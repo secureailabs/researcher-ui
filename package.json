@@ -23,7 +23,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prepare": "husky install",
-    "lint": "eslint ./**/*.js ./**/*.jsx"
+    "lint": "eslint ./src/**/*.ts ./src/**/*.tsx"
   },
   "eslintConfig": {
     "extends": [
@@ -64,7 +64,7 @@
     "./src/**": [
       "prettier --write src/"
     ],
-    "*.js": "eslint --cache --fix"
+    "*.tsx": "eslint ./**/*.js ./**/*.jsx"
   },
   "husky": {
     "hooks": {
