@@ -33,8 +33,18 @@
   "rules": {
     "no-unused-vars": [1, { "args": "after-used", "argsIgnorePattern": "^_" }],
     "react/no-unescaped-entities": "off",
-    "quotes": ["error", "double"],
+    "quotes": ["error", "single", "double"],
     "comma-dangle": ["error", "always-multiline"],
-    "semi": ["error", "always"]
+    "@typescript-eslint/semi": "off",
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }
