@@ -3,7 +3,7 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:react/recommended", "standard-with-typescript"],
+  "extends": ["plugin:react/recommended", "standard-with-typescript", "plugin:@typescript-eslint/recommended"],
   "overrides": [
     {
       "files": ["src/**/*.{js,jsx,ts,tsx}"],
@@ -16,11 +16,16 @@
   "globals": {
     "React": "readonly"
   },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "project": "./tsconfig.json",
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
-  "plugins": ["react"],
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "no-unused-vars": [1, { "args": "after-used", "argsIgnorePattern": "^_" }],
     "react/no-unescaped-entities": "off",
