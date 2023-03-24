@@ -2,20 +2,25 @@ const Styles = {
   light: {
     // palette values for light mode
     primary: {
-      light: '#293545',
-      main: '#1A2432',
-      dark: '#1A2432'
+      light: '#F37B53',
+      main: '#F05A28',
+      dark: '#A83E1C'
+    },
+    secondary: {
+      light: '#45B3EB',
+      main: '#17A1E6',
+      dark: '#1070A1'
     },
     default: {
-      light: '#7CFC00',
-      main: '#458B00',
-      dark: '#3B5323'
+      light: '#F37B53',
+      main: '#F05A28',
+      dark: '#A83E1C'
     },
     background: {
-      default: '#f8f8f8'
+      default: '#f5f5f5'
     },
     text: {
-      primary: '#282828'
+      primary: '#000000'
     }
   }
 };

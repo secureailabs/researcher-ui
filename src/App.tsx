@@ -9,7 +9,7 @@ import Routes from './routes';
 const mode = 'light'; // currently only light mode is supported
 const theme = createTheme(GetDesignTokens(mode));
 
-const App = (): JSX.Element => {
+const App: React.FC = () => {
   return (
     <StyledEngineProvider injectFirst>
     <ThemeProvider theme={theme}>
