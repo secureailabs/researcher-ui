@@ -1,11 +1,3 @@
-import { Box, Typography } from '@mui/material';
-
-const Home: React.FC = () => {
-  return (
-    <Box>
-      <Typography variant="h1">Home</Typography>
-    </Box>
-  );
-}
+import Home from './Home';
 
 export default Home;
