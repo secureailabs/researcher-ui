@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+.featureContainer {
+  width: 250px;
+}
+
+.valueContainer {
+  width: 100px;
+}
+
+.conditionContainer {
+  width: 100px;
+}
