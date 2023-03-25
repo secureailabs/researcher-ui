@@ -1,19 +1,21 @@
 .container {
   display: flex;
   flex-direction: row;
+  background-color: white;
 }
 
 .featureContainer {
-  width: 250px;
+  flex: 2;
 }
 
 .valueContainer {
-  width: 100px;
+  flex: 1;
 }
 
 .conditionContainer {
-  width: 100px;
+  flex: 1;
 }
 
 .deleteButton {
+  flex: 0.5;
 }

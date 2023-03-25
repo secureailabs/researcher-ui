@@ -5,4 +5,6 @@ interface IFilter {
   value: string;
 }
 
-export type { IFilter };
+type TOperatorString = 'AND' | 'OR';
+
+export type { IFilter, TOperatorString };

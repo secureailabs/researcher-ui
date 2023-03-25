@@ -1,13 +1,20 @@
-import { Box, Button, Typography } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { Box, Button, Grid, Typography } from '@mui/material';
+import { useState } from 'react';
 import CohortConditionDropdown from 'src/pages/home/components/CohortConditionDropdown';
 import styles from './CohortSelection.module.css';
-import { type IFilter } from 'src/shared/interfaces/customTypes';
+import {
+  type TOperatorString,
+  type IFilter,
+} from 'src/shared/interfaces/customTypes';
+import OperatorDropdown from '../OperatorDropdown';
 
 export interface ICohortSelection {}
 
+// IOperatorString is a type that is used to define the type of the operator string. It can be either 'AND' or 'OR'
+
 const CohortSelection: React.FC<ICohortSelection> = () => {
   const [filters, setFilters] = useState<IFilter[]>([]);
+  const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
 
   const handleAddFilter = (): void => {
     const lastFilterId =
@@ -23,6 +30,12 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
       },
     ];
     setFilters(newFilterState);
+
+    // Add operator for the new filter
+    if (filters.length > 0) {
+      const newOperatorState = [...filterOperator, 'and' as TOperatorString];
+      setFilterOperator(newOperatorState);
+    }
   };
 
   const handleDeleteFilter = (id: number): void => {
@@ -30,43 +43,45 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
     setFilters(newFilterState);
   };
 
-  const handleFilterChange = useMemo(
-    () =>
-      (data: IFilter): void => {
-        const newFilterState = filters.map((f: IFilter) => {
-          if (f.id === data.id) {
-            return data;
-          }
-          return f;
-        });
-        setFilters(newFilterState);
-      },
-    []
-  );
+  const handleFilterChange = (data: IFilter): void => {
+    const newFilterState = filters.map((f: IFilter) => {
+      if (f.id === data.id) {
+        return data;
+      }
+      return f;
+    });
+    setFilters(newFilterState);
+  };
 
   return (
     <Box className={styles.container}>
       <Typography variant="h5">Cohort Selection</Typography>
-      <Box
-        sx={{
-          marginTop: 2,
-          width: '100%',
-        }}
-      >
-        {filters.map((filter: IFilter) => (
-          <CohortConditionDropdown
-            key={filter.id}
-            filter={filter}
-            handleDeleteFilter={handleDeleteFilter}
-            handleFilterChange={handleFilterChange}
-          />
-        ))}
+      <Box className={styles.filterDropdownContainer}>
+        <Grid container spacing={'40px'} className={styles.filterDropdown}>
+          {filters.map((filter: IFilter, index: number) => (
+            <>
+              {index > 0 && (
+                <Box className={styles.operatorDropdownContainer}>
+                  <OperatorDropdown operator={filterOperator[index - 1]} />
+                </Box>
+              )}
+              <Grid item xs={12} key={filter.id}>
+                <CohortConditionDropdown
+                  filter={filter}
+                  handleDeleteFilter={handleDeleteFilter}
+                  handleFilterChange={handleFilterChange}
+                />
+              </Grid>
+            </>
+          ))}
+        </Grid>
+        <div className={styles.verticalLine}></div>
       </Box>
       <Box>
         <Button
           variant="contained"
-          sx={{ marginTop: 2 }}
           onClick={handleAddFilter}
+          className={styles.addFilterButton}
         >
           Add Condition
         </Button>
