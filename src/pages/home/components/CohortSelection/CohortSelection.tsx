@@ -1,16 +1,10 @@
 import { Box, Button, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import CohortConditionDropdown from 'src/pages/home/components/CohortConditionDropdown';
 import styles from './CohortSelection.module.css';
+import { type IFilter } from 'src/shared/interfaces/customTypes';
 
 export interface ICohortSelection {}
-
-interface IFilter {
-  id: number;
-  variable: string;
-  operator: string;
-  value: string;
-}
 
 const CohortSelection: React.FC<ICohortSelection> = () => {
   const [filters, setFilters] = useState<IFilter[]>([]);
@@ -36,6 +30,20 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
     setFilters(newFilterState);
   };
 
+  const handleFilterChange = useMemo(
+    () =>
+      (data: IFilter): void => {
+        const newFilterState = filters.map((f: IFilter) => {
+          if (f.id === data.id) {
+            return data;
+          }
+          return f;
+        });
+        setFilters(newFilterState);
+      },
+    []
+  );
+
   return (
     <Box className={styles.container}>
       <Typography variant="h5">Cohort Selection</Typography>
@@ -45,20 +53,12 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
           width: '100%',
         }}
       >
-        {filters.map((filter: any) => (
+        {filters.map((filter: IFilter) => (
           <CohortConditionDropdown
             key={filter.id}
             filter={filter}
             handleDeleteFilter={handleDeleteFilter}
-            handleFilterChange={(data: any) => {
-              const newFilterState = filters.map((f: any) => {
-                if (f.id === filter.id) {
-                  return data;
-                }
-                return f;
-              });
-              setFilters(newFilterState);
-            }}
+            handleFilterChange={handleFilterChange}
           />
         ))}
       </Box>
