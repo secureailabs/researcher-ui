@@ -17,6 +17,7 @@ const OperatorDropdown: React.FC<IOperatorDropdown> = ({ operator }) => {
           id="operator"
           label="operator"
           defaultValue=""
+          value={operator}
         >
           {OPERATOR_LIST.map((condition) => (
             <MenuItem key={condition.value} value={condition.value}>

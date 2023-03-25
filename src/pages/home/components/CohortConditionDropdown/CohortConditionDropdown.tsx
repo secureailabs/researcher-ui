@@ -64,6 +64,8 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
         <Autocomplete
           disablePortal
           id="feature-dropdown"
+          value={filter.variable}
+          inputValue={filter.variable}
           options={FEATURE_LIST}
           getOptionLabel={(option) =>
             (option as AutocompleteOptionData).variableName
@@ -105,6 +107,7 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
           id="outlined-basic"
           label="Value"
           variant="outlined"
+          value={filter.value}
           onChange={(event) => {
             handleFilterDataChange({ value: event.target.value });
           }}

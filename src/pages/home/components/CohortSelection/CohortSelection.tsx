@@ -7,6 +7,7 @@ import {
   type IFilter,
 } from 'src/shared/interfaces/customTypes';
 import OperatorDropdown from '../OperatorDropdown';
+import CohortList from '../CohortList';
 
 export interface ICohortSelection {}
 
@@ -15,6 +16,9 @@ export interface ICohortSelection {}
 const CohortSelection: React.FC<ICohortSelection> = () => {
   const [filters, setFilters] = useState<IFilter[]>([]);
   const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
+
+  console.log('filters: ', filters);
+  console.log('filterOperator: ', filterOperator);
 
   const handleAddFilter = (): void => {
     const lastFilterId =
@@ -53,37 +57,53 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
     setFilters(newFilterState);
   };
 
+  const handleCohortSelection = (
+    selectedFilter: IFilter[],
+    selectedFilterOperator: TOperatorString[]
+  ): void => {
+    setFilters(selectedFilter);
+    setFilterOperator(selectedFilterOperator);
+  };
+
   return (
     <Box className={styles.container}>
       <Typography variant="h5">Cohort Selection</Typography>
-      <Box className={styles.filterDropdownContainer}>
-        <Grid container spacing={'40px'} className={styles.filterDropdown}>
-          {filters.map((filter: IFilter, index: number) => (
-            <>
-              {index > 0 && (
-                <Box className={styles.operatorDropdownContainer}>
-                  <OperatorDropdown operator={filterOperator[index - 1]} />
-                </Box>
-              )}
-              <Grid item xs={12} key={filter.id}>
-                <CohortConditionDropdown
-                  filter={filter}
-                  handleDeleteFilter={handleDeleteFilter}
-                  handleFilterChange={handleFilterChange}
-                />
-              </Grid>
-            </>
-          ))}
-        </Grid>
-        <div className={styles.verticalLine}></div>
+      <Box className={styles.container2}>
+        <Box className={styles.cohortListContainer}>
+          <CohortList handleCohortSelection={handleCohortSelection} />
+        </Box>
+        <Box className={styles.filterDropdownContainer}>
+          <Grid container spacing={'40px'} className={styles.filterDropdown}>
+            {filters.map((filter: IFilter, index: number) => (
+              <>
+                {index > 0 && (
+                  <Box className={styles.operatorDropdownContainer}>
+                    <OperatorDropdown operator={filterOperator[index - 1]} />
+                  </Box>
+                )}
+                <Grid item xs={12} key={filter.id}>
+                  <CohortConditionDropdown
+                    filter={filter}
+                    handleDeleteFilter={handleDeleteFilter}
+                    handleFilterChange={handleFilterChange}
+                  />
+                </Grid>
+              </>
+            ))}
+          </Grid>
+          <div className={styles.verticalLine}></div>
+        </Box>
       </Box>
-      <Box>
+      <Box className={styles.buttonContainer}>
         <Button
           variant="contained"
           onClick={handleAddFilter}
           className={styles.addFilterButton}
         >
           Add Condition
+        </Button>
+        <Button variant="outlined" className={styles.saveCohortButton}>
+          Save Cohort
         </Button>
       </Box>
     </Box>
