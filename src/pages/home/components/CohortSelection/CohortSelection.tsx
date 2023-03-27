@@ -11,8 +11,6 @@ import CohortList from '../CohortList';
 
 export interface ICohortSelection {}
 
-// IOperatorString is a type that is used to define the type of the operator string. It can be either 'AND' or 'OR'
-
 const CohortSelection: React.FC<ICohortSelection> = () => {
   const [filters, setFilters] = useState<IFilter[]>([]);
   const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
@@ -40,8 +38,17 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
   };
 
   const handleDeleteFilter = (id: number): void => {
-    const newFilterState = filters.filter((f) => f.id !== id);
+    const index = filters.findIndex((f) => f.id === id);
+    const newFilterState = [...filters];
+    newFilterState.splice(index, 1);
     setFilters(newFilterState);
+
+    // Delete operator for the deleted filter
+    if (filters.length > 1) {
+      const newOperatorState = [...filterOperator];
+      newOperatorState.splice(index - 1, 1);
+      setFilterOperator(newOperatorState);
+    }
   };
 
   const handleFilterChange = (data: IFilter): void => {
