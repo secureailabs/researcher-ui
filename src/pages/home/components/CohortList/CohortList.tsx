@@ -9,10 +9,17 @@ import {
 import { useState } from 'react';
 import COHORT_LIST from 'src/constants/cohortList';
 import styles from './CohortList.module.css';
+import {
+  type IFilter,
+  type TOperatorString,
+} from 'src/shared/interfaces/customTypes';
 
 export interface ICohortList {
   // TODO: Add type for handleCohortSelection
-  handleCohortSelection: (filter: any, operator: any) => void;
+  handleCohortSelection: (
+    filter: IFilter[],
+    operator: TOperatorString[]
+  ) => void;
 }
 
 const CohortList: React.FC<ICohortList> = ({ handleCohortSelection }) => {
@@ -25,7 +32,7 @@ const CohortList: React.FC<ICohortList> = ({ handleCohortSelection }) => {
     setSelectedIndex(index);
     handleCohortSelection(
       COHORT_LIST[index].filters,
-      COHORT_LIST[index].filterOperator
+      COHORT_LIST[index].filterOperator as TOperatorString[]
     );
   };
   return (

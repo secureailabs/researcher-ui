@@ -5,9 +5,15 @@ import styles from './OperatorDropdown.module.css';
 
 export interface IOperatorDropdown {
   operator: TOperatorString;
+  index: number;
+  handleOperatorChange: (index: number, data: TOperatorString) => void;
 }
 
-const OperatorDropdown: React.FC<IOperatorDropdown> = ({ operator }) => {
+const OperatorDropdown: React.FC<IOperatorDropdown> = ({
+  operator,
+  index,
+  handleOperatorChange,
+}) => {
   return (
     <Box className={styles.container}>
       <FormControl variant="standard" fullWidth>
@@ -18,6 +24,9 @@ const OperatorDropdown: React.FC<IOperatorDropdown> = ({ operator }) => {
           label="operator"
           defaultValue=""
           value={operator}
+          onChange={(event) => {
+            handleOperatorChange(index, event.target.value as TOperatorString);
+          }}
         >
           {OPERATOR_LIST.map((condition) => (
             <MenuItem key={condition.value} value={condition.value}>

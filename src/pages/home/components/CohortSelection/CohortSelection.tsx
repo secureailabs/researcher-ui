@@ -62,6 +62,19 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
     setFilterOperator(selectedFilterOperator);
   };
 
+  const handleOperatorChange = (
+    index: number,
+    operator: TOperatorString
+  ): void => {
+    const newOperatorState = filterOperator.map((f, i) => {
+      if (i === index) {
+        return operator;
+      }
+      return f;
+    });
+    setFilterOperator(newOperatorState);
+  };
+
   return (
     <Box className={styles.container}>
       <Typography variant="h5">Cohort Selection</Typography>
@@ -76,7 +89,11 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
               <React.Fragment key={`fragment-${filter.id}`}>
                 {index > 0 ? (
                   <Box className={styles.operatorDropdownContainer}>
-                    <OperatorDropdown operator={filterOperator[index - 1]} />
+                    <OperatorDropdown
+                      operator={filterOperator[index - 1]}
+                      index={index - 1}
+                      handleOperatorChange={handleOperatorChange}
+                    />
                   </Box>
                 ) : null}
                 <Grid item xs={12}>

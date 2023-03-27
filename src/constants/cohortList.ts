@@ -1,23 +1,23 @@
 const COHORT_LIST = [
   {
     cohortId: 'hypertension',
-    cohortName: 'hypertension',
+    cohortName: 'Hypertension',
     cohortDescription: 'No comorbidities',
     filters: [
       {
-        id: 'hypertension-1',
+        id: 1,
         variable: 'patient_id',
         operator: 'gt',
         value: '25',
       },
       {
-        id: 'hypertension-2',
+        id: 2,
         variable: 'body_mass_index',
         operator: 'gt',
         value: '20',
       },
       {
-        id: 'hypertension-3',
+        id: 3,
         variable: 'gender',
         operator: 'eq',
         value: 'female',
@@ -31,7 +31,7 @@ const COHORT_LIST = [
     cohortDescription: 'Hypertension',
     filters: [
       {
-        id: 'age_group_25-1',
+        id: 4,
         variable: 'age_at_nephrectomy',
         operator: 'gt',
         value: '25',
@@ -41,17 +41,17 @@ const COHORT_LIST = [
   },
   {
     cohortId: 'demo_cohort_1',
-    cohortName: 'Demo cohort 1',
+    cohortName: 'Sample cohort 1',
     cohortDescription: 'Hypertension',
     filters: [
       {
-        id: 'demo_cohort_1-1',
+        id: 5,
         variable: 'gender',
         operator: 'eq',
         value: 'female',
       },
       {
-        id: 'demo_cohort_1-2',
+        id: 6,
         variable: 'body_mass_index',
         operator: 'gt',
         value: '20',
@@ -61,23 +61,23 @@ const COHORT_LIST = [
   },
   {
     cohortId: 'demo_cohort_2',
-    cohortName: 'Demo cohort 2',
+    cohortName: 'Sample cohort 2',
     cohortDescription: 'Hypertension',
     filters: [
       {
-        id: 'demo_cohort_2-1',
+        id: 7,
         variable: 'comorbidities__metastatic_solid_tumor',
         operator: 'gt',
         value: '20',
       },
       {
-        id: 'demo_cohort_2-2',
+        id: 8,
         variable: 'smoking_history',
         operator: 'eq',
         value: 'never',
       },
       {
-        id: 'demo_cohort_2-3',
+        id: 9,
         variable: 'gender',
         operator: 'eq',
         value: 'female',
