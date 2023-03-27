@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, type HTMLAttributes } from 'react';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import CONDITION_LIST from 'src/constants/comparisionList';
 import FEATURE_LIST from 'src/constants/featureVariable';
 import styles from './CohortConditionDropdown.module.css';
@@ -142,7 +143,7 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
             handleDeleteFilter(filter.id);
           }}
         >
-          Delete
+          <HighlightOffIcon />
         </Button>
       </Box>
     </Box>

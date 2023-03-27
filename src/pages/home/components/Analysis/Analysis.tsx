@@ -7,8 +7,8 @@ export interface IAnalysis {
 
 const Analysis: React.FC<IAnalysis> = ({ sampleTextProp }) => {
   return (
-    <Box>
-      <Typography variant="h6">Analysis</Typography>
+    <Box className={styles.container}>
+      <Typography variant="h5">Analysis</Typography>
     </Box>
   );
 };
