@@ -84,7 +84,9 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
 
   return (
     <Box className={styles.container}>
-      <Typography variant="h5">Cohort Selection</Typography>
+      <Box className={styles.titleContainer}>
+        <Typography variant="h5">Cohort Selection</Typography>
+      </Box>
       <Box className={styles.container2}>
         <Box className={styles.cohortListContainer}>
           <CohortList handleCohortSelection={handleCohortSelection} />

@@ -5,5 +5,44 @@
   justify-content: center;
   width: 100%;
   height: 100%;
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 80px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.title {
+  text-align: center;
+}
+
+.featureListContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
   padding: 20px 20px;
+}
+
+.featureGrid {
+  border: 1px solid #f1f1f1;
+  border-top: 0;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.featureContainer {
+  word-wrap: normal;
+  word-break: break-all;
+}
+
+.listText {
+  font-style: italic;
 }
