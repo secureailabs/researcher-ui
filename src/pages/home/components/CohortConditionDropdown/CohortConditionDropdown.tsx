@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Autocomplete,
@@ -10,7 +11,7 @@ import {
   TextField,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { type HTMLAttributes } from 'react';
+import React, { useEffect, type HTMLAttributes } from 'react';
 import CONDITION_LIST from 'src/constants/comparisionList';
 import FEATURE_LIST from 'src/constants/featureVariable';
 import styles from './CohortConditionDropdown.module.css';
@@ -21,14 +22,14 @@ export interface ICohortConditionDropdown {
   handleDeleteFilter: (id: number) => void;
 }
 
-interface AutocompleteOptionData {
+interface IAutocompleteOptionData {
   variableName: string;
   dataType: string;
   choices: string;
 }
 
 interface StyledOptionProps extends HTMLAttributes<HTMLDivElement> {
-  option: AutocompleteOptionData;
+  option: IAutocompleteOptionData;
 }
 
 const StyledOption = styled('div')<StyledOptionProps>(({ option }) => ({
@@ -43,6 +44,11 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
   handleFilterChange,
   handleDeleteFilter,
 }) => {
+  const [value, setValue] = React.useState<IAutocompleteOptionData | null>(
+    null
+  );
+  const [inputValue, setInputValue] = React.useState('');
+
   // custom render option : Implemented to handle long text wrapping in dropdown
   const renderOption = (props: any, option: any): JSX.Element => (
     <li {...props} key={option.variableName}>
@@ -58,18 +64,27 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
     handleFilterChange(newFilter);
   };
 
+  useEffect(() => {
+    // filter = {id: newFilterId,variable: '', operator: '',value: ''}
+    // IAutocompleteOptionData = {variableName: string, dataType: string, choices: string}
+    const filterVariable = FEATURE_LIST.find(
+      (feature) => feature.variableName === filter.variable
+    );
+    if (filterVariable === undefined) {
+      setValue(null);
+    } else {
+      setValue(filterVariable);
+    }
+  }, []);
+
   return (
     <Box className={styles.container}>
       <Box className={styles.featureContainer}>
         <Autocomplete
           disablePortal
           id="feature-dropdown"
-          value={filter.variable}
-          inputValue={filter.variable}
           options={FEATURE_LIST}
-          getOptionLabel={(option) =>
-            (option as AutocompleteOptionData).variableName
-          }
+          getOptionLabel={(option) => option.variableName}
           renderInput={(params) => <TextField {...params} label="Feature" />}
           renderOption={renderOption}
           onChange={(event, newValue) => {
@@ -78,6 +93,12 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
             } else {
               handleFilterDataChange({ variable: '' });
             }
+            setValue(newValue);
+          }}
+          value={value}
+          inputValue={inputValue}
+          onInputChange={(event, newInputValue) => {
+            setInputValue(newInputValue);
           }}
         />
       </Box>

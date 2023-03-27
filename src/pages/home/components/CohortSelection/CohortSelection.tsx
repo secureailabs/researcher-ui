@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import CohortConditionDropdown from 'src/pages/home/components/CohortConditionDropdown';
 import styles from './CohortSelection.module.css';
 import {
@@ -16,9 +16,6 @@ export interface ICohortSelection {}
 const CohortSelection: React.FC<ICohortSelection> = () => {
   const [filters, setFilters] = useState<IFilter[]>([]);
   const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
-
-  console.log('filters: ', filters);
-  console.log('filterOperator: ', filterOperator);
 
   const handleAddFilter = (): void => {
     const lastFilterId =
@@ -73,22 +70,23 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
           <CohortList handleCohortSelection={handleCohortSelection} />
         </Box>
         <Box className={styles.filterDropdownContainer}>
+          {/* The section below renders combination of features conditions eg. a and b or c */}
           <Grid container spacing={'40px'} className={styles.filterDropdown}>
             {filters.map((filter: IFilter, index: number) => (
-              <>
-                {index > 0 && (
+              <React.Fragment key={`fragment-${filter.id}`}>
+                {index > 0 ? (
                   <Box className={styles.operatorDropdownContainer}>
                     <OperatorDropdown operator={filterOperator[index - 1]} />
                   </Box>
-                )}
-                <Grid item xs={12} key={filter.id}>
+                ) : null}
+                <Grid item xs={12}>
                   <CohortConditionDropdown
                     filter={filter}
                     handleDeleteFilter={handleDeleteFilter}
                     handleFilterChange={handleFilterChange}
                   />
                 </Grid>
-              </>
+              </React.Fragment>
             ))}
           </Grid>
           <div className={styles.verticalLine}></div>

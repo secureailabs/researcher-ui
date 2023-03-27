@@ -1,4 +1,5 @@
 const FEATURE_LIST = [
+  { variableName: '', dataType: '', choices: '' },
   { variableName: 'patient_id', dataType: 'string', choices: '' },
   { variableName: 'age_at_nephrectomy', dataType: 'number', choices: '' },
   { variableName: 'gender', dataType: 'string', choices: 'male,female' },
