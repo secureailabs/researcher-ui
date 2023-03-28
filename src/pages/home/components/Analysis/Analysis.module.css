@@ -5,5 +5,40 @@
   justify-content: center;
   width: 100%;
   height: 100%;
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 80px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.subContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
   padding: 20px 20px;
+  margin-top: 20px;
+}
+
+.tabPanelContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 0 3rem;
+}
+
+.horizontalLine {
+  width: 100%;
+  height: 1px;
+  background-color: #eaeaea;
+}
+
+.tabs {
+  min-width: 150px;
 }
