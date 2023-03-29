@@ -1,10 +1,11 @@
-import { Box, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Divider, Tab, Tabs, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import {
   Kurtosis,
   SKEW,
   Variance,
 } from '../AnalyticsFunction/AnalyticsFunction';
+import AnalyticsResultHistory from '../AnalyticsResultHistory';
 import styles from './Analysis.module.css';
 
 export interface IAnalysis {
@@ -15,17 +16,23 @@ const ANALYTICS_FUNCTION_LIST = [
   {
     name: 'Skew',
     description: 'Sample Function 1 Description',
-    functionComponent: <SKEW sampleTextProp={''} />,
+    functionComponent: (handleSaveResult: (result: string) => void) => (
+      <SKEW sampleTextProp={''} handleSaveResult={handleSaveResult} />
+    ),
   },
   {
     name: 'Variance',
     description: 'Sample Function 2 Description',
-    functionComponent: <Variance sampleTextProp={''} />,
+    functionComponent: (handleSaveResult: (result: string) => void) => (
+      <Variance sampleTextProp={''} handleSaveResult={handleSaveResult} />
+    ),
   },
   {
     name: 'Kurtosis',
     description: 'Sample Function 3 Description',
-    functionComponent: <Kurtosis sampleTextProp={''} />,
+    functionComponent: (handleSaveResult: (result: string) => void) => (
+      <Kurtosis sampleTextProp={''} handleSaveResult={handleSaveResult} />
+    ),
   },
 ];
 
@@ -36,7 +43,10 @@ const a11yProps = (index: number): { id: string; 'aria-controls': string } => {
   };
 };
 
-const TabPanel: React.FC<{ value: number }> = ({ value }) => {
+const TabPanel: React.FC<{
+  value: number;
+  handleSaveResult: (result: string) => void;
+}> = ({ value, handleSaveResult }) => {
   // right switch case
   switch (value) {
     case value:
@@ -47,7 +57,7 @@ const TabPanel: React.FC<{ value: number }> = ({ value }) => {
           id={`vertical-tabpanel-${value}`}
           aria-labelledby={`vertical-tab-${value}`}
         >
-          {ANALYTICS_FUNCTION_LIST[value].functionComponent}
+          {ANALYTICS_FUNCTION_LIST[value].functionComponent(handleSaveResult)}
         </Box>
       );
     default:
@@ -57,12 +67,17 @@ const TabPanel: React.FC<{ value: number }> = ({ value }) => {
 
 const Analysis: React.FC<IAnalysis> = ({ sampleTextProp }) => {
   const [value, setValue] = useState(0);
+  const [result, setResult] = useState<string[]>([]);
 
   const handleChange = (
     _event: React.SyntheticEvent,
     newValue: number
   ): void => {
     setValue(newValue);
+  };
+
+  const handleSaveResult = (data: string): void => {
+    setResult((prevResult) => [...prevResult, data]);
   };
 
   return (
@@ -80,7 +95,6 @@ const Analysis: React.FC<IAnalysis> = ({ sampleTextProp }) => {
           sx={{ borderRight: 1, borderColor: 'divider' }}
           className={styles.tabs}
         >
-          {/* <Tab label="Item One" {...a11yProps(0)} /> */}
           {ANALYTICS_FUNCTION_LIST.map((item, index) => (
             <Tab
               key={a11yProps(index).id}
@@ -89,7 +103,14 @@ const Analysis: React.FC<IAnalysis> = ({ sampleTextProp }) => {
             />
           ))}
         </Tabs>
-        <TabPanel value={value} />
+        <TabPanel value={value} handleSaveResult={handleSaveResult} />
+      </Box>
+      <Box className={styles.resultContainer}>
+        <Typography variant="h6" className={styles.description}>
+          Results
+        </Typography>
+        <Divider />
+        <AnalyticsResultHistory sampleTextProp={''} result={result} />
       </Box>
     </Box>
   );
