@@ -7,4 +7,12 @@ interface IFilter {
 
 type TOperatorString = 'AND' | 'OR';
 
-export type { IFilter, TOperatorString };
+interface ICohortListData {
+  cohortId: string;
+  cohortName: string;
+  cohortDescription: string;
+  filters: IFilter[];
+  filterOperator: TOperatorString[];
+}
+
+export type { IFilter, TOperatorString, ICohortListData };

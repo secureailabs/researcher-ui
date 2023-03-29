@@ -1,4 +1,4 @@
-const COHORT_LIST = [
+const COHORT_LIST_DATA = [
   {
     cohortId: 'hypertension',
     cohortName: 'Hypertension',
@@ -87,4 +87,4 @@ const COHORT_LIST = [
   },
 ];
 
-export default COHORT_LIST;
+export default COHORT_LIST_DATA;

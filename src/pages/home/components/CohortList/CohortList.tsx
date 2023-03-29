@@ -1,15 +1,16 @@
 import * as React from 'react';
 import {
   Box,
+  Button,
   List,
   ListItemButton,
   ListItemText,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import COHORT_LIST from 'src/constants/cohortList';
 import styles from './CohortList.module.css';
 import {
+  type ICohortListData,
   type IFilter,
   type TOperatorString,
 } from 'src/shared/interfaces/customTypes';
@@ -18,12 +19,17 @@ export interface ICohortList {
   // TODO: Add type for handleCohortSelection
   handleCohortSelection: (
     filter: IFilter[],
-    operator: TOperatorString[]
+    operator: TOperatorString[],
+    selectedIndex: number
   ) => void;
+  cohortListData: ICohortListData[];
 }
 
-const CohortList: React.FC<ICohortList> = ({ handleCohortSelection }) => {
-  const [selectedIndex, setSelectedIndex] = useState(1);
+const CohortList: React.FC<ICohortList> = ({
+  handleCohortSelection,
+  cohortListData,
+}) => {
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   const handleListItemClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -31,17 +37,24 @@ const CohortList: React.FC<ICohortList> = ({ handleCohortSelection }) => {
   ): void => {
     setSelectedIndex(index);
     handleCohortSelection(
-      COHORT_LIST[index].filters,
-      COHORT_LIST[index].filterOperator as TOperatorString[]
+      cohortListData[index].filters,
+      cohortListData[index].filterOperator,
+      index
     );
   };
+
+  const handleNewCohortClick = (): void => {
+    setSelectedIndex(-1);
+    handleCohortSelection([], [], -1);
+  };
+
   return (
     <Box className={styles.container}>
       <Typography variant="h6" component="h6" className={styles.title}>
         Saved Cohort
       </Typography>
       <List aria-label="saved-cohort-list">
-        {COHORT_LIST.map((cohort, index) => {
+        {cohortListData.map((cohort, index) => {
           return (
             <ListItemButton
               key={index}
@@ -55,6 +68,13 @@ const CohortList: React.FC<ICohortList> = ({ handleCohortSelection }) => {
           );
         })}
       </List>
+      <Button
+        variant="outlined"
+        className={styles.saveCohortButton}
+        onClick={handleNewCohortClick}
+      >
+        Create New Cohort
+      </Button>
     </Box>
   );
 };

@@ -5,15 +5,19 @@ import styles from './CohortSelection.module.css';
 import {
   type TOperatorString,
   type IFilter,
+  type ICohortListData,
 } from 'src/shared/interfaces/customTypes';
 import OperatorDropdown from '../OperatorDropdown';
 import CohortList from '../CohortList';
+import COHORT_LIST_DATA from 'src/constants/cohortList';
 
 export interface ICohortSelection {}
 
 const CohortSelection: React.FC<ICohortSelection> = () => {
   const [filters, setFilters] = useState<IFilter[]>([]);
   const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
+  const [cohortListData, setCohortListData] = useState<any[]>(COHORT_LIST_DATA);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
   const handleAddFilter = (): void => {
     const lastFilterId =
@@ -63,10 +67,12 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
 
   const handleCohortSelection = (
     selectedFilter: IFilter[],
-    selectedFilterOperator: TOperatorString[]
+    selectedFilterOperator: TOperatorString[],
+    sIndex: number
   ): void => {
     setFilters(selectedFilter);
     setFilterOperator(selectedFilterOperator);
+    setSelectedIndex(sIndex);
   };
 
   const handleOperatorChange = (
@@ -82,6 +88,24 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
     setFilterOperator(newOperatorState);
   };
 
+  const handleSaveCohort = (): void => {
+    if (selectedIndex === -1) {
+      console.log('Save new cohort');
+    } else {
+      const newCohortListData = cohortListData.map((c, i) => {
+        if (i === selectedIndex) {
+          return {
+            ...c,
+            filters,
+            filterOperator,
+          };
+        }
+        return c;
+      });
+      setCohortListData(newCohortListData);
+    }
+  };
+
   return (
     <Box className={styles.container}>
       <Box className={styles.titleContainer}>
@@ -89,7 +113,10 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
       </Box>
       <Box className={styles.container2}>
         <Box className={styles.cohortListContainer}>
-          <CohortList handleCohortSelection={handleCohortSelection} />
+          <CohortList
+            handleCohortSelection={handleCohortSelection}
+            cohortListData={cohortListData}
+          />
         </Box>
         <Box className={styles.filterDropdownContainer}>
           {/* The section below renders combination of features conditions eg. a and b or c */}
@@ -126,7 +153,11 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
         >
           Add Condition
         </Button>
-        <Button variant="outlined" className={styles.saveCohortButton}>
+        <Button
+          variant="outlined"
+          className={styles.saveCohortButton}
+          onClick={handleSaveCohort}
+        >
           Save Cohort
         </Button>
       </Box>
