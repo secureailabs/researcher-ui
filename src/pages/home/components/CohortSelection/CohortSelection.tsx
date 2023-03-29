@@ -11,6 +11,7 @@ import OperatorDropdown from '../OperatorDropdown';
 import CohortList from '../CohortList';
 import COHORT_LIST_DATA from 'src/constants/cohortList';
 import NewCohortDialog from '../NewCohortDialog';
+import useNotification from 'src/hooks/useNotification';
 
 export interface ICohortSelection {}
 
@@ -21,6 +22,8 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [openNewCohortDialog, setOpenNewCohortDialog] =
     useState<boolean>(false);
+
+  const [msg, sendNotification] = useNotification();
 
   const handleAddFilter = (): void => {
     const lastFilterId =
@@ -93,6 +96,13 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
 
   const handleSaveCohort = (): void => {
     if (selectedIndex === -1) {
+      if (filters.length === 0) {
+        sendNotification({
+          msg: 'Please add at least one condition',
+          variant: 'error',
+        });
+        return;
+      }
       setOpenNewCohortDialog(true);
     } else {
       const newCohortListData = cohortListData.map((c, i) => {
@@ -106,10 +116,22 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
         return c;
       });
       setCohortListData(newCohortListData);
+      sendNotification({
+        msg: 'Cohort saved successfully',
+        variant: 'success',
+      });
     }
   };
 
   const handleNewCohortDialogSave = (cohortLabel: string): void => {
+    if (cohortLabel === '') {
+      sendNotification({
+        msg: 'Please enter cohort label',
+        variant: 'error',
+      });
+      return;
+    }
+
     const newCohortListData = [
       ...cohortListData,
       {
@@ -123,6 +145,10 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
     setCohortListData(newCohortListData);
     setOpenNewCohortDialog(false);
     setSelectedIndex(cohortListData.length);
+    sendNotification({
+      msg: 'Cohort saved successfully',
+      variant: 'success',
+    });
   };
 
   const handleNewCohortDialogClose = (): void => {
