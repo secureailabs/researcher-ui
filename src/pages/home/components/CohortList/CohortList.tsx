@@ -23,19 +23,18 @@ export interface ICohortList {
     selectedIndex: number
   ) => void;
   cohortListData: ICohortListData[];
+  selectedIndex: number;
 }
 
 const CohortList: React.FC<ICohortList> = ({
   handleCohortSelection,
   cohortListData,
+  selectedIndex,
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-
   const handleListItemClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number
   ): void => {
-    setSelectedIndex(index);
     handleCohortSelection(
       cohortListData[index].filters,
       cohortListData[index].filterOperator,
@@ -44,7 +43,6 @@ const CohortList: React.FC<ICohortList> = ({
   };
 
   const handleNewCohortClick = (): void => {
-    setSelectedIndex(-1);
     handleCohortSelection([], [], -1);
   };
 

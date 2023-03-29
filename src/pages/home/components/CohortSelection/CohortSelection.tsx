@@ -10,6 +10,7 @@ import {
 import OperatorDropdown from '../OperatorDropdown';
 import CohortList from '../CohortList';
 import COHORT_LIST_DATA from 'src/constants/cohortList';
+import NewCohortDialog from '../NewCohortDialog';
 
 export interface ICohortSelection {}
 
@@ -18,6 +19,8 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
   const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
   const [cohortListData, setCohortListData] = useState<any[]>(COHORT_LIST_DATA);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const [openNewCohortDialog, setOpenNewCohortDialog] =
+    useState<boolean>(false);
 
   const handleAddFilter = (): void => {
     const lastFilterId =
@@ -90,7 +93,7 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
 
   const handleSaveCohort = (): void => {
     if (selectedIndex === -1) {
-      console.log('Save new cohort');
+      setOpenNewCohortDialog(true);
     } else {
       const newCohortListData = cohortListData.map((c, i) => {
         if (i === selectedIndex) {
@@ -106,6 +109,26 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
     }
   };
 
+  const handleNewCohortDialogSave = (cohortLabel: string): void => {
+    const newCohortListData = [
+      ...cohortListData,
+      {
+        cohortId: cohortLabel,
+        cohortName: cohortLabel,
+        cohortDescription: 'Sample cohort description',
+        filters,
+        filterOperator,
+      },
+    ];
+    setCohortListData(newCohortListData);
+    setOpenNewCohortDialog(false);
+    setSelectedIndex(cohortListData.length);
+  };
+
+  const handleNewCohortDialogClose = (): void => {
+    setOpenNewCohortDialog(false);
+  };
+
   return (
     <Box className={styles.container}>
       <Box className={styles.titleContainer}>
@@ -116,6 +139,7 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
           <CohortList
             handleCohortSelection={handleCohortSelection}
             cohortListData={cohortListData}
+            selectedIndex={selectedIndex}
           />
         </Box>
         <Box className={styles.filterDropdownContainer}>
@@ -161,6 +185,12 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
           Save Cohort
         </Button>
       </Box>
+      <NewCohortDialog
+        sampleTextProp={''}
+        openNewCohortDialog={openNewCohortDialog}
+        handleNewCohortDialogClose={handleNewCohortDialogClose}
+        handleNewCohortDialogSave={handleNewCohortDialogSave}
+      />
     </Box>
   );
 };
