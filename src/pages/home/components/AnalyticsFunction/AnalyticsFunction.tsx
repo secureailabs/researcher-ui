@@ -10,6 +10,7 @@ import FEATURE_LIST from 'src/constants/featureVariable';
 import styles from './AnalyticsFunction.module.css';
 import { styled } from '@mui/material/styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { type IAutocompleteOptionData } from 'src/shared/interfaces/customTypes';
 
 export interface ISKEW {
   sampleTextProp?: string;
@@ -57,12 +58,6 @@ const AnalyticsFunctionContainerComponent: React.FC<
   );
 };
 
-interface IAutocompleteOptionData {
-  variableName: string;
-  dataType: string;
-  choices: string;
-}
-
 interface StyledOptionProps extends HTMLAttributes<HTMLDivElement> {
   option: IAutocompleteOptionData;
 }
@@ -75,8 +70,8 @@ const StyledOption = styled('div')<StyledOptionProps>(({ option }) => ({
 }));
 
 const renderOption = (props: any, option: any): JSX.Element => (
-  <li {...props} key={option.variableName}>
-    <StyledOption option={option}>{option.variableName}</StyledOption>
+  <li {...props} key={option.series_name}>
+    <StyledOption option={option}>{option.series_name}</StyledOption>
   </li>
 );
 
@@ -87,7 +82,7 @@ const SKEW: React.FC<ISKEW> = ({ sampleTextProp, handleSaveResult }) => {
 
   const handleRunAnalysis = (): void => {
     if (feature !== null) {
-      const result = `Skew of ${feature.variableName} :: 0.5`;
+      const result = `Skew of ${feature.series_name} :: 0.5`;
       handleSaveResult(result);
     }
   };
@@ -103,7 +98,7 @@ const SKEW: React.FC<ISKEW> = ({ sampleTextProp, handleSaveResult }) => {
           disablePortal
           id="feature-dropdown"
           options={FEATURE_LIST}
-          getOptionLabel={(option) => option.variableName}
+          getOptionLabel={(option) => option.series_name}
           renderInput={(params) => <TextField {...params} label="Feature" />}
           renderOption={renderOption}
           onChange={(event, newValue) => {

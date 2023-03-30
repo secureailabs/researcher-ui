@@ -66,13 +66,13 @@ const COHORT_LIST_DATA = [
     filters: [
       {
         id: 7,
-        variable: 'comorbidities__metastatic_solid_tumor',
+        variable: 'hospitalization',
         operator: 'gt',
         value: '20',
       },
       {
         id: 8,
-        variable: 'smoking_history',
+        variable: 'ischemia_time',
         operator: 'eq',
         value: 'never',
       },

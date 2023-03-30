@@ -21,12 +21,12 @@ const FeatureExtraction: React.FC<IFeatureExtraction> = () => {
               sm={6}
               md={4}
               lg={3}
-              key={feature.variableName}
+              key={feature.series_name}
               className={styles.featureGrid}
             >
               <Box className={styles.featureContainer}>
                 <Typography className={styles.listText}>
-                  {feature.variableName}
+                  {feature.series_name}
                 </Typography>
               </Box>
             </Grid>

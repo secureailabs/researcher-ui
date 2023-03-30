@@ -161,6 +161,7 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
         <Typography variant="h5">Cohort Selection</Typography>
       </Box>
       <Box className={styles.container2}>
+        {/* saved cohort list component */}
         <Box className={styles.cohortListContainer}>
           <CohortList
             handleCohortSelection={handleCohortSelection}
@@ -168,8 +169,8 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
             selectedIndex={selectedIndex}
           />
         </Box>
+        {/* cohort condition selection component */}
         <Box className={styles.filterDropdownContainer}>
-          {/* The section below renders combination of features conditions eg. a and b or c */}
           <Grid container spacing={'40px'} className={styles.filterDropdown}>
             {filters.map((filter: IFilter, index: number) => (
               <React.Fragment key={`fragment-${filter.id}`}>
@@ -195,6 +196,7 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
           <div className={styles.verticalLine}></div>
         </Box>
       </Box>
+      {/* add condition and save cohort button */}
       <Box className={styles.buttonContainer}>
         <Button
           variant="contained"

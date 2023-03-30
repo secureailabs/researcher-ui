@@ -15,4 +15,15 @@ interface ICohortListData {
   filterOperator: TOperatorString[];
 }
 
-export type { IFilter, TOperatorString, ICohortListData };
+interface IAutocompleteOptionData {
+  series_name: string;
+  list_value?: string[];
+  __type__: string;
+}
+
+export type {
+  IFilter,
+  TOperatorString,
+  ICohortListData,
+  IAutocompleteOptionData,
+};

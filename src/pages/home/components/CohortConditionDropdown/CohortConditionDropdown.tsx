@@ -16,17 +16,13 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import CONDITION_LIST from 'src/constants/comparisionList';
 import FEATURE_LIST from 'src/constants/featureVariable';
 import styles from './CohortConditionDropdown.module.css';
+import { type IAutocompleteOptionData } from 'src/shared/interfaces/customTypes';
+import InputValueRenderer from './ConditionalCohortValue';
 
 export interface ICohortConditionDropdown {
   filter: any;
   handleFilterChange: (data: any) => void;
   handleDeleteFilter: (id: number) => void;
-}
-
-interface IAutocompleteOptionData {
-  variableName: string;
-  dataType: string;
-  choices: string;
 }
 
 interface StyledOptionProps extends HTMLAttributes<HTMLDivElement> {
@@ -52,8 +48,8 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
 
   // custom render option : Implemented to handle long text wrapping in dropdown
   const renderOption = (props: any, option: any): JSX.Element => (
-    <li {...props} key={option.variableName}>
-      <StyledOption option={option}>{option.variableName}</StyledOption>
+    <li {...props} key={option.series_name}>
+      <StyledOption option={option}>{option.series_name}</StyledOption>
     </li>
   );
 
@@ -67,9 +63,9 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
 
   useEffect(() => {
     // filter = {id: newFilterId,variable: '', operator: '',value: ''}
-    // IAutocompleteOptionData = {variableName: string, dataType: string, choices: string}
+    // IAutocompleteOptionData = {series_name: string, dataType: string, choices: string}
     const filterVariable = FEATURE_LIST.find(
-      (feature) => feature.variableName === filter.variable
+      (feature) => feature.series_name === filter.variable
     );
     if (filterVariable === undefined) {
       setValue(null);
@@ -85,12 +81,12 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
           disablePortal
           id="feature-dropdown"
           options={FEATURE_LIST}
-          getOptionLabel={(option) => option.variableName}
+          getOptionLabel={(option) => option.series_name}
           renderInput={(params) => <TextField {...params} label="Feature" />}
           renderOption={renderOption}
           onChange={(event, newValue) => {
             if (newValue != null) {
-              handleFilterDataChange({ variable: newValue?.variableName });
+              handleFilterDataChange({ variable: newValue?.series_name });
             } else {
               handleFilterDataChange({ variable: '' });
             }
@@ -125,7 +121,7 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
         </FormControl>
       </Box>
       <Box className={styles.valueContainer}>
-        <TextField
+        {/* <TextField
           id="outlined-basic"
           label="Value"
           variant="outlined"
@@ -133,7 +129,8 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
           onChange={(event) => {
             handleFilterDataChange({ value: event.target.value });
           }}
-        />
+        /> */}
+        <InputValueRenderer item={value} />
       </Box>
       <Box className={styles.deleteButton}>
         <Button
