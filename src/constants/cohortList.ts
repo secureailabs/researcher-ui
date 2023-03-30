@@ -74,7 +74,7 @@ const COHORT_LIST_DATA = [
         id: 8,
         variable: 'ischemia_time',
         operator: 'eq',
-        value: 'never',
+        value: '10',
       },
       {
         id: 9,

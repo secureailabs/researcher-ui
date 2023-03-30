@@ -130,7 +130,13 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
             handleFilterDataChange({ value: event.target.value });
           }}
         /> */}
-        <InputValueRenderer item={value} />
+        <InputValueRenderer
+          item={value}
+          value={filter.value}
+          onChange={(data) => {
+            handleFilterDataChange({ value: data });
+          }}
+        />
       </Box>
       <Box className={styles.deleteButton}>
         <Button

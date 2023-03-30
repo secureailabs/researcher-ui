@@ -11,19 +11,23 @@ import styles from './CohortConditionDropdown.module.css';
 
 export interface IIntervalInput {
   onChange: (value: string) => void;
+  value: string;
 }
 
 export interface ICategoricalSelect {
   seriesName: string;
   listValues: string[];
   onChange: (value: string) => void;
+  value: string;
 }
 
 export interface IInputValueRenderer {
   item: IAutocompleteOptionData | null;
+  value: string;
+  onChange: (value: string) => void;
 }
 
-const IntervalInput: React.FC<IIntervalInput> = ({ onChange }) => {
+const IntervalInput: React.FC<IIntervalInput> = ({ onChange, value }) => {
   return (
     // MUI Textfield component with input type as number
     <TextField
@@ -34,6 +38,7 @@ const IntervalInput: React.FC<IIntervalInput> = ({ onChange }) => {
       InputLabelProps={{
         shrink: true,
       }}
+      value={value}
       onChange={(event) => {
         onChange(event.target.value);
       }}
@@ -44,14 +49,12 @@ const IntervalInput: React.FC<IIntervalInput> = ({ onChange }) => {
 const CategoricalSelect: React.FC<ICategoricalSelect> = ({
   seriesName,
   listValues,
+  value,
   onChange,
 }) => {
-  const [selectedValue, setSelectedValue] = useState('');
-
   const handleChange = (event: {
     target: { value: SetStateAction<string> };
   }): void => {
-    setSelectedValue(event.target.value);
     onChange(event.target.value as string);
   };
 
@@ -60,15 +63,15 @@ const CategoricalSelect: React.FC<ICategoricalSelect> = ({
       <InputLabel id={seriesName}>Value</InputLabel>
       <Select
         id={seriesName}
-        value={selectedValue}
         onChange={handleChange}
         placeholder="Select"
         label="Value"
+        value={value}
       >
         <MenuItem value="">Select</MenuItem>
-        {listValues.map((value) => (
-          <MenuItem key={value} value={value}>
-            {value}
+        {listValues.map((v) => (
+          <MenuItem key={v} value={v}>
+            {v}
           </MenuItem>
         ))}
       </Select>
@@ -76,11 +79,13 @@ const CategoricalSelect: React.FC<ICategoricalSelect> = ({
   );
 };
 
-const InputValueRenderer: React.FC<IInputValueRenderer> = ({ item }) => {
-  const [value, setValue] = useState('');
-
+const InputValueRenderer: React.FC<IInputValueRenderer> = ({
+  item,
+  value,
+  onChange,
+}) => {
   const handleValueChange = (updatedValue: string): void => {
-    setValue(updatedValue);
+    onChange(updatedValue);
   };
 
   if (item === null) {
@@ -102,7 +107,11 @@ const InputValueRenderer: React.FC<IInputValueRenderer> = ({ item }) => {
   switch (item.__type__) {
     case 'SeriesDataModelInterval':
       return (
-        <IntervalInput key={item.series_name} onChange={handleValueChange} />
+        <IntervalInput
+          key={item.series_name}
+          onChange={handleValueChange}
+          value={value}
+        />
       );
     case 'SeriesDataModelCategorical':
       return (
@@ -111,6 +120,7 @@ const InputValueRenderer: React.FC<IInputValueRenderer> = ({ item }) => {
           seriesName={item.series_name}
           listValues={item.list_value as string[]}
           onChange={handleValueChange}
+          value={value}
         />
       );
     default:
@@ -123,6 +133,7 @@ const InputValueRenderer: React.FC<IInputValueRenderer> = ({ item }) => {
           InputLabelProps={{
             shrink: true,
           }}
+          value={value}
         />
       );
   }
