@@ -168,7 +168,9 @@ const WelchTTest: React.FC<IWelchTTest> = ({
 
   const handleRunAnalysis = (): void => {
     if (feature !== null && feature !== undefined && feature.length === 2) {
-      const result = `Welch TTest result of ${feature[0].series_name} and ${feature[1].series_name} :: 0.5`;
+      const resultData =
+        'statistic=24.610655184404763, pvalue=3.005513292994968e-31';
+      const result = `Welch TTest result of (${feature[0].series_name}, ${feature[1].series_name}) :: ${resultData}`;
       handleSaveResult(result);
     }
   };
