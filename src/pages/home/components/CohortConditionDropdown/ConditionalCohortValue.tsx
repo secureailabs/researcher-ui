@@ -29,7 +29,6 @@ export interface IInputValueRenderer {
 
 const IntervalInput: React.FC<IIntervalInput> = ({ onChange, value }) => {
   return (
-    // MUI Textfield component with input type as number
     <TextField
       className={styles.textfield}
       id="standard-number"
@@ -90,7 +89,6 @@ const InputValueRenderer: React.FC<IInputValueRenderer> = ({
 
   if (item === null) {
     return (
-      // MUI Textfield component with input but disabled
       <TextField
         className={styles.textfield}
         id="standard-number"

@@ -4,6 +4,7 @@ import {
   Kurtosis,
   SKEW,
   Variance,
+  WelchTTest,
 } from '../AnalyticsFunction/AnalyticsFunction';
 import AnalyticsResultHistory from '../AnalyticsResultHistory';
 import styles from './Analysis.module.css';
@@ -32,6 +33,13 @@ const ANALYTICS_FUNCTION_LIST = [
     description: 'Sample Function 3 Description',
     functionComponent: (handleSaveResult: (result: string) => void) => (
       <Kurtosis sampleTextProp={''} handleSaveResult={handleSaveResult} />
+    ),
+  },
+  {
+    name: "Welch's TTest",
+    description: 'Sample Function 3 Description',
+    functionComponent: (handleSaveResult: (result: string) => void) => (
+      <WelchTTest sampleTextProp={''} handleSaveResult={handleSaveResult} />
     ),
   },
 ];
