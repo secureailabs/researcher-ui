@@ -6,7 +6,7 @@ import {
   TextField,
 } from '@mui/material';
 import { type SetStateAction, useState } from 'react';
-import { type IAutocompleteOptionData } from 'src/shared/interfaces/customTypes';
+import { type IAutocompleteOptionData } from 'src/shared/types/customTypes';
 import styles from './CohortConditionDropdown.module.css';
 
 export interface IIntervalInput {

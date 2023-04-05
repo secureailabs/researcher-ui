@@ -13,7 +13,7 @@ import {
   type ICohortListData,
   type IFilter,
   type TOperatorString,
-} from 'src/shared/interfaces/customTypes';
+} from 'src/shared/types/customTypes';
 
 export interface ICohortList {
   // TODO: Add type for handleCohortSelection

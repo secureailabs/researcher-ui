@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import Loadable from 'src/components/Loadable';
+import Loadable from 'src/components/extended/Loadable';
 import MinimalLayout from 'src/components/layout/MinimalLayout';
 
 const Home = Loadable(lazy(async () => await import('src/pages/home')));

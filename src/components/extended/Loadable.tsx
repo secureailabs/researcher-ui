@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/display-name */
-import { ComponentType, LazyExoticComponent, Suspense } from 'react';
+import { Suspense } from 'react';
 
 // project imports
 import Loader from './Loader';

@@ -47,12 +47,9 @@
 }
 
 .addFilterButton {
-  margin-top: 20px;
 }
 
 .saveCohortButton {
-  margin-top: 20px;
-  margin-left: 50px;
 }
 
 .buttonContainer {
@@ -60,6 +57,11 @@
   margin-bottom: 20px;
   margin-right: 20px;
   align-self: flex-end;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
 }
 
 .operatorDropdown {

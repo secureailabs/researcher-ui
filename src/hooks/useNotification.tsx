@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable object-shorthand */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useSnackbar } from 'notistack';
@@ -10,7 +12,7 @@ interface IConf {
   variant?: 'success' | 'error' | 'warning' | 'info' | undefined;
 }
 
-const useNotification = (): [any, any] => {
+const useNotification = (): [any] => {
   const [conf, setConf] = useState<IConf>({
     msg: '',
     variant: 'info',
@@ -41,7 +43,7 @@ const useNotification = (): [any, any] => {
     }
   }, [conf]);
 
-  return [conf, setConf];
+  return [setConf];
 };
 
 export default useNotification;

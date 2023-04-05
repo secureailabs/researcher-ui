@@ -16,7 +16,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import CONDITION_LIST from 'src/constants/comparisionList';
 import FEATURE_LIST from 'src/constants/featureVariable';
 import styles from './CohortConditionDropdown.module.css';
-import { type IAutocompleteOptionData } from 'src/shared/interfaces/customTypes';
+import { type IAutocompleteOptionData } from 'src/shared/types/customTypes';
 import InputValueRenderer from './ConditionalCohortValue';
 
 export interface ICohortConditionDropdown {

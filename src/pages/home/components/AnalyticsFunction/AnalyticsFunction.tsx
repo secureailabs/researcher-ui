@@ -11,7 +11,7 @@ import FEATURE_LIST from 'src/constants/featureVariable';
 import styles from './AnalyticsFunction.module.css';
 import { styled } from '@mui/material/styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import { type IAutocompleteOptionData } from 'src/shared/interfaces/customTypes';
+import { type IAutocompleteOptionData } from 'src/shared/types/customTypes';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 

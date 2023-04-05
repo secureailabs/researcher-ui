@@ -1,6 +1,6 @@
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import OPERATOR_LIST from 'src/constants/operatorList';
-import { type TOperatorString } from 'src/shared/interfaces/customTypes';
+import { type TOperatorString } from 'src/shared/types/customTypes';
 import styles from './OperatorDropdown.module.css';
 
 export interface IOperatorDropdown {

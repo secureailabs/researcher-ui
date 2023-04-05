@@ -6,24 +6,27 @@ import {
   type TOperatorString,
   type IFilter,
   type ICohortListData,
-} from 'src/shared/interfaces/customTypes';
+} from 'src/shared/types/customTypes';
 import OperatorDropdown from '../OperatorDropdown';
 import CohortList from '../CohortList';
 import COHORT_LIST_DATA from 'src/constants/cohortList';
 import NewCohortDialog from '../NewCohortDialog';
 import useNotification from 'src/hooks/useNotification';
+import AnimateButton from 'src/components/extended/AnimateButton';
 
 export interface ICohortSelection {}
 
 const CohortSelection: React.FC<ICohortSelection> = () => {
   const [filters, setFilters] = useState<IFilter[]>([]);
   const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
-  const [cohortListData, setCohortListData] = useState<any[]>(COHORT_LIST_DATA);
+  const [cohortListData, setCohortListData] = useState<ICohortListData[]>(
+    COHORT_LIST_DATA as ICohortListData[]
+  );
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [openNewCohortDialog, setOpenNewCohortDialog] =
     useState<boolean>(false);
 
-  const [msg, sendNotification] = useNotification();
+  const [sendNotification] = useNotification();
 
   const handleAddFilter = (): void => {
     const lastFilterId =
@@ -198,20 +201,24 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
       </Box>
       {/* add condition and save cohort button */}
       <Box className={styles.buttonContainer}>
-        <Button
-          variant="contained"
-          onClick={handleAddFilter}
-          className={styles.addFilterButton}
-        >
-          Add Condition
-        </Button>
-        <Button
-          variant="outlined"
-          className={styles.saveCohortButton}
-          onClick={handleSaveCohort}
-        >
-          Save Cohort
-        </Button>
+        <AnimateButton>
+          <Button
+            variant="contained"
+            onClick={handleAddFilter}
+            className={styles.addFilterButton}
+          >
+            Add Condition
+          </Button>
+        </AnimateButton>
+        <AnimateButton>
+          <Button
+            variant="outlined"
+            className={styles.saveCohortButton}
+            onClick={handleSaveCohort}
+          >
+            Save Cohort
+          </Button>
+        </AnimateButton>
       </Box>
       <NewCohortDialog
         sampleTextProp={''}
