@@ -1,6 +1,6 @@
 interface IFilter {
   id: number;
-  variable: string;
+  series_name: string;
   operator: string;
   value: string;
 }

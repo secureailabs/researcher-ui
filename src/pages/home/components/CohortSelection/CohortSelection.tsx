@@ -14,9 +14,15 @@ import NewCohortDialog from '../NewCohortDialog';
 import useNotification from 'src/hooks/useNotification';
 import AnimateButton from 'src/components/extended/AnimateButton';
 
-export interface ICohortSelection {}
+export interface ICohortSelection {
+  handleChildFilterChange: (data: IFilter[]) => void;
+  handleChildFilterOperatorChange: (data: TOperatorString[]) => void;
+}
 
-const CohortSelection: React.FC<ICohortSelection> = () => {
+const CohortSelection: React.FC<ICohortSelection> = ({
+  handleChildFilterChange,
+  handleChildFilterOperatorChange,
+}) => {
   const [filters, setFilters] = useState<IFilter[]>([]);
   const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
   const [cohortListData, setCohortListData] = useState<ICohortListData[]>(
@@ -36,17 +42,19 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
       ...filters,
       {
         id: newFilterId,
-        variable: '',
+        series_name: '',
         operator: '',
         value: '',
       },
     ];
     setFilters(newFilterState);
+    handleChildFilterChange(newFilterState);
 
     // Add operator for the new filter
     if (filters.length > 0) {
       const newOperatorState = [...filterOperator, 'and' as TOperatorString];
       setFilterOperator(newOperatorState);
+      handleChildFilterOperatorChange(newOperatorState);
     }
   };
 
@@ -55,12 +63,14 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
     const newFilterState = [...filters];
     newFilterState.splice(index, 1);
     setFilters(newFilterState);
+    handleChildFilterChange(newFilterState);
 
     // Delete operator for the deleted filter
     if (filters.length > 1) {
       const newOperatorState = [...filterOperator];
       newOperatorState.splice(index - 1, 1);
       setFilterOperator(newOperatorState);
+      handleChildFilterOperatorChange(newOperatorState);
     }
   };
 
@@ -72,6 +82,7 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
       return f;
     });
     setFilters(newFilterState);
+    handleChildFilterChange(newFilterState);
   };
 
   const handleCohortSelection = (
@@ -82,6 +93,9 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
     setFilters(selectedFilter);
     setFilterOperator(selectedFilterOperator);
     setSelectedIndex(sIndex);
+
+    handleChildFilterChange(selectedFilter);
+    handleChildFilterOperatorChange(selectedFilterOperator);
   };
 
   const handleOperatorChange = (
@@ -95,6 +109,7 @@ const CohortSelection: React.FC<ICohortSelection> = () => {
       return f;
     });
     setFilterOperator(newOperatorState);
+    handleChildFilterOperatorChange(newOperatorState);
   };
 
   const handleSaveCohort = (): void => {

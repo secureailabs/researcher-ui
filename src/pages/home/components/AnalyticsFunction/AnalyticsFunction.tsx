@@ -1,19 +1,33 @@
-import React, { type HTMLAttributes } from 'react';
+/* eslint-disable react/display-name */
+import React, {
+  forwardRef,
+  type HTMLAttributes,
+  useRef,
+  useImperativeHandle,
+} from 'react';
+
 import {
   Autocomplete,
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   TextField,
   Typography,
 } from '@mui/material';
+import axios from 'axios';
 import FEATURE_LIST from 'src/constants/featureVariable';
 import styles from './AnalyticsFunction.module.css';
 import { styled } from '@mui/material/styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import { type IAutocompleteOptionData } from 'src/shared/types/customTypes';
+import {
+  type IFilter,
+  type IAutocompleteOptionData,
+  type TOperatorString,
+} from 'src/shared/types/customTypes';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import useNotification from 'src/hooks/useNotification';
 
 export interface ISKEW {
   sampleTextProp?: string;
@@ -33,17 +47,35 @@ export interface IKurtosis {
 export interface IWelchTTest {
   sampleTextProp?: string;
   handleSaveResult: (result: string) => void;
+  filters: IFilter[];
+  filterOperator: TOperatorString[];
 }
 
 export interface IAnalyticsFunctionContainerComponent {
   title: string;
   children?: React.ReactNode;
   handleRunAnalysis?: () => void;
+  ref?: React.RefObject<HTMLDivElement>;
 }
 
-const AnalyticsFunctionContainerComponent: React.FC<
+interface AnalyticsFunctionContainerRef {
+  toggleLoading: () => void;
+}
+
+const AnalyticsFunctionContainerComponent = forwardRef<
+  AnalyticsFunctionContainerRef,
   IAnalyticsFunctionContainerComponent
-> = ({ title, children, handleRunAnalysis }) => {
+>(({ title, children, handleRunAnalysis }, ref) => {
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const toggleLoading = (): void => {
+    setLoading((prevLoading) => !prevLoading);
+  };
+
+  useImperativeHandle(ref, () => ({
+    toggleLoading,
+  }));
+
   return (
     <Box className={styles.container}>
       <Box className={styles.titleContainer}>
@@ -53,18 +85,25 @@ const AnalyticsFunctionContainerComponent: React.FC<
       </Box>
       {children}
       <Box className={styles.analyseButton}>
-        <Button
-          className={styles.button}
-          variant="outlined"
-          startIcon={<PlayArrowIcon />}
-          onClick={handleRunAnalysis}
-        >
-          Run Analysis
-        </Button>
+        {loading ? (
+          <Box className={styles.loadingContainer}>
+            <CircularProgress />
+            <Typography variant="body2">Running Analysis...</Typography>
+          </Box>
+        ) : (
+          <Button
+            className={styles.button}
+            variant="outlined"
+            startIcon={<PlayArrowIcon />}
+            onClick={handleRunAnalysis}
+          >
+            Run Analysis
+          </Button>
+        )}
       </Box>
     </Box>
   );
-};
+});
 
 interface StyledOptionProps extends HTMLAttributes<HTMLDivElement> {
   option: IAutocompleteOptionData;
@@ -100,6 +139,8 @@ const renderOptionWithCheckbox = (
     </StyledOption>
   </li>
 );
+
+// ==============================|| SKEW ||============================== //
 
 const SKEW: React.FC<ISKEW> = ({ sampleTextProp, handleSaveResult }) => {
   const [feature, setFeature] = React.useState<IAutocompleteOptionData | null>(
@@ -140,6 +181,8 @@ const SKEW: React.FC<ISKEW> = ({ sampleTextProp, handleSaveResult }) => {
   );
 };
 
+// =========================================|| Variance || ========================================= //
+
 const Variance: React.FC<IVariance> = ({ sampleTextProp }) => {
   return (
     <AnalyticsFunctionContainerComponent title={'Variance'}>
@@ -149,6 +192,8 @@ const Variance: React.FC<IVariance> = ({ sampleTextProp }) => {
     </AnalyticsFunctionContainerComponent>
   );
 };
+
+// =========================================|| Kurtosis || ========================================= //
 
 const Kurtosis: React.FC<IKurtosis> = ({ sampleTextProp }) => {
   return (
@@ -160,24 +205,79 @@ const Kurtosis: React.FC<IKurtosis> = ({ sampleTextProp }) => {
   );
 };
 
+// =========================================|| Paired T-Test || ========================================= //
+
 const WelchTTest: React.FC<IWelchTTest> = ({
   sampleTextProp,
   handleSaveResult,
+  filters,
+  filterOperator,
 }) => {
   const [feature, setFeature] = React.useState<IAutocompleteOptionData[]>([]);
+  const [sendNotification] = useNotification();
+  const childRef = useRef<AnalyticsFunctionContainerRef>(null);
+
+  const getAnalyticsResult = async (): Promise<any> => {
+    // axios call
+    const body = {
+      cohort: {
+        filter: filters,
+        filter_operator: filterOperator,
+      },
+      analysis: {
+        type: 'paired_t_test',
+        parameter: {
+          series_name_0: feature[0].series_name,
+          series_name_1: feature[1].series_name,
+        },
+      },
+    };
+
+    try {
+      const response = await axios.post(
+        'http://127.0.0.1:8000/demo/paired_t',
+        body
+      );
+      return response.data.data;
+    } catch (error) {
+      return null;
+    }
+  };
 
   const handleRunAnalysis = (): void => {
     if (feature !== null && feature !== undefined && feature.length === 2) {
-      const resultData =
-        'statistic=24.610655184404763, pvalue=3.005513292994968e-31';
-      const result = `Welch TTest result of (${feature[0].series_name}, ${feature[1].series_name}) :: ${resultData}`;
-      handleSaveResult(result);
+      childRef.current?.toggleLoading();
+      getAnalyticsResult()
+        .then((data) => {
+          if (data !== null) {
+            const resultDataStr = JSON.stringify(data);
+            const result = `Paired TTest result of (${feature[0].series_name}, ${feature[1].series_name}) :: ${resultDataStr}`;
+            handleSaveResult(result);
+          }
+        })
+        .catch((error) => {
+          console.log('error', error);
+          sendNotification({
+            msg: 'Error in running analysis',
+            variant: 'error',
+          });
+        })
+        .finally(() => {
+          childRef.current?.toggleLoading();
+        });
+    } else {
+      sendNotification({
+        msg: 'Please select two features',
+        variant: 'error',
+      });
     }
   };
+
   return (
     <AnalyticsFunctionContainerComponent
       title={"Welch's TTest"}
       handleRunAnalysis={handleRunAnalysis}
+      ref={childRef}
     >
       <Box>
         <Autocomplete

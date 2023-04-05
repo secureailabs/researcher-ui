@@ -9,8 +9,14 @@ import {
 import AnalyticsResultHistory from '../AnalyticsResultHistory';
 import styles from './Analysis.module.css';
 
+import {
+  type TOperatorString,
+  type IFilter,
+} from 'src/shared/types/customTypes';
+
 export interface IAnalysis {
-  sampleTextProp: string;
+  filters: IFilter[];
+  filterOperator: TOperatorString[];
 }
 
 const ANALYTICS_FUNCTION_LIST = [
@@ -38,8 +44,17 @@ const ANALYTICS_FUNCTION_LIST = [
   {
     name: "Welch's TTest",
     description: 'Sample Function 3 Description',
-    functionComponent: (handleSaveResult: (result: string) => void) => (
-      <WelchTTest sampleTextProp={''} handleSaveResult={handleSaveResult} />
+    functionComponent: (
+      handleSaveResult: (result: string) => void,
+      filters: IFilter[],
+      filterOperator: TOperatorString[]
+    ) => (
+      <WelchTTest
+        sampleTextProp={''}
+        handleSaveResult={handleSaveResult}
+        filters={filters}
+        filterOperator={filterOperator}
+      />
     ),
   },
 ];
@@ -54,7 +69,9 @@ const a11yProps = (index: number): { id: string; 'aria-controls': string } => {
 const TabPanel: React.FC<{
   value: number;
   handleSaveResult: (result: string) => void;
-}> = ({ value, handleSaveResult }) => {
+  filters: IFilter[];
+  filterOperator: TOperatorString[];
+}> = ({ value, handleSaveResult, filters, filterOperator }) => {
   // right switch case
   switch (value) {
     case value:
@@ -65,7 +82,11 @@ const TabPanel: React.FC<{
           id={`vertical-tabpanel-${value}`}
           aria-labelledby={`vertical-tab-${value}`}
         >
-          {ANALYTICS_FUNCTION_LIST[value].functionComponent(handleSaveResult)}
+          {ANALYTICS_FUNCTION_LIST[value].functionComponent(
+            handleSaveResult,
+            filters,
+            filterOperator
+          )}
         </Box>
       );
     default:
@@ -73,7 +94,7 @@ const TabPanel: React.FC<{
   }
 };
 
-const Analysis: React.FC<IAnalysis> = ({ sampleTextProp }) => {
+const Analysis: React.FC<IAnalysis> = ({ filters, filterOperator }) => {
   const [value, setValue] = useState(0);
   const [result, setResult] = useState<string[]>([]);
 
@@ -111,7 +132,12 @@ const Analysis: React.FC<IAnalysis> = ({ sampleTextProp }) => {
             />
           ))}
         </Tabs>
-        <TabPanel value={value} handleSaveResult={handleSaveResult} />
+        <TabPanel
+          value={value}
+          handleSaveResult={handleSaveResult}
+          filters={filters}
+          filterOperator={filterOperator}
+        />
       </Box>
       <Box className={styles.resultContainer}>
         <Typography variant="h6" className={styles.description}>

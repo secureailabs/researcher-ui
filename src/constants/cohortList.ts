@@ -6,19 +6,19 @@ const COHORT_LIST_DATA = [
     filters: [
       {
         id: 1,
-        variable: 'patient_id',
+        series_name: 'patient_id',
         operator: 'gt',
         value: '25',
       },
       {
         id: 2,
-        variable: 'body_mass_index',
+        series_name: 'body_mass_index',
         operator: 'gt',
         value: '20',
       },
       {
         id: 3,
-        variable: 'gender',
+        series_name: 'gender',
         operator: 'eq',
         value: 'female',
       },
@@ -32,7 +32,7 @@ const COHORT_LIST_DATA = [
     filters: [
       {
         id: 4,
-        variable: 'age_at_nephrectomy',
+        series_name: 'age_at_nephrectomy',
         operator: 'gt',
         value: '25',
       },
@@ -46,13 +46,13 @@ const COHORT_LIST_DATA = [
     filters: [
       {
         id: 5,
-        variable: 'gender',
+        series_name: 'gender',
         operator: 'eq',
         value: 'female',
       },
       {
         id: 6,
-        variable: 'body_mass_index',
+        series_name: 'body_mass_index',
         operator: 'gt',
         value: '20',
       },
@@ -66,19 +66,19 @@ const COHORT_LIST_DATA = [
     filters: [
       {
         id: 7,
-        variable: 'hospitalization',
+        series_name: 'hospitalization',
         operator: 'gt',
         value: '20',
       },
       {
         id: 8,
-        variable: 'ischemia_time',
+        series_name: 'ischemia_time',
         operator: 'eq',
         value: '10',
       },
       {
         id: 9,
-        variable: 'gender',
+        series_name: 'gender',
         operator: 'eq',
         value: 'female',
       },
