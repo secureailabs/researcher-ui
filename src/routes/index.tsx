@@ -1,15 +1,12 @@
-import { Route, Routes } from 'react-router-dom';
-import MinimalLayout from 'src/components/layout/MinimalLayout';
-import Home from 'src/pages/home';
+import { useRoutes } from 'react-router-dom';
 
-const Navigation = (): JSX.Element => {
-  return (
-    <Routes>
-      <Route path="/" element={<MinimalLayout />}>
-        <Route index element={<Home />} />
-      </Route>
-    </Routes>
-  );
-}
+// routes
+import MainRoutes from './MainRoutes';
 
-export default Navigation;
+// ==============================|| ROUTING RENDER ||============================== //
+
+const AllRoutes: React.FC = () => {
+  return useRoutes([MainRoutes]);
+};
+
+export default AllRoutes;
