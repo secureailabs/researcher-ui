@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
-import MinimalLayout from 'src/components/layout/MinimalLayout';
+import MainLayout from 'src/components/layout/MainLayout';
 
 const Home = Loadable(lazy(async () => await import('src/pages/home')));
 
@@ -8,7 +8,7 @@ const Home = Loadable(lazy(async () => await import('src/pages/home')));
 
 const MainRoutes = {
   path: '/',
-  element: <MinimalLayout />,
+  element: <MainLayout />,
   children: [
     {
       path: '/',
