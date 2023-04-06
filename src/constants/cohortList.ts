@@ -68,13 +68,13 @@ const COHORT_LIST_DATA = [
         id: 7,
         series_name: 'hospitalization',
         operator: 'gt',
-        value: '20',
+        value: 20,
       },
       {
         id: 8,
         series_name: 'ischemia_time',
         operator: 'eq',
-        value: '10',
+        value: 10,
       },
       {
         id: 9,
