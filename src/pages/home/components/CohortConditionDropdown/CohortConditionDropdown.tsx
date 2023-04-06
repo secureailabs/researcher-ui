@@ -36,6 +36,7 @@ const StyledOption = styled('div')<StyledOptionProps>(({ option }) => ({
   wordBreak: 'break-word',
 }));
 
+//  ================================= CohortConditionDropdown ================================= //
 const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
   filter,
   handleFilterChange,
@@ -62,10 +63,8 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
   };
 
   useEffect(() => {
-    // filter = {id: newFilterId,variable: '', operator: '',value: ''}
-    // IAutocompleteOptionData = {series_name: string, dataType: string, choices: string}
     const filterVariable = FEATURE_LIST.find(
-      (feature) => feature.series_name === filter.variable
+      (feature) => feature.series_name === filter.series_name
     );
     if (filterVariable === undefined) {
       setValue(null);
@@ -121,15 +120,6 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
         </FormControl>
       </Box>
       <Box className={styles.valueContainer}>
-        {/* <TextField
-          id="outlined-basic"
-          label="Value"
-          variant="outlined"
-          value={filter.value}
-          onChange={(event) => {
-            handleFilterDataChange({ value: event.target.value });
-          }}
-        /> */}
         <InputValueRenderer
           item={value}
           value={filter.value}

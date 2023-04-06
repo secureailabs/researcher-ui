@@ -18,9 +18,6 @@ const Home: React.FC = () => {
   const [filters, setFilters] = useState<IFilter[]>([]);
   const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
 
-  console.log('filters', filters);
-  console.log('filterOperator', filterOperator);
-
   const handleFilterChange = (data: IFilter[]): void => {
     setFilters(data);
   };
@@ -31,11 +28,13 @@ const Home: React.FC = () => {
 
   return (
     <Grid container spacing={2} className={styles.container}>
+      {/* Feature Extraction */}
       <Grid item xs={12}>
         <SectionCard>
           <FeatureExtraction />
         </SectionCard>
       </Grid>
+      {/* Cohort Selection */}
       <Grid item xs={12}>
         <SectionCard>
           <CohortSelection
@@ -44,6 +43,7 @@ const Home: React.FC = () => {
           />
         </SectionCard>
       </Grid>
+      {/* Analysis */}
       <Grid item xs={12}>
         <SectionCard>
           <Analysis filters={filters} filterOperator={filterOperator} />

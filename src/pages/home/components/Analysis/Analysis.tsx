@@ -2,9 +2,9 @@ import { Box, Divider, Tab, Tabs, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import {
   Kurtosis,
+  PairedTTest,
   SKEW,
   Variance,
-  WelchTTest,
 } from '../AnalyticsFunction/AnalyticsFunction';
 import AnalyticsResultHistory from '../AnalyticsResultHistory';
 import styles from './Analysis.module.css';
@@ -42,14 +42,14 @@ const ANALYTICS_FUNCTION_LIST = [
     ),
   },
   {
-    name: "Welch's TTest",
+    name: 'Paired TTest',
     description: 'Sample Function 3 Description',
     functionComponent: (
       handleSaveResult: (result: string) => void,
       filters: IFilter[],
       filterOperator: TOperatorString[]
     ) => (
-      <WelchTTest
+      <PairedTTest
         sampleTextProp={''}
         handleSaveResult={handleSaveResult}
         filters={filters}

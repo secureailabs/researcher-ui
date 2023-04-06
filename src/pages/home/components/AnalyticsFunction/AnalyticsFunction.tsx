@@ -44,7 +44,7 @@ export interface IKurtosis {
   handleSaveResult: (result: string) => void;
 }
 
-export interface IWelchTTest {
+export interface IPairedTTest {
   sampleTextProp?: string;
   handleSaveResult: (result: string) => void;
   filters: IFilter[];
@@ -207,7 +207,7 @@ const Kurtosis: React.FC<IKurtosis> = ({ sampleTextProp }) => {
 
 // =========================================|| Paired T-Test || ========================================= //
 
-const WelchTTest: React.FC<IWelchTTest> = ({
+const PairedTTest: React.FC<IPairedTTest> = ({
   sampleTextProp,
   handleSaveResult,
   filters,
@@ -240,7 +240,10 @@ const WelchTTest: React.FC<IWelchTTest> = ({
       );
       return response.data.data;
     } catch (error) {
-      return null;
+      sendNotification({
+        msg: 'Error in running analysis',
+        variant: 'error',
+      });
     }
   };
 
@@ -249,18 +252,11 @@ const WelchTTest: React.FC<IWelchTTest> = ({
       childRef.current?.toggleLoading();
       getAnalyticsResult()
         .then((data) => {
-          if (data !== null) {
+          if (data !== null && data !== undefined) {
             const resultDataStr = JSON.stringify(data);
             const result = `Paired TTest result of (${feature[0].series_name}, ${feature[1].series_name}) :: ${resultDataStr}`;
             handleSaveResult(result);
           }
-        })
-        .catch((error) => {
-          console.log('error', error);
-          sendNotification({
-            msg: 'Error in running analysis',
-            variant: 'error',
-          });
         })
         .finally(() => {
           childRef.current?.toggleLoading();
@@ -275,7 +271,7 @@ const WelchTTest: React.FC<IWelchTTest> = ({
 
   return (
     <AnalyticsFunctionContainerComponent
-      title={"Welch's TTest"}
+      title={'Paired TTest'}
       handleRunAnalysis={handleRunAnalysis}
       ref={childRef}
     >
@@ -317,4 +313,4 @@ const WelchTTest: React.FC<IWelchTTest> = ({
   );
 };
 
-export { Kurtosis, SKEW, Variance, WelchTTest };
+export { Kurtosis, SKEW, Variance, PairedTTest };
