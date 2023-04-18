@@ -24,6 +24,7 @@ import {
   type IFilter,
   type IAutocompleteOptionData,
   type TOperatorString,
+  type IAnalyticsResult,
 } from 'src/shared/types/customTypes';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -31,22 +32,22 @@ import useNotification from 'src/hooks/useNotification';
 
 export interface ISKEW {
   sampleTextProp?: string;
-  handleSaveResult: (result: string) => void;
+  handleSaveResult: (result: IAnalyticsResult) => void;
 }
 
 export interface IVariance {
   sampleTextProp?: string;
-  handleSaveResult: (result: string) => void;
+  handleSaveResult: (result: IAnalyticsResult) => void;
 }
 
 export interface IKurtosis {
   sampleTextProp?: string;
-  handleSaveResult: (result: string) => void;
+  handleSaveResult: (result: IAnalyticsResult) => void;
 }
 
 export interface IPairedTTest {
   sampleTextProp?: string;
-  handleSaveResult: (result: string) => void;
+  handleSaveResult: (result: IAnalyticsResult) => void;
   filters: IFilter[];
   filterOperator: TOperatorString[];
 }
@@ -150,7 +151,10 @@ const SKEW: React.FC<ISKEW> = ({ sampleTextProp, handleSaveResult }) => {
   const handleRunAnalysis = (): void => {
     if (feature !== null) {
       const result = `Skew of ${feature.series_name} :: 0.5`;
-      handleSaveResult(result);
+      handleSaveResult({
+        data: result,
+        plot: null,
+      });
     }
   };
 
@@ -253,9 +257,15 @@ const PairedTTest: React.FC<IPairedTTest> = ({
       getAnalyticsResult()
         .then((data) => {
           if (data !== null && data !== undefined) {
+            // remove plot key from data
+            const plot = data.plot;
+            delete data.plot;
             const resultDataStr = JSON.stringify(data);
             const result = `Paired TTest result of (${feature[0].series_name}, ${feature[1].series_name}) :: ${resultDataStr}`;
-            handleSaveResult(result);
+            handleSaveResult({
+              data: result,
+              plot,
+            });
           }
         })
         .finally(() => {

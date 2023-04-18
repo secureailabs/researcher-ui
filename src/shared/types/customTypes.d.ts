@@ -21,9 +21,15 @@ interface IAutocompleteOptionData {
   __type__: string;
 }
 
+interface IAnalyticsResult {
+  data: string;
+  plot: string | null;
+}
+
 export type {
   IFilter,
   TOperatorString,
   ICohortListData,
   IAutocompleteOptionData,
+  IAnalyticsResult,
 };

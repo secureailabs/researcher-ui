@@ -12,6 +12,7 @@ import styles from './Analysis.module.css';
 import {
   type TOperatorString,
   type IFilter,
+  type IAnalyticsResult,
 } from 'src/shared/types/customTypes';
 
 export interface IAnalysis {
@@ -23,29 +24,29 @@ const ANALYTICS_FUNCTION_LIST = [
   {
     name: 'Skew',
     description: 'Sample Function 1 Description',
-    functionComponent: (handleSaveResult: (result: string) => void) => (
-      <SKEW sampleTextProp={''} handleSaveResult={handleSaveResult} />
-    ),
+    functionComponent: (
+      handleSaveResult: (result: IAnalyticsResult) => void
+    ) => <SKEW sampleTextProp={''} handleSaveResult={handleSaveResult} />,
   },
   {
     name: 'Variance',
     description: 'Sample Function 2 Description',
-    functionComponent: (handleSaveResult: (result: string) => void) => (
-      <Variance sampleTextProp={''} handleSaveResult={handleSaveResult} />
-    ),
+    functionComponent: (
+      handleSaveResult: (result: IAnalyticsResult) => void
+    ) => <Variance sampleTextProp={''} handleSaveResult={handleSaveResult} />,
   },
   {
     name: 'Kurtosis',
     description: 'Sample Function 3 Description',
-    functionComponent: (handleSaveResult: (result: string) => void) => (
-      <Kurtosis sampleTextProp={''} handleSaveResult={handleSaveResult} />
-    ),
+    functionComponent: (
+      handleSaveResult: (result: IAnalyticsResult) => void
+    ) => <Kurtosis sampleTextProp={''} handleSaveResult={handleSaveResult} />,
   },
   {
     name: 'Paired TTest',
     description: 'Sample Function 3 Description',
     functionComponent: (
-      handleSaveResult: (result: string) => void,
+      handleSaveResult: (result: IAnalyticsResult) => void,
       filters: IFilter[],
       filterOperator: TOperatorString[]
     ) => (
@@ -68,7 +69,7 @@ const a11yProps = (index: number): { id: string; 'aria-controls': string } => {
 
 const TabPanel: React.FC<{
   value: number;
-  handleSaveResult: (result: string) => void;
+  handleSaveResult: (result: IAnalyticsResult) => void;
   filters: IFilter[];
   filterOperator: TOperatorString[];
 }> = ({ value, handleSaveResult, filters, filterOperator }) => {
@@ -96,7 +97,7 @@ const TabPanel: React.FC<{
 
 const Analysis: React.FC<IAnalysis> = ({ filters, filterOperator }) => {
   const [value, setValue] = useState(0);
-  const [result, setResult] = useState<string[]>([]);
+  const [result, setResult] = useState<IAnalyticsResult[]>([]);
 
   const handleChange = (
     _event: React.SyntheticEvent,
@@ -105,7 +106,7 @@ const Analysis: React.FC<IAnalysis> = ({ filters, filterOperator }) => {
     setValue(newValue);
   };
 
-  const handleSaveResult = (data: string): void => {
+  const handleSaveResult = (data: IAnalyticsResult): void => {
     setResult((prevResult) => [...prevResult, data]);
   };
 
