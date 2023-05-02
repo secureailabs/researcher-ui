@@ -2,27 +2,27 @@ const Styles = {
   light: {
     // palette values for light mode
     primary: {
-      light: '#F37B53',
-      main: '#F05A28',
-      dark: '#A83E1C'
+      light: '#9eafd1',
+      main: '#4c78af',
+      dark: '#4d5b6f',
     },
     secondary: {
-      light: '#45B3EB',
-      main: '#17A1E6',
-      dark: '#1070A1'
+      light: '#f19cb0',
+      main: '#e75a7c',
+      dark: '#8b364a',
     },
     default: {
-      light: '#F37B53',
-      main: '#F05A28',
-      dark: '#A83E1C'
+      light: '#9eafd1',
+      main: '#4c78af',
+      dark: '#4d5b6f',
     },
     background: {
-      default: '#f5f5f5'
+      default: '#f5f5f5',
     },
     text: {
-      primary: '#000000'
-    }
-  }
+      primary: '#000000',
+    },
+  },
 };
 
 export default Styles;

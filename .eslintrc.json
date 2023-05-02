@@ -47,7 +47,8 @@
     "@typescript-eslint/member-delimiter-style": "off",
     "multiline-ternary": "off",
     "react-hook/exhaustive-deps": "off",
-    "@typescript-eslint/indent": "off"
+    "@typescript-eslint/indent": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "settings": {
     "import/resolver": {
