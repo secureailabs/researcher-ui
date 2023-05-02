@@ -6,7 +6,7 @@ import { Box, Drawer, useMediaQuery } from '@mui/material';
 
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { BrowserView, MobileView } from 'react-device-detect';
+import { BrowserView } from 'react-device-detect';
 
 // project imports
 import MenuList from './MenuList';

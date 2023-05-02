@@ -116,7 +116,13 @@ const NavCollapse = ({ menu, level }: any): JSX.Element => {
         selected={selected === menu.id}
         onClick={handleClick}
       >
-        <ListItemIcon sx={{ my: 'auto', minWidth: !menu.icon ? 18 : 36 }}>
+        <ListItemIcon
+          sx={{
+            my: 'auto',
+            minWidth: !menu.icon ? 18 : 36,
+            color: selected === menu.id ? 'secondary.main' : 'inherit',
+          }}
+        >
           {menuIcon}
         </ListItemIcon>
         <ListItemText
@@ -126,8 +132,9 @@ const NavCollapse = ({ menu, level }: any): JSX.Element => {
               color="inherit"
               sx={{
                 my: 'auto',
-                fontWeight: selected === menu.id ? 'medium' : 'regular',
-                fontSize: selected === menu.id ? '1rem' : '0.875rem',
+                fontWeight: selected === menu.id ? 'bold' : 'regular',
+                fontSize: '0.875rem',
+                color: selected === menu.id ? 'secondary.main' : 'inherit',
               }}
             >
               {menu.title}
