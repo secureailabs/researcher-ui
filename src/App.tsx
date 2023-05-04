@@ -1,5 +1,5 @@
 import { createTheme, CssBaseline, StyledEngineProvider } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
+import ThemeCustomization from 'src/themes';
 import { SnackbarProvider } from 'notistack';
 import GetDesignTokens from 'src/styles/theme';
 import './App.css';
@@ -13,12 +13,12 @@ const theme = createTheme(GetDesignTokens(mode));
 const App: React.FC = () => {
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
+      <ThemeCustomization>
         <CssBaseline />
         <SnackbarProvider maxSnack={3}>
           <Routes />
         </SnackbarProvider>
-      </ThemeProvider>
+      </ThemeCustomization>
     </StyledEngineProvider>
   );
 };

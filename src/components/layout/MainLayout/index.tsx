@@ -1,41 +1,41 @@
 import { AppBar, Box, Toolbar } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import Header from './Header';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import Sidebar from './Sidebar';
+import Header from './Header';
+import Drawer from './Drawer';
+import { RootStateProps } from 'src/types/root';
+import { openDrawer } from 'src/store/reducers/menu';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 
 const MinimalLayout = (): JSX.Element => {
   const [leftDrawerOpened, setLeftDrawerOpened] = useState(true);
+  const [open, setOpen] = useState(true);
+  const dispatch = useDispatch();
 
-  const handleLeftDrawerToggle = (): void => {
-    setLeftDrawerOpened((prev) => !prev);
+  const menu = useSelector((state: RootStateProps) => state.menu);
+  const { drawerOpen } = menu;
+
+  const handleDrawerToggle = () => {
+    setOpen((prev) => !prev);
+    dispatch(openDrawer({ drawerOpen: !open }));
   };
 
   return (
-    <>
-      <AppBar enableColorOnDark position="fixed" color="inherit" elevation={0}>
-        <Toolbar>
-          <Header />
-        </Toolbar>
-      </AppBar>
-      <Sidebar
-        drawerOpen={leftDrawerOpened}
-        drawerToggle={handleLeftDrawerToggle}
-      />
+    <Box sx={{ display: 'flex', width: '100%' }}>
+      <Header open={open} handleDrawerToggle={handleDrawerToggle} />
+      <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
       <main>
         <Box
           sx={{
-            marginTop: '64px',
-            width: { sm: `calc(100% - ${leftDrawerOpened ? 260 : 0}px)` },
-            marginLeft: { sm: `${leftDrawerOpened ? 260 : 0}px` },
+            marginTop: '64px'
           }}
         >
           <Outlet />
         </Box>
       </main>
-    </>
+    </Box>
   );
 };
 

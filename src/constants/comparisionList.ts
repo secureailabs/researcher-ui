@@ -4,7 +4,7 @@ const CONDITION_LIST = [
   { value: 'gt', label: '>' },
   { value: 'gte', label: '>=' },
   { value: 'lt', label: '<' },
-  { value: 'lte', label: '<=' },
+  { value: 'lte', label: '<=' }
 ];
 
 export default CONDITION_LIST;

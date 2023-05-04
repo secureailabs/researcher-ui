@@ -15,7 +15,7 @@ interface IConf {
 const useNotification = (): [any] => {
   const [conf, setConf] = useState<IConf>({
     msg: '',
-    variant: 'info',
+    variant: 'info'
   });
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const action = (key: any): JSX.Element => (
@@ -34,11 +34,11 @@ const useNotification = (): [any] => {
       enqueueSnackbar(conf.msg, {
         anchorOrigin: {
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'left'
         },
         variant: conf.variant,
         autoHideDuration: 5000,
-        action,
+        action
       });
     }
   }, [conf]);

@@ -13,19 +13,15 @@ export interface IAnalyticsResultHistory {
   result: IAnalyticsResult[];
 }
 
-const AnalyticsResultHistory: React.FC<IAnalyticsResultHistory> = ({
-  sampleTextProp,
-  result,
-}) => {
-  console.log('AnalyticsResultHistory: ', result);
+const AnalyticsResultHistory: React.FC<IAnalyticsResultHistory> = ({ sampleTextProp, result }) => {
   return (
     <Timeline
       sx={{
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         [`& .${timelineItemClasses.root}:before`]: {
           flex: 0,
-          padding: 0,
-        },
+          padding: 0
+        }
       }}
     >
       {result.map((data, index) => {
@@ -42,7 +38,7 @@ const AnalyticsResultHistory: React.FC<IAnalyticsResultHistory> = ({
               {data.plot != null ? (
                 <Box
                   sx={{
-                    padding: 2,
+                    padding: 2
                   }}
                 >
                   {/* plot using iframe */}

@@ -5,7 +5,7 @@ import Styles from './styles';
 const GetDesignTokens = (mode: PaletteMode): any => ({
   palette: {
     mode,
-    ...(Styles.light)
+    ...Styles.light
   }
 });
 

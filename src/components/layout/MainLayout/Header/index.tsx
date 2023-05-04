@@ -1,23 +1,63 @@
+import { ReactNode, useMemo } from 'react';
+
 // material-ui
-import { Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { AppBar, Toolbar, useMediaQuery, AppBarProps } from '@mui/material';
 
-// project imports
-import LogoSection from '../LogoSection';
+// project import
+import AppBarStyled from './AppBarStyled';
+import HeaderContent from './HeaderContent';
+import IconButton from 'src/components/extended/IconButton';
 
-// ==============================|| MAIN NAVBAR / HEADER ||============================== //
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 
-const Header = (): JSX.Element => {
+// ==============================|| MAIN LAYOUT - HEADER ||============================== //
+
+interface Props {
+  open: boolean;
+  handleDrawerToggle?: () => void;
+}
+
+const Header = ({ open, handleDrawerToggle }: Props) => {
+  const theme = useTheme();
+
+  // header content
+  const headerContent = useMemo(() => <HeaderContent />, []);
+
+  // common header
+  const mainHeader: ReactNode = (
+    <Toolbar>
+      <IconButton
+        aria-label="open drawer"
+        onClick={handleDrawerToggle}
+        edge="start"
+        color="primary"
+        variant="light"
+        sx={{ color: 'text.primary' }}
+      >
+        {!open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+      </IconButton>
+      {headerContent}
+    </Toolbar>
+  );
+
+  // app-bar params
+  const appBar: AppBarProps = {
+    position: 'fixed',
+    color: 'inherit',
+    elevation: 0,
+    sx: {
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      zIndex: 1200,
+      width: open ? 'calc(100% - 260px)' : { xs: '100%', lg: 'calc(100% - 60px)' }
+    }
+  };
+
   return (
     <>
-      {/* logo & toggler button */}
-      <Box>
-        <Box
-          component="span"
-          sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}
-        >
-          <LogoSection />
-        </Box>
-      </Box>
+      <AppBarStyled open={open} {...appBar}>
+        {mainHeader}
+      </AppBarStyled>
     </>
   );
 };

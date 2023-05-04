@@ -1,10 +1,27 @@
-const config = {
-  // basename: only at build time to set, and Don't add '/' at end off BASENAME for breadcrumbs, also Don't put only '/' use blank('') instead,
-  // like '/berry-material-react/react/default'
-  basename: '/free',
-  defaultPath: '/dashboard/default',
-  fontFamily: 'Roboto, sans-serif',
-  borderRadius: 12,
+// types
+import { DefaultConfigProps } from 'src/types/config';
+
+// ==============================|| THEME CONSTANT  ||============================== //
+
+export const twitterColor = '#1DA1F2';
+export const facebookColor = '#3b5998';
+export const linkedInColor = '#0e76a8';
+
+export const APP_DEFAULT_PATH = '/';
+export const HORIZONTAL_MAX_ITEM = 6;
+export const DRAWER_WIDTH = 260;
+
+// ==============================|| THEME CONFIG  ||============================== //
+
+const config: DefaultConfigProps = {
+  fontFamily: `'Public Sans', sans-serif`,
+  i18n: 'en',
+  menuOrientation: 'vertical',
+  miniDrawer: false,
+  container: true,
+  mode: 'light',
+  presetColor: 'default',
+  themeDirection: 'ltr'
 };
 
 export default config;

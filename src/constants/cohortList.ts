@@ -8,22 +8,22 @@ const COHORT_LIST_DATA = [
         id: 1,
         series_name: 'patient_id',
         operator: 'gt',
-        value: 25,
+        value: 25
       },
       {
         id: 2,
         series_name: 'body_mass_index',
         operator: 'gt',
-        value: 20,
+        value: 20
       },
       {
         id: 3,
         series_name: 'gender',
         operator: 'eq',
-        value: 'female',
-      },
+        value: 'female'
+      }
     ],
-    filterOperator: ['and', 'and'],
+    filterOperator: ['and', 'and']
   },
   {
     cohortId: 'age_group_25',
@@ -34,10 +34,10 @@ const COHORT_LIST_DATA = [
         id: 4,
         series_name: 'age_at_nephrectomy',
         operator: 'gt',
-        value: 25,
-      },
+        value: 25
+      }
     ],
-    filterOperator: [],
+    filterOperator: []
   },
   {
     cohortId: 'demo_cohort_1',
@@ -48,16 +48,16 @@ const COHORT_LIST_DATA = [
         id: 5,
         series_name: 'gender',
         operator: 'eq',
-        value: 'female',
+        value: 'female'
       },
       {
         id: 6,
         series_name: 'body_mass_index',
         operator: 'gt',
-        value: 20,
-      },
+        value: 20
+      }
     ],
-    filterOperator: ['and'],
+    filterOperator: ['and']
   },
   {
     cohortId: 'demo_cohort_2',
@@ -68,23 +68,23 @@ const COHORT_LIST_DATA = [
         id: 7,
         series_name: 'hospitalization',
         operator: 'gt',
-        value: 20,
+        value: 20
       },
       {
         id: 8,
         series_name: 'ischemia_time',
         operator: 'eq',
-        value: 10,
+        value: 10
       },
       {
         id: 9,
         series_name: 'gender',
         operator: 'eq',
-        value: 'female',
-      },
+        value: 'female'
+      }
     ],
-    filterOperator: ['and', 'or'],
-  },
+    filterOperator: ['and', 'or']
+  }
 ];
 
 export default COHORT_LIST_DATA;
