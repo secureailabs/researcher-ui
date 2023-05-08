@@ -1,4 +1,5 @@
-import { AppBar, Tabs, Tab, Box, Typography, styled } from '@mui/material';
+import { AppBar, Tabs, Tab, Box, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 import styles from './Home.module.css';
 import FeatureExtraction from './components/FeatureExtraction';
@@ -7,6 +8,7 @@ import { IconList, IconUsersGroup, IconChartInfographic } from '@tabler/icons-re
 import { type TOperatorString, type IFilter } from 'src/shared/types/customTypes';
 import CohortSelection from './components/CohortSelection';
 import Analysis from './components/Analysis';
+import { margin } from '@mui/system';
 
 export interface IHome {
   sampleTextProp: string;
@@ -39,18 +41,22 @@ function a11yProps(index: number) {
   };
 }
 
-const CircularTabs = styled(Tabs)`
+const StyledTabs = styled(Tabs)`
   border-radius: ${({ theme }) => theme.spacing(2)}px;
   overflow: hidden;
 `;
 
-const CircularTab = styled(Tab)`
-  min-width: 0;
-  width: ${({ theme }) => theme.spacing(5)}px;
-  height: ${({ theme }) => theme.spacing(5)}px;
-  border-radius: 50%;
-  margin: ${({ theme }) => theme.spacing(0, 1)}px;
-`;
+const StyledTab = styled(Tab)(({ theme }) => ({
+  minWidth: 0,
+  backgroundColor: '#f5f5f5',
+  margin: '10px',
+  color: '#000',
+  // if active tab then change color
+  '&.Mui-selected': {
+    backgroundColor: theme.palette.primary.lighter,
+    fontWeight: 'bold'
+  }
+}));
 
 const Home: React.FC<IHome> = ({ sampleTextProp }) => {
   const [value, setValue] = useState(0);
@@ -72,11 +78,11 @@ const Home: React.FC<IHome> = ({ sampleTextProp }) => {
   return (
     <Box sx={{ width: '100%' }} className={styles.container}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
-        <CircularTabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="fullWidth">
-          <CircularTab icon={<IconList />} label="Feature Selection" {...a11yProps(0)} />
-          <CircularTab icon={<IconUsersGroup />} label="Cohort Selection" {...a11yProps(1)} />
-          <CircularTab icon={<IconChartInfographic />} label="Analysis" {...a11yProps(2)} />
-        </CircularTabs>
+        <StyledTabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="fullWidth">
+          <StyledTab icon={<IconList />} label="Feature Selection" {...a11yProps(0)} />
+          <StyledTab icon={<IconUsersGroup />} label="Cohort Selection" {...a11yProps(1)} />
+          <StyledTab icon={<IconChartInfographic />} label="Analysis" {...a11yProps(2)} />
+        </StyledTabs>
       </Box>
       <TabPanel value={value} index={0}>
         <FeatureExtraction />
