@@ -6,7 +6,7 @@ import { PaletteColorOptions } from '@mui/material/styles';
 // ==============================|| PRESET THEME - DEFAULT ||============================== //
 
 const Default = (colors: PalettesProps): PaletteThemeProps => {
-  const { blue, red, gold, cyan, green, grey } = colors;
+  const { grey } = colors;
   const greyColors: PaletteColorOptions = {
     0: grey[0],
     50: grey[1],
@@ -28,18 +28,24 @@ const Default = (colors: PalettesProps): PaletteThemeProps => {
   };
   const contrastText = '#fff';
 
+  let primaryColors = ['#dbe4ef', '#94aecf', '#82a1c7', '#7093bf', '#5e86b7', '#4c78af', '#446c9e', '#3d608c', '#35547a', '#2e4869'];
+  let errorColors = ['#FFE7D3', '#FF805D', '#FF4528', '#DB271D', '#930C1A'];
+  let warningColors = ['#FFF6D0', '#FFCF4E', '#FFB814', '#DB970E', '#935B06'];
+  let infoColors = ['#DCF0FF', '#7EB9FF', '#549BFF', '#3D78DB', '#1A3D93'];
+  let successColors = ['#EAFCD4', '#8AE65B', '#58D62A', '#3DB81E', '#137C0D'];
+
   return {
     primary: {
-      lighter: blue[0],
-      100: blue[1],
-      200: blue[2],
-      light: blue[3],
-      400: blue[4],
-      main: blue[5],
-      dark: blue[6],
-      700: blue[7],
-      darker: blue[8],
-      900: blue[9],
+      lighter: primaryColors[0],
+      100: primaryColors[1],
+      200: primaryColors[2],
+      light: primaryColors[3],
+      400: primaryColors[4],
+      main: primaryColors[5],
+      dark: primaryColors[6],
+      700: primaryColors[7],
+      darker: primaryColors[8],
+      900: primaryColors[9],
       contrastText
     },
     secondary: {
@@ -59,35 +65,35 @@ const Default = (colors: PalettesProps): PaletteThemeProps => {
       contrastText: greyColors[0]
     },
     error: {
-      lighter: red[0],
-      light: red[2],
-      main: red[4],
-      dark: red[7],
-      darker: red[9],
+      lighter: errorColors[0],
+      light: errorColors[1],
+      main: errorColors[2],
+      dark: errorColors[3],
+      darker: errorColors[4],
       contrastText
     },
     warning: {
-      lighter: gold[0],
-      light: gold[3],
-      main: gold[5],
-      dark: gold[7],
-      darker: gold[9],
+      lighter: warningColors[0],
+      light: warningColors[1],
+      main: warningColors[2],
+      dark: warningColors[3],
+      darker: warningColors[4],
       contrastText: greyColors[100]
     },
     info: {
-      lighter: cyan[0],
-      light: cyan[3],
-      main: cyan[5],
-      dark: cyan[7],
-      darker: cyan[9],
+      lighter: infoColors[0],
+      light: infoColors[1],
+      main: infoColors[2],
+      dark: infoColors[3],
+      darker: infoColors[4],
       contrastText
     },
     success: {
-      lighter: green[0],
-      light: green[3],
-      main: green[5],
-      dark: green[7],
-      darker: green[9],
+      lighter: successColors[0],
+      light: successColors[1],
+      main: successColors[2],
+      dark: successColors[3],
+      darker: successColors[4],
       contrastText
     },
     grey: greyColors
