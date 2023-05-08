@@ -23,18 +23,21 @@ const MinimalLayout = (): JSX.Element => {
   };
 
   return (
-    <Box sx={{ display: 'flex', width: '100%' }}>
+    <Box sx={{ display: 'flex', width: '100%', backgroundColor: '#e6e6e6' }}>
       <Header open={open} handleDrawerToggle={handleDrawerToggle} />
       <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
-      <main>
-        <Box
-          sx={{
-            marginTop: '64px'
-          }}
-        >
-          <Outlet />
-        </Box>
-      </main>
+      <Box
+        sx={{
+          margin: '15px',
+          marginTop: '79px',
+          display: 'flex',
+          flex: 1,
+          backgroundColor: '#ffffff',
+          minHeight: 'calc(100vh - 79px - 30px)'
+        }}
+      >
+        <Outlet />
+      </Box>
     </Box>
   );
 };
