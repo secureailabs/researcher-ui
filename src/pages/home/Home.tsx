@@ -8,7 +8,6 @@ import { IconList, IconUsersGroup, IconChartInfographic } from '@tabler/icons-re
 import { type TOperatorString, type IFilter } from 'src/shared/types/customTypes';
 import CohortSelection from './components/CohortSelection';
 import Analysis from './components/Analysis';
-import { margin } from '@mui/system';
 
 export interface IHome {
   sampleTextProp: string;

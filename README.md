@@ -23,3 +23,7 @@
 1. Update the 'src/menu-items' file with the new item.
 
 ## Please try to follow the commit-lint message format (refer to commitlint.config.js)
+
+# Deploy using docker
+
+make push_image
