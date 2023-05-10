@@ -1,12 +1,13 @@
 // material ui
 import { Theme } from '@mui/material/styles';
-import { ButtonProps, ChipProps, IconButtonProps, SliderProps } from '@mui/material';
+import { ButtonProps, ChipProps, IconButtonProps, SliderProps, TextFieldProps } from '@mui/material';
 import { LoadingButtonProps } from '@mui/lab';
 
 // ==============================|| EXTENDED COMPONENT - TYPES  ||============================== //
 
 export type ButtonVariantProps = 'contained' | 'light' | 'outlined' | 'dashed' | 'text' | 'shadow';
 export type IconButtonShapeProps = 'rounded' | 'square';
+export type TextFieldVariantProps = 'outlined' | 'filled' | 'standard';
 type TooltipColor = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' | 'default';
 export type ColorProps =
   | ChipProps['color']
