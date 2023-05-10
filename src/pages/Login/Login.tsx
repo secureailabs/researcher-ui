@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Divider, Stack } from "@mui/material";
-import Socials from "./Socials";
+import Socials from "./components/Socials";
 
 
 export interface ILogin {
