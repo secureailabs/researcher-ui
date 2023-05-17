@@ -1,34 +1,17 @@
 /* eslint-disable react/display-name */
-import React, {
-  forwardRef,
-  type HTMLAttributes,
-  useRef,
-  useImperativeHandle,
-} from 'react';
+import React, { forwardRef, type HTMLAttributes, useRef, useImperativeHandle } from 'react';
 
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Checkbox,
-  CircularProgress,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Autocomplete, Box, Button, Checkbox, CircularProgress, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import FEATURE_LIST from 'src/constants/featureVariable';
 import styles from './AnalyticsFunction.module.css';
 import { styled } from '@mui/material/styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import {
-  type IFilter,
-  type IAutocompleteOptionData,
-  type TOperatorString,
-  type IAnalyticsResult,
-} from 'src/shared/types/customTypes';
+import { type IFilter, type IAutocompleteOptionData, type TOperatorString, type IAnalyticsResult } from 'src/shared/types/customTypes';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import useNotification from 'src/hooks/useNotification';
+import { BASE_URL } from 'src/utils/apiServices';
 
 export interface ISKEW {
   sampleTextProp?: string;
@@ -63,48 +46,42 @@ interface AnalyticsFunctionContainerRef {
   toggleLoading: () => void;
 }
 
-const AnalyticsFunctionContainerComponent = forwardRef<
-  AnalyticsFunctionContainerRef,
-  IAnalyticsFunctionContainerComponent
->(({ title, children, handleRunAnalysis }, ref) => {
-  const [loading, setLoading] = React.useState<boolean>(false);
+const AnalyticsFunctionContainerComponent = forwardRef<AnalyticsFunctionContainerRef, IAnalyticsFunctionContainerComponent>(
+  ({ title, children, handleRunAnalysis }, ref) => {
+    const [loading, setLoading] = React.useState<boolean>(false);
 
-  const toggleLoading = (): void => {
-    setLoading((prevLoading) => !prevLoading);
-  };
+    const toggleLoading = (): void => {
+      setLoading((prevLoading) => !prevLoading);
+    };
 
-  useImperativeHandle(ref, () => ({
-    toggleLoading,
-  }));
+    useImperativeHandle(ref, () => ({
+      toggleLoading
+    }));
 
-  return (
-    <Box className={styles.container}>
-      <Box className={styles.titleContainer}>
-        <Typography variant="h6" className={styles.title}>
-          {title}
-        </Typography>
+    return (
+      <Box className={styles.container}>
+        <Box className={styles.titleContainer}>
+          <Typography variant="h6" className={styles.title}>
+            {title}
+          </Typography>
+        </Box>
+        {children}
+        <Box className={styles.analyseButton}>
+          {loading ? (
+            <Box className={styles.loadingContainer}>
+              <CircularProgress />
+              <Typography variant="body2">Running Analysis...</Typography>
+            </Box>
+          ) : (
+            <Button className={styles.button} variant="outlined" startIcon={<PlayArrowIcon />} onClick={handleRunAnalysis}>
+              Run Analysis
+            </Button>
+          )}
+        </Box>
       </Box>
-      {children}
-      <Box className={styles.analyseButton}>
-        {loading ? (
-          <Box className={styles.loadingContainer}>
-            <CircularProgress />
-            <Typography variant="body2">Running Analysis...</Typography>
-          </Box>
-        ) : (
-          <Button
-            className={styles.button}
-            variant="outlined"
-            startIcon={<PlayArrowIcon />}
-            onClick={handleRunAnalysis}
-          >
-            Run Analysis
-          </Button>
-        )}
-      </Box>
-    </Box>
-  );
-});
+    );
+  }
+);
 
 interface StyledOptionProps extends HTMLAttributes<HTMLDivElement> {
   option: IAutocompleteOptionData;
@@ -114,7 +91,7 @@ const StyledOption = styled('div')<StyledOptionProps>(({ option }) => ({
   display: 'flex',
   alignItems: 'center',
   whiteSpace: 'normal',
-  wordBreak: 'break-word',
+  wordBreak: 'break-word'
 }));
 
 const renderOption = (props: any, option: any): JSX.Element => (
@@ -123,11 +100,7 @@ const renderOption = (props: any, option: any): JSX.Element => (
   </li>
 );
 
-const renderOptionWithCheckbox = (
-  props: any,
-  option: any,
-  { selected }: any
-): JSX.Element => (
+const renderOptionWithCheckbox = (props: any, option: any, { selected }: any): JSX.Element => (
   <li {...props} key={option.series_name}>
     <StyledOption option={option}>
       <Checkbox
@@ -144,25 +117,20 @@ const renderOptionWithCheckbox = (
 // ==============================|| SKEW ||============================== //
 
 const SKEW: React.FC<ISKEW> = ({ sampleTextProp, handleSaveResult }) => {
-  const [feature, setFeature] = React.useState<IAutocompleteOptionData | null>(
-    null
-  );
+  const [feature, setFeature] = React.useState<IAutocompleteOptionData | null>(null);
 
   const handleRunAnalysis = (): void => {
     if (feature !== null) {
       const result = `Skew of ${feature.series_name} :: 0.5`;
       handleSaveResult({
         data: result,
-        plot: null,
+        plot: null
       });
     }
   };
 
   return (
-    <AnalyticsFunctionContainerComponent
-      title={'Skew'}
-      handleRunAnalysis={handleRunAnalysis}
-    >
+    <AnalyticsFunctionContainerComponent title={'Skew'} handleRunAnalysis={handleRunAnalysis}>
       <Box className={styles.featureContainer}>
         <Autocomplete
           className={styles.autocomplete}
@@ -211,12 +179,7 @@ const Kurtosis: React.FC<IKurtosis> = ({ sampleTextProp }) => {
 
 // =========================================|| Paired T-Test || ========================================= //
 
-const PairedTTest: React.FC<IPairedTTest> = ({
-  sampleTextProp,
-  handleSaveResult,
-  filters,
-  filterOperator,
-}) => {
+const PairedTTest: React.FC<IPairedTTest> = ({ sampleTextProp, handleSaveResult, filters, filterOperator }) => {
   const [feature, setFeature] = React.useState<IAutocompleteOptionData[]>([]);
   const [sendNotification] = useNotification();
   const childRef = useRef<AnalyticsFunctionContainerRef>(null);
@@ -226,27 +189,24 @@ const PairedTTest: React.FC<IPairedTTest> = ({
     const body = {
       cohort: {
         filter: filters,
-        filter_operator: filterOperator,
+        filter_operator: filterOperator
       },
       analysis: {
         type: 'paired_t_test',
         parameter: {
           series_name_0: feature[0].series_name,
-          series_name_1: feature[1].series_name,
-        },
-      },
+          series_name_1: feature[1].series_name
+        }
+      }
     };
 
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:8000/demo/paired_t',
-        body
-      );
+      const response = await axios.post(`${BASE_URL}/analysis`, body);
       return response.data.data;
     } catch (error) {
       sendNotification({
         msg: 'Error in running analysis',
-        variant: 'error',
+        variant: 'error'
       });
     }
   };
@@ -264,7 +224,7 @@ const PairedTTest: React.FC<IPairedTTest> = ({
             const result = `Paired TTest result of (${feature[0].series_name}, ${feature[1].series_name}) :: ${resultDataStr}`;
             handleSaveResult({
               data: result,
-              plot,
+              plot
             });
           }
         })
@@ -274,17 +234,13 @@ const PairedTTest: React.FC<IPairedTTest> = ({
     } else {
       sendNotification({
         msg: 'Please select two features',
-        variant: 'error',
+        variant: 'error'
       });
     }
   };
 
   return (
-    <AnalyticsFunctionContainerComponent
-      title={'Paired TTest'}
-      handleRunAnalysis={handleRunAnalysis}
-      ref={childRef}
-    >
+    <AnalyticsFunctionContainerComponent title={'Paired TTest'} handleRunAnalysis={handleRunAnalysis} ref={childRef}>
       <Box>
         <Autocomplete
           multiple
@@ -306,12 +262,7 @@ const PairedTTest: React.FC<IPairedTTest> = ({
             }
           }}
           getOptionDisabled={(option) => {
-            if (
-              feature !== null &&
-              feature !== undefined &&
-              feature.length > 1 &&
-              !feature.includes(option)
-            ) {
+            if (feature !== null && feature !== undefined && feature.length > 1 && !feature.includes(option)) {
               return true;
             }
             return false;

@@ -1,7 +1,6 @@
 import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
-import MainLayout from 'src/components/layout/MainLayout';
-import Login from 'src/pages/Login';
+import MinimalLayout from 'src/components/layout/MinimalLayout';
 import Invalid404 from 'src/pages/invalid404';
 
 const Home = Loadable(lazy(async () => await import('src/pages/home')));
@@ -9,23 +8,15 @@ const DemoLongitudinal = Loadable(lazy(async () => await import('src/pages/DemoL
 
 // ==============================|| MAIN ROUTING ||============================== //
 
-const MainRoutes = {
+const OtherRoutes = {
   path: '/',
-  element: <MainLayout />,
+  element: <MinimalLayout />,
   children: [
     {
-      path: '/',
-      element: <Home />
-    },
-    {
-      path: 'home',
-      element: <Home />
-    },
-    {
-      path: 'demo-longitudinal',
-      element: <DemoLongitudinal />
+      path: '*',
+      element: <Invalid404 />
     }
   ]
 };
 
-export default MainRoutes;
+export default OtherRoutes;
