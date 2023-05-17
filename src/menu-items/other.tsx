@@ -35,13 +35,6 @@ const other: NavItemType = {
           type: 'item',
           url: '/demo-longitudinal',
           target: false
-        },
-        {
-          id: 'login_page',
-          title: 'Login',
-          type: 'item',
-          url: '/login',
-          target: false
         }
       ]
     }

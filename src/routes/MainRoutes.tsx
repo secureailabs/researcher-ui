@@ -1,10 +1,10 @@
 import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
 import MainLayout from 'src/components/layout/MainLayout';
+import Login from 'src/pages/Login';
 
 const Home = Loadable(lazy(async () => await import('src/pages/home')));
 const DemoLongitudinal = Loadable(lazy(async () => await import('src/pages/DemoLongitudinal')));
-const Login = Loadable(lazy(async () => await import('src/pages/Login')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -23,10 +23,6 @@ const MainRoutes = {
     {
       path: 'demo-longitudinal',
       element: <DemoLongitudinal />
-    },
-    {
-      path: 'login',
-      element: <Login />
     }
   ]
 };
