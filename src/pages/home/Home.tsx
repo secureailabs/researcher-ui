@@ -1,4 +1,4 @@
-import { AppBar, Tabs, Tab, Box, Typography } from '@mui/material';
+import { AppBar, Tabs, Tab, Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 import styles from './Home.module.css';
@@ -8,10 +8,38 @@ import { IconList, IconUsersGroup, IconChartInfographic } from '@tabler/icons-re
 import { type TOperatorString, type IFilter } from 'src/shared/types/customTypes';
 import CohortSelection from './components/CohortSelection';
 import Analysis from './components/Analysis';
+import { ErrorBoundary, FallbackProps, withErrorBoundary } from 'react-error-boundary';
+
+// ErrorFallback component to render when an error occurs
+function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+  return (
+    <Box>
+      <Typography variant="h2">Something went wrong</Typography>
+      <Typography>{error.message}</Typography>
+      <Button variant="contained" onClick={resetErrorBoundary}>
+        Try again
+      </Button>
+    </Box>
+  );
+}
+
+const ComponentWithErrorBoundary = withErrorBoundary(ErrorFallback, {
+  fallback: (
+    <Box>
+      <Typography>Something went wrong</Typography>
+    </Box>
+  ),
+  onError(error, info) {
+    // Do something with the error
+    // E.g. log to an error logging client here
+  }
+});
 
 export interface IHome {
   sampleTextProp: string;
 }
+
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
