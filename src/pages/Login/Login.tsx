@@ -17,6 +17,9 @@ import { AxiosError } from 'axios';
 import { LoginSuccess_Out, OpenAPI } from 'src/client';
 import { DefaultService, Body_login } from 'src/client';
 import useNotification from "src/hooks/useNotification";
+import { activeAccessToken, activeRefreshToken, tokenType } from 'src/store/Auth';
+import { dispatch } from "src/store";
+
 
 export interface IEmailAndPassword {
   username: string;
@@ -36,6 +39,13 @@ const Login: React.FC = () => {
     setShowPassword(prev => !prev);
   }
 
+  const storeLoginCredentials = (tokens: LoginSuccess_Out) => {
+    dispatch(activeAccessToken({ accessToken: tokens.access_token }));
+    console.log(tokens.access_token);
+    dispatch(activeRefreshToken({ refreshToken: tokens.refresh_token }));
+    dispatch(tokenType({ tokenType: tokens.token_type }));
+  };
+
   async function postLogin(data: IEmailAndPassword): Promise<LoginSuccess_Out | undefined> {
     OpenAPI.BASE = 'http://172.20.100.6:8000';
     // if (!process.env.REACT_APP_SAIL_API_SERVICE_URL)
@@ -50,6 +60,7 @@ const Login: React.FC = () => {
       const res = await DefaultService.login(login_req);
       OpenAPI.TOKEN = res.access_token;
       localStorage.setItem('token', res.access_token);
+      storeLoginCredentials(res);
       return res;
     } catch (error) {
       if (error) {
