@@ -16,56 +16,61 @@ import { useMutation } from 'react-query';
 import { AxiosError } from 'axios';
 import { LoginSuccess_Out, OpenAPI } from 'src/client';
 import { DefaultService, Body_login } from 'src/client';
-import { Store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
+import useNotification from "src/hooks/useNotification";
 
 export interface IEmailAndPassword {
   username: string;
   password: string;
 }
 
-// TODO: Implement login error in POG-388 
-const showLoginError = Store.addNotification({
-  title: "Error",
-  message: "Login Attempt Failed",
-  type: "danger",
-  insert: "top",
-  container: "center",
-  animationIn: ["animate__animated", "animate__zoomOut"],
-  animationOut: ["animate__animated", "animate__zoomOut"],
-  dismiss: {
-    duration: 5000,
-    click: true
-  }
-});
 
 const Login: React.FC = () => {
-  const { handleSubmit, control, register, formState } = useForm();
-  const onSubmit = (data: any) => console.log(data);
+  const { handleSubmit, control } = useForm();
+  const onSubmit = (data: any) => {
+    const result = postLogin(data)
+    console.log(result)
+    if (result == null) {
+      sendNotification({
+        msg: 'Invalid email or password',
+        variant: 'error',
+      });
+      return;
+    }
+  };
   const [showPassword, setShowPassword] = useState(false);
+  const [sendNotification] = useNotification();
   const handleShowPassword = () => {
     setShowPassword(prev => !prev);
   }
 
-  async function post(data: IEmailAndPassword): Promise<LoginSuccess_Out> {
-    // OpenAPI.BASE = 'https://172.20.100.8:8000';
-    if (!process.env.REACT_APP_SAIL_API_SERVICE_URL)
-      throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
+  async function postLogin(data: IEmailAndPassword): Promise<LoginSuccess_Out | undefined> {
+    OpenAPI.BASE = 'http://172.20.100.6:8000';
+    // if (!process.env.REACT_APP_SAIL_API_SERVICE_URL)
+    //   throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
 
-    OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
+    //  OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
     const login_req: Body_login = {
       username: data.username,
       password: data.password
     };
-    const res = await DefaultService.login(login_req);
-    OpenAPI.TOKEN = res.access_token;
-    localStorage.setItem('token', res.access_token);
-    return res;
+    try {
+      const res = await DefaultService.login(login_req);
+      OpenAPI.TOKEN = res.access_token;
+      localStorage.setItem('token', res.access_token);
+      return res;
+    } catch (error) {
+      if (error) {
+        sendNotification({
+          msg: 'Invalid email or password',
+          variant: 'error',
+        });
+      }
+    }
   }
 
   //const queryClient = new QueryClient();
   // @ts-ignore
-  const loginMutation = useMutation<LoginSuccess_Out, AxiosError>(post, {
+  const loginMutation = useMutation<LoginSuccess_Out, AxiosError>(postLogin, {
     onSuccess: () => console.log("successful login")
   });
 
@@ -101,7 +106,7 @@ const Login: React.FC = () => {
             Email Address
           </Typography>
           <Controller
-            name="email"
+            name="username"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value }, fieldState: { error } }) => (
