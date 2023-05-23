@@ -12,19 +12,62 @@ import styles from './Login.module.css';
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useMutation } from 'react-query';
+import { AxiosError } from 'axios';
+import { LoginSuccess_Out, OpenAPI } from 'src/client';
+import { DefaultService, Body_login } from 'src/client';
+import { Store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 
-export interface ILogin {
-  sampleTextProp: string;
+export interface IEmailAndPassword {
+  username: string;
+  password: string;
 }
 
-const Login: React.FC<ILogin> = ({ sampleTextProp }) => {
-  const { handleSubmit, control } = useForm();
+// TODO: Implement login error in POG-388 
+const showLoginError = Store.addNotification({
+  title: "Error",
+  message: "Login Attempt Failed",
+  type: "danger",
+  insert: "top",
+  container: "center",
+  animationIn: ["animate__animated", "animate__zoomOut"],
+  animationOut: ["animate__animated", "animate__zoomOut"],
+  dismiss: {
+    duration: 5000,
+    click: true
+  }
+});
+
+const Login: React.FC = () => {
+  const { handleSubmit, control, register, formState } = useForm();
   const onSubmit = (data: any) => console.log(data);
   const [showPassword, setShowPassword] = useState(false);
-  
   const handleShowPassword = () => {
     setShowPassword(prev => !prev);
   }
+
+  async function post(data: IEmailAndPassword): Promise<LoginSuccess_Out> {
+    // OpenAPI.BASE = 'https://172.20.100.8:8000';
+    if (!process.env.REACT_APP_SAIL_API_SERVICE_URL)
+      throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
+
+    OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
+    const login_req: Body_login = {
+      username: data.username,
+      password: data.password
+    };
+    const res = await DefaultService.login(login_req);
+    OpenAPI.TOKEN = res.access_token;
+    localStorage.setItem('token', res.access_token);
+    return res;
+  }
+
+  //const queryClient = new QueryClient();
+  // @ts-ignore
+  const loginMutation = useMutation<LoginSuccess_Out, AxiosError>(post, {
+    onSuccess: () => console.log("successful login")
+  });
 
 
   return (
@@ -70,7 +113,7 @@ const Login: React.FC<ILogin> = ({ sampleTextProp }) => {
                 helperText={error ? error.message : null}
                 required
                 fullWidth
-                id="email"
+                id="username"
                 label="Enter email address"
                 autoComplete="email"
                 autoFocus
