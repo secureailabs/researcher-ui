@@ -29,13 +29,6 @@ const Login: React.FC = () => {
   const onSubmit = (data: any) => {
     const result = postLogin(data)
     console.log(result)
-    if (result == null) {
-      sendNotification({
-        msg: 'Invalid email or password',
-        variant: 'error',
-      });
-      return;
-    }
   };
   const [showPassword, setShowPassword] = useState(false);
   const [sendNotification] = useNotification();
