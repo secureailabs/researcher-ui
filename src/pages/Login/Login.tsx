@@ -32,6 +32,12 @@ const Login: React.FC = () => {
   const handleShowPassword = () => {
     setShowPassword(prev => !prev);
   }
+  const showInfoNotification = () => {
+    sendNotification({
+      msg: 'Please contact your administrator',
+      variant: 'info',
+    })
+  }
 
   async function postLogin(data: IEmailAndPassword): Promise<LoginSuccess_Out | undefined> {
     OpenAPI.BASE = 'http://172.20.100.6:8000';
@@ -82,6 +88,7 @@ const Login: React.FC = () => {
               variant="subtitle2"
               href="#"
               underline="hover"
+              onClick={showInfoNotification}
             >
               Don't have an account?
             </Link>
@@ -158,6 +165,7 @@ const Login: React.FC = () => {
               variant="subtitle2"
               href="#"
               underline="hover"
+              onClick={showInfoNotification}
             >
               Forgot password?
             </Link>
