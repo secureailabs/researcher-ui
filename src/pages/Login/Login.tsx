@@ -35,6 +35,12 @@ const Login: React.FC = () => {
   const handleShowPassword = () => {
     setShowPassword(prev => !prev);
   }
+  const showInfoNotification = () => {
+    sendNotification({
+      msg: 'Please contact your administrator',
+      variant: 'info',
+    })
+  }
 
   const storeLoginCredentials = (tokens: LoginSuccess_Out) => {
     dispatch(activeAccessToken({ accessToken: tokens.access_token }));
@@ -93,6 +99,7 @@ const Login: React.FC = () => {
               variant="subtitle2"
               href="#"
               underline="hover"
+              onClick={showInfoNotification}
             >
               Don't have an account?
             </Link>
@@ -169,6 +176,7 @@ const Login: React.FC = () => {
               variant="subtitle2"
               href="#"
               underline="hover"
+              onClick={showInfoNotification}
             >
               Forgot password?
             </Link>
