@@ -12,8 +12,6 @@ import styles from './Login.module.css';
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useMutation } from 'react-query';
-import { AxiosError } from 'axios';
 import { LoginSuccess_Out, OpenAPI } from 'src/client';
 import { DefaultService, Body_login } from 'src/client';
 import useNotification from "src/hooks/useNotification";
@@ -31,7 +29,6 @@ const Login: React.FC = () => {
   const { handleSubmit, control } = useForm();
   const onSubmit = (data: any) => {
     const result = postLogin(data)
-    console.log(result)
   };
   const [showPassword, setShowPassword] = useState(false);
   const [sendNotification] = useNotification();
@@ -71,12 +68,6 @@ const Login: React.FC = () => {
       }
     }
   }
-
-  //const queryClient = new QueryClient();
-  // @ts-ignore
-  const loginMutation = useMutation<LoginSuccess_Out, AxiosError>(postLogin, {
-    onSuccess: () => console.log("successful login")
-  });
 
 
   return (

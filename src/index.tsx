@@ -9,8 +9,6 @@ import './App.css';
 import './index.css';
 import { ConfigProvider } from 'src/contexts/ConfigContext';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactNotifications } from 'react-notifications-component';
-
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } }
@@ -23,7 +21,6 @@ root.render(
     <ConfigProvider>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-      <ReactNotifications />
         <App />
       </BrowserRouter>
       </QueryClientProvider>
