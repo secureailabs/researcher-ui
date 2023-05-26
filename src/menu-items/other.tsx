@@ -35,6 +35,13 @@ const other: NavItemType = {
           type: 'item',
           url: '/demo-longitudinal',
           target: false
+        },
+        {
+          id: 'datasets',
+          title: 'Datasets',
+          type: 'item',
+          url: '/datasets',
+          target: false
         }
       ]
     }
