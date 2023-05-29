@@ -8,14 +8,25 @@ import App from './App';
 import './App.css';
 import './index.css';
 import { ConfigProvider } from 'src/contexts/ConfigContext';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactNotifications } from 'react-notifications-component';
+
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false } }
+});
+
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <Provider store={store}>
     <ConfigProvider>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+      <ReactNotifications />
         <App />
       </BrowserRouter>
+      </QueryClientProvider>
     </ConfigProvider>
   </Provider>
 );
