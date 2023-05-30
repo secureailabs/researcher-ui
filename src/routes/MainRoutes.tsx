@@ -4,6 +4,7 @@ import MainLayout from 'src/components/layout/MainLayout';
 
 const Home = Loadable(lazy(async () => await import('src/pages/home')));
 const DemoLongitudinal = Loadable(lazy(async () => await import('src/pages/DemoLongitudinal')));
+const PAG = Loadable(lazy(async () => await import('src/pages/PAG')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -22,6 +23,10 @@ const MainRoutes = {
     {
       path: 'demo-longitudinal',
       element: <DemoLongitudinal />
+    },
+    {
+      path: 'pag-home',
+      element: <PAG />
     }
   ]
 };

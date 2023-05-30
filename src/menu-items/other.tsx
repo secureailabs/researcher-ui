@@ -37,6 +37,28 @@ const other: NavItemType = {
           target: false
         }
       ]
+    },
+    {
+      id: 'patient-advisory-group',
+      title: 'Patient Advisory Group',
+      type: 'collapse',
+      icon: icons.IconChartHistogram,
+      children: [
+        {
+          id: 'pag-home',
+          title: 'Home',
+          type: 'item',
+          url: '/pag-home',
+          target: false
+        },
+        {
+          id: 'comparison-metrics',
+          title: 'Comparison Metrics',
+          type: 'item',
+          url: '/pag-comparisonmetrics',
+          target: false
+        }
+      ]
     }
   ]
 };
