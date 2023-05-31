@@ -1,0 +1,22 @@
+.metrics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2.5%; /* Adjust the gap between cards in the section as needed */
+    margin-bottom: 2.5%;
+  }
+
+  .piechartsection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5%; /* Adjust the gap between cards in the section as needed */
+    margin-bottom: 2.5%;
+  }
+  
+  .bargraphs {
+    display: flex;
+    grid-gap: 2%;
+  }
+
+
+  

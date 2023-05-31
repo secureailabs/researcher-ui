@@ -54,7 +54,7 @@ export const pieChartData = [
   }
 ];
 
-export const ageData = {
+export const BarGraph1Data = {
   label: 'Age at diagnosis in years',
   data: [
     { range: '20-30', value: 10 },
@@ -66,7 +66,7 @@ export const ageData = {
   ]
 };
 
-export const deathData = {
+export const BarGraph2Data = {
   label: 'Age at death in years',
   data: [
     { range: '20-30', value: 5 },
@@ -78,7 +78,7 @@ export const deathData = {
   ]
 };
 
-export const survivalData = {
+export const BarGraph3Data = {
   label: 'Survival time in years',
   data: [
     { range: '0-1', value: 50 },
