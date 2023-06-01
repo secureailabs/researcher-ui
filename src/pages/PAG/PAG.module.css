@@ -1,22 +1,26 @@
-.metrics {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 2.5%; /* Adjust the gap between cards in the section as needed */
-    margin-bottom: 2.5%;
-  }
+.container {
+  padding: 1rem 1rem;
+}
 
-  .piechartsection {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2.5%; /* Adjust the gap between cards in the section as needed */
-    margin-bottom: 2.5%;
-  }
-  
-  .bargraphs {
-    display: flex;
-    grid-gap: 2%;
-  }
+.metricsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 2.5%;
+  margin-top: 10px;
+  padding: 2rem 2rem;
+}
 
+.piechartsection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5%; /* Adjust the gap between cards in the section as needed */
+  margin-bottom: 2.5%;
+  margin-top: 10px;
+  padding: 2rem 2rem;
+}
 
-  
+.bargraphs {
+  display: flex;
+  grid-gap: 2%;
+}

@@ -1,5 +1,6 @@
-import { Grid, Paper, Typography } from '@mui/material';
+import { Box, Grid, Paper, Typography } from '@mui/material';
 import Plot from 'react-plotly.js';
+import styles from './PieChartSection.module.css';
 
 export interface IPieChartSectionProps {
   chart: any;
@@ -8,7 +9,7 @@ export interface IPieChartSectionProps {
 
 const PieChartSection: React.FC<IPieChartSectionProps> = ({ chart, index }) => {
   return (
-    <Grid key={index} item xs={5} sm={5} md={5}>
+    <Box key={index} className={styles.container}>
       <Paper>
         <Typography variant="h6" align="center" style={{ fontWeight: 'bold', fontSize: 18 }}>
           {chart.label}
@@ -28,7 +29,7 @@ const PieChartSection: React.FC<IPieChartSectionProps> = ({ chart, index }) => {
           }}
         />
       </Paper>
-    </Grid>
+    </Box>
   );
 };
 

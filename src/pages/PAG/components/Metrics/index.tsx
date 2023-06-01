@@ -1,3 +1,3 @@
-import Metrics from './Metrics';
+import Metrics from './MetricsCard';
 
 export default Metrics;
