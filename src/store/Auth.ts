@@ -23,19 +23,20 @@ const auth = createSlice({
     activeAccessToken(state, action) {
       state.accessToken = action.payload.accessToken;
     },
-
     activeRefreshToken(state, action) {
       state.refreshToken = action.payload.refreshToken;
-
     },
-
     tokenType(state, action) {
       state.tokenType = action.payload.tokenType;
-
+    },
+    updateAuthState(state, action) {
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+      state.tokenType = action.payload.tokenType;
     }
   }
 });
 
 export default auth.reducer;
 
-export const { activeAccessToken, activeRefreshToken, tokenType } = auth.actions;
+export const { activeAccessToken, activeRefreshToken, tokenType, updateAuthState } = auth.actions;

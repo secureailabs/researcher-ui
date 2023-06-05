@@ -1,11 +1,12 @@
 import { AppBar, Box, Toolbar } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './Header';
 import Drawer from './Drawer';
 import { RootStateProps } from 'src/types/root';
 import { openDrawer } from 'src/store/reducers/menu';
+import { storeLoginCredentials } from 'src/pages/Login/Login';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 
@@ -13,6 +14,7 @@ const MinimalLayout = (): JSX.Element => {
   const [leftDrawerOpened, setLeftDrawerOpened] = useState(true);
   const [open, setOpen] = useState(true);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const menu = useSelector((state: RootStateProps) => state.menu);
   const { drawerOpen } = menu;
@@ -21,6 +23,22 @@ const MinimalLayout = (): JSX.Element => {
     setOpen((prev) => !prev);
     dispatch(openDrawer({ drawerOpen: !open }));
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+    const tokenType = localStorage.getItem('tokenType');
+    if (accessToken && refreshToken && tokenType) {
+      const res = {
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        token_type: tokenType
+      };
+      storeLoginCredentials(res);
+    } else {
+      navigate('/login');
+    }
+  }, []);
 
   return (
     <Box sx={{ display: 'flex', width: '100%', backgroundColor: '#e6e6e6' }}>
