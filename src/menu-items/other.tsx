@@ -1,12 +1,13 @@
 // assets
-import { IconChartHistogram } from '@tabler/icons-react';
+import { IconChartHistogram, IconDatabaseCog } from '@tabler/icons-react';
 
 // type
 import { NavItemType } from 'src/types/menu';
 
 // icons
 const icons = {
-  IconChartHistogram
+  IconChartHistogram,
+  IconDatabaseCog
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -34,6 +35,21 @@ const other: NavItemType = {
           title: 'Longitudinal Data',
           type: 'item',
           url: '/demo-longitudinal',
+          target: false
+        }
+      ]
+    },
+    {
+      id: 'data-model',
+      title: 'Data Model',
+      type: 'collapse',
+      icon: icons.IconDatabaseCog,
+      children: [
+        {
+          id: 'data-model',
+          title: 'Data Model',
+          type: 'item',
+          url: '/data-model',
           target: false
         }
       ]

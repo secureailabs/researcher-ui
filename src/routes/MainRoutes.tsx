@@ -6,6 +6,7 @@ import Invalid404 from 'src/pages/invalid404';
 
 const Home = Loadable(lazy(async () => await import('src/pages/home')));
 const DemoLongitudinal = Loadable(lazy(async () => await import('src/pages/DemoLongitudinal')));
+const DataModel = Loadable(lazy(async () => await import('src/pages/DataModel')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -24,6 +25,10 @@ const MainRoutes = {
     {
       path: 'demo-longitudinal',
       element: <DemoLongitudinal />
+    },
+    {
+      path: 'data-model',
+      element: <DataModel />
     }
   ]
 };
