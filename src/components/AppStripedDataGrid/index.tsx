@@ -4,6 +4,7 @@ import { DataGrid, gridClasses } from '@mui/x-data-grid';
 const ODD_OPACITY = 0.2;
 
 const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
+  border: `1px solid ${theme.palette.divider}`,
   '.table--header': {
     backgroundColor: '#EAEFF0'
   },

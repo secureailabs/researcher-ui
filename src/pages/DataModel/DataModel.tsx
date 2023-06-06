@@ -22,8 +22,6 @@ const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
     }
   );
 
-  console.log('data1', data);
-
   return (
     <Box sx={{ width: '100%' }} className={styles.container}>
       <Typography variant="h4" component="h4">
@@ -44,16 +42,6 @@ const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
           </Button>
         </Box>
       )}
-      <Drawer
-        anchor="right"
-        open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
-        PaperProps={{
-          sx: { width: '50%', padding: '20px 0 0 20px' }
-        }}
-      >
-        <AddNewDataModel />
-      </Drawer>
     </Box>
   );
 };
