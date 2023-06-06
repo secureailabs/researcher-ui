@@ -1,7 +1,7 @@
 import { Box, Button, Drawer, Typography } from '@mui/material';
 import styles from './DataModel.module.css';
 import UtilityBar from './components/UtilityBar';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { ApiError, DefaultService, GetMultipleDataModel_Out } from 'src/client';
 import AddNewDataModel from './components/AddNewDataModel';
@@ -35,7 +35,7 @@ const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
       ) : (
         <Box className={styles.bodyContainerEmpty}>
           <Typography variant="body1" component="p">
-            No tables have been added to your datamodel
+            No tables have been added to your data model
           </Typography>
           <Button variant="contained" color="primary" className={styles.addTableButton} onClick={() => setOpenDrawer(true)}>
             Add Table

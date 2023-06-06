@@ -6,6 +6,7 @@ export interface IDataModelColumnCard {
 }
 
 const DataModelColumnCard: React.FC<IDataModelColumnCard> = ({ columnData }) => {
+  console.log('columnData', columnData);
   return (
     <Box className={styles.container}>
       <Grid container spacing={2}>
