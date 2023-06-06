@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 
 export type TableProps = {
   columns: any[];
-  error: ApiError | null;
+  error?: ApiError | null;
   rows: any[];
 };
 
@@ -24,17 +24,14 @@ const StyledDataGrid = styled(DataGrid)(() => ({
   }
 }));
 
-const DataGridTable: React.FC<TableProps> = ({ columns, rows, error }) => {
+const DataGridTable: React.FC<TableProps> = (props: any) => {
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <StyledDataGrid
         sx={{
           boxShadow: 2
         }}
-        rows={rows}
-        columns={columns}
-        pageSizeOptions={[5]}
-        disableRowSelectionOnClick
+        {...props}
       />
     </Box>
   );
