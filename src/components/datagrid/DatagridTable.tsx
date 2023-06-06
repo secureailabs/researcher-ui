@@ -1,15 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { ApiError, GetMultipleDataset_Out } from 'src/client';
+import { ApiError, GetDataset_Out, GetMultipleDataset_Out } from 'src/client';
 import { styled } from '@mui/material/styles';
 
 
 export type TableProps = {
   columns: any[];
-  rows: any[];
   error: ApiError | null;
-  data: GetMultipleDataset_Out | null;
+  rows: any[];
 };
 
 const StyledDataGrid = styled(DataGrid)(() => ({
@@ -25,7 +24,7 @@ const StyledDataGrid = styled(DataGrid)(() => ({
   }
 }));
 
-const DataGridTable: React.FC<TableProps> = ({ columns, rows, error, data }) => {
+const DataGridTable: React.FC<TableProps> = ({ columns, rows, error }) => {
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <StyledDataGrid
@@ -34,15 +33,7 @@ const DataGridTable: React.FC<TableProps> = ({ columns, rows, error, data }) => 
         }}
         rows={rows}
         columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
         pageSizeOptions={[5]}
-        checkboxSelection
         disableRowSelectionOnClick
       />
     </Box>
