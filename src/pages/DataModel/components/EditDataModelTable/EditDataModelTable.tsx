@@ -9,6 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DataModelColumnCard from '../DataModelColumnCard';
 import DataModelSeriesForm from '../DataModelSeriesForm';
 import useNotification from 'src/hooks/useNotification';
+import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 
 export interface IEditDataModelTable {
   tableData: any;
@@ -50,6 +51,7 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
   const [columns, setColumns] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [sendNotification] = useNotification();
+  const [selectedColumn, setSelectedColumn] = useState<any>(null);
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -77,6 +79,32 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
       setColumns(data);
     });
   }, [tableData]);
+
+  const handleEditClicked = (columnData: any) => {
+    setSelectedColumn(columnData);
+    setOpenModal(true);
+  };
+
+  const handleAddNewColumnClicked = () => {
+    setSelectedColumn(null);
+    setOpenModal(true);
+  };
+
+  const handleDeleteClicked = async (columnData: any) => {
+    try {
+      const res = await DefaultService.deleteDataModelSeries(columnData.id);
+      sendNotification({
+        msg: 'Data Column Deleted Successfully',
+        variant: 'success'
+      });
+      refetchDataFrameInfo();
+    } catch (err) {
+      sendNotification({
+        msg: 'Something went wrong',
+        variant: 'error'
+      });
+    }
+  };
 
   return (
     <Box sx={{ width: '100%' }} className={styles.container}>
@@ -128,13 +156,7 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
               marginRight: '1rem'
             }}
           >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                setOpenModal(true);
-              }}
-            >
+            <Button variant="contained" color="primary" onClick={handleAddNewColumnClicked}>
               Add Column
             </Button>
           </Box>
@@ -146,11 +168,24 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
         }}
       >
         {columns.map((column) => {
-          return <DataModelColumnCard key={column.id} columnData={column} />;
+          return (
+            <DataModelColumnCard
+              key={column.id}
+              columnData={column}
+              handleEditClicked={handleEditClicked}
+              handleDeleteClicked={handleDeleteClicked}
+            />
+          );
         })}
       </Box>
       <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <DataModelSeriesForm handleCloseModal={handleCloseModal} dataModelId={tableData.id} handleSuccessfulSave={handleSuccessfulSave} />
+        <DataModelSeriesForm
+          handleCloseModal={handleCloseModal}
+          dataModelId={tableData.id}
+          handleSuccessfulSave={handleSuccessfulSave}
+          selectedColumn={selectedColumn !== null ? selectedColumn : 'new'}
+          mode={selectedColumn !== null ? 'edit' : 'new'}
+        />
       </Modal>
     </Box>
   );

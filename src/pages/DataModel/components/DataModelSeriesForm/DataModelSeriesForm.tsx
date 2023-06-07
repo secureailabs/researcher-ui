@@ -1,7 +1,7 @@
 import { IconButton, TextField, FormControl, InputLabel, Select, MenuItem, Box, Button, Typography } from '@mui/material';
 import styles from './DataModelSeriesForm.module.css';
 import CloseIcon from '@mui/icons-material/Close';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import uuid from 'react-uuid';
 import { DataModelDataframeState, DefaultService } from 'src/client';
 
@@ -9,6 +9,8 @@ export interface IDataModelSeriesForm {
   handleCloseModal: () => void;
   dataModelId: string;
   handleSuccessfulSave: () => void;
+  selectedColumn?: any;
+  mode: 'new' | 'edit';
 }
 
 const DataModelSeriesTypeEnums = [
@@ -19,7 +21,15 @@ const DataModelSeriesTypeEnums = [
   'SeriesDataModelUnique'
 ];
 
-const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal, dataModelId, handleSuccessfulSave }) => {
+const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
+  handleCloseModal,
+  dataModelId,
+  handleSuccessfulSave,
+  selectedColumn,
+  mode
+}) => {
+  console.log('selectedColumn', selectedColumn);
+
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [type, setType] = useState<string>('');
@@ -29,8 +39,7 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal,
   const [unit, setUnit] = useState<string>('');
   const [resolution, setResolution] = useState<number | ''>('');
 
-  const handleSaveDataModelSeries = async () => {
-    const newUUID = uuid();
+  const handleSaveNewDataModelSeries = async () => {
     const series_schema: any = {
       type,
       series_name: name,
@@ -60,6 +69,31 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal,
     return res;
   };
 
+  const handleUpdateDataModelSeries = async () => {
+    const series_schema: any = { ...selectedColumn.series_schema };
+
+    const properties = {
+      list_value: values,
+      unit,
+      min,
+      max,
+      resolution
+    };
+
+    for (const [key, value] of Object.entries(properties)) {
+      if (value) {
+        series_schema[key] = value;
+      }
+    }
+
+    const res = await DefaultService.updateDataModelSeries(selectedColumn.id, {
+      series_schema
+    });
+
+    return res;
+  };
+
+  // This is the api call needed to be called after registering a new data model series
   const handleUpdateDataModelDataframe = async (dataModelSeriesId: string) => {
     const requestBody = {
       data_model_series_to_add: [dataModelSeriesId],
@@ -71,14 +105,33 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal,
 
   const handleSaveButtonClicked = async () => {
     try {
-      const res = await handleSaveDataModelSeries();
-      const finalRes = await handleUpdateDataModelDataframe(res.id);
+      // const res = await handleSaveNewDataModelSeries();
+      if (mode === 'new') {
+        const res = await handleSaveNewDataModelSeries();
+        const finalRes = await handleUpdateDataModelDataframe(res.id);
+      }
+      if (mode === 'edit') {
+        const res = await handleUpdateDataModelSeries();
+      }
       handleSuccessfulSave();
       handleCloseModal();
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (selectedColumn && selectedColumn !== 'new') {
+      setName(selectedColumn.name);
+      setDescription(selectedColumn.description);
+      setType(selectedColumn.series_schema.type);
+      setValues(selectedColumn.series_schema.list_values);
+      setMin(selectedColumn.series_schema.min);
+      setMax(selectedColumn.series_schema.max);
+      setUnit(selectedColumn.series_schema.unit);
+      setResolution(selectedColumn.series_schema.resolution);
+    }
+  }, [selectedColumn]);
 
   return (
     <Box
@@ -101,7 +154,11 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal,
           alignItems: 'center'
         }}
       >
-        <Typography variant="h5">Add DataModel Series</Typography>
+        {mode === 'new' ? (
+          <Typography variant="h5">Add DataModel Series</Typography>
+        ) : (
+          <Typography variant="h5">Edit DataModel Series</Typography>
+        )}
       </Box>
       <Box
         sx={{
