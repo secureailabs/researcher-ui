@@ -4,7 +4,7 @@ import DatasetsTable from './components/DatasetsTable';
 import styles from './Datasets.module.css';
 import { useQuery } from 'react-query';
 import { GetMultipleDataset_Out, ApiError, DefaultService } from 'src/client';
-import NewDatasetModal from './components/NewDatasetModal';
+//import NewDatasetModal from './components/NewDatasetModal';
 
 const Datasets: React.FC = () => {
   const { data } = useQuery<
