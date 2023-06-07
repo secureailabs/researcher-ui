@@ -65,7 +65,6 @@ const DatasetsTable: React.FC<IDatasetsTable> = ({ data }) => {
     },
   ];
 
-
   return (
     <Box>
       {rows.length > 0 ? (
@@ -73,14 +72,11 @@ const DatasetsTable: React.FC<IDatasetsTable> = ({ data }) => {
           <DataGridTable
             columns={columns}
             rows={rows}
-            error={null}
           />
         </Box>
       ) : null}
     </Box>
   );
-
-
 };
 
 export default DatasetsTable;

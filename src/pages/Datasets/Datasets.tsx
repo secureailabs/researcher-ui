@@ -4,35 +4,29 @@ import DatasetsTable from './components/DatasetsTable';
 import styles from './Datasets.module.css';
 import { useQuery } from 'react-query';
 import { GetMultipleDataset_Out, ApiError, DefaultService } from 'src/client';
-
+import NewDatasetModal from './components/NewDatasetModal';
 
 const Datasets: React.FC = () => {
-  const onSubmit = () => {
-    console.log("click");
-  };
-
   const { data } = useQuery<
     GetMultipleDataset_Out,
     ApiError
   >(['datasets'], DefaultService.getAllDatasets, { refetchOnMount: 'always' });
-  console.log(data, "data");
 
   return (
-    <Box sx={{ width: '100%', py: '1rem', px: '3rem' }} >
+    <Box sx={{ width: '100%', p: '1rem' }} >
       <Box className={styles.stack}>
         <Typography variant="h3"> Datasets </Typography>
         <Button
-          onClick={onSubmit}
-          type="submit"
-          variant="contained"
-          sx={{ mb: 2 }}
-        >
-          New Dataset
-        </Button>
+            type="submit"
+            variant="contained"
+            sx={{ mb: 2 }}
+          >
+            New Dataset
+          </Button>
       </Box>
       <Box sx={{ mt: 3 }}>
         {data ?
-          <DatasetsTable data={data.datasets} /> : null}
+          <DatasetsTable data={data.datasets} /> : <p>There was an error fetching datasets. Please try again later</p>}
       </Box>
     </Box>
   );
