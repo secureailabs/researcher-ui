@@ -94,19 +94,12 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data, refetch
     <Box className={styles.container}>
       <Box
         sx={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)'
+          display: 'flex',
+          justifyContent: 'flex-end'
         }}
       >
-        <Typography variant="body1" component="p">
-          <span className={styles.title}>Name : </span>
-          {data.name}
-        </Typography>
         <Typography variant="body1" component="p" className={styles.rightAlign}>
           <span className={styles.title}>Created At : </span> {data.creation_time}
-        </Typography>
-        <Typography variant="body1" component="p">
-          <span className={styles.title}>Description : </span> {data.description}
         </Typography>
       </Box>
       {rows && rows.length > 0 ? (
