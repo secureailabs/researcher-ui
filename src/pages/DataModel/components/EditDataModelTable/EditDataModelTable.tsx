@@ -5,11 +5,9 @@ import { DefaultService } from 'src/client';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
-import CloseIcon from '@mui/icons-material/Close';
 import DataModelColumnCard from '../DataModelColumnCard';
 import DataModelSeriesForm from '../DataModelSeriesForm';
 import useNotification from 'src/hooks/useNotification';
-import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 
 export interface IEditDataModelTable {
   tableData: any;
@@ -49,9 +47,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchDataFrameInfo }) => {
   const [columns, setColumns] = useState<any[]>([]);
+  const [filteredColumns, setFilteredColumns] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [sendNotification] = useNotification();
   const [selectedColumn, setSelectedColumn] = useState<any>(null);
+  const [searchText, setSearchText] = useState<string>('');
+
+  const handleSearchTextChange = (e: any) => {
+    setSearchText(e.target.value);
+  };
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -72,13 +76,6 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
       variant: 'success'
     });
   };
-
-  useEffect(() => {
-    const series_ids = tableData.data_model_series;
-    fetchDataModelSeriesInfo(series_ids).then((data) => {
-      setColumns(data);
-    });
-  }, [tableData]);
 
   const handleEditClicked = (columnData: any) => {
     setSelectedColumn(columnData);
@@ -105,6 +102,27 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
       });
     }
   };
+
+  useEffect(() => {
+    const series_ids = tableData.data_model_series;
+    fetchDataModelSeriesInfo(series_ids).then((data) => {
+      setColumns(data);
+    });
+  }, [tableData]);
+
+  useEffect(() => {
+    if (searchText === '') {
+      setFilteredColumns(columns);
+    } else {
+      const filtered = columns.filter((column) => {
+        return (
+          column.name.toLowerCase().includes(searchText.toLowerCase()) ||
+          column.description.toLowerCase().includes(searchText.toLowerCase())
+        );
+      });
+      setFilteredColumns(filtered);
+    }
+  }, [searchText, columns]);
 
   return (
     <Box sx={{ width: '100%' }} className={styles.container}>
@@ -146,7 +164,12 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
-              <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+                value={searchText}
+                onChange={handleSearchTextChange}
+              />
             </Search>
           </Box>
           <Box
@@ -167,7 +190,7 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
           marginTop: '1rem'
         }}
       >
-        {columns.map((column) => {
+        {filteredColumns.map((column) => {
           return (
             <DataModelColumnCard
               key={column.id}
