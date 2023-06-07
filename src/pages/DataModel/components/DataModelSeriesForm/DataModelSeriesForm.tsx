@@ -2,11 +2,13 @@ import { IconButton, TextField, FormControl, InputLabel, Select, MenuItem, Box, 
 import styles from './DataModelSeriesForm.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react';
-import { DefaultService } from 'src/client';
+import uuid from 'react-uuid';
+import { DataModelDataframeState, DefaultService } from 'src/client';
 
 export interface IDataModelSeriesForm {
   handleCloseModal: () => void;
   dataModelId: string;
+  handleSuccessfulSave: () => void;
 }
 
 const DataModelSeriesTypeEnums = [
@@ -17,7 +19,7 @@ const DataModelSeriesTypeEnums = [
   'SeriesDataModelUnique'
 ];
 
-const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal, dataModelId }) => {
+const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal, dataModelId, handleSuccessfulSave }) => {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [type, setType] = useState<string>('');
@@ -28,27 +30,25 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal,
   const [resolution, setResolution] = useState<number | ''>('');
 
   const handleSaveDataModelSeries = async () => {
-    console.log('handleSaveDataModelSeries');
+    const newUUID = uuid();
     const series_schema: any = {
       type,
       series_name: name,
-      series_data_model_id: dataModelId
+      series_data_model_id: uuid()
     };
 
-    if (values) {
-      series_schema['list_value'] = values.split(',');
-    }
-    if (unit) {
-      series_schema['unit'] = unit;
-    }
-    if (min) {
-      series_schema['min'] = min;
-    }
-    if (max) {
-      series_schema['max'] = max;
-    }
-    if (resolution) {
-      series_schema['resolution'] = resolution;
+    const properties = {
+      list_value: values,
+      unit,
+      min,
+      max,
+      resolution
+    };
+
+    for (const [key, value] of Object.entries(properties)) {
+      if (value) {
+        series_schema[key] = value;
+      }
     }
 
     const res = await DefaultService.registerDataModelSeries({
@@ -57,11 +57,27 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal,
       series_schema
     });
 
-    console.log('res', res);
+    return res;
   };
 
-  const handleSaveButtonClicked = () => {
-    handleSaveDataModelSeries();
+  const handleUpdateDataModelDataframe = async (dataModelSeriesId: string) => {
+    const requestBody = {
+      data_model_series_to_add: [dataModelSeriesId],
+      state: DataModelDataframeState.ACTIVE
+    };
+    const res = await DefaultService.updateDataModelDataframe(dataModelId, requestBody);
+    return res;
+  };
+
+  const handleSaveButtonClicked = async () => {
+    try {
+      const res = await handleSaveDataModelSeries();
+      const finalRes = await handleUpdateDataModelDataframe(res.id);
+      handleSuccessfulSave();
+      handleCloseModal();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -108,8 +124,24 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal,
           flexDirection: 'column'
         }}
       >
-        <TextField id="column-name" label="Column Name" variant="outlined" className={styles.modalInput} />
-        <TextField multiline rows={2} id="description" label="Description" variant="outlined" className={styles.modalInput} />
+        <TextField
+          id="column-name"
+          label="Column Name"
+          variant="outlined"
+          className={styles.modalInput}
+          onChange={(e) => setName(e.target.value as string)}
+          value={name}
+        />
+        <TextField
+          multiline
+          rows={2}
+          id="description"
+          label="Description"
+          variant="outlined"
+          className={styles.modalInput}
+          onChange={(e) => setDescription(e.target.value as string)}
+          value={description}
+        />
         <FormControl fullWidth className={styles.modalInput}>
           <InputLabel id="demo-simple-select-label">Type</InputLabel>
           <Select
@@ -171,6 +203,7 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({ handleCloseModal,
           sx={{
             width: '100px'
           }}
+          onClick={handleCloseModal}
         >
           Cancel
         </Button>

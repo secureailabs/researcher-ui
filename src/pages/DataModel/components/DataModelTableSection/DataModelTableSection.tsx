@@ -9,10 +9,10 @@ import EditDataModelTable from '../EditDataModelTable';
 
 export interface IDataModelTableSection {
   data: any;
+  refetchDataModelTables: () => void;
 }
 
-const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
-  const [rows, setRows] = useState<any[]>([]);
+const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data, refetchDataModelTables }) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [selectedRowId, setSelectedRowId] = useState();
   const [selectedTableData, setSelectedTableData] = useState<any>(null);
@@ -26,12 +26,14 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
     return dataFrameInfo;
   };
 
-  useEffect(() => {
-    const dataModelFramesIds = data.data_model_dataframes;
-    fetchDataFrameInfo(dataModelFramesIds).then((data) => {
-      setRows(data);
-    });
-  }, [data]);
+  const dataModelFramesIds = data.data_model_dataframes;
+
+  const {
+    data: rows,
+    isLoading,
+    isError,
+    refetch: refetchDataFrameInfo
+  } = useQuery('dataFrameInfo', () => fetchDataFrameInfo(dataModelFramesIds));
 
   const tableColumns = [
     {
@@ -69,17 +71,19 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
       renderCell: (params: any) => {
         return (
           <>
-            <Button
-              variant="text"
-              onClick={() => {
-                setSelectedRowId(params.row.id);
-                const selectedTableData = rows.find((row) => row.id === params.row.id);
-                setSelectedTableData(selectedTableData);
-                setOpenDrawer(true);
-              }}
-            >
-              View Columns
-            </Button>
+            {rows && rows.length > 0 ? (
+              <Button
+                variant="text"
+                onClick={() => {
+                  setSelectedRowId(params.row.id);
+                  const selectedTableData = rows.find((row) => row.id === params.row.id);
+                  setSelectedTableData(selectedTableData);
+                  setOpenDrawer(true);
+                }}
+              >
+                View Columns
+              </Button>
+            ) : null}
           </>
         );
       }
@@ -105,7 +109,7 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
           <span className={styles.title}>Description : </span> {data.description}
         </Typography>
       </Box>
-      {rows.length > 0 ? (
+      {rows && rows.length > 0 ? (
         <Box className={styles.tableContainer}>
           <AppStripedDataGrid
             autoHeight
@@ -129,7 +133,7 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
           sx: { width: '50%', padding: '20px 0 0 20px' }
         }}
       >
-        <EditDataModelTable tableData={selectedTableData} />
+        <EditDataModelTable tableData={selectedTableData} refetchDataFrameInfo={refetchDataFrameInfo} />
       </Drawer>
     </Box>
   );

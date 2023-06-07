@@ -8,9 +8,11 @@ import InputBase from '@mui/material/InputBase';
 import CloseIcon from '@mui/icons-material/Close';
 import DataModelColumnCard from '../DataModelColumnCard';
 import DataModelSeriesForm from '../DataModelSeriesForm';
+import useNotification from 'src/hooks/useNotification';
 
 export interface IEditDataModelTable {
   tableData: any;
+  refetchDataFrameInfo: () => void;
 }
 
 const Search = styled('div')(({ theme }) => ({
@@ -44,11 +46,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }
 }));
 
-const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData }) => {
+const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchDataFrameInfo }) => {
   const [columns, setColumns] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
-
-  console.log('tableData', tableData);
+  const [sendNotification] = useNotification();
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -60,6 +61,14 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData }) => {
     });
     const res = await Promise.all(promises);
     return res;
+  };
+
+  const handleSuccessfulSave = () => {
+    refetchDataFrameInfo();
+    sendNotification({
+      msg: 'Data Column Added Successfully',
+      variant: 'success'
+    });
   };
 
   useEffect(() => {
@@ -141,7 +150,7 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData }) => {
         })}
       </Box>
       <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <DataModelSeriesForm handleCloseModal={handleCloseModal} dataModelId={tableData.id} />
+        <DataModelSeriesForm handleCloseModal={handleCloseModal} dataModelId={tableData.id} handleSuccessfulSave={handleSuccessfulSave} />
       </Modal>
     </Box>
   );

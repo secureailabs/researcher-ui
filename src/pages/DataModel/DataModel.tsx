@@ -30,7 +30,7 @@ const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
       <UtilityBar />
       {data && !isLoading ? (
         <Box className={styles.bodyContainerTable}>
-          <DataModelTableSection data={data?.data_models[0]} />
+          <DataModelTableSection data={data?.data_models[0]} refetchDataModelTables={refetch} />
         </Box>
       ) : (
         <Box className={styles.bodyContainerEmpty}>
