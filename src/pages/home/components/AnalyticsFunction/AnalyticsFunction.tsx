@@ -216,9 +216,11 @@ const PairedTTest: React.FC<IPairedTTest> = ({ sampleTextProp, handleSaveResult,
       childRef.current?.toggleLoading();
       getAnalyticsResult()
         .then((data) => {
+          console.log('data', data);
           if (data !== null && data !== undefined) {
             // remove plot key from data
-            const plot = data.plot;
+            // const plot = data.plot;
+            const plot = 'demo';
             delete data.plot;
             const resultDataStr = JSON.stringify(data);
             const result = `Paired TTest result of (${feature[0].series_name}, ${feature[1].series_name}) :: ${resultDataStr}`;
