@@ -51,6 +51,13 @@ const other: NavItemType = {
           type: 'item',
           url: '/data-model',
           target: false
+        },
+        {
+          id: 'datasets',
+          title: 'Upload Datasets',
+          type: 'item',
+          url: '/datasets',
+          target: false
         }
       ]
     },

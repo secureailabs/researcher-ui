@@ -8,6 +8,7 @@ const Home = Loadable(lazy(async () => await import('src/pages/home')));
 const DemoLongitudinal = Loadable(lazy(async () => await import('src/pages/DemoLongitudinal')));
 const DataModel = Loadable(lazy(async () => await import('src/pages/DataModel')));
 const PAG = Loadable(lazy(async () => await import('src/pages/PAG')));
+const Datasets = Loadable(lazy(async () => await import('src/pages/Datasets')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -34,6 +35,10 @@ const MainRoutes = {
     {
       path: 'pag-home',
       element: <PAG />
+    },
+    {
+      path: 'datasets',
+      element: <Datasets />
     }
   ]
 };

@@ -1,0 +1,5 @@
+.stack {
+  display: flex;
+  justify-content:space-between;
+  align-items: baseline;
+}
