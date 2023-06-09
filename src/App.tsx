@@ -11,11 +11,12 @@ import { useQuery } from 'react-query';
 const mode = 'light'; // currently only light mode is supported
 
 const checkUserSession = async (): Promise<UserInfo_Out> => {
-  if (!process.env.REACT_APP_SAIL_API_SERVICE_URL)
-    throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
-  OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
+  //if (!process.env.REACT_APP_SAIL_API_SERVICE_URL)
+  //  throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
+  const REACT_APP_SAIL_API_SERVICE_URL = 'http://172.20.100.7:8000';
+  OpenAPI.BASE = REACT_APP_SAIL_API_SERVICE_URL;
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   if (token) {
     OpenAPI.TOKEN = token;
     const res = await DefaultService.getCurrentUserInfo();
