@@ -3,9 +3,8 @@ import React, { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useQueryClient } from 'react-query';
 import { UserInfo_Out, DefaultService, RegisterDataset_In, DatasetFormat } from 'src/client';
-import FormField from 'src/components/forms/FormField';
 import useNotification from 'src/hooks/useNotification';
-import "./NewDatasetModal.module.css";
+// import styles from "./NewDatasetModal.module.css";
 
 export interface IDatasetModal {
   refetch: () => void;
@@ -22,8 +21,6 @@ const NewDatasetModal: React.FC<IDatasetModal> = ({ refetch }) => {
   const { handleSubmit, control } = useForm({
     mode: 'onSubmit'
   });
-
-  const [tags, setTags] = useState([""]);
 
   const queryClient = useQueryClient();
   const userData: UserInfo_Out | undefined =
@@ -70,14 +67,14 @@ const NewDatasetModal: React.FC<IDatasetModal> = ({ refetch }) => {
               .catch((error) => {
                 sendNotification({
                   msg: error.message,
-                  variant: 'warning'
+                  variant: 'error'
                 });
               });
           })
           .catch((error) => {
             sendNotification({
               msg: error.message,
-              variant: 'info'
+              variant: 'error'
             });
           });
       })
