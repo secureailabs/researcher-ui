@@ -28,8 +28,6 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
   selectedColumn,
   mode
 }) => {
-  console.log('selectedColumn', selectedColumn);
-
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [type, setType] = useState<string>('');
@@ -77,7 +75,8 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
       unit,
       min,
       max,
-      resolution
+      resolution,
+      type
     };
 
     for (const [key, value] of Object.entries(properties)) {

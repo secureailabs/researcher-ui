@@ -84,14 +84,18 @@ const Login: React.FC = () => {
   }
 
   return (
-    <Container component="main" className={styles.container}>
+    <Box className={styles.container}>
       <Box
         sx={{
           mt: 6,
-          width: '100%',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center'
+          alignItems: 'center',
+          border: '1px solid #e0e0e0',
+          borderRadius: 5,
+          p: 4,
+          backgroundColor: '#fff',
+          boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)'
         }}
       >
         <Box component="form" noValidate sx={{ mt: 1, width: 400 }} onSubmit={handleSubmit(onSubmit)}>
@@ -173,7 +177,7 @@ const Login: React.FC = () => {
           </Box>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

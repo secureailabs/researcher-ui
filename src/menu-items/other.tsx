@@ -63,7 +63,7 @@ const other: NavItemType = {
     },
     {
       id: 'patient-advisory-group',
-      title: 'Patient Advisory Group',
+      title: 'Administrative',
       type: 'collapse',
       icon: icons.IconChartHistogram,
       children: [
@@ -73,6 +73,13 @@ const other: NavItemType = {
           type: 'item',
           url: '/pag-home',
           target: false
+        },
+        {
+          id: 'pag-comparitive-analysis',
+          title: 'Comparative Analysis',
+          type: 'item',
+          url: 'https://sail365-demo-portal1.eastus.cloudapp.azure.com:8501/Comparison%20Metrics',
+          target: true
         }
       ]
     }

@@ -118,6 +118,8 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data, refetch
           />
         </Box>
       ) : null}
+
+      {/* Right sidebar to display column infos */}
       <Drawer
         anchor="right"
         open={openDrawer}

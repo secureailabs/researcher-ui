@@ -14,7 +14,7 @@ RUN yarn install --production --frozen-lockfile
 COPY . .
 
 # Build the application
-RUN yarn build
+COPY ./build /app/build
 
 
 # Production stage

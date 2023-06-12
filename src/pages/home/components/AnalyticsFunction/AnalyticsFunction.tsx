@@ -216,7 +216,6 @@ const PairedTTest: React.FC<IPairedTTest> = ({ sampleTextProp, handleSaveResult,
       childRef.current?.toggleLoading();
       getAnalyticsResult()
         .then((data) => {
-          console.log('data', data);
           if (data !== null && data !== undefined) {
             // remove plot key from data
             // const plot = data.plot;

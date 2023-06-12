@@ -90,6 +90,10 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
   const handleDeleteClicked = async (columnData: any) => {
     try {
       const res = await DefaultService.deleteDataModelSeries(columnData.id);
+      const requestBody = {
+        data_model_series_to_remove: [columnData.id]
+      };
+      const res2 = await DefaultService.updateDataModelDataframe(tableData.id, requestBody);
       sendNotification({
         msg: 'Data Column Deleted Successfully',
         variant: 'success'

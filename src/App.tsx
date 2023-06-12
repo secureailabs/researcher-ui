@@ -17,6 +17,7 @@ const checkUserSession = async (): Promise<UserInfo_Out> => {
   if (token) {
     OpenAPI.TOKEN = token;
     const res = await DefaultService.getCurrentUserInfo();
+    console.log('res', res);
     return res;
   } else throw new Error('No token found');
 };

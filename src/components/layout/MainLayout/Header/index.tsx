@@ -26,7 +26,13 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
 
   // common header
   const mainHeader: ReactNode = (
-    <Toolbar>
+    <Toolbar
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}
+    >
       <IconButton
         aria-label="open drawer"
         onClick={handleDrawerToggle}
