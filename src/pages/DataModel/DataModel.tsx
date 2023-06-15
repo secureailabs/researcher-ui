@@ -23,8 +23,8 @@ const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
   );
 
   return (
-    <Box sx={{ width: '100%' }} className={styles.container}>
-      <Typography variant="h4" component="h4">
+    <Box className={styles.container}>
+      <Typography variant="h3" component="h3">
         Data Model
       </Typography>
       <UtilityBar />

@@ -1,16 +1,12 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem 1rem;
-  margin-bottom: 100px;
+  flex: 1;
+  max-width: 100%;
 }
 
-.bodyContainer {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.bodyContainerTable {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 2rem 2rem;
 }
 
 .addTableButton {

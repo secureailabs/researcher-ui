@@ -38,7 +38,8 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
         onClick={handleDrawerToggle}
         edge="start"
         color="primary"
-        variant="light"
+        variant="dashed"
+        shape="square"
         sx={{ color: 'text.primary' }}
       >
         {!open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}

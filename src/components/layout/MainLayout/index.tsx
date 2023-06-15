@@ -1,4 +1,4 @@
-import { AppBar, Box, Toolbar } from '@mui/material';
+import { AppBar, Box, Container, Toolbar } from '@mui/material';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -41,20 +41,24 @@ const MinimalLayout = (): JSX.Element => {
   }, []);
 
   return (
-    <Box sx={{ display: 'flex', width: '100%', backgroundColor: '#e6e6e6' }}>
+    <Box sx={{ display: 'flex', backgroundColor: '#f5f5f5' }}>
       <Header open={open} handleDrawerToggle={handleDrawerToggle} />
       <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
-      <Box
-        sx={{
-          margin: '15px',
-          marginTop: '79px',
-          display: 'flex',
-          flex: 1,
-          backgroundColor: '#ffffff',
-          minHeight: 'calc(100vh - 79px - 30px)'
-        }}
-      >
-        <Outlet />
+      <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
+        <Container
+          maxWidth="xl"
+          sx={{
+            position: 'relative',
+            marginTop: '79px',
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 'calc(100vh - 79px)',
+            backgroundColor: '#f5f5f5',
+            width: '100%'
+          }}
+        >
+          <Outlet />
+        </Container>
       </Box>
     </Box>
   );
