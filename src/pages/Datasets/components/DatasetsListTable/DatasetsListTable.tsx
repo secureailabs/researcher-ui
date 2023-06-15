@@ -8,7 +8,7 @@ export interface IDatasetsTable {
   data: any;
 }
 
-const DatasetsTable: React.FC<IDatasetsTable> = ({ data }) => {
+const DatasetsListTable: React.FC<IDatasetsTable> = ({ data }) => {
   const [rows, setRows] = useState<any>([]);
 
   useEffect(() => {
@@ -72,11 +72,12 @@ const DatasetsTable: React.FC<IDatasetsTable> = ({ data }) => {
           <DataGridTable
             columns={columns}
             rows={rows}
+            base_url={'/datasets'}
           />
         </Box>
-      ) : null}
+      ) : <p>There are no datasets to display for this user.</p>}
     </Box>
   );
 };
 
-export default DatasetsTable;
+export default DatasetsListTable;

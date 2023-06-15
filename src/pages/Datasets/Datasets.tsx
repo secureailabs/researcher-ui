@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from '@mui/material';
 import React from 'react';
-import DatasetsTable from './components/DatasetsTable';
+import DatasetsListTable from './components/DatasetsListTable';
 import styles from './Datasets.module.css';
 import { useQuery } from 'react-query';
 import { GetMultipleDataset_Out, ApiError, DefaultService } from 'src/client';
@@ -21,7 +21,7 @@ const Datasets: React.FC = () => {
       </Box>
       <Box sx={{ mt: 3 }}>
         {data ?
-          <DatasetsTable data={data.datasets} /> : <p>There was an error fetching datasets. Please try again later</p>}
+          <DatasetsListTable data={data.datasets} /> : <p>There was an error fetching datasets. Please try again later</p>}
       </Box>
     </Box>
   );
