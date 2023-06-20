@@ -5,7 +5,6 @@ import { ApiError, DefaultService, GetDataset_Out } from 'src/client';
 import DatasetVersionsTable from './components/DatasetVersionsTable';
 import { useParams } from 'react-router';
 import ViewDataset from './components/ViewDataset/ViewDataset';
-import NewDatasetModal from '../NewDatasetModal';
 import styles from './DatasetPage.module.css';
 import NewDatasetVersionModal from './components/NewDatasetVersionModal';
 

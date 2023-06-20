@@ -22,7 +22,7 @@ const ViewDataset: React.FC = () => {
 
   return (
     <Box sx={{ width: '100%', p: '1rem' }}>
-      <Box className={styles.row} sx={{ borderColor: 'lightgrey', boxShadow: 4}}>
+      <Box className={styles.row} sx={{ borderColor: 'lightgrey', boxShadow: 2}}>
         <Box className={styles.column}>
           <Typography variant="h6">Publish Date</Typography>
           <Controller

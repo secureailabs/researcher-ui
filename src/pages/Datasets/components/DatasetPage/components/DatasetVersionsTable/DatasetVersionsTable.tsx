@@ -21,7 +21,7 @@ const DatasetVersionsTable: React.FC = () => {
 
 
   useEffect(() => {
-    setRows(data);
+    setRows(data?.dataset_versions);
   }, []);
 
   const columns: GridColDef[] = [
@@ -55,17 +55,18 @@ const DatasetVersionsTable: React.FC = () => {
     },
   ];
 
+  console.log('rows', rows);
+
   return (
-    <Box>
-      {rows.length > 0 ? (
-        <Box sx={{ borderColor: 'lightgrey', boxShadow: 4 }}>
+    <Box  sx={{ width: '100%', p: '1rem' }}>
+      {rows?.length > 0 ? (
+        <Box sx={{ borderColor: 'lightgrey' }}>
           <DataGridTable
             columns={columns}
             rows={rows}
-            base_url={'/dashboard/datasets/' + id + '/versions'}
           />
         </Box>
-      ) : <p>There are no previous dataset versions. Any changes to a dataset will appear here. </p>}
+      ) : <p>There are no datasets to display for this user.</p>}
     </Box>
   );
 };

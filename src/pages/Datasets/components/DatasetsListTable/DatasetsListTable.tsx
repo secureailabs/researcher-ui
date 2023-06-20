@@ -67,7 +67,7 @@ const DatasetsListTable: React.FC<IDatasetsTable> = ({ data }) => {
 
   return (
     <Box>
-      {rows.length > 0 ? (
+      {rows?.length > 0 ? (
         <Box>
           <DataGridTable
             columns={columns}
