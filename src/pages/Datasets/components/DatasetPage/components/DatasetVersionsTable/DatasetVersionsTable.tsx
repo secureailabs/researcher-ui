@@ -64,6 +64,7 @@ const DatasetVersionsTable: React.FC = () => {
           <DataGridTable
             columns={columns}
             rows={rows}
+            base_url={'/datasets/' + id + '/versions'}
           />
         </Box>
       ) : <p>There are no datasets to display for this user.</p>}
