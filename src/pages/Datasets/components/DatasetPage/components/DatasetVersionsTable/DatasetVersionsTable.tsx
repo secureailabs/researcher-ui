@@ -55,8 +55,6 @@ const DatasetVersionsTable: React.FC = () => {
     },
   ];
 
-  console.log('rows', rows);
-
   return (
     <Box  sx={{ width: '100%', p: '1rem' }}>
       {rows?.length > 0 ? (
