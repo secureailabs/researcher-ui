@@ -1,5 +1,6 @@
 import { alpha, styled } from '@mui/material/styles';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, GridEventListener } from '@mui/x-data-grid';
+import { useNavigate } from 'react-router-dom';
 
 const ODD_OPACITY = 0.2;
 
@@ -36,11 +37,18 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
 }));
 
 export default function AppStripedDataGrid(props: any) {
+  const navigate = useNavigate();
+
+  const handleRowClick: GridEventListener<'rowClick'> = (params) => {
+    navigate(`${props.base_url}/${params.row.id}`);
+  };
+
   return (
     <StripedDataGrid
       getRowClassName={(params: any) => {
         return params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd';
       }}
+      onRowClick={props.base_url ? handleRowClick : undefined}
       {...props}
     />
   );

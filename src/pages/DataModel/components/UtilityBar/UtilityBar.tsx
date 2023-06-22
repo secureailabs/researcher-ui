@@ -1,14 +1,22 @@
-import { Box, Button, Menu, MenuItem } from '@mui/material';
+import { Box, Button, Menu, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import MenuIcon from '@mui/icons-material/Menu';
 import styles from './UtilityBar.module.css';
 import { useState } from 'react';
 import IconButton from 'src/components/extended/IconButton';
+import { DefaultService, RegisterDataModel_In } from 'src/client';
 
-export interface IUtilityBar {}
+export interface IUtilityBar {
+  refetch: () => void;
+}
 
-const UtilityBar: React.FC<IUtilityBar> = () => {
+const UtilityBar: React.FC<IUtilityBar> = ({ refetch }) => {
+  const [tableName, setTableName] = useState('');
+  const [tableDescription, setTableDescription] = useState('');
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [openModal, setOpenModal] = useState(false);
+
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -17,15 +25,33 @@ const UtilityBar: React.FC<IUtilityBar> = () => {
     setAnchorEl(null);
   };
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleSave = async () => {
+    const body: RegisterDataModel_In = {
+      name: tableName,
+      description: tableDescription
+    };
+    try {
+      const res = await DefaultService.registerDataModelDataframe(body);
+      refetch();
+      setOpenModal(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Box className={styles.container}>
       <Box className={styles.bodyContainerLeft}></Box>
       <Box className={styles.bodyContainerRight}>
-        <Button variant="contained" color="primary" className={styles.addTableButton}>
+        <Button variant="contained" color="primary" className={styles.addTableButton} onClick={() => setOpenModal(true)}>
           Add Table
         </Button>
         <IconButton
-          aria-label="delete"
+          aria-label="refresh"
           shape="rounded"
           variant="outlined"
           sx={{
@@ -34,7 +60,7 @@ const UtilityBar: React.FC<IUtilityBar> = () => {
         >
           <RefreshIcon />
         </IconButton>
-        <IconButton aria-label="delete" shape="rounded" variant="outlined" onClick={handleClick}>
+        <IconButton aria-label="menu" shape="rounded" variant="outlined" onClick={handleClick}>
           <MenuIcon />
         </IconButton>
         <Menu
@@ -49,6 +75,62 @@ const UtilityBar: React.FC<IUtilityBar> = () => {
           <MenuItem onClick={handleClose}>Revision History</MenuItem>
         </Menu>
       </Box>
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: '#fff',
+            padding: '30px',
+            outline: 'none',
+            width: '500px'
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Enter DataModel Table Details
+          </Typography>
+          <Box>
+            <TextField
+              id="outlined-basic"
+              label="Table Name"
+              variant="outlined"
+              value={tableName}
+              onChange={(e) => setTableName(e.target.value)}
+              sx={{
+                width: '100%',
+                marginTop: '20px'
+              }}
+            />
+            <TextField
+              id="outlined-basic"
+              label="Table Description"
+              variant="outlined"
+              value={tableDescription}
+              onChange={(e) => setTableDescription(e.target.value)}
+              sx={{
+                width: '100%',
+                marginTop: '20px'
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              marginTop: '20px'
+            }}
+          >
+            <Button variant="outlined" color="info" onClick={handleCloseModal}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleSave} style={{ marginLeft: '10px' }}>
+              Save
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 };

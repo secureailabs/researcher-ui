@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { DefaultService } from 'src/client';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
-import AddNewDataModel from '../AddNewDataModel';
 import EditDataModelTable from '../EditDataModelTable';
 
 export interface IDataModelTableSection {

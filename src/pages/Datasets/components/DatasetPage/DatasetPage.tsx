@@ -8,29 +8,27 @@ import ViewDataset from './components/ViewDataset/ViewDataset';
 import styles from './DatasetPage.module.css';
 import NewDatasetVersionModal from './components/NewDatasetVersionModal';
 
-
 const Dataset: React.FC = () => {
   const { id } = useParams() as { id: string };
-  const { data, refetch } = useQuery<
-    GetDataset_Out,
-    ApiError
-  >([id], () => DefaultService.getDataset(id), {
+  const { data, refetch } = useQuery<GetDataset_Out, ApiError>([id], () => DefaultService.getDataset(id), {
     refetchOnMount: 'always'
   });
 
   return (
-    <Box sx={{ width: '100%', p: '1rem' }} >
-      {data ?
+    <Box sx={{ width: '100%' }}>
+      {data ? (
         <Box>
-          <Typography variant='h3' sx={{ pb: 2 }}>{data?.name}</Typography>
+          <Typography variant="h3">{data?.name}</Typography>
           <ViewDataset />
           <Box className={styles.stack}>
-          <Typography variant='h3' sx={{ py: 2 }}>Versions</Typography>
-          <NewDatasetVersionModal refetch={refetch}></NewDatasetVersionModal>
+            <Typography variant="h3">Versions</Typography>
+            <NewDatasetVersionModal refetch={refetch}></NewDatasetVersionModal>
           </Box>
           <DatasetVersionsTable />
         </Box>
-        : <p>There was an error fetching information for this dataset. Please try again later</p>}
+      ) : (
+        <p>There was an error fetching information for this dataset. Please try again later</p>
+      )}
     </Box>
   );
 };

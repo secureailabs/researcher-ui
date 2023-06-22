@@ -1,7 +1,9 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import React, { useState, useEffect } from 'react'
-import DataGridTable from 'src/components/datagrid/DatagridTable';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
+
 // import styles from './DatasetsTable.module.css';
 
 export interface IDatasetsTable {
@@ -10,24 +12,25 @@ export interface IDatasetsTable {
 
 const DatasetsListTable: React.FC<IDatasetsTable> = ({ data }) => {
   const [rows, setRows] = useState<any>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setRows(data);
-  }, []);
+  }, [data]);
 
   const columns: GridColDef[] = [
     {
       field: 'name',
-      headerClassName: 'header',
+      headerClassName: 'table--header',
       headerName: 'Name',
       flex: 1,
       valueGetter: (params: any) => {
         return params.row.name ? params.row.name : '--';
-      },
+      }
     },
     {
       field: 'creation_time',
-      headerClassName: 'header',
+      headerClassName: 'table--header',
       headerName: 'Publish Date',
       flex: 1,
       type: 'string',
@@ -37,7 +40,7 @@ const DatasetsListTable: React.FC<IDatasetsTable> = ({ data }) => {
     },
     {
       field: 'tags',
-      headerClassName: 'header',
+      headerClassName: 'table--header',
       headerName: 'Keywords',
       flex: 1,
       type: 'array',
@@ -47,7 +50,7 @@ const DatasetsListTable: React.FC<IDatasetsTable> = ({ data }) => {
     },
     {
       field: 'format',
-      headerClassName: 'header',
+      headerClassName: 'table--header',
       headerName: 'Format',
       flex: 1,
       valueGetter: (params: any) => {
@@ -56,26 +59,45 @@ const DatasetsListTable: React.FC<IDatasetsTable> = ({ data }) => {
     },
     {
       field: 'state',
-      headerClassName: 'header',
+      headerClassName: 'table--header',
       headerName: 'State',
       flex: 1,
       valueGetter: (params: any) => {
         return params.row?.state ? `${params.row?.state}` : '--';
       }
     },
+    {
+      field: 'action',
+      flex: 1,
+      headerName: 'Action',
+      headerClassName: 'table--header',
+      renderCell: (params: any) => {
+        return (
+          <>
+            {rows && rows.length > 0 ? (
+              <Button
+                onClick={() => {
+                  navigate(`/datasets/${params.row.id}`);
+                }}
+              >
+                Edit
+              </Button>
+            ) : null}
+          </>
+        );
+      }
+    }
   ];
 
   return (
     <Box>
       {rows?.length > 0 ? (
         <Box>
-          <DataGridTable
-            columns={columns}
-            rows={rows}
-            base_url={'/datasets'}
-          />
+          <AppStripedDataGrid columns={columns} rows={rows} />
         </Box>
-      ) : <p>There are no datasets to display for this user.</p>}
+      ) : (
+        <p>There are no datasets to display for this user.</p>
+      )}
     </Box>
   );
 };

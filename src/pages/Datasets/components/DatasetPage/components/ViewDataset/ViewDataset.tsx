@@ -9,20 +9,17 @@ import styles from './ViewDataset.module.css';
 
 const ViewDataset: React.FC = () => {
   const { id } = useParams() as { id: string };
-  const { data, refetch } = useQuery<
-    GetDataset_Out,
-    ApiError
-  >([id], () => DefaultService.getDataset(id), {
+  const { data, refetch } = useQuery<GetDataset_Out, ApiError>([id], () => DefaultService.getDataset(id), {
     refetchOnMount: 'always'
   });
-  
+
   const { control } = useForm({
-    mode: 'onSubmit',
+    mode: 'onSubmit'
   });
 
   return (
-    <Box sx={{ width: '100%', p: '1rem' }}>
-      <Box className={styles.row} sx={{ borderColor: 'lightgrey', boxShadow: 2}}>
+    <Box className={styles.container}>
+      <Box className={styles.row}>
         <Box className={styles.column}>
           <Typography variant="h6">Publish Date</Typography>
           <Controller

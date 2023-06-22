@@ -51,9 +51,17 @@ const other: NavItemType = {
           type: 'item',
           url: '/data-model',
           target: false
-        },
+        }
+      ]
+    },
+    {
+      id: 'data-model-upload',
+      title: 'Data Upload',
+      type: 'collapse',
+      icon: icons.IconDatabaseCog,
+      children: [
         {
-          id: 'datasets',
+          id: 'upload-datasets',
           title: 'Upload Datasets',
           type: 'item',
           url: '/datasets',

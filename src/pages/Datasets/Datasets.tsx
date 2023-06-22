@@ -6,22 +6,21 @@ import { useQuery } from 'react-query';
 import { GetMultipleDataset_Out, ApiError, DefaultService } from 'src/client';
 import NewDatasetModal from './components/NewDatasetModal';
 
-
 const Datasets: React.FC = () => {
-  const { data, refetch } = useQuery<
-    GetMultipleDataset_Out,
-    ApiError
-  >(['datasets'], DefaultService.getAllDatasets, { refetchOnMount: 'always' });
+  const { data, refetch } = useQuery<GetMultipleDataset_Out, ApiError>(['datasets'], DefaultService.getAllDatasets, {
+    refetchOnMount: 'always'
+  });
+
+  console.log('ddd', data);
 
   return (
-    <Box sx={{ width: '100%', p: '1rem' }} >
+    <Box sx={{ width: '100%', p: '1rem' }}>
       <Box className={styles.stack}>
         <Typography variant="h3"> Datasets </Typography>
-        <NewDatasetModal refetch={refetch } />
+        <NewDatasetModal refetch={refetch} />
       </Box>
-      <Box sx={{ mt: 3 }}>
-        {data ?
-          <DatasetsListTable data={data.datasets} /> : <p>There was an error fetching datasets. Please try again later</p>}
+      <Box sx={{ mt: 3 }} className={styles.bodyContainerTable}>
+        {data ? <DatasetsListTable data={data.datasets} /> : <p>There was an error fetching datasets. Please try again later</p>}
       </Box>
     </Box>
   );

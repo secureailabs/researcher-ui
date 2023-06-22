@@ -14,8 +14,8 @@ const NewDatasetModal: React.FC<IDatasetModal> = ({ refetch }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-    setOpen(false);
     refetch();
+    setOpen(false);
   };
   const [sendNotification] = useNotification();
   const { handleSubmit, control } = useForm({
@@ -23,21 +23,21 @@ const NewDatasetModal: React.FC<IDatasetModal> = ({ refetch }) => {
   });
 
   const queryClient = useQueryClient();
-  const userData: UserInfo_Out | undefined =
-    queryClient.getQueryData('userData');
+  const userData: UserInfo_Out | undefined = queryClient.getQueryData('userData');
 
   const onSubmit: SubmitHandler<any> = (data) => {
     if (!userData) {
       sendNotification({
-        msg: "User not found. Please login again",
+        msg: 'User not found. Please login again',
         variant: 'error'
-      }); return;
+      });
+      return;
     }
     DefaultService.getAllDataFederations(userData.organization.id)
       .then((response) => {
         if (response.data_federations?.length === 0) {
           sendNotification({
-            msg: "No data federation found. Cannot register dataset at this time",
+            msg: 'No data federation found. Cannot register dataset at this time',
             variant: 'error'
           });
           return;
@@ -45,7 +45,7 @@ const NewDatasetModal: React.FC<IDatasetModal> = ({ refetch }) => {
         const federation_id = response.data_federations?.[0].id;
         if (!federation_id) {
           sendNotification({
-            msg: "No data federation found. Cannot register dataset at this time",
+            msg: 'No data federation found. Cannot register dataset at this time',
             variant: 'error'
           });
           return;
@@ -95,23 +95,20 @@ const NewDatasetModal: React.FC<IDatasetModal> = ({ refetch }) => {
     bgcolor: 'background.paper',
     borderColor: 'lightgrey',
     boxShadow: 24,
-    p: 4,
+    p: 4
   };
 
   return (
     <Box>
-      <Button
-        sx={{ mb: 2 }}
-        onClick={handleOpen}
-        type="submit"
-        variant="contained"
-      >New Dataset</Button>
+      <Button sx={{ mb: 2 }} onClick={handleOpen} type="submit" variant="contained">
+        New Dataset
+      </Button>
       <Modal
         sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          borderColor: 'lightgrey',
+          borderColor: 'lightgrey'
         }}
         open={open}
         onClose={handleClose}
@@ -119,7 +116,9 @@ const NewDatasetModal: React.FC<IDatasetModal> = ({ refetch }) => {
         aria-describedby="Enter new dataset information"
       >
         <Box sx={style} component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Typography sx={{ pb: 1 }} variant="h4">New Dataset</Typography>
+          <Typography sx={{ pb: 1 }} variant="h4">
+            New Dataset
+          </Typography>
           <Box sx={{ py: 2 }}>
             <Controller
               name="name"
