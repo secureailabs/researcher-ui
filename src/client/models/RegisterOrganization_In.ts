@@ -2,6 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { UserRole } from './UserRole';
+
 export type RegisterOrganization_In = {
     name: string;
     description: string;
@@ -11,5 +13,6 @@ export type RegisterOrganization_In = {
     admin_email: string;
     admin_password: string;
     admin_avatar?: string;
+    admin_roles: Array<UserRole>;
 };
 

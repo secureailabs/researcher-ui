@@ -4,13 +4,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import styles from './UtilityBar.module.css';
 import { useState } from 'react';
 import IconButton from 'src/components/extended/IconButton';
-import { DefaultService, RegisterDataModel_In } from 'src/client';
+import { DefaultService, RegisterDataModelDataframe_In, RegisterDataModel_In } from 'src/client';
 
 export interface IUtilityBar {
   refetch: () => void;
+  dataModelId: string;
 }
 
-const UtilityBar: React.FC<IUtilityBar> = ({ refetch }) => {
+const UtilityBar: React.FC<IUtilityBar> = ({ refetch, dataModelId }) => {
   const [tableName, setTableName] = useState('');
   const [tableDescription, setTableDescription] = useState('');
 
@@ -30,9 +31,10 @@ const UtilityBar: React.FC<IUtilityBar> = ({ refetch }) => {
   };
 
   const handleSave = async () => {
-    const body: RegisterDataModel_In = {
+    const body: RegisterDataModelDataframe_In = {
       name: tableName,
-      description: tableDescription
+      description: tableDescription,
+      data_model_id: dataModelId
     };
     try {
       const res = await DefaultService.registerDataModelDataframe(body);

@@ -9,5 +9,6 @@ export type RegisterDataset_In = {
     description: string;
     tags: string;
     format: DatasetFormat;
+    data_federation_id: string;
 };
 

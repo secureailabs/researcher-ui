@@ -11,7 +11,7 @@ const Datasets: React.FC = () => {
     refetchOnMount: 'always'
   });
 
-  console.log('ddd', data);
+  console.log('data', data);
 
   return (
     <Box sx={{ width: '100%', p: '1rem' }}>

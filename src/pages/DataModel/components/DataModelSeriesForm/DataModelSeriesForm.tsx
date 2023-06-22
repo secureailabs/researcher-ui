@@ -3,7 +3,7 @@ import styles from './DataModelSeriesForm.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
 import uuid from 'react-uuid';
-import { DataModelDataframeState, DefaultService } from 'src/client';
+import { DataModelDataframeState, DefaultService, UpdateDataModelDataframe_In } from 'src/client';
 
 export interface IDataModelSeriesForm {
   handleCloseModal: () => void;
@@ -40,8 +40,7 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
   const handleSaveNewDataModelSeries = async () => {
     const series_schema: any = {
       type,
-      series_name: name,
-      series_data_model_id: uuid()
+      series_name: name
     };
 
     const properties = {
@@ -61,7 +60,8 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
     const res = await DefaultService.registerDataModelSeries({
       name,
       description,
-      series_schema
+      series_schema,
+      data_model_dataframe_id: dataModelId
     });
 
     return res;
@@ -92,22 +92,11 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
     return res;
   };
 
-  // This is the api call needed to be called after registering a new data model series
-  const handleUpdateDataModelDataframe = async (dataModelSeriesId: string) => {
-    const requestBody = {
-      data_model_series_to_add: [dataModelSeriesId],
-      state: DataModelDataframeState.ACTIVE
-    };
-    const res = await DefaultService.updateDataModelDataframe(dataModelId, requestBody);
-    return res;
-  };
-
   const handleSaveButtonClicked = async () => {
     try {
       // const res = await handleSaveNewDataModelSeries();
       if (mode === 'new') {
         const res = await handleSaveNewDataModelSeries();
-        const finalRes = await handleUpdateDataModelDataframe(res.id);
       }
       if (mode === 'edit') {
         const res = await handleUpdateDataModelSeries();

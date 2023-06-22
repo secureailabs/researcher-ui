@@ -2,10 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { SeriesDataModelType } from './SeriesDataModelType';
+
 export type SeriesDataModelSchema = {
-    type: string;
+    type: SeriesDataModelType;
     series_name: string;
-    series_data_model_id: string;
     list_value?: Array<string>;
     unit?: string;
     min?: number;

@@ -22,16 +22,20 @@ const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
     }
   );
 
+  console.log('data', data);
+
   return (
     <Box className={styles.container}>
       <Typography variant="h3" component="h3">
         Data Model
       </Typography>
-      <UtilityBar refetch={refetch} />
       {data && !isLoading ? (
-        <Box className={styles.bodyContainerTable}>
-          <DataModelTableSection data={data?.data_models[0]} refetchDataModelTables={refetch} />
-        </Box>
+        <>
+          <UtilityBar refetch={refetch} dataModelId={data?.data_models[0].id} />
+          <Box className={styles.bodyContainerTable}>
+            <DataModelTableSection data={data?.data_models[0]} refetchDataModelTables={refetch} />
+          </Box>
+        </>
       ) : (
         <Box className={styles.bodyContainerEmpty}>
           <Typography variant="body1" component="p">

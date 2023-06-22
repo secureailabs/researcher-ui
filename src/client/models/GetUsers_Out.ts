@@ -9,8 +9,8 @@ export type GetUsers_Out = {
     name: string;
     email: string;
     job_title: string;
-    role: UserRole;
-    avatar: string;
+    roles: Array<UserRole>;
+    avatar?: string;
     id: string;
     organization: BasicObjectInfo;
 };

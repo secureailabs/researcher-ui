@@ -50,26 +50,20 @@ const NewDatasetModal: React.FC<IDatasetModal> = ({ refetch }) => {
           });
           return;
         }
+
         const data_format = response.data_federations?.[0].data_format;
+
         const register_dataset_data: RegisterDataset_In = {
           name: data.name,
           format: data_format as unknown as DatasetFormat,
           tags: data.tags,
-          description: data.description
+          description: data.description,
+          data_federation_id: federation_id
         };
+
         DefaultService.registerDataset(register_dataset_data)
           .then((response) => {
-            const dataset_id = response.id;
-            DefaultService.addDataset(federation_id, dataset_id)
-              .then(() => {
-                handleClose();
-              })
-              .catch((error) => {
-                sendNotification({
-                  msg: error.message,
-                  variant: 'error'
-                });
-              });
+            handleClose();
           })
           .catch((error) => {
             sendNotification({

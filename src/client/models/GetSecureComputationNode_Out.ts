@@ -15,6 +15,6 @@ export type GetSecureComputationNode_Out = {
     timestamp: string;
     state: SecureComputationNodeState;
     detail?: string;
-    ipaddress?: string;
+    url?: string;
 };
 

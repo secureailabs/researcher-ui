@@ -65,9 +65,11 @@ export type { RegisterSecureComputationNode_In } from './models/RegisterSecureCo
 export type { RegisterSecureComputationNode_Out } from './models/RegisterSecureComputationNode_Out';
 export type { RegisterUser_In } from './models/RegisterUser_In';
 export type { RegisterUser_Out } from './models/RegisterUser_Out';
+export { Resource } from './models/Resource';
 export { SecureComputationNodeSize } from './models/SecureComputationNodeSize';
 export { SecureComputationNodeState } from './models/SecureComputationNodeState';
 export type { SeriesDataModelSchema } from './models/SeriesDataModelSchema';
+export { SeriesDataModelType } from './models/SeriesDataModelType';
 export type { UpdateDataFederation_In } from './models/UpdateDataFederation_In';
 export type { UpdateDataModel_In } from './models/UpdateDataModel_In';
 export type { UpdateDataModelDataframe_In } from './models/UpdateDataModelDataframe_In';

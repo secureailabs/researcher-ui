@@ -46,6 +46,7 @@ import type { RegisterSecureComputationNode_In } from '../models/RegisterSecureC
 import type { RegisterSecureComputationNode_Out } from '../models/RegisterSecureComputationNode_Out';
 import type { RegisterUser_In } from '../models/RegisterUser_In';
 import type { RegisterUser_Out } from '../models/RegisterUser_Out';
+import type { Resource } from '../models/Resource';
 import type { UpdateDataFederation_In } from '../models/UpdateDataFederation_In';
 import type { UpdateDataModel_In } from '../models/UpdateDataModel_In';
 import type { UpdateDataModelDataframe_In } from '../models/UpdateDataModelDataframe_In';
@@ -67,8 +68,11 @@ export class DefaultService {
      * Audit Incidents Query
      * query by logQL
      * @param label
-     * @param userId query events related to a specific user id
-     * @param dataId query events related to a specific data id
+     * @param userId query events related to a specific user
+     * @param resource query events related to a specific resource
+     * @param datasetId query events related to a specific dataset
+     * @param scnId query events related to a specific scn
+     * @param dataModeId query events related to a specific data model
      * @param start starting timestamp of the query range
      * @param end ending timestamp of the query range
      * @param limit query events number limit
@@ -80,7 +84,10 @@ export class DefaultService {
     public static auditIncidentsQuery(
         label: string,
         userId?: string,
-        dataId?: string,
+        resource?: Resource,
+        datasetId?: string,
+        scnId?: string,
+        dataModeId?: string,
         start?: number,
         end?: number,
         limit?: number,
@@ -93,7 +100,10 @@ export class DefaultService {
             query: {
                 'label': label,
                 'user_id': userId,
-                'data_id': dataId,
+                'resource': resource,
+                'dataset_id': datasetId,
+                'scn_id': scnId,
+                'data_mode_id': dataModeId,
                 'start': start,
                 'end': end,
                 'limit': limit,
@@ -101,8 +111,6 @@ export class DefaultService {
                 'direction': direction,
             },
             errors: {
-                403: `Unauthorized`,
-                404: `Organization not found`,
                 422: `Validation Error`,
             },
         });
@@ -220,7 +228,7 @@ export class DefaultService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                409: `User already registered`,
+                409: `SAIL_ADMIN already exists`,
                 422: `Validation Error`,
             },
         });
@@ -354,6 +362,29 @@ export class DefaultService {
     }
 
     /**
+     * Upgrade Organization
+     * Upgrade the organization to a non-free plan
+     * @param organizationId UUID of the organization
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static upgradeOrganization(
+        organizationId: string,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/organizations/{organization_id}/upgrade',
+            path: {
+                'organization_id': organizationId,
+            },
+            errors: {
+                404: `Organization not found`,
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
      * Get User
      * Get information about a user
      * @param organizationId UUID of the organization
@@ -373,6 +404,7 @@ export class DefaultService {
                 'user_id': userId,
             },
             errors: {
+                403: `Unauthorized`,
                 404: `User not found`,
                 422: `Validation Error`,
             },
@@ -443,14 +475,14 @@ export class DefaultService {
      * Get All Data Federations
      * Get list of all the data federations
      * @param dataSubmitterId UUID of Data Submitter in the data federation
-     * @param researcherId UUID of Researcher in the data federation
+     * @param researchOrganizationsId UUID of Researcher in the data federation
      * @param datasetId UUID of Dataset in the data federation
      * @returns GetMultipleDataFederation_Out List of data federations
      * @throws ApiError
      */
     public static getAllDataFederations(
         dataSubmitterId?: string,
-        researcherId?: string,
+        researchOrganizationsId?: string,
         datasetId?: string,
     ): CancelablePromise<GetMultipleDataFederation_Out> {
         return __request(OpenAPI, {
@@ -458,12 +490,11 @@ export class DefaultService {
             url: '/data-federations',
             query: {
                 'data_submitter_id': dataSubmitterId,
-                'researcher_id': researcherId,
+                'research_organizations_id': researchOrganizationsId,
                 'dataset_id': datasetId,
             },
             errors: {
                 403: `Access denied`,
-                404: `Organization not found`,
                 422: `Validation Error`,
             },
         });
@@ -784,33 +815,6 @@ export class DefaultService {
     }
 
     /**
-     * Add Dataset
-     * Add a dataset to a data federation
-     * @param dataFederationId UUID of the Data federation to which the dataset is being added
-     * @param datasetId UUID of the dataset that is being added to the data federation
-     * @returns void
-     * @throws ApiError
-     */
-    public static addDataset(
-        dataFederationId: string,
-        datasetId: string,
-    ): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/data-federations/{data_federation_id}/datasets/{dataset_id}',
-            path: {
-                'data_federation_id': dataFederationId,
-                'dataset_id': datasetId,
-            },
-            errors: {
-                401: `Unauthorised`,
-                404: `Unauthorised`,
-                422: `Validation Error`,
-            },
-        });
-    }
-
-    /**
      * Remove Dataset
      * Remove a dataset from a data federation
      * @param dataFederationId UUID of the Data federation from which the dataset is being removed
@@ -903,9 +907,6 @@ export class DefaultService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/datasets',
-            errors: {
-                404: `Organization not found`,
-            },
         });
     }
 
@@ -947,7 +948,6 @@ export class DefaultService {
                 'dataset_id': datasetId,
             },
             errors: {
-                404: `Organization not found`,
                 422: `Validation Error`,
             },
         });
@@ -974,8 +974,6 @@ export class DefaultService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                403: `Unauthorized`,
-                404: `Dataset not found`,
                 422: `Validation Error`,
             },
         });
@@ -998,8 +996,6 @@ export class DefaultService {
                 'dataset_id': datasetId,
             },
             errors: {
-                403: `Unauthorized`,
-                404: `Dataset not found`,
                 422: `Validation Error`,
             },
         });
@@ -1022,7 +1018,6 @@ export class DefaultService {
                 'dataset_id': datasetId,
             },
             errors: {
-                404: `Organization not found`,
                 422: `Validation Error`,
             },
         });
@@ -1044,8 +1039,7 @@ export class DefaultService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                403: `Dataset not found`,
-                404: `Organization not found`,
+                403: `Dataset is not active. Try again later`,
                 422: `Validation Error`,
             },
         });
@@ -1053,7 +1047,7 @@ export class DefaultService {
 
     /**
      * Get Dataset Version
-     * Get the information about a dataset
+     * Get the information about a dataset version
      * @param datasetVersionId UUID of the dataset version
      * @returns GetDatasetVersion_Out Successful Response
      * @throws ApiError
@@ -1068,7 +1062,6 @@ export class DefaultService {
                 'dataset_version_id': datasetVersionId,
             },
             errors: {
-                404: `Dataset version not found`,
                 422: `Validation Error`,
             },
         });
@@ -1095,7 +1088,6 @@ export class DefaultService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                404: `Dataset not found`,
                 422: `Validation Error`,
             },
         });
@@ -1118,8 +1110,6 @@ export class DefaultService {
                 'dataset_version_id': datasetVersionId,
             },
             errors: {
-                403: `Unauthorized`,
-                404: `Dataset not found`,
                 422: `Validation Error`,
             },
         });
@@ -1142,7 +1132,6 @@ export class DefaultService {
                 'dataset_version_id': datasetVersionId,
             },
             errors: {
-                404: `Dataset version not found`,
                 409: `Dataset version is not in ENCRYPTING state. Cannot get the connection string.`,
                 422: `Validation Error`,
             },
@@ -1160,7 +1149,7 @@ export class DefaultService {
             method: 'GET',
             url: '/secure-computation-node',
             errors: {
-                404: `Dataset version not found`,
+                404: `DataFederation not found`,
             },
         });
     }
@@ -1381,13 +1370,22 @@ export class DefaultService {
     /**
      * Get All Data Model Dataframe Info
      * Get all data model dataframe SCNs
+     * @param dataModelId UUID of Data Model
      * @returns GetMultipleDataModelDataframe_Out All Data model dataframe information for the current organization or data model
      * @throws ApiError
      */
-    public static getAllDataModelDataframeInfo(): CancelablePromise<GetMultipleDataModelDataframe_Out> {
+    public static getAllDataModelDataframeInfo(
+        dataModelId?: string,
+    ): CancelablePromise<GetMultipleDataModelDataframe_Out> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/data-models-dataframes',
+            query: {
+                'data_model_id': dataModelId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
         });
     }
 
@@ -1485,13 +1483,22 @@ export class DefaultService {
     /**
      * Get All Data Model Series Info
      * Get all data model series SCNs
+     * @param dataModelDataframeId Data model dataframe Id
      * @returns GetMultipleDataModelSeries_Out All Data model series information for the current organization or data model
      * @throws ApiError
      */
-    public static getAllDataModelSeriesInfo(): CancelablePromise<GetMultipleDataModelSeries_Out> {
+    public static getAllDataModelSeriesInfo(
+        dataModelDataframeId?: string,
+    ): CancelablePromise<GetMultipleDataModelSeries_Out> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/data-models-series',
+            query: {
+                'data_model_dataframe_id': dataModelDataframeId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
         });
     }
 
