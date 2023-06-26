@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridEventListener } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { getUrl } from 'src/client/core/request';
 
 export type TableProps = {
   columns: any[];
