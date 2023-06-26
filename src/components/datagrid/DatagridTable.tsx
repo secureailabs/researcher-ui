@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridEventListener } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-
+import { getUrl } from 'src/client/core/request';
 
 export type TableProps = {
   columns: any[];
@@ -25,15 +25,21 @@ const DataGridTable: React.FC<TableProps> = (props: any) => {
   const navigate = useNavigate();
 
   const handleRowClick: GridEventListener<'rowClick'> = (params) => {
-    navigate(`${props.base_url}/${params.row.id}`);
-  };
+    const checkUrl = `${props.base_url}/${params.row.id}`;
+
+    if (checkUrl.includes('undefined')) {
+      return;
+    } else {
+      navigate(`${props.base_url}/${params.row.id}`);
+    }
+  }; 
 
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <StyledDataGrid
         sx={{
           boxShadow: 2,
-          px:2
+          px: 2
         }}
         onRowClick={handleRowClick}
         {...props}

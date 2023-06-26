@@ -1,6 +1,6 @@
 import papaparse from 'papaparse';
 import { SeriesDataModelSchema } from 'src/client';
-import { TDataFrameDataModel } from './components/UploadItem/UploadItem';
+import { TDataFrameDataModel } from './DatasetUpload';
 
 class ValidatorCsv {
   public validate_headers(
