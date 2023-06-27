@@ -13,11 +13,14 @@ interface CsvDisplayProps {
 
 const CsvDisplay: React.FC<CsvDisplayProps> = ({ csvData }) => {
   const [headers, ...rows] = csvData.map((row) => row.split(','));
+
   return (
     <TableContainer
       component={Paper}
       sx={{
-        height: 400
+        p: '1rem',
+        height: 400,
+        boxShadow: 4
       }}
     >
       <Table

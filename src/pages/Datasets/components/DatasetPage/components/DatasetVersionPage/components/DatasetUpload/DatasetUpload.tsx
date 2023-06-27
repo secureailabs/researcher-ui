@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import React, { useRef, ChangeEvent, useState } from 'react';
-import { Box } from '@mui/material';
+import { Autocomplete, Box, TextField, Typography } from '@mui/material';
 import CsvDisplay from './components/CsvDisplay/CsvDisplay';
 import papaparse from 'papaparse';
 import { useParams } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { SeriesDataModelSchema } from 'src/client';
 import { validateFile } from './Validate';
 import { uploadAndPublish } from './Utils';
 import { DefaultService, UpdateDatasetVersion_In } from 'src/client';
+import { IAutocompleteOptionData } from 'src/shared/types/customTypes';
 
 
 export interface UploadProps {
@@ -72,6 +73,10 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
   );
   const { version } = useParams() as { version: string };
   const [showUploadButton, setShowUploadButton] = React.useState(true);
+  const [value, setValue] = React.useState<string | null>(null);
+
+  const [inputValue, setInputValue] = React.useState('');
+
 
   function addLogMessage(message: string) {
     setLogs((prev) => prev + '\n' + message);
@@ -163,9 +168,9 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
     validateFiles();
   }, [dataframeState]);
 
-  /* React.useEffect(() => {
-     previewFile();
-   }, [currentFile]); */
+  React.useEffect(() => {
+    previewFile();
+  }, [currentFile]);
 
   function validateFiles() {
     if (dataModel) {
@@ -351,6 +356,73 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
         columns={columns}
         rows={rows}
       />
+      {currentFile && (
+        <Box
+          sx={{
+            display: 'flex',
+            width: '100%',
+            alignItems: 'center',
+            alignContent: 'center',
+            py: 4,
+          }}
+        >
+          <Typography variant="h3">Preview data</Typography>
+          <Autocomplete
+            sx={{ width: '15%', mx: 2 }}
+            disablePortal
+            id="dataframe-dropdown"
+            options={Array.from(dataframeState).map((dataframeInfo) => dataframeInfo.dataframeName)}
+            renderInput={(params) => <TextField {...params} label="Dataset" />}
+            onChange={(event, newValue) => {
+              if (newValue != null) {
+                const dataframe = Array.from(dataframeState).find(
+                  (dataframe) =>
+                    dataframe.dataframeName === newValue &&
+                    dataframe.file
+                );
+                if (dataframe) {
+                  setCurrentFile(dataframe.file);
+                  setValue(newValue);
+                }
+              }
+            }}
+            value={value}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+          />
+        </Box>
+      )}
+      {sample_csv_data.length ? (
+        <CsvDisplay csvData={sample_csv_data} />
+      ) : null}
+      <br />
+      {logs && (
+        <>
+          <Typography sx={{pt: 2}}variant="h3">Status</Typography>
+          <pre style={{ fontSize: '1rem', lineHeight: '2rem' }}>
+            {logs}
+          </pre>
+        </>
+      )}
+      {allFilesValidated && showUploadButton && (
+        <Button
+          onClick={() => {
+            const fileList: Array<File> = [];
+            dataframeState.forEach((dataframe) => {
+              if (dataframe.file) {
+                fileList.push(dataframe.file);
+              }
+            });
+            setShowUploadButton(false);
+            uploadAndPublish(version, fileList, addLogMessage, refetch);
+          }}
+          variant="contained"
+        >
+          Upload and Publish
+        </Button>
+      )}
     </Box>
   );
 };
