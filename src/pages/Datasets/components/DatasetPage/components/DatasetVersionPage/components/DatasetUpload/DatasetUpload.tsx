@@ -146,7 +146,6 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
     }
 
     setRows(dataframes);
-    console.log(dataframes, 'dataframes');
     // Set the data model and the validation state
     setDataframeState(data_frames_validation_state);
 
@@ -350,6 +349,8 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
     },
   ];
 
+  const dataframeOptions = Array.from(dataframeState).map((dataframeInfo) => dataframeInfo.dataframeName);
+
   return (
     <Box sx={{ width: '100%', p: '1rem' }}>
       <DataGridTable
@@ -366,20 +367,21 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
             py: 4,
           }}
         >
-          <Typography variant="h3">Preview data</Typography>
+          <Typography sx={{ ml: -2 }} variant="h3">Preview data</Typography>
           <Autocomplete
             sx={{ width: '15%', mx: 2 }}
             disablePortal
             id="dataframe-dropdown"
-            options={Array.from(dataframeState).map((dataframeInfo) => dataframeInfo.dataframeName)}
-            renderInput={(params) => <TextField {...params} label="Dataset" />}
+            options={dataframeOptions}
+            renderInput={(params) => <TextField {...params} label={dataframeOptions[0]} />}
             onChange={(event, newValue) => {
               if (newValue != null) {
                 const dataframe = Array.from(dataframeState).find(
                   (dataframe) =>
-                    dataframe.dataframeName === newValue &&
-                    dataframe.file
+                    dataframe.dataframeName === newValue
+                    && dataframe.file
                 );
+
                 if (dataframe) {
                   setCurrentFile(dataframe.file);
                   setValue(newValue);
@@ -400,7 +402,7 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
       <br />
       {logs && (
         <>
-          <Typography sx={{pt: 2}}variant="h3">Status</Typography>
+          <Typography sx={{ pt: 2 }} variant="h3">Status</Typography>
           <pre style={{ fontSize: '1rem', lineHeight: '2rem' }}>
             {logs}
           </pre>
