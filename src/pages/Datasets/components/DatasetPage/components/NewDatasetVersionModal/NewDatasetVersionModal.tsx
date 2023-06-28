@@ -25,8 +25,7 @@ const NewDatasetVersionModal: React.FC<IDatasetModal> = ({ refetch }) => {
   });
 
   const queryClient = useQueryClient();
-  const userData: UserInfo_Out | undefined =
-    queryClient.getQueryData('userData');
+  const userData: UserInfo_Out | undefined = queryClient.getQueryData('userData');
 
   const onSubmit: SubmitHandler<any> = (data) => {
     const add_version_req: RegisterDatasetVersion_In = {
@@ -36,14 +35,15 @@ const NewDatasetVersionModal: React.FC<IDatasetModal> = ({ refetch }) => {
     };
     DefaultService.registerDatasetVersion(add_version_req)
       .then(() => {
-        console.log("Dataset version added");
+        console.log('Dataset version added');
         handleClose();
       })
       .catch((error) => {
         sendNotification({
           msg: error.message,
           variant: 'error'
-        });      });
+        });
+      });
   };
 
   const style = {
@@ -55,23 +55,20 @@ const NewDatasetVersionModal: React.FC<IDatasetModal> = ({ refetch }) => {
     bgcolor: 'background.paper',
     borderColor: 'lightgrey',
     boxShadow: 24,
-    p: 4,
+    p: 4
   };
 
   return (
     <Box>
-      <Button
-        sx={{ mb: 2 }}
-        onClick={handleOpen}
-        type="submit"
-        variant="contained"
-      >Add Version</Button>
+      <Button sx={{ mb: 2 }} onClick={handleOpen} type="submit" variant="contained">
+        Add Version
+      </Button>
       <Modal
         sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          borderColor: 'lightgrey',
+          borderColor: 'lightgrey'
         }}
         open={open}
         onClose={handleClose}
@@ -79,7 +76,9 @@ const NewDatasetVersionModal: React.FC<IDatasetModal> = ({ refetch }) => {
         aria-describedby="Enter new dataset version information"
       >
         <Box sx={style} component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Typography sx={{ pb: 1 }} variant="h4">Enter New Dataset Information</Typography>
+          <Typography sx={{ pb: 1 }} variant="h4">
+            Enter New Dataset Information
+          </Typography>
           <Box sx={{ py: 2 }}>
             <Controller
               name="name"

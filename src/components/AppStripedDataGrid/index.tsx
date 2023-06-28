@@ -39,16 +39,11 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
 export default function AppStripedDataGrid(props: any) {
   const navigate = useNavigate();
 
-  const handleRowClick: GridEventListener<'rowClick'> = (params) => {
-    navigate(`${props.base_url}/${params.row.id}`);
-  };
-
   return (
     <StripedDataGrid
       getRowClassName={(params: any) => {
         return params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd';
       }}
-      onRowClick={props.base_url ? handleRowClick : undefined}
       {...props}
     />
   );

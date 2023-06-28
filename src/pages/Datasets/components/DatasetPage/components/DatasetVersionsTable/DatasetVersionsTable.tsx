@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
@@ -6,10 +6,12 @@ import { useParams } from 'react-router';
 import { GetMultipleDatasetVersion_Out, ApiError, DefaultService } from 'src/client';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import styles from './DatasetVersionsTable.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const DatasetVersionsTable: React.FC = () => {
   const [rows, setRows] = useState<any>([]);
   const { id } = useParams() as { id: string };
+  const navigate = useNavigate();
 
   const { data, refetch } = useQuery<GetMultipleDatasetVersion_Out, ApiError>(
     ['dataset_versions'],
@@ -18,6 +20,8 @@ const DatasetVersionsTable: React.FC = () => {
       refetchOnMount: 'always'
     }
   );
+
+  console.log('rows: ', rows);
 
   useEffect(() => {
     setRows(data?.dataset_versions);
@@ -50,6 +54,27 @@ const DatasetVersionsTable: React.FC = () => {
       flex: 1,
       valueGetter: (params: any) => {
         return params.row?.state ? `${params.row?.state}` : '--';
+      }
+    },
+    {
+      field: 'action',
+      flex: 1,
+      headerName: 'Action',
+      headerClassName: 'table--header',
+      renderCell: (params: any) => {
+        return (
+          <>
+            {rows && rows.length > 0 ? (
+              <Button
+                onClick={() => {
+                  navigate(`/datasets/${params.row.dataset_id}/versions/${params.row.id}`);
+                }}
+              >
+                Edit
+              </Button>
+            ) : null}
+          </>
+        );
       }
     }
   ];
