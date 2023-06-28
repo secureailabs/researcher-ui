@@ -3,7 +3,14 @@ import styles from './DataModel.module.css';
 import UtilityBar from './components/UtilityBar';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
-import { ApiError, DefaultService, GetMultipleDataModel_Out } from 'src/client';
+import {
+  ApiError,
+  DataModelState,
+  DefaultService,
+  GetDataModel_Out,
+  GetMultipleDataModelDataframe_Out,
+  GetMultipleDataModel_Out
+} from 'src/client';
 import AddNewDataModel from './components/AddNewDataModel';
 import DataModelTableSection from './components/DataModelTableSection';
 
@@ -13,27 +20,35 @@ export interface IDataModel {
 
 const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [dataModelInfo, setDataModelInfo] = useState<GetDataModel_Out | undefined>();
 
-  const { data, isLoading, status, error, refetch } = useQuery<GetMultipleDataModel_Out, ApiError>(
+  const fetchAllDataFrames = async () => {
+    const res1 = await DefaultService.getAllDataModelInfo();
+    // Only taling the first from the array list
+    setDataModelInfo(res1.data_models[0]);
+    const dataModelId = res1.data_models[0].id;
+    const res = await DefaultService.getAllDataModelDataframeInfo(dataModelId);
+    return res;
+  };
+
+  const { data, isLoading, status, error, refetch } = useQuery<GetMultipleDataModelDataframe_Out, ApiError>(
     ['dataModels'],
-    DefaultService.getAllDataModelInfo,
+    fetchAllDataFrames,
     {
       refetchOnMount: 'always'
     }
   );
-
-  console.log('data', data);
 
   return (
     <Box className={styles.container}>
       <Typography variant="h3" component="h3">
         Data Model
       </Typography>
-      {data && !isLoading ? (
+      {data && !isLoading && dataModelInfo ? (
         <>
-          <UtilityBar refetch={refetch} dataModelId={data?.data_models[0].id} />
+          <UtilityBar refetch={refetch} dataModelId={dataModelInfo?.id} />
           <Box className={styles.bodyContainerTable}>
-            <DataModelTableSection data={data?.data_models[0]} refetchDataModelTables={refetch} />
+            <DataModelTableSection data={data} refetchDataModelTables={refetch} />
           </Box>
         </>
       ) : (

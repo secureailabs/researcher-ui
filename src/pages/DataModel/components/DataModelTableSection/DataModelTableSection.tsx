@@ -2,7 +2,7 @@ import { Box, Button, Drawer, Typography } from '@mui/material';
 import styles from './DataModelTableSection.module.css';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { DefaultService } from 'src/client';
+import { DefaultService, GetMultipleDataModelDataframe_Out } from 'src/client';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import EditDataModelTable from '../EditDataModelTable';
 
@@ -11,28 +11,22 @@ export interface IDataModelTableSection {
   refetchDataModelTables: () => void;
 }
 
-const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data, refetchDataModelTables }) => {
+const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [selectedRowId, setSelectedRowId] = useState();
   const [selectedTableData, setSelectedTableData] = useState<any>(null);
 
-  const fetchDataFrameInfo = async (dataModelFramesId: string[]) => {
-    const promises = dataModelFramesId.map((id) => {
-      return DefaultService.getDataModelDataframeInfo(id);
-    });
+  // const fetchDataFrameInfo = async (dataModelFramesId: string[]) => {
+  //   const promises = await DefaultService.get;
+  //   return dataFrameInfo;
+  // };
 
-    const dataFrameInfo = await Promise.all(promises);
-    return dataFrameInfo;
+  const fetchAllDataFrames = async (dataModelId: string) => {
+    const res = await DefaultService.getAllDataModelDataframeInfo(dataModelId);
+    return res.data_model_dataframes;
   };
 
-  const dataModelFramesIds = data.data_model_dataframes;
-
-  const {
-    data: rows,
-    isLoading,
-    isError,
-    refetch: refetchDataFrameInfo
-  } = useQuery('dataFrameInfo', () => fetchDataFrameInfo(dataModelFramesIds));
+  const { data: rows, isLoading, isError, refetch: refetchDataFrameInfo } = useQuery('dataFrameInfo', () => fetchAllDataFrames(data.id));
 
   const tableColumns = [
     {
