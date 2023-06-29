@@ -3,14 +3,7 @@ import styles from './DataModel.module.css';
 import UtilityBar from './components/UtilityBar';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
-import {
-  ApiError,
-  DataModelState,
-  DefaultService,
-  GetDataModel_Out,
-  GetMultipleDataModelDataframe_Out,
-  GetMultipleDataModel_Out
-} from 'src/client';
+import { ApiError, DataModelState, DefaultService, GetDataModel_Out, GetMultipleDataModelDataframe_Out } from 'src/client';
 import AddNewDataModel from './components/AddNewDataModel';
 import DataModelTableSection from './components/DataModelTableSection';
 
@@ -38,6 +31,8 @@ const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
       refetchOnMount: 'always'
     }
   );
+
+  console.log('data', data);
 
   return (
     <Box className={styles.container}>

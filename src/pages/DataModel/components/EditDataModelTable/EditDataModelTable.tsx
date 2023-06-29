@@ -1,7 +1,7 @@
 import { Box, Button, FormControl, Icon, IconButton, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material';
 import styles from './EditDataModelTable.module.css';
 import { useEffect, useState } from 'react';
-import { DefaultService } from 'src/client';
+import { DefaultService, GetDataModelDataframe_Out } from 'src/client';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
@@ -10,7 +10,7 @@ import DataModelSeriesForm from '../DataModelSeriesForm';
 import useNotification from 'src/hooks/useNotification';
 
 export interface IEditDataModelTable {
-  tableData: any;
+  tableData: GetDataModelDataframe_Out;
   refetchDataFrameInfo: () => void;
 }
 
@@ -61,11 +61,8 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
     setOpenModal(false);
   };
 
-  const fetchDataModelSeriesInfo = async (ids: string[]) => {
-    const promises = ids.map((id) => {
-      return DefaultService.getDataModelSeriesInfo(id);
-    });
-    const res = await Promise.all(promises);
+  const fetchDataModelSeriesInfo = async () => {
+    const res = await DefaultService.getAllDataModelSeriesInfo(tableData.id);
     return res;
   };
 
@@ -104,9 +101,8 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
   };
 
   useEffect(() => {
-    const series_ids = tableData.data_model_series;
-    fetchDataModelSeriesInfo(series_ids).then((data) => {
-      setColumns(data);
+    fetchDataModelSeriesInfo().then((data) => {
+      setColumns(data.data_model_series);
     });
   }, [tableData]);
 

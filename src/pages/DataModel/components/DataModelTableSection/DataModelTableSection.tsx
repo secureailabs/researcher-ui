@@ -2,31 +2,30 @@ import { Box, Button, Drawer, Typography } from '@mui/material';
 import styles from './DataModelTableSection.module.css';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { DefaultService, GetMultipleDataModelDataframe_Out } from 'src/client';
+import { DefaultService, GetDataModelDataframe_Out, GetMultipleDataModelDataframe_Out } from 'src/client';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import EditDataModelTable from '../EditDataModelTable';
+import { set } from 'react-hook-form';
 
 export interface IDataModelTableSection {
-  data: any;
+  data: GetMultipleDataModelDataframe_Out;
   refetchDataModelTables: () => void;
 }
 
-const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
+const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data, refetchDataModelTables }) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [rows, setRows] = useState<GetDataModelDataframe_Out[]>();
   const [selectedRowId, setSelectedRowId] = useState();
-  const [selectedTableData, setSelectedTableData] = useState<any>(null);
+  const [selectedTableData, setSelectedTableData] = useState<GetDataModelDataframe_Out>();
 
   // const fetchDataFrameInfo = async (dataModelFramesId: string[]) => {
   //   const promises = await DefaultService.get;
   //   return dataFrameInfo;
   // };
 
-  const fetchAllDataFrames = async (dataModelId: string) => {
-    const res = await DefaultService.getAllDataModelDataframeInfo(dataModelId);
-    return res.data_model_dataframes;
-  };
-
-  const { data: rows, isLoading, isError, refetch: refetchDataFrameInfo } = useQuery('dataFrameInfo', () => fetchAllDataFrames(data.id));
+  useEffect(() => {
+    setRows(data.data_model_dataframes);
+  }, [data]);
 
   const tableColumns = [
     {
@@ -69,7 +68,7 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
                 variant="text"
                 onClick={() => {
                   setSelectedRowId(params.row.id);
-                  const selectedTableData = rows.find((row) => row.id === params.row.id);
+                  const selectedTableData = rows.find((row: any) => row.id === params.row.id);
                   setSelectedTableData(selectedTableData);
                   setOpenDrawer(true);
                 }}
@@ -85,16 +84,6 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
 
   return (
     <Box className={styles.container}>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end'
-        }}
-      >
-        <Typography variant="body1" component="p" className={styles.rightAlign}>
-          <span className={styles.title}>Created At : </span> {data.creation_time}
-        </Typography>
-      </Box>
       {rows && rows.length > 0 ? (
         <Box className={styles.tableContainer}>
           <AppStripedDataGrid
@@ -113,6 +102,7 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
       ) : null}
 
       {/* Right sidebar to display column infos */}
+
       <Drawer
         anchor="right"
         open={openDrawer}
@@ -121,7 +111,9 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data }) => {
           sx: { width: '50%', padding: '20px 0 0 20px' }
         }}
       >
-        <EditDataModelTable tableData={selectedTableData} refetchDataFrameInfo={refetchDataFrameInfo} />
+        {selectedTableData !== undefined ? (
+          <EditDataModelTable tableData={selectedTableData} refetchDataFrameInfo={refetchDataModelTables} />
+        ) : null}
       </Drawer>
     </Box>
   );
