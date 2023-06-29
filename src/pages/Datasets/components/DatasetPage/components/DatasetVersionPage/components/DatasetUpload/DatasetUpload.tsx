@@ -95,7 +95,7 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
 
     const data_frames_validation_state: TFileInformation[] = [];
 
-    const dataframes = [];
+    const dataframes: TFileInformation[] = [];
 
     for (const dataframe of allDataframes.data_model_dataframes) {
       // tracking validation state of the data
@@ -215,13 +215,13 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
         step: function (results: { data: any }) {
           let csv_line = '';
           for (const key in results.data) {
-            if (csv_line != '') {
+            if (csv_line !== '') {
               csv_line += ',';
             }
             csv_line += results.data[key];
           }
           csv_lines.push(csv_line);
-          if (i == 9) {
+          if (i === 9) {
             setSampleCsvData(csv_lines);
           }
           i++;
@@ -303,7 +303,9 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
       headerClassName: 'fileName',
       headerName: 'File',
       flex: 1,
-      renderCell: (params: any) => <UploadFile cell={params.row?.dataframeName} />
+      renderCell: (params: any) => {
+        return <UploadFile cell={{ value: params.row?.dataframeName }} />;
+      }
     }
   ];
 

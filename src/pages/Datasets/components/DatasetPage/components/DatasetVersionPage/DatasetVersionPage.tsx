@@ -7,28 +7,30 @@ import styles from './DatasetVersionPage.module.css';
 import ViewDatasetVersion from './components/ViewDatasetVersion';
 import DatasetUpload from './components/DatasetUpload';
 
-
 const DatasetVersion: React.FC = () => {
   const { version } = useParams() as { version: string };
   const queryClient = useQueryClient();
 
-  const { data, refetch } = useQuery<
-    GetDatasetVersion_Out,
-    ApiError
-  >([version], () => DefaultService.getDatasetVersion(version), {
+  const { data, refetch } = useQuery<GetDatasetVersion_Out, ApiError>([version], () => DefaultService.getDatasetVersion(version), {
     refetchOnMount: 'always'
   });
 
   return (
-    <Box sx={{ width: '100%', p: '1rem' }} >
-      {data ?
+    <Box sx={{ width: '100%', p: '1rem' }}>
+      {data ? (
         <Box>
-          <Typography variant='h3' sx={{ pb: 2 }}>{data?.name}</Typography>
+          <Typography variant="h3" sx={{ pb: 2 }}>
+            {data?.name}
+          </Typography>
           <ViewDatasetVersion data={data} />
-          <Typography variant='h3' sx={{ py: 2 }}>Add Data Files </Typography>
-          <DatasetUpload refetch={refetch}/>
+          <Typography variant="h3" sx={{ py: 2 }}>
+            Add Data Files
+          </Typography>
+          <DatasetUpload refetch={refetch} />
         </Box>
-        : <p>There was an error fetching information for this dataset version. Please try again later</p>}
+      ) : (
+        <p>There was an error fetching information for this dataset version. Please try again later</p>
+      )}
     </Box>
   );
 };

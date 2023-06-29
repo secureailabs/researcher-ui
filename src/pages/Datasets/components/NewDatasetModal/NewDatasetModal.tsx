@@ -94,7 +94,7 @@ const NewDatasetModal: React.FC<IDatasetModal> = ({ refetch }) => {
 
   return (
     <Box>
-      <Button sx={{ mb: 2 }} onClick={handleOpen} type="submit" variant="contained">
+      <Button onClick={handleOpen} type="submit" variant="contained">
         New Dataset
       </Button>
       <Modal

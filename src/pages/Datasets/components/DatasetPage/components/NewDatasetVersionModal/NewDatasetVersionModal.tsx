@@ -35,10 +35,10 @@ const NewDatasetVersionModal: React.FC<IDatasetModal> = ({ refetch }) => {
     };
     DefaultService.registerDatasetVersion(add_version_req)
       .then(() => {
-        console.log('Dataset version added');
         handleClose();
       })
       .catch((error) => {
+        console.log('Error adding dataset version');
         sendNotification({
           msg: error.message,
           variant: 'error'
@@ -60,7 +60,7 @@ const NewDatasetVersionModal: React.FC<IDatasetModal> = ({ refetch }) => {
 
   return (
     <Box>
-      <Button sx={{ mb: 2 }} onClick={handleOpen} type="submit" variant="contained">
+      <Button onClick={handleOpen} type="submit" variant="contained">
         Add Version
       </Button>
       <Modal

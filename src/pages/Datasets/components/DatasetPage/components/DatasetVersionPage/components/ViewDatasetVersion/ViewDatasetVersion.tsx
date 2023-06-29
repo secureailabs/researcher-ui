@@ -9,14 +9,14 @@ export interface IDatasetVersion {
   refetch?: () => void;
 }
 
-const ViewDatasetVersion: React.FC<IDatasetVersion> = ({data, refetch}) => {
+const ViewDatasetVersion: React.FC<IDatasetVersion> = ({ data }) => {
   const { control } = useForm({
-    mode: 'onSubmit',
+    mode: 'onSubmit'
   });
 
   return (
     <Box sx={{ width: '100%', p: '1rem' }}>
-      <Box className={styles.row} sx={{ borderColor: 'lightgrey', boxShadow: 2}}>
+      <Box className={styles.row} sx={{ borderColor: 'lightgrey', boxShadow: 2 }}>
         <Box className={styles.column}>
           <Typography variant="h6">Name</Typography>
           <Controller

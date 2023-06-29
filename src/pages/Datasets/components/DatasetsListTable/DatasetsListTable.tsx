@@ -2,20 +2,23 @@ import { Box, Button } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { GetDataset_Out } from 'src/client';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 
 // import styles from './DatasetsTable.module.css';
 
 export interface IDatasetsTable {
-  data: any;
+  data: GetDataset_Out[] | undefined;
 }
 
 const DatasetsListTable: React.FC<IDatasetsTable> = ({ data }) => {
-  const [rows, setRows] = useState<any>([]);
+  const [rows, setRows] = useState<GetDataset_Out[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setRows(data);
+    if (data !== undefined) {
+      setRows(data);
+    }
   }, [data]);
 
   const columns: GridColDef[] = [
@@ -74,7 +77,7 @@ const DatasetsListTable: React.FC<IDatasetsTable> = ({ data }) => {
       renderCell: (params: any) => {
         return (
           <>
-            {rows && rows.length > 0 ? (
+            {params.row.state === 'ACTIVE' ? (
               <Button
                 onClick={() => {
                   navigate(`/datasets/${params.row.id}`);

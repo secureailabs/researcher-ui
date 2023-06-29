@@ -8,24 +8,17 @@ import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import styles from './DatasetVersionsTable.module.css';
 import { useNavigate } from 'react-router-dom';
 
-const DatasetVersionsTable: React.FC = () => {
+export interface IDatasetVersionsTable {
+  data: GetMultipleDatasetVersion_Out;
+}
+
+const DatasetVersionsTable: React.FC<IDatasetVersionsTable> = ({ data }) => {
   const [rows, setRows] = useState<any>([]);
-  const { id } = useParams() as { id: string };
   const navigate = useNavigate();
-
-  const { data, refetch } = useQuery<GetMultipleDatasetVersion_Out, ApiError>(
-    ['dataset_versions'],
-    () => DefaultService.getAllDatasetVersions(id),
-    {
-      refetchOnMount: 'always'
-    }
-  );
-
-  console.log('rows: ', rows);
 
   useEffect(() => {
     setRows(data?.dataset_versions);
-  }, []);
+  }, [data]);
 
   const columns: GridColDef[] = [
     {
