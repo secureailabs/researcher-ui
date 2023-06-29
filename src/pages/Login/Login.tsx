@@ -15,7 +15,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { LoginSuccess_Out, OpenAPI } from 'src/client';
 import { DefaultService, Body_login } from 'src/client';
 import useNotification from 'src/hooks/useNotification';
-import { activeAccessToken, activeRefreshToken, tokenType, updateAuthState } from 'src/store/Auth';
+import { activeAccessToken, activeRefreshToken, tokenType, updateAuthState } from 'src/store/reducers/Auth';
 import { dispatch } from 'src/store';
 import { REACT_APP_SAIL_API_SERVICE_URL } from 'src/config';
 import { useNavigate } from 'react-router-dom';

@@ -3,6 +3,8 @@ import { IconChartHistogram, IconDatabaseCog, IconUpload, IconDeviceDesktopAnaly
 
 // type
 import { NavItemType } from 'src/types/menu';
+import { store } from 'src/store';
+import { UserRole } from 'src/client';
 
 // icons
 const icons = {
@@ -14,7 +16,15 @@ const icons = {
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
 
-const other: NavItemType = {
+let state = store.getState();
+
+let userProfile = state.userprofile;
+
+const hasDataModelUploadRole = userProfile?.roles?.includes(UserRole.DATA_SUBMITTER);
+
+console.log('hasDataModelUploadRole', hasDataModelUploadRole);
+
+const other: any = {
   id: 'pages',
   title: 'Pages',
   type: 'group',
@@ -56,7 +66,7 @@ const other: NavItemType = {
         }
       ]
     },
-    {
+    true && {
       id: 'data-model-upload',
       title: 'Data Upload',
       type: 'collapse',
@@ -93,7 +103,16 @@ const other: NavItemType = {
         }
       ]
     }
-  ]
+  ].filter(Boolean)
 };
+
+// Add a callback function to handle store state changes
+function handleStateChange() {
+  state = store.getState();
+  userProfile = state.userprofile;
+}
+
+// Subscribe to store state changes
+store.subscribe(handleStateChange);
 
 export default other;

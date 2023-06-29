@@ -31,6 +31,7 @@ import MainCard from 'src/components/extended/MainCard';
 import Avatar from 'src/components/extended/Avatar';
 import { UserInfo_Out } from 'src/client';
 import { useQueryClient } from 'react-query';
+import { connect } from 'react-redux';
 
 // types
 interface TabPanelProps {
@@ -60,12 +61,12 @@ function a11yProps(index: number) {
 
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
-const Profile = () => {
+const Profile: React.FC<any> = ({ userProfile }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const userData: UserInfo_Out | undefined = queryClient.getQueryData('userData');
+  console.log('uuuu', userProfile);
 
   // const { logout, user } = useAuth();
   const handleLogout = async () => {
@@ -122,7 +123,7 @@ const Profile = () => {
       >
         <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
           <Avatar alt="profile user" src={avatar1} size="xs" />
-          <Typography variant="subtitle1">{userData?.name}</Typography>
+          <Typography variant="subtitle1">{userProfile?.name}</Typography>
         </Stack>
       </ButtonBase>
       <Popper
@@ -164,12 +165,12 @@ const Profile = () => {
                         <Stack direction="row" spacing={1.25} alignItems="center">
                           <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
                           <Stack>
-                            <Typography variant="h6">{userData?.name}</Typography>
+                            <Typography variant="h6">{userProfile?.name}</Typography>
                             <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-                              {userData?.job_title}
+                              {userProfile?.job_title}
                             </Typography>
                             <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-                              {userData?.email}
+                              {userProfile?.email}
                             </Typography>
                           </Stack>
                         </Stack>
@@ -213,4 +214,8 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+const mapStateToProps = (state: any) => ({
+  userProfile: state.userprofile
+});
+
+export default connect(mapStateToProps)(Profile);

@@ -1,10 +1,6 @@
-import {
-  DefaultService,
-  OpenAPI,
-  Body_upload_dataset
-} from 'src/datasetUpload';
+import { DefaultService, OpenAPI, Body_upload_dataset } from 'src/datasetUpload';
 import { updateDatasetInfo } from './DatasetUpload';
-
+import { REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL } from 'src/config';
 
 export function uploadAndPublish(
   dataset_version_id: string,
@@ -13,11 +9,8 @@ export function uploadAndPublish(
   refetch_data_version: () => void
 ) {
   let notes = '';
-  if (!process.env.REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL)
-    throw new Error('REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL not set');
-
-  OpenAPI.BASE = process.env.REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL;
-  OpenAPI.TOKEN = localStorage.getItem('token') || '';
+  OpenAPI.BASE = REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL;
+  OpenAPI.TOKEN = localStorage.getItem('accessToken') || '';
   if (selectedFiles) {
     const file_blobs: Body_upload_dataset = {
       dataset_files: []
@@ -40,4 +33,3 @@ export function uploadAndPublish(
       });
   }
 }
-

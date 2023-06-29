@@ -7,6 +7,10 @@ import Drawer from './Drawer';
 import { RootStateProps } from 'src/types/root';
 import { openDrawer } from 'src/store/reducers/menu';
 import { storeLoginCredentials } from 'src/pages/Login/Login';
+import { ApiError, DefaultService, OpenAPI, UserInfo_Out } from 'src/client';
+import { REACT_APP_SAIL_API_SERVICE_URL } from 'src/config';
+import { useQuery } from 'react-query';
+import { updateUserProfile } from 'src/store/reducers/userprofile';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 
@@ -24,6 +28,22 @@ const MinimalLayout = (): JSX.Element => {
     dispatch(openDrawer({ drawerOpen: !open }));
   };
 
+  const checkUserSession = async (): Promise<UserInfo_Out> => {
+    OpenAPI.BASE = REACT_APP_SAIL_API_SERVICE_URL;
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      OpenAPI.TOKEN = token;
+      try {
+        const res = await DefaultService.getCurrentUserInfo();
+        dispatch(updateUserProfile(res));
+        return res;
+      } catch (err) {
+        console.log(err);
+        throw new Error('User session fetch failed');
+      }
+    } else throw new Error('No token found');
+  };
+
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
@@ -39,6 +59,10 @@ const MinimalLayout = (): JSX.Element => {
       navigate('/login');
     }
   }, []);
+
+  useQuery<UserInfo_Out, ApiError>('userData', checkUserSession, {
+    refetchOnMount: 'always'
+  });
 
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#f5f5f5' }}>
