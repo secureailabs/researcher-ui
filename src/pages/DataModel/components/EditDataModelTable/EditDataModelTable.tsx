@@ -66,12 +66,19 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
     return res;
   };
 
+  const refetchDataModelSeries = () => {
+    fetchDataModelSeriesInfo().then((data) => {
+      setColumns(data.data_model_series);
+    });
+  };
+
   const handleSuccessfulSave = () => {
     refetchDataFrameInfo();
     sendNotification({
       msg: 'Data Column Added Successfully',
       variant: 'success'
     });
+    refetchDataModelSeries();
   };
 
   const handleEditClicked = (columnData: any) => {
@@ -91,7 +98,7 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
         msg: 'Data Column Deleted Successfully',
         variant: 'success'
       });
-      refetchDataFrameInfo();
+      refetchDataModelSeries();
     } catch (err) {
       sendNotification({
         msg: 'Something went wrong',
