@@ -15,8 +15,8 @@ const ViewDatasetVersion: React.FC<IDatasetVersion> = ({ data }) => {
   });
 
   return (
-    <Box sx={{ width: '100%', p: '1rem' }}>
-      <Box className={styles.row} sx={{ borderColor: 'lightgrey', boxShadow: 2 }}>
+    <Box sx={{ width: '100%' }}>
+      <Box className={styles.row}>
         <Box className={styles.column}>
           <Typography variant="h6">Name</Typography>
           <Controller

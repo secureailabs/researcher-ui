@@ -16,17 +16,24 @@ const DatasetVersion: React.FC = () => {
   });
 
   return (
-    <Box sx={{ width: '100%', p: '1rem' }}>
+    <Box sx={{ width: '100%' }}>
       {data ? (
         <Box>
-          <Typography variant="h3" sx={{ pb: 2 }}>
+          <Typography variant="h3">
+            <Typography variant="h5" component={'span'}>
+              Dataset version name -{' '}
+            </Typography>{' '}
             {data?.name}
           </Typography>
           <ViewDatasetVersion data={data} />
-          <Typography variant="h3" sx={{ py: 2 }}>
-            Add Data Files
-          </Typography>
-          <DatasetUpload refetch={refetch} />
+          <Box
+            sx={{
+              mt: 5
+            }}
+          >
+            <Typography variant="h4">Add Data Files</Typography>
+            <DatasetUpload refetch={refetch} />
+          </Box>
         </Box>
       ) : (
         <p>There was an error fetching information for this dataset version. Please try again later</p>

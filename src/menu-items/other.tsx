@@ -1,5 +1,5 @@
 // assets
-import { IconChartHistogram, IconDatabaseCog } from '@tabler/icons-react';
+import { IconChartHistogram, IconDatabaseCog, IconUpload, IconDeviceDesktopAnalytics } from '@tabler/icons-react';
 
 // type
 import { NavItemType } from 'src/types/menu';
@@ -7,7 +7,9 @@ import { NavItemType } from 'src/types/menu';
 // icons
 const icons = {
   IconChartHistogram,
-  IconDatabaseCog
+  IconDatabaseCog,
+  IconUpload,
+  IconDeviceDesktopAnalytics
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -58,7 +60,7 @@ const other: NavItemType = {
       id: 'data-model-upload',
       title: 'Data Upload',
       type: 'collapse',
-      icon: icons.IconDatabaseCog,
+      icon: icons.IconUpload,
       children: [
         {
           id: 'upload-datasets',
@@ -73,7 +75,7 @@ const other: NavItemType = {
       id: 'patient-advisory-group',
       title: 'Administrative',
       type: 'collapse',
-      icon: icons.IconChartHistogram,
+      icon: icons.IconDeviceDesktopAnalytics,
       children: [
         {
           id: 'pag-home',

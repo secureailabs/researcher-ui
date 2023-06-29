@@ -12,6 +12,7 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
   '.MuiDataGrid-columnHeaderTitle': {
     fontWeight: 'bold'
   },
+  //
   [`& .${gridClasses.row}.odd`]: {
     backgroundColor: '#f5f5f5',
     '&:hover, &.Mui-hovered': {
@@ -37,13 +38,12 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
 }));
 
 export default function AppStripedDataGrid(props: any) {
-  const navigate = useNavigate();
-
   return (
     <StripedDataGrid
       getRowClassName={(params: any) => {
         return params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd';
       }}
+      getRowHeight={() => 'auto'}
       {...props}
     />
   );

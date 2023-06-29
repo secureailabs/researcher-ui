@@ -10,7 +10,8 @@ import { GetDataModel_Out, SeriesDataModelSchema } from 'src/client';
 import { validateFile } from './Validate';
 import { uploadAndPublish } from './Utils';
 import { DefaultService, UpdateDatasetVersion_In } from 'src/client';
-import { IAutocompleteOptionData } from 'src/shared/types/customTypes';
+import styles from './DatasetUpload.module.css';
+import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 
 export interface UploadProps {
   cell: {
@@ -55,6 +56,65 @@ export function updateDatasetInfo(dataset_version_id: string, notes: string) {
       console.log('Dataset update failed! Error: ' + err);
     });
 }
+
+const UploadFile: React.FC<any> = ({
+  cell: { value },
+  currentFile,
+  setCurrentFile,
+  previewFile,
+  processUploadedFile,
+  showUploadButton
+}) => {
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  function handleButtonClick() {
+    fileInputRef.current?.click();
+  }
+
+  function handleSelectFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files;
+    if (file?.length === 1) {
+      setSelectedFile(file[0]);
+      if (!currentFile) {
+        setCurrentFile(file[0]);
+        previewFile();
+      }
+      // call the validation function
+      processUploadedFile(file[0], value);
+    }
+  }
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        mt: 1
+      }}
+    >
+      <input type="file" ref={fileInputRef} accept="csv" style={{ display: 'none' }} onChange={handleSelectFile} />
+      <Button onClick={handleButtonClick} disabled={!showUploadButton} variant="contained">
+        Upload file
+      </Button>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          wordBreak: 'break-all'
+        }}
+      >
+        <Typography variant="caption" sx={{ mt: 1, mb: 1, fontStyle: 'italic', color: '#38855e' }}>
+          {selectedFile?.name}
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
 
 const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
   // State to keep track of the validation state of the dataframes
@@ -230,41 +290,10 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
     }
   }
 
-  const UploadFile: React.FC<UploadProps> = ({ cell: { value } }) => {
-    const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    function handleButtonClick() {
-      fileInputRef.current?.click();
-    }
-
-    function handleSelectFile(event: ChangeEvent<HTMLInputElement>) {
-      const file = event.target.files;
-      if (file?.length === 1) {
-        setSelectedFile(file[0]);
-        if (!currentFile) {
-          setCurrentFile(file[0]);
-          previewFile();
-        }
-        // call the validation function
-        processUploadedFile(file[0], value);
-      }
-    }
-
-    return (
-      <Box display="flex" flexWrap="nowrap">
-        <input type="file" ref={fileInputRef} accept="csv" style={{ display: 'none' }} onChange={handleSelectFile} />
-        <Button onClick={handleButtonClick} disabled={!showUploadButton} variant="contained">
-          Browse
-        </Button>
-        <Box style={{ marginLeft: '1rem' }}>{selectedFile?.name}</Box>
-      </Box>
-    );
-  };
-
   const columns: GridColDef[] = [
     {
       field: 'id',
-      headerClassName: 'id',
+      headerClassName: 'table--header',
       headerName: 'ID',
       flex: 2,
       valueGetter: (params: any) => {
@@ -273,7 +302,7 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
     },
     {
       field: 'dataframeName',
-      headerClassName: 'dataframeName',
+      headerClassName: 'table--header',
       headerName: 'Dataframe',
       flex: 1,
       valueGetter: (params: any) => {
@@ -282,7 +311,7 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
     },
     {
       field: 'validationState',
-      headerClassName: 'validationState',
+      headerClassName: 'table--header',
       headerName: 'Validation Success',
       flex: 1,
       valueGetter: (params: any) => {
@@ -291,7 +320,7 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
     },
     {
       field: 'required',
-      headerClassName: 'required',
+      headerClassName: 'table--header',
       headerName: 'Required',
       flex: 1,
       valueGetter: (params: any) => {
@@ -300,11 +329,20 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
     },
     {
       field: 'fileName',
-      headerClassName: 'fileName',
+      headerClassName: 'table--header',
       headerName: 'File',
       flex: 1,
       renderCell: (params: any) => {
-        return <UploadFile cell={{ value: params.row?.dataframeName }} />;
+        return (
+          <UploadFile
+            cell={{ value: params.row?.dataframeName }}
+            currentFile={currentFile}
+            setCurrentFile={setCurrentFile}
+            processUploadedFile={processUploadedFile}
+            previewFile={previewFile}
+            showUploadButton={showUploadButton}
+          />
+        );
       }
     }
   ];
@@ -312,8 +350,15 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
   const dataframeOptions = Array.from(dataframeState).map((dataframeInfo) => dataframeInfo.dataframeName);
 
   return (
-    <Box sx={{ width: '100%', p: '1rem' }}>
-      <DataGridTable columns={columns} rows={rows} />
+    <Box sx={{ width: '100%' }} className={styles.container}>
+      <Box
+        sx={{
+          backgroundColor: '#fff',
+          boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)'
+        }}
+      >
+        <AppStripedDataGrid columns={columns} rows={rows} />
+      </Box>
       {currentFile && (
         <Box
           sx={{
@@ -321,12 +366,10 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
             width: '100%',
             alignItems: 'center',
             alignContent: 'center',
-            py: 4
+            mt: 5
           }}
         >
-          <Typography sx={{ ml: -2 }} variant="h3">
-            Preview data
-          </Typography>
+          <Typography variant="h4">Preview data</Typography>
           <Autocomplete
             sx={{ width: '15%', mx: 2 }}
             disablePortal
@@ -351,7 +394,13 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
           />
         </Box>
       )}
-      {sample_csv_data.length ? <CsvDisplay csvData={sample_csv_data} /> : null}
+      <Box
+        sx={{
+          mt: 2
+        }}
+      >
+        {sample_csv_data.length ? <CsvDisplay csvData={sample_csv_data} /> : null}
+      </Box>
       <br />
       {logs && (
         <>
