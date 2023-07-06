@@ -4,6 +4,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import styles from './DataModelColumnCard.module.css';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 import { useState } from 'react';
+import { connect } from 'react-redux';
+import { UserRole } from 'src/client';
 
 export interface IDataModelColumnCard {
   columnData: any;
@@ -11,7 +13,16 @@ export interface IDataModelColumnCard {
   handleDeleteClicked: (columnData: any) => void;
 }
 
-const DataModelColumnCard: React.FC<IDataModelColumnCard> = ({ columnData, handleEditClicked, handleDeleteClicked }) => {
+interface IDispatchProps {
+  userProfile: any;
+}
+
+const DataModelColumnCard: React.FC<IDataModelColumnCard & IDispatchProps> = ({
+  columnData,
+  handleEditClicked,
+  handleDeleteClicked,
+  ...props
+}) => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
 
   const handleOpenDeleteModal = () => {
@@ -61,23 +72,27 @@ const DataModelColumnCard: React.FC<IDataModelColumnCard> = ({ columnData, handl
                 textAlign: 'right'
               }}
             >
-              <IconButton
-                aria-label="delete"
-                onClick={() => {
-                  handleEditClicked(columnData);
-                }}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                aria-label="delete"
-                color="error"
-                onClick={() => {
-                  handleOpenDeleteModal();
-                }}
-              >
-                <DeleteOutlineIcon />
-              </IconButton>
+              {props.userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) ? (
+                <>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => {
+                      handleEditClicked(columnData);
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    aria-label="delete"
+                    color="error"
+                    onClick={() => {
+                      handleOpenDeleteModal();
+                    }}
+                  >
+                    <DeleteOutlineIcon />
+                  </IconButton>
+                </>
+              ) : null}
             </Box>
           </Box>
         </Grid>
@@ -124,4 +139,8 @@ const DataModelColumnCard: React.FC<IDataModelColumnCard> = ({ columnData, handl
   );
 };
 
-export default DataModelColumnCard;
+const mapStateToProps = (state: any) => ({
+  userProfile: state.userprofile
+});
+
+export default connect(mapStateToProps)(DataModelColumnCard);

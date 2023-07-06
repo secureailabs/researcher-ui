@@ -1,17 +1,22 @@
 import { Box, Button, FormControl, Icon, IconButton, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material';
 import styles from './EditDataModelTable.module.css';
 import { useEffect, useState } from 'react';
-import { DefaultService, GetDataModelDataframe_Out } from 'src/client';
+import { DefaultService, GetDataModelDataframe_Out, UserInfo_Out, UserRole } from 'src/client';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import DataModelColumnCard from '../DataModelColumnCard';
 import DataModelSeriesForm from '../DataModelSeriesForm';
 import useNotification from 'src/hooks/useNotification';
+import { connect } from 'react-redux';
 
 export interface IEditDataModelTable {
   tableData: GetDataModelDataframe_Out;
   refetchDataFrameInfo: () => void;
+}
+
+interface IDispatchProps {
+  userProfile: any;
 }
 
 const Search = styled('div')(({ theme }) => ({
@@ -45,7 +50,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }
 }));
 
-const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchDataFrameInfo }) => {
+const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({ tableData, refetchDataFrameInfo, ...props }) => {
   const [columns, setColumns] = useState<any[]>([]);
   const [filteredColumns, setFilteredColumns] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -175,6 +180,7 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
               />
             </Search>
           </Box>
+
           <Box
             sx={{
               flex: 1,
@@ -182,9 +188,11 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
               marginRight: '1rem'
             }}
           >
-            <Button variant="contained" color="primary" onClick={handleAddNewColumnClicked}>
-              Add Column
-            </Button>
+            {props.userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) ? (
+              <Button variant="contained" color="primary" onClick={handleAddNewColumnClicked}>
+                Add Column
+              </Button>
+            ) : null}
           </Box>
         </Box>
       </Box>
@@ -217,4 +225,8 @@ const EditDataModelTable: React.FC<IEditDataModelTable> = ({ tableData, refetchD
   );
 };
 
-export default EditDataModelTable;
+const mapStateToProps = (state: any) => ({
+  userProfile: state.userprofile
+});
+
+export default connect(mapStateToProps)(EditDataModelTable);

@@ -41,6 +41,7 @@ const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
       </Typography>
       {data && !isLoading && dataModelInfo ? (
         <>
+          {/* Utility bar contains Add table button, refresh button  */}
           <UtilityBar refetch={refetch} dataModelId={dataModelInfo?.id} />
           <Box className={styles.bodyContainerTable}>
             <DataModelTableSection data={data} refetchDataModelTables={refetch} />

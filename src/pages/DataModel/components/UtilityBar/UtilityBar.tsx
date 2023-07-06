@@ -4,14 +4,19 @@ import MenuIcon from '@mui/icons-material/Menu';
 import styles from './UtilityBar.module.css';
 import { useState } from 'react';
 import IconButton from 'src/components/extended/IconButton';
-import { DefaultService, RegisterDataModelDataframe_In, RegisterDataModel_In } from 'src/client';
+import { DefaultService, RegisterDataModelDataframe_In, RegisterDataModel_In, UserRole } from 'src/client';
+import { connect } from 'react-redux';
 
 export interface IUtilityBar {
   refetch: () => void;
   dataModelId: string;
 }
 
-const UtilityBar: React.FC<IUtilityBar> = ({ refetch, dataModelId }) => {
+interface DispatchProps {
+  userProfile: any;
+}
+
+const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ refetch, dataModelId, ...props }) => {
   const [tableName, setTableName] = useState('');
   const [tableDescription, setTableDescription] = useState('');
 
@@ -49,9 +54,12 @@ const UtilityBar: React.FC<IUtilityBar> = ({ refetch, dataModelId }) => {
     <Box className={styles.container}>
       <Box className={styles.bodyContainerLeft}></Box>
       <Box className={styles.bodyContainerRight}>
-        <Button variant="contained" color="primary" className={styles.addTableButton} onClick={() => setOpenModal(true)}>
-          Add Table
-        </Button>
+        {props.userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) ? (
+          <Button variant="contained" color="primary" className={styles.addTableButton} onClick={() => setOpenModal(true)}>
+            Add Table
+          </Button>
+        ) : null}
+
         <IconButton
           aria-label="refresh"
           shape="rounded"
@@ -137,4 +145,8 @@ const UtilityBar: React.FC<IUtilityBar> = ({ refetch, dataModelId }) => {
   );
 };
 
-export default UtilityBar;
+const mapStateToProps = (state: any) => ({
+  userProfile: state.userprofile
+});
+
+export default connect(mapStateToProps)(UtilityBar);
