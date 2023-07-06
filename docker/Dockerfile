@@ -14,8 +14,8 @@ RUN yarn install --production --frozen-lockfile
 COPY . .
 
 # Build the application
-COPY ./build /app/build
-
+# COPY ./build /app/build
+# RUN yarn build
 
 # Production stage
 FROM nginx:alpine
@@ -32,5 +32,10 @@ COPY --from=build /app/build /usr/share/nginx/html
 # Expose port 80
 EXPOSE 80
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# # Start Nginx
+# CMD ["nginx", "-g", "daemon off;"]
+
+COPY docker/Entrypoint.sh /Entrypoint.sh
+RUN chmod +x /Entrypoint.sh
+
+ENTRYPOINT [ "/Entrypoint.sh" ]

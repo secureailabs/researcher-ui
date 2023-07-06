@@ -24,7 +24,7 @@ const AnalyticsResultHistory: React.FC<IAnalyticsResultHistory> = ({ sampleTextP
         }
       }}
     >
-      {result.map((data, index) => {
+      {result.reverse().map((data, index) => {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         // get plot url situates in the public folder
         const plotUrl = `${process.env.PUBLIC_URL}/paired_samples_scatterplot.html`;
