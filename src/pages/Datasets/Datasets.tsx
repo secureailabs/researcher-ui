@@ -7,9 +7,11 @@ import { GetMultipleDataset_Out, ApiError, DefaultService } from 'src/client';
 import NewDatasetModal from './components/NewDatasetModal';
 import IconButton from 'src/components/extended/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import useNotification from 'src/hooks/useNotification';
 
 const Datasets: React.FC = () => {
-  const { data, isLoading, refetch } = useQuery<GetMultipleDataset_Out, ApiError>(['datasets'], DefaultService.getAllDatasets, {
+  const [sendNotification] = useNotification();
+  const { data, isLoading, isError, refetch } = useQuery<GetMultipleDataset_Out, ApiError>(['datasets'], DefaultService.getAllDatasets, {
     refetchOnMount: 'always'
   });
 
@@ -50,7 +52,11 @@ const Datasets: React.FC = () => {
             <CircularProgress />
           </Box>
         ) : null}
-        {data ? <DatasetsListTable data={data?.datasets} /> : <p>There was an error fetching datasets. Please try again later</p>}
+        {isError ? (sendNotification({
+          msg: 'There was an error fetching the datasets for your organization.',
+          variant: 'error'
+        })) : null}
+        {data ? <DatasetsListTable data={data?.datasets} /> : null}
       </Box>
     </Box>
   );

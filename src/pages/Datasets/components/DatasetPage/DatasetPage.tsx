@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { ApiError, DefaultService, GetDataset_Out, GetMultipleDatasetVersion_Out } from 'src/client';
@@ -12,7 +12,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 
 const Dataset: React.FC = () => {
   const { id } = useParams() as { id: string };
-  const { data, refetch } = useQuery<GetDataset_Out, ApiError>([id], () => DefaultService.getDataset(id), {
+  const { data, isLoading, refetch } = useQuery<GetDataset_Out, ApiError>([id], () => DefaultService.getDataset(id), {
     refetchOnMount: 'always'
   });
 
@@ -56,10 +56,21 @@ const Dataset: React.FC = () => {
               </IconButton>
             </Box>
           </Box>
+          {isLoading ? (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : null}
           {dataset_versions !== undefined ? <DatasetVersionsTable data={dataset_versions} /> : null}
         </Box>
       ) : (
-        <p>There was an error fetching information for this dataset. Please try again later</p>
+        null
       )}
     </Box>
   );

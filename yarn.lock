@@ -10080,6 +10080,11 @@ react-plotly.js@^2.6.0:
   dependencies:
     prop-types "^15.8.1"
 
+react-plotly@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-plotly/-/react-plotly-1.0.0.tgz#addff804d47abe4e2abc49ad96f8a038cfe7f498"
+  integrity sha512-vVwqUePJ9gIdezCrT3dQDT4r6sL5bDGwdkhy/yR3cuXt9BWlwwyQ5wst5ouTdK6xCGSBB324Ok+EjcWTRo9qQQ==
+
 react-query@^3.39.3:
   version "3.39.3"
   resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.39.3.tgz#4cea7127c6c26bdea2de5fb63e51044330b03f35"

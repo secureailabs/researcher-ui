@@ -12,6 +12,7 @@ import { uploadAndPublish } from './Utils';
 import { DefaultService, UpdateDatasetVersion_In } from 'src/client';
 import styles from './DatasetUpload.module.css';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
+import useNotification from 'src/hooks/useNotification';
 
 export interface UploadProps {
   cell: {
@@ -128,7 +129,7 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
   const { version } = useParams() as { version: string };
   const [showUploadButton, setShowUploadButton] = React.useState(true);
   const [value, setValue] = React.useState<string | null>(null);
-
+  const [sendNotification] = useNotification();
   const [inputValue, setInputValue] = React.useState('');
 
   function addLogMessage(message: string) {
@@ -206,7 +207,12 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
   }
 
   React.useEffect(() => {
-    fetchDataModel();
+    fetchDataModel().catch((error) => {
+      sendNotification({
+        msg: error.message,
+        variant: 'error'
+      });
+    });
   }, []);
 
   React.useEffect(() => {
