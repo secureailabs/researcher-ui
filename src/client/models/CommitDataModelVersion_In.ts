@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type HTTPException = {
-    detail?: string;
+export type CommitDataModelVersion_In = {
+    commit_message: string;
 };
 

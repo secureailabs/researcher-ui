@@ -5,5 +5,6 @@
 export type RegisterDataModel_In = {
     name: string;
     description: string;
+    tags?: Array<string>;
 };
 

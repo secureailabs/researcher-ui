@@ -2,19 +2,18 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Body_login } from '../models/Body_login';
+import type { CommitDataModelVersion_In } from '../models/CommitDataModelVersion_In';
 import type { DatasetEncryptionKey_Out } from '../models/DatasetEncryptionKey_Out';
 import type { GetDataFederation_Out } from '../models/GetDataFederation_Out';
 import type { GetDataModel_Out } from '../models/GetDataModel_Out';
-import type { GetDataModelDataframe_Out } from '../models/GetDataModelDataframe_Out';
-import type { GetDataModelSeries_Out } from '../models/GetDataModelSeries_Out';
+import type { GetDataModelVersion_Out } from '../models/GetDataModelVersion_Out';
 import type { GetDataset_Out } from '../models/GetDataset_Out';
 import type { GetDatasetVersion_Out } from '../models/GetDatasetVersion_Out';
 import type { GetDatasetVersionConnectionString_Out } from '../models/GetDatasetVersionConnectionString_Out';
 import type { GetInvite_Out } from '../models/GetInvite_Out';
 import type { GetMultipleDataFederation_Out } from '../models/GetMultipleDataFederation_Out';
 import type { GetMultipleDataModel_Out } from '../models/GetMultipleDataModel_Out';
-import type { GetMultipleDataModelDataframe_Out } from '../models/GetMultipleDataModelDataframe_Out';
-import type { GetMultipleDataModelSeries_Out } from '../models/GetMultipleDataModelSeries_Out';
+import type { GetMultipleDataModelVersion_Out } from '../models/GetMultipleDataModelVersion_Out';
 import type { GetMultipleDataset_Out } from '../models/GetMultipleDataset_Out';
 import type { GetMultipleDatasetVersion_Out } from '../models/GetMultipleDatasetVersion_Out';
 import type { GetMultipleInvite_Out } from '../models/GetMultipleInvite_Out';
@@ -32,10 +31,8 @@ import type { RegisterDataFederation_In } from '../models/RegisterDataFederation
 import type { RegisterDataFederation_Out } from '../models/RegisterDataFederation_Out';
 import type { RegisterDataModel_In } from '../models/RegisterDataModel_In';
 import type { RegisterDataModel_Out } from '../models/RegisterDataModel_Out';
-import type { RegisterDataModelDataframe_In } from '../models/RegisterDataModelDataframe_In';
-import type { RegisterDataModelDataframe_Out } from '../models/RegisterDataModelDataframe_Out';
-import type { RegisterDataModelSeries_In } from '../models/RegisterDataModelSeries_In';
-import type { RegisterDataModelSeries_Out } from '../models/RegisterDataModelSeries_Out';
+import type { RegisterDataModelVersion_In } from '../models/RegisterDataModelVersion_In';
+import type { RegisterDataModelVersion_Out } from '../models/RegisterDataModelVersion_Out';
 import type { RegisterDataset_In } from '../models/RegisterDataset_In';
 import type { RegisterDataset_Out } from '../models/RegisterDataset_Out';
 import type { RegisterDatasetVersion_In } from '../models/RegisterDatasetVersion_In';
@@ -47,10 +44,9 @@ import type { RegisterSecureComputationNode_Out } from '../models/RegisterSecure
 import type { RegisterUser_In } from '../models/RegisterUser_In';
 import type { RegisterUser_Out } from '../models/RegisterUser_Out';
 import type { Resource } from '../models/Resource';
+import type { SaveDataModelVersion_In } from '../models/SaveDataModelVersion_In';
 import type { UpdateDataFederation_In } from '../models/UpdateDataFederation_In';
 import type { UpdateDataModel_In } from '../models/UpdateDataModel_In';
-import type { UpdateDataModelDataframe_In } from '../models/UpdateDataModelDataframe_In';
-import type { UpdateDataModelSeries_In } from '../models/UpdateDataModelSeries_In';
 import type { UpdateDataset_In } from '../models/UpdateDataset_In';
 import type { UpdateDatasetVersion_In } from '../models/UpdateDatasetVersion_In';
 import type { UpdateOrganization_In } from '../models/UpdateOrganization_In';
@@ -72,7 +68,8 @@ export class DefaultService {
      * @param resource query events related to a specific resource
      * @param datasetId query events related to a specific dataset
      * @param scnId query events related to a specific scn
-     * @param dataModeId query events related to a specific data model
+     * @param dataModelId query events related to a specific data model
+     * @param dataFederationId query events related to a specific data federation
      * @param start starting timestamp of the query range
      * @param end ending timestamp of the query range
      * @param limit query events number limit
@@ -87,7 +84,8 @@ export class DefaultService {
         resource?: Resource,
         datasetId?: string,
         scnId?: string,
-        dataModeId?: string,
+        dataModelId?: string,
+        dataFederationId?: string,
         start?: number,
         end?: number,
         limit?: number,
@@ -103,7 +101,8 @@ export class DefaultService {
                 'resource': resource,
                 'dataset_id': datasetId,
                 'scn_id': scnId,
-                'data_mode_id': dataModeId,
+                'data_model_id': dataModelId,
+                'data_federation_id': dataFederationId,
                 'start': start,
                 'end': end,
                 'limit': limit,
@@ -111,6 +110,9 @@ export class DefaultService {
                 'direction': direction,
             },
             errors: {
+                400: `Invalid resource or resource ID`,
+                403: `Dataset does not belong to the user`,
+                404: `DataFederation not found`,
                 422: `Validation Error`,
             },
         });
@@ -355,6 +357,7 @@ export class DefaultService {
             mediaType: 'application/json',
             errors: {
                 403: `Unauthorized`,
+                404: `Organization not found. Or is inactive`,
                 409: `User already exists`,
                 422: `Validation Error`,
             },
@@ -365,12 +368,12 @@ export class DefaultService {
      * Upgrade Organization
      * Upgrade the organization to a non-free plan
      * @param organizationId UUID of the organization
-     * @returns any Successful Response
+     * @returns void
      * @throws ApiError
      */
     public static upgradeOrganization(
         organizationId: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/organizations/{organization_id}/upgrade',
@@ -1194,7 +1197,7 @@ export class DefaultService {
                 'secure_computation_node_id': secureComputationNodeId,
             },
             errors: {
-                404: `Secure Computation Node not found`,
+                404: `DataFederation not found`,
                 422: `Validation Error`,
             },
         });
@@ -1222,7 +1225,6 @@ export class DefaultService {
             mediaType: 'application/json',
             errors: {
                 403: `Access denied`,
-                404: `Secure Computation Node not found`,
                 422: `Validation Error`,
             },
         });
@@ -1343,7 +1345,7 @@ export class DefaultService {
 
     /**
      * Update Data Model
-     * Update data model to add or remove data frames
+     * Update data model information
      * @param dataModelId Data model Id to update
      * @param requestBody
      * @returns void
@@ -1368,19 +1370,19 @@ export class DefaultService {
     }
 
     /**
-     * Get All Data Model Dataframe Info
-     * Get all data model dataframe SCNs
-     * @param dataModelId UUID of Data Model
-     * @returns GetMultipleDataModelDataframe_Out All Data model dataframe information for the current organization or data model
+     * Get All Data Model Version Names
+     * Get all published data model versions
+     * @param dataModelId
+     * @returns any List of all published Data model versions
      * @throws ApiError
      */
-    public static getAllDataModelDataframeInfo(
-        dataModelId?: string,
-    ): CancelablePromise<GetMultipleDataModelDataframe_Out> {
+    public static getAllDataModelVersionNames(
+        dataModelId: string,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/data-models-dataframes',
-            query: {
+            url: '/data-model/{data_model_id}/versions',
+            path: {
                 'data_model_id': dataModelId,
             },
             errors: {
@@ -1390,41 +1392,42 @@ export class DefaultService {
     }
 
     /**
-     * Register Data Model Dataframe
-     * Provision data federation SCNs
+     * Register Data Model Version
+     * Register a new data model version
      * @param requestBody
-     * @returns RegisterDataModelDataframe_Out Data model dataframe Id and list of SCNs
+     * @returns RegisterDataModelVersion_Out Data model version Id
      * @throws ApiError
      */
-    public static registerDataModelDataframe(
-        requestBody: RegisterDataModelDataframe_In,
-    ): CancelablePromise<RegisterDataModelDataframe_Out> {
+    public static registerDataModelVersion(
+        requestBody: RegisterDataModelVersion_In,
+    ): CancelablePromise<RegisterDataModelVersion_Out> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/data-models-dataframes',
+            url: '/data-model-version',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
+                400: `Previous version id is required for creating a new version`,
                 422: `Validation Error`,
             },
         });
     }
 
     /**
-     * Get Data Model Dataframe Info
-     * Get data model dataframe
-     * @param dataModelDataframeId Data model dataframe Id
-     * @returns GetDataModelDataframe_Out Data model dataframe information and list of SCNs
+     * Get Data Model Version
+     * Get data model version
+     * @param dataModelVersionId Data model Id
+     * @returns GetDataModelVersion_Out Data model information and list of SCNs
      * @throws ApiError
      */
-    public static getDataModelDataframeInfo(
-        dataModelDataframeId: string,
-    ): CancelablePromise<GetDataModelDataframe_Out> {
+    public static getDataModelVersion(
+        dataModelVersionId: string,
+    ): CancelablePromise<GetDataModelVersion_Out> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/data-models-dataframes/{data_model_dataframe_id}',
+            url: '/data-model-versions/{data_model_version_id}',
             path: {
-                'data_model_dataframe_id': dataModelDataframeId,
+                'data_model_version_id': dataModelVersionId,
             },
             errors: {
                 422: `Validation Error`,
@@ -1433,20 +1436,20 @@ export class DefaultService {
     }
 
     /**
-     * Delete Data Model Dataframe
-     * Soft delete data model dataframe
-     * @param dataModelDataframeId Data model dataframe Id to delete
+     * Delete Data Model Version
+     * Soft delete data model version
+     * @param dataModelVersionId Data model vesion Id to delete
      * @returns void
      * @throws ApiError
      */
-    public static deleteDataModelDataframe(
-        dataModelDataframeId: string,
+    public static deleteDataModelVersion(
+        dataModelVersionId: string,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/data-models-dataframes/{data_model_dataframe_id}',
+            url: '/data-model-versions/{data_model_version_id}',
             path: {
-                'data_model_dataframe_id': dataModelDataframeId,
+                'data_model_version_id': dataModelVersionId,
             },
             errors: {
                 422: `Validation Error`,
@@ -1455,139 +1458,67 @@ export class DefaultService {
     }
 
     /**
-     * Update Data Model Dataframe
-     * Update data model dataframe
-     * @param dataModelDataframeId Data model dataframe Id
+     * Get All Data Model Versions
+     * Get all data model versions for the current user
+     * @returns GetMultipleDataModelVersion_Out List of Data model versions for the current user
+     * @throws ApiError
+     */
+    public static getAllDataModelVersions(): CancelablePromise<GetMultipleDataModelVersion_Out> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/data-model-versions',
+        });
+    }
+
+    /**
+     * Save Data Model
+     * Save the changes made to the current data model
+     * @param dataModelVersionId Data model Id to update
      * @param requestBody
      * @returns void
      * @throws ApiError
      */
-    public static updateDataModelDataframe(
-        dataModelDataframeId: string,
-        requestBody: UpdateDataModelDataframe_In,
+    public static saveDataModel(
+        dataModelVersionId: string,
+        requestBody: SaveDataModelVersion_In,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'PATCH',
-            url: '/data-models-dataframes/{data_model_dataframe_id}',
+            url: '/data-model-versions/{data_model_version_id}/save',
             path: {
-                'data_model_dataframe_id': dataModelDataframeId,
+                'data_model_version_id': dataModelVersionId,
             },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
+                400: `Data model version is not in draft state and cannot be updated. Checkout a new version and try again.`,
                 422: `Validation Error`,
             },
         });
     }
 
     /**
-     * Get All Data Model Series Info
-     * Get all data model series SCNs
-     * @param dataModelDataframeId Data model dataframe Id
-     * @returns GetMultipleDataModelSeries_Out All Data model series information for the current organization or data model
-     * @throws ApiError
-     */
-    public static getAllDataModelSeriesInfo(
-        dataModelDataframeId?: string,
-    ): CancelablePromise<GetMultipleDataModelSeries_Out> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/data-models-series',
-            query: {
-                'data_model_dataframe_id': dataModelDataframeId,
-            },
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-
-    /**
-     * Register Data Model Series
-     * Register a new data model series
+     * Commit Data Model
+     * Commit the changes made to the current data model
+     * @param dataModelVersionId Data model Id to update
      * @param requestBody
-     * @returns RegisterDataModelSeries_Out Data model series Id
-     * @throws ApiError
-     */
-    public static registerDataModelSeries(
-        requestBody: RegisterDataModelSeries_In,
-    ): CancelablePromise<RegisterDataModelSeries_Out> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/data-models-series',
-            body: requestBody,
-            mediaType: 'application/json',
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-
-    /**
-     * Get Data Model Series Info
-     * Get data model series
-     * @param dataModelSeriesId Data model series Id
-     * @returns GetDataModelSeries_Out Data model series information and list of SCNs
-     * @throws ApiError
-     */
-    public static getDataModelSeriesInfo(
-        dataModelSeriesId: string,
-    ): CancelablePromise<GetDataModelSeries_Out> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/data-models-series/{data_model_series_id}',
-            path: {
-                'data_model_series_id': dataModelSeriesId,
-            },
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-
-    /**
-     * Update Data Model Series
-     * Update data model series
-     * @param dataModelSeriesId Data model series Id
-     * @param requestBody
-     * @returns GetDataModelSeries_Out Data model series information
-     * @throws ApiError
-     */
-    public static updateDataModelSeries(
-        dataModelSeriesId: string,
-        requestBody: UpdateDataModelSeries_In,
-    ): CancelablePromise<GetDataModelSeries_Out> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/data-models-series/{data_model_series_id}',
-            path: {
-                'data_model_series_id': dataModelSeriesId,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-
-    /**
-     * Delete Data Model Series
-     * Soft delete data model series
-     * @param dataModelSeriesId Data model series Id to delete
      * @returns void
      * @throws ApiError
      */
-    public static deleteDataModelSeries(
-        dataModelSeriesId: string,
+    public static saveDataModelVersion(
+        dataModelVersionId: string,
+        requestBody: CommitDataModelVersion_In,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/data-models-series/{data_model_series_id}',
+            method: 'PATCH',
+            url: '/data-model-versions/{data_model_version_id}/commit',
             path: {
-                'data_model_series_id': dataModelSeriesId,
+                'data_model_version_id': dataModelVersionId,
             },
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
+                400: `Data model version is not in draft state and cannot be updated. Checkout a new version and try again.`,
                 422: `Validation Error`,
             },
         });

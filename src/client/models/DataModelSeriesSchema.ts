@@ -4,7 +4,7 @@
 
 import type { SeriesDataModelType } from './SeriesDataModelType';
 
-export type SeriesDataModelSchema = {
+export type DataModelSeriesSchema = {
     type: SeriesDataModelType;
     series_name: string;
     list_value?: Array<string>;

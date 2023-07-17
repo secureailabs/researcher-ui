@@ -5,7 +5,8 @@
 /**
  * An enumeration.
  */
-export enum DataModelDataframeState {
-    ACTIVE = 'ACTIVE',
+export enum DataModelVersionState {
+    DRAFT = 'DRAFT',
+    PUBLISHED = 'PUBLISHED',
     DELETED = 'DELETED',
 }

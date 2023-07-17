@@ -17,5 +17,9 @@ export type UpdateDataModel_In = {
      * The description of the data model
      */
     description?: string;
+    /**
+     * The current version id of the data model
+     */
+    current_version_id?: string;
 };
 
