@@ -8,6 +8,10 @@ import { IconList, IconUsersGroup, IconChartInfographic } from '@tabler/icons-re
 import { type TOperatorString, type IFilter } from 'src/shared/types/customTypes';
 import CohortSelection from './components/CohortSelection';
 import Analysis from './components/Analysis';
+//import DynamicGroupingDataTable from './components/DynamicGroupingDataModelTable/DynamicGroupingDataModelTable';
+import { useQuery } from 'react-query';
+import { GetDataModel_Out, DefaultService, GetMultipleDataModelDataframe_Out, ApiError } from 'src/client';
+import AntTable from './components/DynamicGroupingDataModelTable/AntDesignTest';
 
 export interface IHome {
   sampleTextProp: string;
@@ -61,6 +65,24 @@ const Home: React.FC<IHome> = ({ sampleTextProp }) => {
   const [value, setValue] = useState(0);
   const [filters, setFilters] = useState<IFilter[]>([]);
   const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
+  const [dataModelInfo, setDataModelInfo] = useState<GetDataModel_Out | undefined>();
+
+  const fetchAllDataFrames = async () => {
+    const res1 = await DefaultService.getAllDataModelInfo();
+    // Only taling the first from the array list
+    setDataModelInfo(res1.data_models[0]);
+    const dataModelId = res1.data_models[0].id;
+    const res = await DefaultService.getAllDataModelDataframeInfo(dataModelId);
+    return res;
+  };
+
+  const { data, isLoading, status, error, refetch } = useQuery<GetMultipleDataModelDataframe_Out, ApiError>(
+    ['dataModels'],
+    fetchAllDataFrames,
+    {
+      refetchOnMount: 'always'
+    }
+  );
 
   const handleFilterChange = (data: IFilter[]): void => {
     setFilters(data);
@@ -84,7 +106,9 @@ const Home: React.FC<IHome> = ({ sampleTextProp }) => {
         </StyledTabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <FeatureExtraction />
+      {data && !isLoading ? (
+      <AntTable />
+      ) : null}
       </TabPanel>
       <TabPanel value={value} index={1}>
         <CohortSelection handleChildFilterChange={handleFilterChange} handleChildFilterOperatorChange={handleFilterOperatorChange} />
