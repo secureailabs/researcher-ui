@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from '@mui/material';
-import type { TableColumnsType } from 'antd';
-import { Form, Radio, Switch, Table } from 'antd';
+import { Form, Radio, Table, TableColumnsType } from 'antd';
+import FEATURE_LIST from 'src/constants/featureVariable';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { GetDataModel_Out, DefaultService, GetMultipleDataModelDataframe_Out, ApiError } from 'src/client';
@@ -54,14 +54,24 @@ const AntTable: React.FC = () => {
       { title: 'Feature', dataIndex: 'feature', key: 'feature' },
     ];
 
-    const data = [];
-    for (let i = 0; i < 3; ++i) {
-      data.push({
-        key: i.toString(),
-        feature: 'feature name',
+    const featureData: ExpandedDataType[] = []; // the following section is temporary until the dynamic feature list is implemented
+    const featureList: string[] = [];
+    let featureIndex = 0;
+
+    {FEATURE_LIST.map((feature, index) => (  
+      featureList.push(
+       feature.series_name) 
+    ))}
+
+    featureList.forEach((feature: any) => {
+      featureData.push({
+        key: featureIndex.toString(),
+        feature: feature,
       });
-    }
-    return <Table columns={columns} dataSource={data} pagination={false} />;
+      featureIndex++;
+    });
+
+    return <Table columns={columns} dataSource={featureData} pagination={false} />;
   };
 
   const columns: TableColumnsType<DataType> = [
@@ -92,7 +102,7 @@ const AntTable: React.FC = () => {
           <CircularProgress />
         </Box>
       ) : null}
-      <div>
+      <Box>
         <Form
           layout="inline"
           className="components-table-demo-control-bar"
@@ -106,7 +116,7 @@ const AntTable: React.FC = () => {
             </Radio.Group>
           </Form.Item>
         </Form>
-      </div>
+      </Box>
       <Table
         columns={columns}
         expandable={{ expandedRowRender }}
