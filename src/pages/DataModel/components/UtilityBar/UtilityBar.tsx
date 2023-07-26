@@ -4,13 +4,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import styles from './UtilityBar.module.css';
 import { useState } from 'react';
 import IconButton from 'src/components/extended/IconButton';
-import { DataModelVersionState, DefaultService, GetDataModelVersion_Out, RegisterDataModel_In, UserInfo_Out, UserRole } from 'src/client';
+import { DataModelVersionState, GetDataModelVersion_Out, UserInfo_Out, UserRole } from 'src/client';
 import { connect } from 'react-redux';
 import useNotification from 'src/hooks/useNotification';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface IUtilityBar {
-  dataModelId: string;
+  handlePublish: (publishMessage: string) => void;
   dataModelVersion: GetDataModelVersion_Out;
   setDataModelVersion: (dataModelVersion: GetDataModelVersion_Out) => void;
 }
@@ -19,11 +19,12 @@ interface DispatchProps {
   userProfile: UserInfo_Out;
 }
 
-const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ dataModelId, dataModelVersion, setDataModelVersion, userProfile }) => {
+const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ dataModelVersion, setDataModelVersion, userProfile, handlePublish }) => {
   const [tableName, setTableName] = useState('');
   const [tableDescription, setTableDescription] = useState('');
   const [sendNotification] = useNotification();
-
+  const [publishMessage, setPublishMessage] = useState<string>('');
+  const [openPublishModal, setOpenPublishModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openModal, setOpenModal] = useState(false);
 
@@ -33,6 +34,10 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ dataModelId, dataMo
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleClosePublishModal = () => {
+    setOpenPublishModal(false);
   };
 
   const handleCloseModal = () => {
@@ -66,13 +71,6 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ dataModelId, dataMo
     setOpenModal(false);
   };
 
-  const handleCommit = async () => {
-    // TODO: ensure that there are no unsaved changes
-
-    // commit the data model in the backend
-    await DefaultService.commitDataModelVersion(dataModelVersion.id, { commit_message: 'test' });
-  };
-
   return (
     <Box className={styles.container}>
       <Box className={styles.bodyContainerLeft}></Box>
@@ -85,7 +83,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ dataModelId, dataMo
               Add Table
             </Button>
 
-            <Button variant="contained" color="primary" className={styles.addTableButton} onClick={handleCommit}>
+            <Button variant="contained" color="primary" className={styles.addTableButton} onClick={() => setOpenPublishModal(true)}>
               Publish
             </Button>
           </>
@@ -173,6 +171,59 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ dataModelId, dataMo
             </Button>
             <Button variant="contained" color="primary" onClick={handleAddNewTable} style={{ marginLeft: '10px' }}>
               Save
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+      <Modal open={openPublishModal} onClose={handleClosePublishModal}>
+        <Box
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: '#fff',
+            padding: '30px',
+            outline: 'none',
+            width: '500px'
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Publish Message
+          </Typography>
+          <Box>
+            <TextField
+              id="outlined-basic"
+              label="Publish Notes"
+              variant="outlined"
+              value={publishMessage}
+              onChange={(e) => setPublishMessage(e.target.value)}
+              sx={{
+                width: '100%',
+                marginTop: '20px'
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              marginTop: '20px'
+            }}
+          >
+            <Button variant="outlined" color="info" onClick={handleClosePublishModal}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                handlePublish(publishMessage);
+                setOpenPublishModal(false);
+              }}
+              style={{ marginLeft: '10px' }}
+            >
+              Publish
             </Button>
           </Box>
         </Box>

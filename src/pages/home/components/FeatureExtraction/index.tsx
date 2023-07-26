@@ -1,3 +1,3 @@
 import FeatureExtraction from './FeatureExtraction';
 
-export default FeatureExtraction
+export default FeatureExtraction;

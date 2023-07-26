@@ -65,8 +65,6 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({
   const [selectedColumn, setSelectedColumn] = useState<DataModelSeries | null>(null);
   const [searchText, setSearchText] = useState<string>('');
 
-  console.log('tableData', tableData);
-
   const handleSearchTextChange = (e: any) => {
     setSearchText(e.target.value);
   };
