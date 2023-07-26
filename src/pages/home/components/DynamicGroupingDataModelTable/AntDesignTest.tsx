@@ -4,6 +4,8 @@ import FEATURE_LIST from 'src/constants/featureVariable';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { GetDataModel_Out, DefaultService, GetMultipleDataModelDataframe_Out, ApiError } from 'src/client';
+import { SeriesDataModelType } from 'src/client';
+import { TFileInformation } from 'src/pages/Datasets/components/DatasetPage/components/DatasetVersionPage/components/DatasetUpload/DatasetUpload';
 
 interface DataType {
   key: React.Key;
@@ -14,7 +16,8 @@ interface DataType {
 
 interface ExpandedDataType {
   key: React.Key;
-  feature: string;
+  feature?: string;
+  group?: string;
 }
 
 const AntTable: React.FC = () => {
@@ -48,8 +51,7 @@ const AntTable: React.FC = () => {
       });
     }
   }
-
-  const expandedRowRender = () => {
+  const defaultExpand = () => {
     const columns: TableColumnsType<ExpandedDataType> = [
       { title: 'Feature', dataIndex: 'feature', key: 'feature' },
     ];
@@ -58,10 +60,12 @@ const AntTable: React.FC = () => {
     const featureList: string[] = [];
     let featureIndex = 0;
 
-    {FEATURE_LIST.map((feature, index) => (  
-      featureList.push(
-       feature.series_name) 
-    ))}
+    {
+      FEATURE_LIST.map((feature, index) => (
+        featureList.push(
+          feature.series_name)
+      ))
+    }
 
     featureList.forEach((feature: any) => {
       featureData.push({
@@ -72,7 +76,32 @@ const AntTable: React.FC = () => {
     });
 
     return <Table columns={columns} dataSource={featureData} pagination={false} />;
+  }
+
+  const tagExpand = () => {
+    const columns: TableColumnsType<ExpandedDataType> = [
+      { title: 'Group', dataIndex: 'group', key: 'group' },
+    ];
+
+    const groupData: ExpandedDataType[] = [];
+    const groupList: string[] = [];
+    let groupIndex = 0;
+
+    for (const group in SeriesDataModelType) {
+      groupList.push(group);
+    }
+
+    groupList.forEach((group: any) => {
+      groupData.push({
+        key: groupIndex.toString(),
+        group: group,
+      });
+      groupIndex++;
+    });
+
+    return <Table columns={columns} dataSource={groupData} pagination={false} expandable={{ expandedRowRender: defaultExpand }} />;
   };
+
 
   const columns: TableColumnsType<DataType> = [
     { title: 'Name', dataIndex: 'name', key: 'name' },
@@ -82,6 +111,7 @@ const AntTable: React.FC = () => {
 
   //const [toggle, setToggle] = useState<boolean>(false);
   const [size, setSize] = useState<string>('default');
+  const [defaultView, setDefaultView] = useState<boolean>(true);
 
   const handleSizeChange = (e: any) => {
     setSize(e.target.value);
@@ -118,8 +148,14 @@ const AntTable: React.FC = () => {
         </Form>
       </Box>
       <Table
+        className="default-table-view"
         columns={columns}
-        expandable={{ expandedRowRender }}
+        expandable={{ expandedRowRender: defaultExpand }}
+        dataSource={tableData}
+      />
+      <Table
+        columns={columns}
+        expandable={{ expandedRowRender: tagExpand }}
         dataSource={tableData}
       />
     </Box>
