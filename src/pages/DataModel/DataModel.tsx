@@ -6,6 +6,7 @@ import { useQuery } from 'react-query';
 import { ApiError, DataModelVersionState, DefaultService, GetDataModelVersion_Out, GetDataModel_Out } from 'src/client';
 import DataModelTableSection from './components/DataModelTableSection';
 import useNotification from 'src/hooks/useNotification';
+import { useEffect } from 'react';
 
 const DataModel: React.FC = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -15,7 +16,25 @@ const DataModel: React.FC = () => {
   const [publishedVersions, setPublishedVersions] = useState<Record<string, string>>({});
   const [draftVersions, setDraftVersions] = useState<Record<string, string>>({});
 
-  const fetchAllDataFrames = async () => {
+  const setAllVersions = async () => {
+    if (!dataModelInfo) {
+      return;
+    }
+
+    // Get the list of all published versions
+    const publishedVersions = await DefaultService.getAllPublishedDataModelVersionNames(dataModelInfo.id);
+    setPublishedVersions(publishedVersions);
+
+    // Get the list of all draft Versions
+    const draftVersions = await DefaultService.getAllDraftDataModelVersionNames(dataModelInfo.id);
+    setDraftVersions(draftVersions);
+  };
+
+  useEffect(() => {
+    setAllVersions();
+  }, [dataModelInfo]);
+
+  const fetchDataModelVersion = async () => {
     if (!dataModelVersion) {
       const res1 = await DefaultService.getAllDataModelInfo();
       if (res1.data_models[0]) {
@@ -23,15 +42,6 @@ const DataModel: React.FC = () => {
         if (res1.data_models[0].current_version_id) {
           const latest_version = await DefaultService.getDataModelVersion(res1.data_models[0].current_version_id);
           setDataModelVersion(latest_version);
-
-          // Get the list of all published versions
-          const publishedVersions = await DefaultService.getAllPublishedDataModelVersionNames(res1.data_models[0].id);
-          setPublishedVersions(publishedVersions);
-
-          // Get the list of all draft Versions
-          const draftVersions = await DefaultService.getAllDraftDataModelVersionNames(res1.data_models[0].id);
-          setDraftVersions(draftVersions);
-
           return latest_version;
         } else {
           return null;
@@ -44,28 +54,16 @@ const DataModel: React.FC = () => {
     return null;
   };
 
-  const setSelectedVersion = async (version: string) => {
+  const setSelectedVersion = async (versionId: string) => {
     if (!dataModelInfo) {
       return;
     }
 
-    let version_id = Object.keys(publishedVersions).find((key) => publishedVersions[key] === version);
-    if (!version_id) {
-      version_id = Object.keys(draftVersions).find((key) => draftVersions[key] === version);
-      if (!version_id) {
-        sendNotification({
-          msg: 'Version not found',
-          variant: 'error'
-        });
-        return;
-      }
-    }
-
-    const version_data = await DefaultService.getDataModelVersion(version_id);
-    setDataModelVersion(version_data);
+    const versionData = await DefaultService.getDataModelVersion(versionId);
+    setDataModelVersion(versionData);
   };
 
-  const { isLoading, refetch } = useQuery<GetDataModelVersion_Out | null, ApiError>(['dataModelVersion'], fetchAllDataFrames, {
+  const { isLoading, refetch } = useQuery<GetDataModelVersion_Out | null, ApiError>(['dataModelVersion'], fetchDataModelVersion, {
     refetchOnMount: 'always'
   });
 
@@ -99,6 +97,9 @@ const DataModel: React.FC = () => {
       variant: 'success'
     });
 
+    // refetch the list of data model versions
+    setAllVersions();
+
     // update the data model version in the frontend
     refetch();
   };
@@ -111,12 +112,15 @@ const DataModel: React.FC = () => {
       {dataModelVersion && !isLoading && dataModelInfo ? (
         <>
           <UtilityBar
+            dataModel={dataModelInfo}
             dataModelVersion={dataModelVersion}
             handlePublish={handlePublish}
             publishedVersions={publishedVersions}
             draftVersions={draftVersions}
             setDataModelVersion={saveDataModelVersion}
             displaySelectedVersion={setSelectedVersion}
+            setAllVersions={setAllVersions}
+            setDataModelInfo={setDataModelInfo}
           />
           <Box className={styles.bodyContainerTable}>
             <DataModelTableSection dataModelVersion={dataModelVersion} setDataModelVersion={saveDataModelVersion} />
