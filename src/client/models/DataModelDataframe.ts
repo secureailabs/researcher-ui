@@ -5,8 +5,8 @@
 import type { DataModelSeries } from './DataModelSeries';
 
 export type DataModelDataframe = {
-    name: string;
-    description: string;
-    series?: Array<DataModelSeries>;
+  id: string;
+  name: string;
+  description: string;
+  series: Array<DataModelSeries>;
 };
-

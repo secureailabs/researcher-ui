@@ -4,21 +4,25 @@ import MenuIcon from '@mui/icons-material/Menu';
 import styles from './UtilityBar.module.css';
 import { useState } from 'react';
 import IconButton from 'src/components/extended/IconButton';
-import { DefaultService, RegisterDataModelDataframe_In, RegisterDataModel_In, UserRole } from 'src/client';
+import { DataModelVersionState, DefaultService, GetDataModelVersion_Out, RegisterDataModel_In, UserInfo_Out, UserRole } from 'src/client';
 import { connect } from 'react-redux';
+import useNotification from 'src/hooks/useNotification';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface IUtilityBar {
-  refetch: () => void;
   dataModelId: string;
+  dataModelVersion: GetDataModelVersion_Out;
+  setDataModelVersion: (dataModelVersion: GetDataModelVersion_Out) => void;
 }
 
 interface DispatchProps {
-  userProfile: any;
+  userProfile: UserInfo_Out;
 }
 
-const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ refetch, dataModelId, ...props }) => {
+const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ dataModelId, dataModelVersion, setDataModelVersion, userProfile }) => {
   const [tableName, setTableName] = useState('');
   const [tableDescription, setTableDescription] = useState('');
+  const [sendNotification] = useNotification();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openModal, setOpenModal] = useState(false);
@@ -35,28 +39,60 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ refetch, dataModelI
     setOpenModal(false);
   };
 
-  const handleSave = async () => {
-    const body: RegisterDataModelDataframe_In = {
-      name: tableName,
-      description: tableDescription,
-      data_model_id: dataModelId
-    };
-    try {
-      const res = await DefaultService.registerDataModelDataframe(body);
-      refetch();
-      setOpenModal(false);
-    } catch (e) {
-      console.log(e);
+  const handleAddNewTable = () => {
+    // ensure that the new tableName is not already in use
+    const existingTableNames = dataModelVersion.dataframes.map((df) => df.name);
+    if (existingTableNames.includes(tableName)) {
+      sendNotification({
+        msg: 'Table name already exists. Kindly choose a different name.',
+        variant: 'error'
+      });
+      return;
     }
+
+    const newDataModel = {
+      ...dataModelVersion,
+      dataframes: [
+        ...dataModelVersion.dataframes,
+        {
+          id: uuidv4(),
+          name: tableName,
+          description: tableDescription,
+          series: []
+        }
+      ]
+    };
+    setDataModelVersion(newDataModel);
+    setOpenModal(false);
+  };
+
+  const handleCommit = async () => {
+    // TODO: ensure that there are no unsaved changes
+
+    // commit the data model in the backend
+    await DefaultService.commitDataModelVersion(dataModelVersion.id, { commit_message: 'test' });
   };
 
   return (
     <Box className={styles.container}>
       <Box className={styles.bodyContainerLeft}></Box>
       <Box className={styles.bodyContainerRight}>
-        {props.userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) ? (
+        {userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) &&
+        dataModelVersion.state === DataModelVersionState.DRAFT &&
+        userProfile.id === dataModelVersion.user_id ? (
+          <>
+            <Button variant="contained" color="primary" className={styles.addTableButton} onClick={() => setOpenModal(true)}>
+              Add Table
+            </Button>
+
+            <Button variant="contained" color="primary" className={styles.addTableButton} onClick={handleCommit}>
+              Publish
+            </Button>
+          </>
+        ) : null}
+        {userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) && dataModelVersion.state === DataModelVersionState.PUBLISHED ? (
           <Button variant="contained" color="primary" className={styles.addTableButton} onClick={() => setOpenModal(true)}>
-            Add Table
+            Checkout
           </Button>
         ) : null}
 
@@ -135,7 +171,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ refetch, dataModelI
             <Button variant="outlined" color="info" onClick={handleCloseModal}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary" onClick={handleSave} style={{ marginLeft: '10px' }}>
+            <Button variant="contained" color="primary" onClick={handleAddNewTable} style={{ marginLeft: '10px' }}>
               Save
             </Button>
           </Box>

@@ -1373,12 +1373,12 @@ export class DefaultService {
      * Get All Data Model Version Names
      * Get all published data model versions
      * @param dataModelId
-     * @returns any List of all published Data model versions
+     * @returns string List of all published Data model versions
      * @throws ApiError
      */
     public static getAllDataModelVersionNames(
         dataModelId: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<Record<string, string>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/data-model/{data_model_id}/versions',
@@ -1505,7 +1505,7 @@ export class DefaultService {
      * @returns void
      * @throws ApiError
      */
-    public static saveDataModelVersion(
+    public static commitDataModelVersion(
         dataModelVersionId: string,
         requestBody: CommitDataModelVersion_In,
     ): CancelablePromise<void> {

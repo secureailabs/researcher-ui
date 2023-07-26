@@ -1,7 +1,7 @@
-import { Box, Button, FormControl, Icon, IconButton, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import styles from './EditDataModelTable.module.css';
 import { useEffect, useState } from 'react';
-import { DefaultService, GetDataModelDataframe_Out, UserInfo_Out, UserRole } from 'src/client';
+import { DataModelDataframe, DataModelSeries, GetDataModelVersion_Out, SeriesDataModelType, UserRole } from 'src/client';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
@@ -9,10 +9,12 @@ import DataModelColumnCard from '../DataModelColumnCard';
 import DataModelSeriesForm from '../DataModelSeriesForm';
 import useNotification from 'src/hooks/useNotification';
 import { connect } from 'react-redux';
+import uuid from 'react-uuid';
 
 export interface IEditDataModelTable {
-  tableData: GetDataModelDataframe_Out;
-  refetchDataFrameInfo: () => void;
+  dataModelVersion: GetDataModelVersion_Out;
+  setDataModelVersion: (dataModelVersion: GetDataModelVersion_Out) => void;
+  tableData: DataModelDataframe;
 }
 
 interface IDispatchProps {
@@ -50,13 +52,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }
 }));
 
-const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({ tableData, refetchDataFrameInfo, ...props }) => {
-  const [columns, setColumns] = useState<any[]>([]);
+const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({
+  dataModelVersion,
+  setDataModelVersion,
+  tableData,
+  ...props
+}) => {
+  const [columns, setColumns] = useState<DataModelSeries[]>([]);
   const [filteredColumns, setFilteredColumns] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [sendNotification] = useNotification();
-  const [selectedColumn, setSelectedColumn] = useState<any>(null);
+  const [selectedColumn, setSelectedColumn] = useState<DataModelSeries | null>(null);
   const [searchText, setSearchText] = useState<string>('');
+
+  console.log('tableData', tableData);
 
   const handleSearchTextChange = (e: any) => {
     setSearchText(e.target.value);
@@ -67,23 +76,7 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({ ta
   };
 
   const fetchDataModelSeriesInfo = async () => {
-    const res = await DefaultService.getAllDataModelSeriesInfo(tableData.id);
-    return res;
-  };
-
-  const refetchDataModelSeries = () => {
-    fetchDataModelSeriesInfo().then((data) => {
-      setColumns(data.data_model_series);
-    });
-  };
-
-  const handleSuccessfulSave = () => {
-    refetchDataFrameInfo();
-    sendNotification({
-      msg: 'Data Column Added Successfully',
-      variant: 'success'
-    });
-    refetchDataModelSeries();
+    return tableData;
   };
 
   const handleEditClicked = (columnData: any) => {
@@ -98,12 +91,33 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({ ta
 
   const handleDeleteClicked = async (columnData: any) => {
     try {
-      const res = await DefaultService.deleteDataModelSeries(columnData.id);
+      const currentDataModelDataframe = dataModelVersion.dataframes.find((df) => df.id === tableData.id);
+      if (currentDataModelDataframe === undefined) {
+        return;
+      }
+
+      const newSeries = currentDataModelDataframe.series.filter((s) => s.id !== columnData.id);
+      currentDataModelDataframe.series = newSeries;
+
+      // Update the data model version with the new data model dataframe
+      const newDataModelVersion = {
+        ...dataModelVersion,
+        dataframes: dataModelVersion.dataframes.map((df) => {
+          if (df.id === tableData.id) {
+            return currentDataModelDataframe;
+          }
+          return df;
+        })
+      };
+
+      // Update the data model version in the state
+      console.log('deleteDataModelVersion', newDataModelVersion);
+      setDataModelVersion(newDataModelVersion);
+
       sendNotification({
         msg: 'Data Column Deleted Successfully',
         variant: 'success'
       });
-      refetchDataModelSeries();
     } catch (err) {
       sendNotification({
         msg: 'Something went wrong',
@@ -114,7 +128,10 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({ ta
 
   useEffect(() => {
     fetchDataModelSeriesInfo().then((data) => {
-      setColumns(data.data_model_series);
+      if (data.series === undefined) {
+        return;
+      }
+      setColumns(data.series);
     });
   }, [tableData]);
 
@@ -206,6 +223,8 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({ ta
             <DataModelColumnCard
               key={column.id}
               columnData={column}
+              dataModelVersion={dataModelVersion}
+              setDataModelVersion={setDataModelVersion}
               handleEditClicked={handleEditClicked}
               handleDeleteClicked={handleDeleteClicked}
             />
@@ -215,9 +234,21 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({ ta
       <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <DataModelSeriesForm
           handleCloseModal={handleCloseModal}
-          dataModelId={tableData.id}
-          handleSuccessfulSave={handleSuccessfulSave}
-          selectedColumn={selectedColumn !== null ? selectedColumn : 'new'}
+          dataModelDataframeId={tableData.id}
+          dataModelVersion={dataModelVersion}
+          setDataModelVersion={setDataModelVersion}
+          selectedColumn={
+            selectedColumn !== null
+              ? selectedColumn
+              : {
+                  id: uuid(),
+                  name: '',
+                  description: '',
+                  series_schema: {
+                    type: SeriesDataModelType.SERIES_DATA_MODEL_CATEGORICAL
+                  }
+                }
+          }
           mode={selectedColumn !== null ? 'edit' : 'new'}
         />
       </Modal>

@@ -40,6 +40,7 @@ export type { GetMultipleUsers_Out } from './models/GetMultipleUsers_Out';
 export type { GetOrganizations_Out } from './models/GetOrganizations_Out';
 export type { GetSecureComputationNode_Out } from './models/GetSecureComputationNode_Out';
 export type { GetUsers_Out } from './models/GetUsers_Out';
+export type { HTTPException } from './models/HTTPException';
 export type { HTTPValidationError } from './models/HTTPValidationError';
 export { InviteState } from './models/InviteState';
 export { InviteType } from './models/InviteType';

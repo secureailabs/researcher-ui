@@ -3,7 +3,7 @@ import styles from './DataModel.module.css';
 import UtilityBar from './components/UtilityBar';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
-import { ApiError, DataModelState, DefaultService, GetDataModel_Out, GetMultipleDataModelDataframe_Out } from 'src/client';
+import { ApiError, DataModelState, DefaultService, GetDataModelVersion_Out, GetDataModel_Out } from 'src/client';
 import AddNewDataModel from './components/AddNewDataModel';
 import DataModelTableSection from './components/DataModelTableSection';
 
@@ -14,17 +14,34 @@ export interface IDataModel {
 const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [dataModelInfo, setDataModelInfo] = useState<GetDataModel_Out | undefined>();
+  const [dataModelVersion, setDataModelVersion] = useState<GetDataModelVersion_Out>();
 
   const fetchAllDataFrames = async () => {
     const res1 = await DefaultService.getAllDataModelInfo();
-    // Only taling the first from the array list
-    setDataModelInfo(res1.data_models[0]);
-    const dataModelId = res1.data_models[0].id;
-    const res = await DefaultService.getAllDataModelDataframeInfo(dataModelId);
-    return res;
+
+    if (res1.data_models[0]) {
+      setDataModelInfo(res1.data_models[0]);
+      if (res1.data_models[0].current_version_id) {
+        const latest_version = await DefaultService.getDataModelVersion(res1.data_models[0].current_version_id);
+        console.log('latest_version', latest_version);
+        setDataModelVersion(latest_version);
+        return latest_version;
+      } else {
+        return null;
+      }
+    }
+    return null;
   };
 
-  const { data, isLoading, status, error, refetch } = useQuery<GetMultipleDataModelDataframe_Out, ApiError>(
+  const saveDataModelVersion = async (newDataModelVersion: GetDataModelVersion_Out) => {
+    if (!dataModelVersion) {
+      return;
+    }
+    await DefaultService.saveDataModel(dataModelVersion.id, newDataModelVersion);
+    refetch();
+  };
+
+  const { data, isLoading, status, error, refetch } = useQuery<GetDataModelVersion_Out | null, ApiError>(
     ['dataModels'],
     fetchAllDataFrames,
     {
@@ -32,19 +49,19 @@ const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
     }
   );
 
-  console.log('data', data);
+  console.log('dataModel', dataModelVersion);
 
   return (
     <Box className={styles.container}>
       <Typography variant="h3" component="h3">
         Data Model
       </Typography>
-      {data && !isLoading && dataModelInfo ? (
+      {dataModelVersion && !isLoading && dataModelInfo ? (
         <>
           {/* Utility bar contains Add table button, refresh button  */}
-          <UtilityBar refetch={refetch} dataModelId={dataModelInfo?.id} />
+          <UtilityBar dataModelVersion={dataModelVersion} setDataModelVersion={saveDataModelVersion} dataModelId={dataModelInfo?.id} />
           <Box className={styles.bodyContainerTable}>
-            <DataModelTableSection data={data} refetchDataModelTables={refetch} />
+            <DataModelTableSection dataModelVersion={dataModelVersion} setDataModelVersion={saveDataModelVersion} />
           </Box>
         </>
       ) : (
