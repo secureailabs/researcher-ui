@@ -5,7 +5,7 @@ import styles from './DataModelColumnCard.module.css';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 import { useState } from 'react';
 import { connect } from 'react-redux';
-import { GetDataModelVersion_Out, UserRole } from 'src/client';
+import { DataModelVersionState, GetDataModelVersion_Out, UserRole } from 'src/client';
 
 export interface IDataModelColumnCard {
   columnData: any;
@@ -25,7 +25,7 @@ const DataModelColumnCard: React.FC<IDataModelColumnCard & IDispatchProps> = ({
   dataModelVersion,
   setDataModelVersion,
   handleDeleteClicked,
-  ...props
+  userProfile
 }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
 
@@ -76,7 +76,9 @@ const DataModelColumnCard: React.FC<IDataModelColumnCard & IDispatchProps> = ({
                 textAlign: 'right'
               }}
             >
-              {props.userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) ? (
+              {userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) &&
+              dataModelVersion.state === DataModelVersionState.DRAFT &&
+              userProfile.id === dataModelVersion.user_id ? (
                 <>
                   <IconButton
                     aria-label="delete"

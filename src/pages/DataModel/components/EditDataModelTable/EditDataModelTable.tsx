@@ -1,7 +1,14 @@
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import styles from './EditDataModelTable.module.css';
 import { useEffect, useState } from 'react';
-import { DataModelDataframe, DataModelSeries, GetDataModelVersion_Out, SeriesDataModelType, UserRole } from 'src/client';
+import {
+  DataModelDataframe,
+  DataModelSeries,
+  DataModelVersionState,
+  GetDataModelVersion_Out,
+  SeriesDataModelType,
+  UserRole
+} from 'src/client';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
@@ -56,7 +63,7 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({
   dataModelVersion,
   setDataModelVersion,
   tableData,
-  ...props
+  userProfile
 }) => {
   const [columns, setColumns] = useState<DataModelSeries[]>([]);
   const [filteredColumns, setFilteredColumns] = useState<any[]>([]);
@@ -90,7 +97,7 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({
   const handleDeleteClicked = async (columnData: any) => {
     try {
       const currentDataModelDataframe = dataModelVersion.dataframes.find((df) => df.id === tableData.id);
-      if (currentDataModelDataframe === undefined) {
+      if (currentDataModelDataframe === undefined || currentDataModelDataframe.series === undefined) {
         return;
       }
 
@@ -203,7 +210,9 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({
               marginRight: '1rem'
             }}
           >
-            {props.userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) ? (
+            {userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) &&
+            dataModelVersion.state === DataModelVersionState.DRAFT &&
+            userProfile.id === dataModelVersion.user_id ? (
               <Button variant="contained" color="primary" onClick={handleAddNewColumnClicked}>
                 Add Column
               </Button>
@@ -230,25 +239,29 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({
         })}
       </Box>
       <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <DataModelSeriesForm
-          handleCloseModal={handleCloseModal}
-          dataModelDataframeId={tableData.id}
-          dataModelVersion={dataModelVersion}
-          setDataModelVersion={setDataModelVersion}
-          selectedColumn={
-            selectedColumn !== null
-              ? selectedColumn
-              : {
-                  id: uuid(),
-                  name: '',
-                  description: '',
-                  series_schema: {
-                    type: SeriesDataModelType.SERIES_DATA_MODEL_CATEGORICAL
+        {tableData.id ? (
+          <DataModelSeriesForm
+            handleCloseModal={handleCloseModal}
+            dataModelDataframeId={tableData.id}
+            dataModelVersion={dataModelVersion}
+            setDataModelVersion={setDataModelVersion}
+            selectedColumn={
+              selectedColumn !== null
+                ? selectedColumn
+                : {
+                    id: uuid(),
+                    name: '',
+                    description: '',
+                    series_schema: {
+                      type: SeriesDataModelType.SERIES_DATA_MODEL_CATEGORICAL
+                    }
                   }
-                }
-          }
-          mode={selectedColumn !== null ? 'edit' : 'new'}
-        />
+            }
+            mode={selectedColumn !== null ? 'edit' : 'new'}
+          />
+        ) : (
+          <> </>
+        )}
       </Modal>
     </Box>
   );

@@ -12,21 +12,57 @@ const DataModel: React.FC = () => {
   const [dataModelInfo, setDataModelInfo] = useState<GetDataModel_Out | undefined>();
   const [dataModelVersion, setDataModelVersion] = useState<GetDataModelVersion_Out>();
   const [sendNotification] = useNotification();
+  const [publishedVersions, setPublishedVersions] = useState<Record<string, string>>({});
+  const [draftVersions, setDraftVersions] = useState<Record<string, string>>({});
 
   const fetchAllDataFrames = async () => {
-    const res1 = await DefaultService.getAllDataModelInfo();
+    if (!dataModelVersion) {
+      const res1 = await DefaultService.getAllDataModelInfo();
+      if (res1.data_models[0]) {
+        setDataModelInfo(res1.data_models[0]);
+        if (res1.data_models[0].current_version_id) {
+          const latest_version = await DefaultService.getDataModelVersion(res1.data_models[0].current_version_id);
+          setDataModelVersion(latest_version);
 
-    if (res1.data_models[0]) {
-      setDataModelInfo(res1.data_models[0]);
-      if (res1.data_models[0].current_version_id) {
-        const latest_version = await DefaultService.getDataModelVersion(res1.data_models[0].current_version_id);
-        setDataModelVersion(latest_version);
-        return latest_version;
-      } else {
-        return null;
+          // Get the list of all published versions
+          const publishedVersions = await DefaultService.getAllPublishedDataModelVersionNames(res1.data_models[0].id);
+          setPublishedVersions(publishedVersions);
+
+          // Get the list of all draft Versions
+          const draftVersions = await DefaultService.getAllDraftDataModelVersionNames(res1.data_models[0].id);
+          setDraftVersions(draftVersions);
+
+          return latest_version;
+        } else {
+          return null;
+        }
       }
+    } else {
+      const version_data = await DefaultService.getDataModelVersion(dataModelVersion.id);
+      setDataModelVersion(version_data);
     }
     return null;
+  };
+
+  const setSelectedVersion = async (version: string) => {
+    if (!dataModelInfo) {
+      return;
+    }
+
+    let version_id = Object.keys(publishedVersions).find((key) => publishedVersions[key] === version);
+    if (!version_id) {
+      version_id = Object.keys(draftVersions).find((key) => draftVersions[key] === version);
+      if (!version_id) {
+        sendNotification({
+          msg: 'Version not found',
+          variant: 'error'
+        });
+        return;
+      }
+    }
+
+    const version_data = await DefaultService.getDataModelVersion(version_id);
+    setDataModelVersion(version_data);
   };
 
   const { isLoading, refetch } = useQuery<GetDataModelVersion_Out | null, ApiError>(['dataModelVersion'], fetchAllDataFrames, {
@@ -74,7 +110,14 @@ const DataModel: React.FC = () => {
       </Typography>
       {dataModelVersion && !isLoading && dataModelInfo ? (
         <>
-          <UtilityBar dataModelVersion={dataModelVersion} handlePublish={handlePublish} setDataModelVersion={saveDataModelVersion} />
+          <UtilityBar
+            dataModelVersion={dataModelVersion}
+            handlePublish={handlePublish}
+            publishedVersions={publishedVersions}
+            draftVersions={draftVersions}
+            setDataModelVersion={saveDataModelVersion}
+            displaySelectedVersion={setSelectedVersion}
+          />
           <Box className={styles.bodyContainerTable}>
             <DataModelTableSection dataModelVersion={dataModelVersion} setDataModelVersion={saveDataModelVersion} />
           </Box>

@@ -1,4 +1,4 @@
-import { Box, Button, Drawer } from '@mui/material';
+import { Box, Button, Drawer, Typography } from '@mui/material';
 import styles from './DataModelTableSection.module.css';
 import { useEffect, useState } from 'react';
 import { DataModelDataframe, GetDataModelVersion_Out } from 'src/client';
@@ -68,6 +68,10 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ dataModelVers
 
   return (
     <Box className={styles.container}>
+      <Typography variant="h3" component="h3">
+        {dataModelVersion.name}
+      </Typography>
+
       {rows && rows.length > 0 ? (
         <Box className={styles.tableContainer}>
           <AppStripedDataGrid

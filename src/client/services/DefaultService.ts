@@ -1370,18 +1370,40 @@ export class DefaultService {
     }
 
     /**
-     * Get All Data Model Version Names
+     * Get All Published Data Model Version Names
      * Get all published data model versions
      * @param dataModelId
      * @returns string List of all published Data model versions
      * @throws ApiError
      */
-    public static getAllDataModelVersionNames(
+    public static getAllPublishedDataModelVersionNames(
         dataModelId: string,
     ): CancelablePromise<Record<string, string>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/data-model/{data_model_id}/versions',
+            url: '/data-model/{data_model_id}/published-versions',
+            path: {
+                'data_model_id': dataModelId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Get All Draft Data Model Version Names
+     * Get all draft data model versions
+     * @param dataModelId
+     * @returns string List of all published Data model versions
+     * @throws ApiError
+     */
+    public static getAllDraftDataModelVersionNames(
+        dataModelId: string,
+    ): CancelablePromise<Record<string, string>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/data-model/{data_model_id}/draft-versions',
             path: {
                 'data_model_id': dataModelId,
             },

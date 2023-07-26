@@ -1,8 +1,8 @@
-import { Box, Button, Menu, MenuItem, Modal, TextField, Typography } from '@mui/material';
+import { Select, Box, Button, FormControl, InputLabel, Menu, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import MenuIcon from '@mui/icons-material/Menu';
 import styles from './UtilityBar.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import IconButton from 'src/components/extended/IconButton';
 import { DataModelVersionState, GetDataModelVersion_Out, UserInfo_Out, UserRole } from 'src/client';
 import { connect } from 'react-redux';
@@ -13,13 +13,24 @@ export interface IUtilityBar {
   handlePublish: (publishMessage: string) => void;
   dataModelVersion: GetDataModelVersion_Out;
   setDataModelVersion: (dataModelVersion: GetDataModelVersion_Out) => void;
+  publishedVersions: Record<string, string>;
+  draftVersions: Record<string, string>;
+  displaySelectedVersion: (version: string) => void;
 }
 
 interface DispatchProps {
   userProfile: UserInfo_Out;
 }
 
-const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ dataModelVersion, setDataModelVersion, userProfile, handlePublish }) => {
+const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
+  dataModelVersion,
+  setDataModelVersion,
+  userProfile,
+  handlePublish,
+  publishedVersions,
+  draftVersions,
+  displaySelectedVersion
+}) => {
   const [tableName, setTableName] = useState('');
   const [tableDescription, setTableDescription] = useState('');
   const [sendNotification] = useNotification();
@@ -27,6 +38,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ dataModelVersion, s
   const [openPublishModal, setOpenPublishModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openModal, setOpenModal] = useState(false);
+  const [selectedVersion, setSelectedVersion] = useState(Object.entries(publishedVersions)[0][1]);
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -73,6 +85,50 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({ dataModelVersion, s
 
   return (
     <Box className={styles.container}>
+      <FormControl variant="standard">
+        <InputLabel id="demo-simple-select-label">Published Versions</InputLabel>
+        <Select
+          labelId="publishedVersions"
+          id="publishedVersions"
+          label="publishedVersions"
+          placeholder="Select Published Version"
+          value={selectedVersion}
+          onChange={(event) => {
+            if (event.target.value === null) {
+              return;
+            }
+            setSelectedVersion(event.target.value);
+            displaySelectedVersion(event.target.value);
+          }}
+        >
+          {Object.entries(publishedVersions).map(([key, value]) => (
+            <MenuItem key={key} value={value}>
+              {value}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl variant="standard">
+        <InputLabel id="demo-simple-select-label">Draft Versions</InputLabel>
+        <Select
+          labelId="draftVersions"
+          id="draftVersions"
+          label="draftVersions"
+          placeholder="Select Draft Version"
+          value={selectedVersion ?? null}
+          onChange={(event) => {
+            setSelectedVersion(event.target.value);
+            displaySelectedVersion(event.target.value);
+          }}
+        >
+          {Object.entries(draftVersions).map(([key, value]) => (
+            <MenuItem key={key} value={value}>
+              {value}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
       <Box className={styles.bodyContainerLeft}></Box>
       <Box className={styles.bodyContainerRight}>
         {userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) &&

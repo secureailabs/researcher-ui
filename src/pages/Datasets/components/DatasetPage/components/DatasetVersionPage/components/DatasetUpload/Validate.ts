@@ -9,6 +9,11 @@ class ValidatorCsv {
   ): boolean {
     let allGood = true;
     const list_series_data_model = data_model.series;
+    if (!list_series_data_model)
+      throw new Error(
+        `Data model with name "${data_model.name}" does not have a list of series while this is required to validate the headers`
+      );
+
     const list_series_name_model = list_series_data_model.map((series_data_model) => {
       return series_data_model.name;
     });
@@ -47,6 +52,10 @@ class ValidatorCsv {
         break;
       }
       const value = row_data[key];
+      if (!data_frame_data_model.series)
+        throw new Error(
+          `Data model with name "${data_frame_data_model.name}" does not have a list of series while this is required to validate the data`
+        );
       const series_data_model = data_frame_data_model.series[i];
       allGood = allGood && this.validate_data_value(index, value, data_frame_data_model.name, series_data_model, addLogMessage);
       i++;
