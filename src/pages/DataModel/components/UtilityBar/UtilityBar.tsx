@@ -1,10 +1,12 @@
-import { Select, Box, Button, FormControl, InputLabel, Menu, MenuItem, Modal, TextField, Typography } from '@mui/material';
+import { Select, Box, Button, FormControl, InputLabel, Menu, MenuItem, Modal, TextField, Typography, Divider } from '@mui/material';
+import { Drawer } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import MenuIcon from '@mui/icons-material/Menu';
 import styles from './UtilityBar.module.css';
 import { useEffect, useState } from 'react';
 import IconButton from 'src/components/extended/IconButton';
 import {
+  DataModelVersionBasicInfo,
   DataModelVersionState,
   DefaultService,
   GetDataModelVersion_Out,
@@ -17,6 +19,7 @@ import {
 import { connect } from 'react-redux';
 import useNotification from 'src/hooks/useNotification';
 import { v4 as uuidv4 } from 'uuid';
+import DataModelRevisionHistoryCard from 'src/pages/DataModel/components/DataModelRevisionHistoryCard';
 
 export interface IUtilityBar {
   dataModel: GetDataModel_Out;
@@ -57,9 +60,11 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
   const [newVersionDescription, setNewVersionDescription] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedVersion, setSelectedVersion] = useState(dataModelVersion.name);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [revisionHistoryElement, setRevisionHistoryElement] = useState<GetDataModelVersion_Out | GetDataModel_Out>();
 
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -182,7 +187,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
   };
 
   return (
-    <Box className={styles.container}>
+    <Box sx={{ marginTop: '20px' }} className={styles.container}>
       <FormControl variant="standard">
         <InputLabel id="demo-simple-select-label">Published Versions</InputLabel>
         <Select
@@ -190,7 +195,8 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
           id="publishedVersions"
           label="publishedVersions"
           placeholder="Select Published Version"
-          value={selectedVersion}
+          value={selectedVersion ?? null}
+          sx={{ width: '100%', minWidth: '200px' }}
           onChange={(event) => {
             if (!event.target.value) {
               return;
@@ -214,6 +220,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
           label="draftVersions"
           placeholder="Select Draft Version"
           value={selectedVersion ?? null}
+          sx={{ width: '100%', minWidth: '200px' }}
           onChange={(event) => {
             setSelectedVersion(event.target.value);
             displaySelectedVersion(map_name_to_id(event.target.value));
@@ -229,7 +236,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
 
       <Box className={styles.bodyContainerLeft}></Box>
       <Box className={styles.bodyContainerRight}>
-        {userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) &&
+        {(userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) || userProfile.roles.includes(UserRole.SAIL_ADMIN)) &&
         dataModelVersion.state === DataModelVersionState.DRAFT &&
         userProfile.id === dataModelVersion.user_id ? (
           <>
@@ -242,7 +249,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
             </Button>
           </>
         ) : null}
-        {userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) &&
+        {(userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) || userProfile.roles.includes(UserRole.SAIL_ADMIN)) &&
         dataModelVersion.state === DataModelVersionState.PUBLISHED &&
         userProfile.organization.id === dataModel.maintainer_organization.id &&
         dataModelVersion.id !== dataModel.current_version_id ? (
@@ -253,7 +260,8 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
           </>
         ) : null}
 
-        {userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) && dataModelVersion.state === DataModelVersionState.PUBLISHED ? (
+        {(userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) || userProfile.roles.includes(UserRole.SAIL_ADMIN)) &&
+        dataModelVersion.state === DataModelVersionState.PUBLISHED ? (
           <Button variant="contained" color="primary" className={styles.addTableButton} onClick={() => setOpenCheckoutModal(true)}>
             Checkout
           </Button>
@@ -281,7 +289,24 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
             'aria-labelledby': 'basic-button'
           }}
         >
-          <MenuItem onClick={handleClose}>Revision History</MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              if (dataModel.revision_history) setRevisionHistoryElement(dataModel);
+              setOpenDrawer(true);
+            }}
+          >
+            Data Model Publish History
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              if (dataModelVersion.revision_history) setRevisionHistoryElement(dataModelVersion);
+              setOpenDrawer(true);
+            }}
+          >
+            Version - {dataModelVersion.name} Revision History
+          </MenuItem>
         </Menu>
       </Box>
       <Modal open={openModal} onClose={handleCloseModal}>
@@ -449,6 +474,27 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
           </Box>
         </Box>
       </Modal>
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        PaperProps={{
+          sx: { width: '50%', padding: '20px 0 0 20px' }
+        }}
+      >
+        {/* <Box sx={{ width: '100%' }} className={styles.container}> */}
+        <Box className={styles.drawercontainer} sx={{ width: '100%' }}>
+          <Typography variant="h4" component="h4" sx={{ marginRight: '1rem' }}>
+            Revision History - {revisionHistoryElement?.name}
+          </Typography>
+          <Divider sx={{ flexGrow: 1 }} />
+          <Box className={styles.inputContainer}>
+            {revisionHistoryElement?.revision_history?.reverse().map((column) => {
+              return <DataModelRevisionHistoryCard key={column.id} revisionData={column} />;
+            })}
+          </Box>
+        </Box>
+      </Drawer>
     </Box>
   );
 };

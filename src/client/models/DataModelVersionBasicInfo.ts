@@ -2,12 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { DataModelSeries } from './DataModelSeries';
-
-export type DataModelDataframe = {
+export type DataModelVersionBasicInfo = {
     id: string;
     name: string;
     description: string;
-    series: Array<DataModelSeries>;
+    commit_message: string;
+    merge_time: string;
 };
 

@@ -5,7 +5,7 @@
 import type { DataModelSeriesSchema } from './DataModelSeriesSchema';
 
 export type DataModelSeries = {
-    id?: string;
+    id: string;
     name: string;
     description: string;
     series_schema: DataModelSeriesSchema;

@@ -1364,6 +1364,7 @@ export class DefaultService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
+                400: `Data model version is not published or has no commit message`,
                 422: `Validation Error`,
             },
         });

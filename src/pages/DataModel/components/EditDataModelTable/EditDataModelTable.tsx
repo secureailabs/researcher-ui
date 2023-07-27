@@ -210,7 +210,7 @@ const EditDataModelTable: React.FC<IEditDataModelTable & IDispatchProps> = ({
               marginRight: '1rem'
             }}
           >
-            {userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) &&
+            {(userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) || userProfile.roles.includes(UserRole.SAIL_ADMIN)) &&
             dataModelVersion.state === DataModelVersionState.DRAFT &&
             userProfile.id === dataModelVersion.user_id ? (
               <Button variant="contained" color="primary" onClick={handleAddNewColumnClicked}>

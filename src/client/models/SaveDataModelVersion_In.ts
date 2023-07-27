@@ -5,6 +5,6 @@
 import type { DataModelDataframe } from './DataModelDataframe';
 
 export type SaveDataModelVersion_In = {
-    dataframes?: Array<DataModelDataframe>;
+    dataframes: Array<DataModelDataframe>;
 };
 

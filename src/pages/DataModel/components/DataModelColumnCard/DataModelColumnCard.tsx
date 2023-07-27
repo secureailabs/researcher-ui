@@ -76,7 +76,7 @@ const DataModelColumnCard: React.FC<IDataModelColumnCard & IDispatchProps> = ({
                 textAlign: 'right'
               }}
             >
-              {userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) &&
+              {(userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) || userProfile.roles.includes(UserRole.SAIL_ADMIN)) &&
               dataModelVersion.state === DataModelVersionState.DRAFT &&
               userProfile.id === dataModelVersion.user_id ? (
                 <>

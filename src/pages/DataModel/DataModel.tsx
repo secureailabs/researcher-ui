@@ -91,7 +91,6 @@ const DataModel: React.FC = () => {
 
     // commit the data model in the backend
     await DefaultService.commitDataModelVersion(dataModelVersion.id, { commit_message: publishMessage });
-
     sendNotification({
       msg: 'Data Model published successfully.',
       variant: 'success'
@@ -106,11 +105,11 @@ const DataModel: React.FC = () => {
 
   return (
     <Box className={styles.container}>
-      <Typography variant="h3" component="h3">
-        Data Model
-      </Typography>
       {dataModelVersion && !isLoading && dataModelInfo ? (
         <>
+          <Typography variant="h3" component="h3">
+            Data Model - {dataModelInfo.name}
+          </Typography>
           <UtilityBar
             dataModel={dataModelInfo}
             dataModelVersion={dataModelVersion}

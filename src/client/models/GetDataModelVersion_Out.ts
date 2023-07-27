@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 import type { DataModelDataframe } from './DataModelDataframe';
+import type { DataModelVersionBasicInfo } from './DataModelVersionBasicInfo';
 import type { DataModelVersionState } from './DataModelVersionState';
 
 export type GetDataModelVersion_Out = {
@@ -19,5 +20,6 @@ export type GetDataModelVersion_Out = {
     user_id: string;
     dataframes: Array<DataModelDataframe>;
     state: DataModelVersionState;
+    revision_history?: Array<DataModelVersionBasicInfo>;
 };
 

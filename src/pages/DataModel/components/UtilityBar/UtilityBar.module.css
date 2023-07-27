@@ -5,3 +5,15 @@
   align-items: center;
   margin-bottom: 100px;
 }
+
+.drawercontainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}

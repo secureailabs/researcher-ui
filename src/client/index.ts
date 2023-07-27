@@ -15,6 +15,7 @@ export type { DataModelDataframe } from './models/DataModelDataframe';
 export type { DataModelSeries } from './models/DataModelSeries';
 export type { DataModelSeriesSchema } from './models/DataModelSeriesSchema';
 export { DataModelState } from './models/DataModelState';
+export type { DataModelVersionBasicInfo } from './models/DataModelVersionBasicInfo';
 export { DataModelVersionState } from './models/DataModelVersionState';
 export type { DatasetBasicInformation } from './models/DatasetBasicInformation';
 export type { DatasetEncryptionKey_Out } from './models/DatasetEncryptionKey_Out';
