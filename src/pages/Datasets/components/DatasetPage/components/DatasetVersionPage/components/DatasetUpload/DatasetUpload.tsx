@@ -19,6 +19,7 @@ export interface UploadProps {
 }
 
 export type TFileInformation = {
+  id: string;
   file: File | null;
   required: boolean;
   dataframeName: string;
@@ -140,6 +141,7 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
     for (const dataframe of datamodelVersion.dataframes) {
       // tracking validation state of the data
       const dataframeFileInfo: TFileInformation = {
+        id: dataframe.id,
         dataframeName: dataframe.name,
         file: null,
         required: true,
