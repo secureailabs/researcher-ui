@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type RegisterDataModelDataframe_Out = {
-    id: string;
+export type CommitDataModelVersion_In = {
+    commit_message: string;
 };
 

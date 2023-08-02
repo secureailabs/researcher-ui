@@ -5,10 +5,12 @@ import styles from './DataModelColumnCard.module.css';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 import { useState } from 'react';
 import { connect } from 'react-redux';
-import { UserRole } from 'src/client';
+import { DataModelVersionState, GetDataModelVersion_Out, UserRole } from 'src/client';
 
 export interface IDataModelColumnCard {
   columnData: any;
+  dataModelVersion: GetDataModelVersion_Out;
+  setDataModelVersion: (dataModelVersion: GetDataModelVersion_Out) => void;
   handleEditClicked: (columnData: any) => void;
   handleDeleteClicked: (columnData: any) => void;
 }
@@ -20,8 +22,10 @@ interface IDispatchProps {
 const DataModelColumnCard: React.FC<IDataModelColumnCard & IDispatchProps> = ({
   columnData,
   handleEditClicked,
+  dataModelVersion,
+  setDataModelVersion,
   handleDeleteClicked,
-  ...props
+  userProfile
 }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
 
@@ -72,7 +76,9 @@ const DataModelColumnCard: React.FC<IDataModelColumnCard & IDispatchProps> = ({
                 textAlign: 'right'
               }}
             >
-              {props.userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) ? (
+              {(userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) || userProfile.roles.includes(UserRole.SAIL_ADMIN)) &&
+              dataModelVersion.state === DataModelVersionState.DRAFT &&
+              userProfile.id === dataModelVersion.user_id ? (
                 <>
                   <IconButton
                     aria-label="delete"
@@ -110,7 +116,7 @@ const DataModelColumnCard: React.FC<IDataModelColumnCard & IDispatchProps> = ({
           </Typography>
         </Grid>
         {Object.keys(columnData.series_schema).map((key) => {
-          if (['list_values', 'min', 'max', 'resolution', 'type', 'unit'].includes(key) && columnData.series_schema[key] !== null) {
+          if (['list_value', 'min', 'max', 'resolution', 'type', 'unit'].includes(key) && columnData.series_schema[key] !== null) {
             return (
               <Grid item xs={6}>
                 <Typography variant="body1" component="p">
@@ -123,11 +129,11 @@ const DataModelColumnCard: React.FC<IDataModelColumnCard & IDispatchProps> = ({
                   >
                     {key}
                   </Typography>
-                  {columnData.series_schema[key]}
+                  {Array.isArray(columnData.series_schema[key]) ? columnData.series_schema[key].join(', ') : columnData.series_schema[key]}
                 </Typography>
               </Grid>
             );
-          }
+          } else return null;
         })}
       </Grid>
       <DeleteConfirmationModal

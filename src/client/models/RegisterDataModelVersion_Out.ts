@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type RegisterDataModelSeries_Out = {
+export type RegisterDataModelVersion_Out = {
     id: string;
 };
 

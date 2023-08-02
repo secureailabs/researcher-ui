@@ -1,3 +1,3 @@
-import CohortSelection from './CohortSelection'
+import CohortSelection from './CohortSelection';
 
-export default CohortSelection
+export default CohortSelection;

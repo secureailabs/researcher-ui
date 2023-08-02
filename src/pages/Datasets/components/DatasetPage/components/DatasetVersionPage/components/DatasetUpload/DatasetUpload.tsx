@@ -5,8 +5,7 @@ import CsvDisplay from './components/CsvDisplay/CsvDisplay';
 import papaparse from 'papaparse';
 import { useParams } from 'react-router-dom';
 import { GridColDef } from '@mui/x-data-grid';
-import DataGridTable from 'src/components/datagrid';
-import { GetDataModel_Out, SeriesDataModelSchema } from 'src/client';
+import { GetDataModelVersion_Out } from 'src/client';
 import { validateFile } from './Validate';
 import { uploadAndPublish } from './Utils';
 import { DefaultService, UpdateDatasetVersion_In } from 'src/client';
@@ -20,24 +19,11 @@ export interface UploadProps {
 }
 
 export type TFileInformation = {
+  id: string;
   file: File | null;
   required: boolean;
   dataframeName: string;
-  id: string;
   validationState: boolean;
-};
-
-export type TDataFrameDataModel = {
-  type: string;
-  data_frame_name: string;
-  data_frame_data_model_id: string;
-  list_series_data_model: SeriesDataModelSchema[];
-};
-
-export type TDataModel = {
-  data_model_id: string;
-  data_model_name: string;
-  data_model_dataframes: TDataFrameDataModel[];
 };
 
 export type TDatasetUploadProps = {
@@ -118,7 +104,7 @@ const UploadFile: React.FC<any> = ({
 
 const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
   // State to keep track of the validation state of the dataframes
-  const [dataModel, setDataModel] = React.useState<TDataModel | null>(null);
+  const [dataModelVersion, setDataModelVersion] = React.useState<GetDataModelVersion_Out | null>(null);
   const [rows, setRows] = useState<any>([]);
   const [dataframeState, setDataframeState] = React.useState<TFileInformation[]>([]);
   const [currentFile, setCurrentFile] = React.useState<File | null>(null);
@@ -143,21 +129,16 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
       setLogs('No data model found for the data federation.');
       return;
     }
-    const datamodel: GetDataModel_Out = await DefaultService.getDataModelInfo(datafederation.data_federations[0].data_model_id);
-
-    const allDataframes = await DefaultService.getAllDataModelDataframeInfo(datafederation.data_federations[0].data_model_id);
-
-    const data_model: TDataModel = {
-      data_model_id: datamodel.id,
-      data_model_name: datamodel.name,
-      data_model_dataframes: []
-    };
-
+    const datamodel = await DefaultService.getDataModelInfo(datafederation.data_federations[0].data_model_id);
+    if (!datamodel || !datamodel.current_version_id) {
+      setLogs('No data model found for the data federation.');
+      return;
+    }
+    const datamodelVersion = await DefaultService.getDataModelVersion(datamodel.current_version_id);
     const data_frames_validation_state: TFileInformation[] = [];
-
     const dataframes: TFileInformation[] = [];
 
-    for (const dataframe of allDataframes.data_model_dataframes) {
+    for (const dataframe of datamodelVersion.dataframes) {
       // tracking validation state of the data
       const dataframeFileInfo: TFileInformation = {
         id: dataframe.id,
@@ -169,24 +150,6 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
 
       dataframes.push(dataframeFileInfo);
 
-      // Create a data frame data model object
-      const data_frame_data_model: TDataFrameDataModel = {
-        data_frame_name: dataframe.name,
-        data_frame_data_model_id: dataframe.id,
-        type: dataframe.name,
-        list_series_data_model: []
-      };
-
-      const all_datamodel_series = await DefaultService.getAllDataModelSeriesInfo(dataframe.id);
-
-      // Fetch the data model series info
-      all_datamodel_series.data_model_series.map((seriesInfo) => {
-        data_frame_data_model.list_series_data_model.push(seriesInfo.series_schema);
-      });
-
-      // Add the data frame data model object to the data model object
-      data_model.data_model_dataframes.push(data_frame_data_model);
-
       // Assign the validation state for the data frame to be false
       data_frames_validation_state.push(dataframeFileInfo);
     }
@@ -196,7 +159,7 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
     setDataframeState(data_frames_validation_state);
 
     // Set the data model
-    setDataModel(data_model);
+    setDataModelVersion(datamodelVersion);
 
     // Add a log message
     setLogs('Data model fetched successfully.');
@@ -210,24 +173,20 @@ const DatasetUpload: React.FC<TDatasetUploadProps> = ({ refetch }) => {
   }, []);
 
   React.useEffect(() => {
-    validateFiles();
-  }, [dataframeState]);
+    if (dataModelVersion) {
+      // check if all the files are validated
+      const allFilesValidated = dataframeState.every((dataframe) => dataframe.validationState === true);
+      setAllFilesValidated(allFilesValidated);
+    }
+  }, [dataframeState, dataModelVersion]);
 
   React.useEffect(() => {
     previewFile();
   }, [currentFile]);
 
-  function validateFiles() {
-    if (dataModel) {
-      // check if all the files are validated
-      const allFilesValidated = dataframeState.every((dataframe) => dataframe.validationState === true);
-      setAllFilesValidated(allFilesValidated);
-    }
-  }
-
   function processUploadedFile(fileToProcess: File, dataframeName: string) {
-    if (fileToProcess && dataModel) {
-      const dataframeDataModel = dataModel.data_model_dataframes.find((dataframe) => dataframe.data_frame_name === dataframeName);
+    if (fileToProcess && dataModelVersion) {
+      const dataframeDataModel = dataModelVersion.dataframes.find((dataframe) => dataframe.name === dataframeName);
       if (!dataframeDataModel) {
         addLogMessage('Dataframe ' + dataframeName + ' is not present in the data model. Ignoring the file.');
         return;

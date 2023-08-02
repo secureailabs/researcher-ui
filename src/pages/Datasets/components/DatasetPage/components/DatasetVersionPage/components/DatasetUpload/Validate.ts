@@ -1,19 +1,23 @@
 import papaparse from 'papaparse';
-import { SeriesDataModelSchema } from 'src/client';
-import { TDataFrameDataModel } from './DatasetUpload';
+import { DataModelDataframe, DataModelSeries } from 'src/client';
 
 class ValidatorCsv {
   public validate_headers(
-    data_model: TDataFrameDataModel,
+    data_model: DataModelDataframe,
     list_series_name_data: string[],
     addLogMessage: (message: string) => void
   ): boolean {
     let allGood = true;
-    const list_series_data_model = data_model.list_series_data_model;
+    const list_series_data_model = data_model.series;
+    if (!list_series_data_model)
+      throw new Error(
+        `Data model with name "${data_model.name}" does not have a list of series while this is required to validate the headers`
+      );
+
     const list_series_name_model = list_series_data_model.map((series_data_model) => {
-      return series_data_model.series_name;
+      return series_data_model.name;
     });
-    const data_frame_name = data_model.data_frame_name;
+    const data_frame_name = data_model.name;
 
     for (const series_name of list_series_name_model) {
       if (!list_series_name_data.includes(series_name)) {
@@ -36,7 +40,7 @@ class ValidatorCsv {
     return allGood;
   }
 
-  public validate_data_row(row_data: any, data_frame_data_model: TDataFrameDataModel, addLogMessage: (message: string) => void): boolean {
+  public validate_data_row(row_data: any, data_frame_data_model: DataModelDataframe, addLogMessage: (message: string) => void): boolean {
     // TODO: validate that patient id and dataset id series are present?
     let allGood = true;
     let i = 0;
@@ -48,8 +52,12 @@ class ValidatorCsv {
         break;
       }
       const value = row_data[key];
-      const series_data_model = data_frame_data_model.list_series_data_model[i];
-      allGood = allGood && this.validate_data_value(index, value, data_frame_data_model.data_frame_name, series_data_model, addLogMessage);
+      if (!data_frame_data_model.series)
+        throw new Error(
+          `Data model with name "${data_frame_data_model.name}" does not have a list of series while this is required to validate the data`
+        );
+      const series_data_model = data_frame_data_model.series[i];
+      allGood = allGood && this.validate_data_value(index, value, data_frame_data_model.name, series_data_model, addLogMessage);
       i++;
     }
     return allGood;
@@ -64,21 +72,22 @@ class ValidatorCsv {
     index: string,
     value: string,
     name_data_frame: string,
-    series_data_model: SeriesDataModelSchema,
+    series_data_model: DataModelSeries,
     addLogMessage: (message: string) => void
   ): boolean {
-    if (series_data_model.type === 'SeriesDataModelCategorical') {
+    const series_schema = series_data_model.series_schema;
+    if (series_schema.type === 'SeriesDataModelCategorical') {
       return this.validate_data_element_categorical(index, value, name_data_frame, series_data_model, addLogMessage);
-    } else if (series_data_model.type === 'SeriesDataModelDate') {
+    } else if (series_schema.type === 'SeriesDataModelDate') {
       return this.validate_data_element_date(index, value, name_data_frame, series_data_model, addLogMessage);
-    } else if (series_data_model.type === 'SeriesDataModelDateTime') {
+    } else if (series_schema.type === 'SeriesDataModelDateTime') {
       return this.validate_data_element_date_time(index, value, name_data_frame, series_data_model, addLogMessage);
-    } else if (series_data_model.type === 'SeriesDataModelInterval') {
+    } else if (series_schema.type === 'SeriesDataModelInterval') {
       return this.validate_data_element_interval(index, value, name_data_frame, series_data_model, addLogMessage);
-    } else if (series_data_model.type === 'SeriesDataModelUnique') {
+    } else if (series_schema.type === 'SeriesDataModelUnique') {
       return this.validate_data_element_unique(index, value, name_data_frame, series_data_model, addLogMessage);
     } else {
-      throw new Error(`Unknown series data model type ${series_data_model.type}`);
+      throw new Error(`Unknown series data model type ${series_schema.type}`);
     }
   }
 
@@ -86,17 +95,18 @@ class ValidatorCsv {
     index: string,
     value: string,
     data_frame_name: string,
-    series_data_model: SeriesDataModelSchema,
+    series_data_model: DataModelSeries,
     addLogMessage: (message: string) => void
   ): boolean {
-    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.series_name, index);
+    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.name, index);
     // check that the value is string or ""
     // check that every value is out of the list of values or None
+    const series_schema = series_data_model.series_schema;
     if (value === '') {
       addLogMessage(`${problem_prefix} value is empty`);
       return false;
-    } else if (!series_data_model.list_value?.includes(value)) {
-      addLogMessage(`${problem_prefix} value "${value}" is not in list of allowed values ${series_data_model.list_value}`);
+    } else if (!series_schema.list_value?.includes(value)) {
+      addLogMessage(`${problem_prefix} value "${value}" is not in list of allowed values ${series_schema.list_value}`);
       return false;
     }
     return true;
@@ -106,11 +116,12 @@ class ValidatorCsv {
     index: string,
     value: string,
     data_frame_name: string,
-    series_data_model: SeriesDataModelSchema,
+    series_data_model: DataModelSeries,
     addLogMessage: (message: string) => void
   ): boolean {
     // follows "YYYY-MM-DD" https://microformats.org/wiki/datetime-design-pattern
-    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.series_name, index);
+    const series_schema = series_data_model.series_schema;
+    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.name, index);
 
     // check that the value is string or ""
     // check that the value is a valid date
@@ -145,11 +156,11 @@ class ValidatorCsv {
     index: string,
     value: string,
     data_frame_name: string,
-    series_data_model: SeriesDataModelSchema,
+    series_data_model: DataModelSeries,
     addLogMessage: (message: string) => void
   ): boolean {
     // follows "YYYY-MM-DDTHH:MM:SS+ZZ:ZZ" https://microformats.org/wiki/datetime-design-pattern
-    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.series_name, index);
+    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.name, index);
     // check that the value is string or ""
     // check that the value is a valid date time
     if (value === '') {
@@ -169,14 +180,14 @@ class ValidatorCsv {
     index: string,
     value: string,
     data_frame_name: string,
-    series_data_model: SeriesDataModelSchema,
+    series_data_model: DataModelSeries,
     addLogMessage: (message: string) => void
   ): boolean {
-    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.series_name, index);
+    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.name, index);
     // check that the series parses as float
     // check that every value is between min an max if specified
     // check that every value is in resolution if specified
-
+    const series_schema = series_data_model.series_schema;
     const value_float = parseFloat(value);
     if (isNaN(value_float)) {
       addLogMessage(
@@ -184,23 +195,23 @@ class ValidatorCsv {
       );
       return false;
     }
-    if (series_data_model.min) {
-      if (value_float < series_data_model.min) {
-        addLogMessage(problem_prefix + ` value is smaller than specified minimum of : ${series_data_model.min}`);
+    if (series_schema.min) {
+      if (value_float < series_schema.min) {
+        addLogMessage(problem_prefix + ` value is smaller than specified minimum of : ${series_schema.min}`);
         return false;
       }
     }
 
-    if (series_data_model.max) {
-      if (series_data_model.max < value_float) {
-        addLogMessage(problem_prefix + ` value is larger than specified maximum of : ${series_data_model.max}`);
+    if (series_schema.max) {
+      if (series_schema.max < value_float) {
+        addLogMessage(problem_prefix + ` value is larger than specified maximum of : ${series_schema.max}`);
         return false;
       }
     }
 
-    if (series_data_model.resolution) {
-      if (0.0001 < value_float % series_data_model.resolution) {
-        addLogMessage(problem_prefix + ` value is out of specified resultion  ${series_data_model.resolution} by more than 0.0001`);
+    if (series_schema.resolution) {
+      if (0.0001 < value_float % series_schema.resolution) {
+        addLogMessage(problem_prefix + ` value is out of specified resultion  ${series_schema.resolution} by more than 0.0001`);
         return false;
       }
     }
@@ -211,10 +222,10 @@ class ValidatorCsv {
     index: string,
     value: string,
     data_frame_name: string,
-    series_data_model: SeriesDataModelSchema,
+    series_data_model: DataModelSeries,
     addLogMessage: (message: string) => void
   ): boolean {
-    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.series_name, index);
+    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.name, index);
     // check that the value is string or ""
     // check that the value is a valid interval
     const value_float = parseFloat(value);
@@ -223,14 +234,15 @@ class ValidatorCsv {
       return false;
     }
 
-    if (series_data_model.min !== null) {
+    const series_schema = series_data_model.series_schema;
+    if (series_schema.min !== null) {
       if (value_float < 0) {
         addLogMessage(problem_prefix + ` value "${value}" is smaller than 0 while date model specifies this is series as Ratio`);
         return false;
       }
     }
 
-    if (series_data_model.max !== null) {
+    if (series_schema.max !== null) {
       if (1 < value_float) {
         addLogMessage(problem_prefix + ` value "${value}" is larger than 1 while date model specifies this is series as Ratio`);
         return false;
@@ -243,10 +255,10 @@ class ValidatorCsv {
     index: string,
     value: string,
     data_frame_name: string,
-    series_data_model: SeriesDataModelSchema,
+    series_data_model: DataModelSeries,
     addLogMessage: (message: string) => void
   ): boolean {
-    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.series_name, index);
+    const problem_prefix = this._get_problem_prefix(data_frame_name, series_data_model.name, index);
     // check that the value is string or ""
     if (value === '') {
       addLogMessage(`${problem_prefix} value is empty`);
@@ -258,7 +270,7 @@ class ValidatorCsv {
 
 export async function validateFile(
   file: File,
-  dataframeDataModel: TDataFrameDataModel,
+  dataframeDataModel: DataModelDataframe,
   addLogMessage: (message: string) => void
 ): Promise<boolean> {
   addLogMessage('Validating ' + file.name + '...');

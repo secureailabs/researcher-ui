@@ -1,50 +1,128 @@
-import { Box, Button, Drawer, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import styles from './DataModel.module.css';
 import UtilityBar from './components/UtilityBar';
 import { useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
-import { ApiError, DataModelState, DefaultService, GetDataModel_Out, GetMultipleDataModelDataframe_Out } from 'src/client';
-import AddNewDataModel from './components/AddNewDataModel';
+import { useQuery } from 'react-query';
+import { ApiError, DataModelVersionState, DefaultService, GetDataModelVersion_Out, GetDataModel_Out } from 'src/client';
 import DataModelTableSection from './components/DataModelTableSection';
+import useNotification from 'src/hooks/useNotification';
+import { useEffect } from 'react';
 
-export interface IDataModel {
-  sampleTextProp: string;
-}
-
-const DataModel: React.FC<IDataModel> = ({ sampleTextProp }) => {
+const DataModel: React.FC = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [dataModelInfo, setDataModelInfo] = useState<GetDataModel_Out | undefined>();
+  const [dataModelVersion, setDataModelVersion] = useState<GetDataModelVersion_Out>();
+  const [sendNotification] = useNotification();
+  const [publishedVersions, setPublishedVersions] = useState<Record<string, string>>({});
+  const [draftVersions, setDraftVersions] = useState<Record<string, string>>({});
 
-  const fetchAllDataFrames = async () => {
-    const res1 = await DefaultService.getAllDataModelInfo();
-    // Only taling the first from the array list
-    setDataModelInfo(res1.data_models[0]);
-    const dataModelId = res1.data_models[0].id;
-    const res = await DefaultService.getAllDataModelDataframeInfo(dataModelId);
-    return res;
+  const setAllVersions = async () => {
+    if (!dataModelInfo) {
+      return;
+    }
+
+    // Get the list of all published versions
+    const publishedVersions = await DefaultService.getAllPublishedDataModelVersionNames(dataModelInfo.id);
+    setPublishedVersions(publishedVersions);
+
+    // Get the list of all draft Versions
+    const draftVersions = await DefaultService.getAllDraftDataModelVersionNames(dataModelInfo.id);
+    setDraftVersions(draftVersions);
   };
 
-  const { data, isLoading, status, error, refetch } = useQuery<GetMultipleDataModelDataframe_Out, ApiError>(
-    ['dataModels'],
-    fetchAllDataFrames,
-    {
-      refetchOnMount: 'always'
-    }
-  );
+  useEffect(() => {
+    setAllVersions();
+  }, [dataModelInfo]);
 
-  console.log('data', data);
+  const fetchDataModelVersion = async () => {
+    if (!dataModelVersion) {
+      const res1 = await DefaultService.getAllDataModelInfo();
+      if (res1.data_models[0]) {
+        setDataModelInfo(res1.data_models[0]);
+        if (res1.data_models[0].current_version_id) {
+          const latest_version = await DefaultService.getDataModelVersion(res1.data_models[0].current_version_id);
+          setDataModelVersion(latest_version);
+          return latest_version;
+        } else {
+          return null;
+        }
+      }
+    } else {
+      const version_data = await DefaultService.getDataModelVersion(dataModelVersion.id);
+      setDataModelVersion(version_data);
+    }
+    return null;
+  };
+
+  const setSelectedVersion = async (versionId: string) => {
+    if (!dataModelInfo) {
+      return;
+    }
+
+    const versionData = await DefaultService.getDataModelVersion(versionId);
+    setDataModelVersion(versionData);
+  };
+
+  const { isLoading, refetch } = useQuery<GetDataModelVersion_Out | null, ApiError>(['dataModelVersion'], fetchDataModelVersion, {
+    refetchOnMount: 'always'
+  });
+
+  const saveDataModelVersion = async (newDataModelVersion: GetDataModelVersion_Out) => {
+    if (!dataModelVersion) {
+      return;
+    }
+    await DefaultService.saveDataModel(dataModelVersion.id, newDataModelVersion);
+    refetch();
+  };
+
+  const handlePublish = async (publishMessage: string) => {
+    if (!dataModelVersion) {
+      return;
+    }
+
+    // only publish data model if it is in draft state
+    if (dataModelVersion.state !== DataModelVersionState.DRAFT) {
+      sendNotification({
+        msg: 'Data Model is not ready to be published or is already published.',
+        variant: 'error'
+      });
+      return;
+    }
+
+    // commit the data model in the backend
+    await DefaultService.commitDataModelVersion(dataModelVersion.id, { commit_message: publishMessage });
+    sendNotification({
+      msg: 'Data Model published successfully.',
+      variant: 'success'
+    });
+
+    // refetch the list of data model versions
+    setAllVersions();
+
+    // update the data model version in the frontend
+    refetch();
+  };
 
   return (
     <Box className={styles.container}>
-      <Typography variant="h3" component="h3">
-        Data Model
-      </Typography>
-      {data && !isLoading && dataModelInfo ? (
+      {dataModelVersion && !isLoading && dataModelInfo ? (
         <>
-          {/* Utility bar contains Add table button, refresh button  */}
-          <UtilityBar refetch={refetch} dataModelId={dataModelInfo?.id} />
+          <Typography variant="h3" component="h3">
+            Data Model - {dataModelInfo.name}
+          </Typography>
+          <UtilityBar
+            dataModel={dataModelInfo}
+            dataModelVersion={dataModelVersion}
+            handlePublish={handlePublish}
+            publishedVersions={publishedVersions}
+            draftVersions={draftVersions}
+            setDataModelVersion={saveDataModelVersion}
+            displaySelectedVersion={setSelectedVersion}
+            setAllVersions={setAllVersions}
+            setDataModelInfo={setDataModelInfo}
+          />
           <Box className={styles.bodyContainerTable}>
-            <DataModelTableSection data={data} refetchDataModelTables={refetch} />
+            <DataModelTableSection dataModelVersion={dataModelVersion} setDataModelVersion={saveDataModelVersion} />
           </Box>
         </>
       ) : (

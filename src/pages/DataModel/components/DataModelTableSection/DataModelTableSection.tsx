@@ -1,31 +1,24 @@
 import { Box, Button, Drawer, Typography } from '@mui/material';
 import styles from './DataModelTableSection.module.css';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import { DefaultService, GetDataModelDataframe_Out, GetMultipleDataModelDataframe_Out } from 'src/client';
+import { DataModelDataframe, GetDataModelVersion_Out } from 'src/client';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import EditDataModelTable from '../EditDataModelTable';
-import { set } from 'react-hook-form';
 
 export interface IDataModelTableSection {
-  data: GetMultipleDataModelDataframe_Out;
-  refetchDataModelTables: () => void;
+  dataModelVersion: GetDataModelVersion_Out;
+  setDataModelVersion: (dataModelVersion: GetDataModelVersion_Out) => void;
 }
 
-const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data, refetchDataModelTables }) => {
+const DataModelTableSection: React.FC<IDataModelTableSection> = ({ dataModelVersion, setDataModelVersion }) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const [rows, setRows] = useState<GetDataModelDataframe_Out[]>();
+  const [rows, setRows] = useState<DataModelDataframe[]>();
   const [selectedRowId, setSelectedRowId] = useState();
-  const [selectedTableData, setSelectedTableData] = useState<GetDataModelDataframe_Out>();
-
-  // const fetchDataFrameInfo = async (dataModelFramesId: string[]) => {
-  //   const promises = await DefaultService.get;
-  //   return dataFrameInfo;
-  // };
+  const [selectedTableData, setSelectedTableData] = useState<DataModelDataframe>();
 
   useEffect(() => {
-    setRows(data.data_model_dataframes);
-  }, [data]);
+    setRows(dataModelVersion.dataframes);
+  }, [dataModelVersion]);
 
   const tableColumns = [
     {
@@ -47,15 +40,6 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data, refetch
       }
     },
     {
-      field: 'Created at',
-      flex: 2,
-      headerName: 'Created at',
-      headerClassName: 'table--header',
-      valueGetter: (params: any) => {
-        return params.row?.creation_time ? `${params.row?.creation_time}` : '--';
-      }
-    },
-    {
       field: 'action',
       flex: 1,
       headerName: 'Action',
@@ -68,7 +52,7 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data, refetch
                 variant="text"
                 onClick={() => {
                   setSelectedRowId(params.row.id);
-                  const selectedTableData = rows.find((row: any) => row.id === params.row.id);
+                  const selectedTableData = rows.find((row) => row.id === params.id);
                   setSelectedTableData(selectedTableData);
                   setOpenDrawer(true);
                 }}
@@ -84,6 +68,10 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data, refetch
 
   return (
     <Box className={styles.container}>
+      <Typography variant="h3" component="h3">
+        {dataModelVersion.name}
+      </Typography>
+
       {rows && rows.length > 0 ? (
         <Box className={styles.tableContainer}>
           <AppStripedDataGrid
@@ -112,7 +100,7 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ data, refetch
         }}
       >
         {selectedTableData !== undefined ? (
-          <EditDataModelTable tableData={selectedTableData} refetchDataFrameInfo={refetchDataModelTables} />
+          <EditDataModelTable dataModelVersion={dataModelVersion} setDataModelVersion={setDataModelVersion} tableData={selectedTableData} />
         ) : null}
       </Drawer>
     </Box>

@@ -2,9 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type RegisterDataModel_In = {
+export type DataModelVersionBasicInfo = {
+    id: string;
     name: string;
     description: string;
-    tags?: Array<string>;
+    commit_message: string;
+    merge_time: string;
 };
 

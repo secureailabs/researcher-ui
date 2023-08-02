@@ -2,106 +2,118 @@ import { IconButton, TextField, FormControl, InputLabel, Select, MenuItem, Box, 
 import styles from './DataModelSeriesForm.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
-import uuid from 'react-uuid';
-import { DataModelDataframeState, DefaultService, UpdateDataModelDataframe_In } from 'src/client';
+import { DataModelSeries, GetDataModelVersion_Out, SeriesDataModelType } from 'src/client';
+import useNotification from 'src/hooks/useNotification';
 
 export interface IDataModelSeriesForm {
   handleCloseModal: () => void;
-  dataModelId: string;
-  handleSuccessfulSave: () => void;
-  selectedColumn?: any;
+  dataModelDataframeId: string;
+  selectedColumn: DataModelSeries;
   mode: 'new' | 'edit';
+  dataModelVersion: GetDataModelVersion_Out;
+  setDataModelVersion: (dataModelVersion: GetDataModelVersion_Out) => void;
 }
-
-const DataModelSeriesTypeEnums = [
-  'SeriesDataModelCategorical',
-  'SeriesDataModelDate',
-  'SeriesDataModelDateTime',
-  'SeriesDataModelInterval',
-  'SeriesDataModelUnique'
-];
 
 const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
   handleCloseModal,
-  dataModelId,
-  handleSuccessfulSave,
+  dataModelDataframeId,
+  dataModelVersion,
+  setDataModelVersion,
   selectedColumn,
   mode
 }) => {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [type, setType] = useState<string>('');
-  const [values, setValues] = useState<string>('');
-  const [min, setMin] = useState<number | ''>('');
-  const [max, setMax] = useState<number | ''>('');
-  const [unit, setUnit] = useState<string>('');
-  const [resolution, setResolution] = useState<number | ''>('');
+  const [type, setType] = useState<SeriesDataModelType>(SeriesDataModelType.SERIES_DATA_MODEL_CATEGORICAL);
+  const [values, setValues] = useState<string | null>(null);
+  const [min, setMin] = useState<number | null>(null);
+  const [max, setMax] = useState<number | null>(null);
+  const [unit, setUnit] = useState<string | null>(null);
+  const [resolution, setResolution] = useState<number | null>(null);
+  const [sendNotification] = useNotification();
 
-  const handleSaveNewDataModelSeries = async () => {
-    const series_schema: any = {
-      type,
-      series_name: name
-    };
-
-    const properties = {
-      list_value: values,
-      unit,
-      min,
-      max,
-      resolution
-    };
-
-    for (const [key, value] of Object.entries(properties)) {
-      if (value) {
-        series_schema[key] = value;
+  const handleSaveDataModelSeries = async () => {
+    // convert values from comma separated string to array
+    const valuesArray = values?.split(',');
+    const series: DataModelSeries = {
+      id: selectedColumn.id,
+      name: name,
+      description: description,
+      series_schema: {
+        type: type,
+        list_value: valuesArray,
+        unit: unit ?? undefined,
+        min: min ?? undefined,
+        max: max ?? undefined,
+        resolution: resolution ?? undefined
       }
-    }
-
-    const res = await DefaultService.registerDataModelSeries({
-      name,
-      description,
-      series_schema,
-      data_model_dataframe_id: dataModelId
-    });
-
-    return res;
-  };
-
-  const handleUpdateDataModelSeries = async () => {
-    const series_schema: any = { ...selectedColumn.series_schema };
-
-    const properties = {
-      list_value: values,
-      unit,
-      min,
-      max,
-      resolution,
-      type
     };
 
-    for (const [key, value] of Object.entries(properties)) {
-      if (value) {
-        series_schema[key] = value;
+    // Get the data model dataframe from the data model version
+    const dataModelDataframe = dataModelVersion.dataframes.find((df) => df.id === dataModelDataframeId);
+
+    // Add the new series to the data model dataframe
+    if (dataModelDataframe && dataModelDataframe.series) {
+      // Remove the old series if it is an edit mode
+      if (mode === 'edit') {
+        const oldSeries = dataModelDataframe?.series.find((s) => s.id === selectedColumn.id);
+        if (oldSeries) {
+          const newSeries = dataModelDataframe.series.filter((s) => s.id !== oldSeries.id);
+          dataModelDataframe.series = newSeries;
+        }
       }
+
+      const newDataModelDataframe = {
+        ...dataModelDataframe,
+        series: [...dataModelDataframe.series, series]
+      };
+
+      // Check if the series name is already in use
+      const existingSeriesNames = dataModelDataframe.series.map((s) => s.name);
+      if (mode === 'new' && existingSeriesNames.includes(name)) {
+        sendNotification({
+          msg: 'Series name already exists. Kindly choose a different name.',
+          variant: 'error'
+        });
+        return;
+      }
+
+      // Update the data model version with the new data model dataframe
+      const newDataModelVersion = {
+        ...dataModelVersion,
+        dataframes: dataModelVersion.dataframes.map((df) => {
+          if (df.id === dataModelDataframeId) {
+            return newDataModelDataframe;
+          }
+          return df;
+        })
+      };
+
+      // Update the data model version in the state
+      setDataModelVersion(newDataModelVersion);
+
+      if (mode === 'new') {
+        sendNotification({
+          msg: 'Data Column Added Successfully',
+          variant: 'success'
+        });
+      } else {
+        sendNotification({
+          msg: 'Data Column Updated Successfully',
+          variant: 'success'
+        });
+      }
+    } else {
+      sendNotification({
+        msg: 'Something went wrong',
+        variant: 'error'
+      });
     }
-
-    const res = await DefaultService.updateDataModelSeries(selectedColumn.id, {
-      series_schema
-    });
-
-    return res;
   };
 
   const handleSaveButtonClicked = async () => {
     try {
-      // const res = await handleSaveNewDataModelSeries();
-      if (mode === 'new') {
-        const res = await handleSaveNewDataModelSeries();
-      }
-      if (mode === 'edit') {
-        const res = await handleUpdateDataModelSeries();
-      }
-      handleSuccessfulSave();
+      const res = await handleSaveDataModelSeries();
       handleCloseModal();
     } catch (error) {
       console.error(error);
@@ -109,17 +121,17 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
   };
 
   useEffect(() => {
-    if (selectedColumn && selectedColumn !== 'new') {
+    if (selectedColumn && mode !== 'new') {
       setName(selectedColumn.name);
       setDescription(selectedColumn.description);
       setType(selectedColumn.series_schema.type);
-      setValues(selectedColumn.series_schema.list_values);
-      setMin(selectedColumn.series_schema.min);
-      setMax(selectedColumn.series_schema.max);
-      setUnit(selectedColumn.series_schema.unit);
-      setResolution(selectedColumn.series_schema.resolution);
+      setValues(selectedColumn.series_schema.list_value?.join(',') ?? null);
+      setMin(selectedColumn.series_schema.min ?? null);
+      setMax(selectedColumn.series_schema.max ?? null);
+      setUnit(selectedColumn.series_schema.unit ?? null);
+      setResolution(selectedColumn.series_schema.resolution ?? null);
     }
-  }, [selectedColumn]);
+  }, [selectedColumn, mode]);
 
   return (
     <Box
@@ -194,9 +206,9 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
             id="demo-simple-select"
             value={type}
             label="Type"
-            onChange={(e) => setType(e.target.value as string)}
+            onChange={(e) => setType(e.target.value as SeriesDataModelType)}
           >
-            {DataModelSeriesTypeEnums.map((type) => {
+            {Object.values(SeriesDataModelType).map((type) => {
               return (
                 <MenuItem key={type} value={type}>
                   {type}
@@ -206,7 +218,13 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
           </Select>
         </FormControl>
         {type === 'SeriesDataModelCategorical' ? (
-          <TextField id="values" label="Values" variant="outlined" className={styles.modalInput} />
+          <TextField
+            id="values"
+            label="Values"
+            variant="outlined"
+            className={styles.modalInput}
+            onChange={(e) => setValues(e.target.value)}
+          />
         ) : null}
         {type === 'SeriesDataModelInterval' ? (
           <Box
@@ -216,10 +234,31 @@ const DataModelSeriesForm: React.FC<IDataModelSeriesForm> = ({
               columnGap: '20px'
             }}
           >
-            <TextField id="min" label="Min" variant="outlined" className={styles.modalInput} type="number" />
-            <TextField id="Max" label="Max" variant="outlined" className={styles.modalInput} type="number" />
-            <TextField id="unit" label="Unit" variant="outlined" className={styles.modalInput} />
-            <TextField id="resolution" label="resolution" variant="outlined" className={styles.modalInput} type="number" />
+            <TextField
+              id="min"
+              label="Min"
+              variant="outlined"
+              className={styles.modalInput}
+              type="number"
+              onChange={(e) => setMin(Number(e.target.value))}
+            />
+            <TextField
+              id="Max"
+              label="Max"
+              variant="outlined"
+              className={styles.modalInput}
+              type="number"
+              onChange={(e) => setMax(Number(e.target.value))}
+            />
+            <TextField id="unit" label="Unit" variant="outlined" className={styles.modalInput} onChange={(e) => setUnit(e.target.value)} />
+            <TextField
+              id="resolution"
+              label="resolution"
+              variant="outlined"
+              className={styles.modalInput}
+              type="number"
+              onChange={(e) => setResolution(Number(e.target.value))}
+            />
           </Box>
         ) : null}
       </Box>
