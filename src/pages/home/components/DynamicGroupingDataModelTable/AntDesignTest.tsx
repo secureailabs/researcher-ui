@@ -1,24 +1,52 @@
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Tab } from '@mui/material';
 import { Form, Radio, Table, TableColumnsType } from 'antd';
-import FEATURE_LIST from 'src/constants/featureVariable';
+import FEATURE_LIST, { LONGITUDINAL_VARIABLES } from 'src/constants/featureVariable';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { GetDataModel_Out, DefaultService, GetMultipleDataModelDataframe_Out, ApiError } from 'src/client';
 import { SeriesDataModelType } from 'src/client';
 import { TFileInformation } from 'src/pages/Datasets/components/DatasetPage/components/DatasetVersionPage/components/DatasetUpload/DatasetUpload';
+import { LONGITUDINAL_DATA_MODEL } from 'src/constants/featureVariable';
 
 interface DataType {
   key: React.Key;
-  name: string;
-  description: string;
-  publishDate: string | undefined;
+  name?: string;
+  description?: string;
+  publishDate?: string | undefined;
+  group?: string;
 }
 
 interface ExpandedDataType {
   key: React.Key;
   feature?: string;
   group?: string;
+  model?: string;
 }
+
+interface Feature {
+  key: React.Key;
+  feature?: string;
+  modelGroup?: string[];
+}
+
+
+
+/*const filteredDateFeatures = ( ) => {
+  const dateFeatures: Feature[] = [];
+  for (let i = 0; i <= 4; i++) {
+  LONGITUDINAL_DATA_MODEL.list_data_frame_data_model[i].list_series_data_model
+  .forEach((feature: any) => {
+    if (feature._type_ === 'SeriesDataModelDate') {
+      dateFeatures.push({
+        key: feature.series_data_model_id,
+        feature: feature.series_name,
+        modelGroup: LONGITUDINAL_DATA_MODEL.list_data_frame_data_model[i].data_frame_name,
+      });
+    }
+  });
+}
+  return dateFeatures;
+}; */
 
 const AntTable: React.FC = () => {
   const [dataModelInfo, setDataModelInfo] = useState<GetDataModel_Out | undefined>();
@@ -51,6 +79,7 @@ const AntTable: React.FC = () => {
       });
     }
   }
+
   const defaultExpand = () => {
     const columns: TableColumnsType<ExpandedDataType> = [
       { title: 'Feature', dataIndex: 'feature', key: 'feature' },
@@ -78,7 +107,7 @@ const AntTable: React.FC = () => {
     return <Table columns={columns} dataSource={featureData} pagination={false} />;
   }
 
-  const tagExpand = () => {
+  const groupExpand = () => {
     const columns: TableColumnsType<ExpandedDataType> = [
       { title: 'Group', dataIndex: 'group', key: 'group' },
     ];
@@ -102,12 +131,69 @@ const AntTable: React.FC = () => {
     return <Table columns={columns} dataSource={groupData} pagination={false} expandable={{ expandedRowRender: defaultExpand }} />;
   };
 
+  const filteredFeatures = () => {
+    const columns: TableColumnsType<ExpandedDataType> = [
+      { title: 'Feature', dataIndex: 'feature', key: 'feature' },
+      { title: 'Model Group', dataIndex: 'modelGroup', key: 'modelGroup' }
+    ];
+
+    const groupedFeatures: Feature[] = [];
+    LONGITUDINAL_DATA_MODEL.list_data_frame_data_model.forEach((dataframe: any) => {
+      dataframe.list_series_data_model
+        .forEach((feature: any) => {
+          if (feature.__type__ === 'SeriesDataModelUnique') {
+            groupedFeatures.push({
+              key: feature.series_data_model_id + feature.series_name,
+              feature: feature.series_name,
+              modelGroup: dataframe.data_frame_name,
+            });
+          }
+        });
+    });
+    
+    const uniqueList: Feature[] = []; 
+    groupedFeatures.forEach((item: any) => {
+      if (!uniqueList.includes(item.feature)) {
+        uniqueList.push(item);
+      } else {
+        const toAdd = uniqueList.find((duplicate: any) => duplicate.feature === item.feature);
+        toAdd?.modelGroup?.push(item.modelGroup);
+      }
+    });
+
+
+    return <Table columns={columns} dataSource={uniqueList} pagination={false} />;
+  };
+
+  const groupData: DataType[] = [];
+  const groupList: string[] = [];
+  let groupIndex = 0;
+
+  for (const group in SeriesDataModelType) {
+    groupList.push(group);
+  }
+
+  groupList.forEach((group: any) => {
+    groupData.push({
+      key: groupIndex.toString(),
+      group: group,
+    });
+    groupIndex++;
+  });
+
+
+
 
   const columns: TableColumnsType<DataType> = [
     { title: 'Name', dataIndex: 'name', key: 'name' },
     { title: 'Description', dataIndex: 'description', key: 'description' },
     { title: 'Created At', dataIndex: 'Created at', key: 'Created at' },
   ];
+
+  const Groupcolumns: TableColumnsType<DataType> = [
+    { title: 'Group', dataIndex: 'group', key: 'group' },
+  ];
+
 
   //const [toggle, setToggle] = useState<boolean>(false);
   const [size, setSize] = useState<string>('default');
@@ -155,8 +241,13 @@ const AntTable: React.FC = () => {
       />
       <Table
         columns={columns}
-        expandable={{ expandedRowRender: tagExpand }}
+        expandable={{ expandedRowRender: groupExpand }}
         dataSource={tableData}
+      />
+      <Table
+        columns={Groupcolumns}
+        expandable={{ expandedRowRender: filteredFeatures }}
+        dataSource={groupData}
       />
     </Box>
   );
