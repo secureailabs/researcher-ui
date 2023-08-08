@@ -4,16 +4,12 @@
 /* eslint-disable */
 
 import type { BasicObjectInfo } from './BasicObjectInfo';
-import type { UserRole } from './UserRole';
 
-export type UserInfo_Out = {
-    name: string;
-    email: string;
-    job_title: string;
-    roles: Array<UserRole>;
-    avatar?: string;
+export type GetComment_Out = {
     id: string;
+    user: BasicObjectInfo;
     organization: BasicObjectInfo;
-    freemium?: boolean;
+    comment: string;
+    time?: string;
 };
 

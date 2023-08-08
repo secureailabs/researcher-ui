@@ -1,3 +1,4 @@
+/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
@@ -6,6 +7,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { AddComment_In } from './models/AddComment_In';
 export type { BasicObjectInfo } from './models/BasicObjectInfo';
 export type { Body_login } from './models/Body_login';
 export type { CommitDataModelVersion_In } from './models/CommitDataModelVersion_In';
@@ -22,6 +24,8 @@ export type { DatasetEncryptionKey_Out } from './models/DatasetEncryptionKey_Out
 export { DatasetFormat } from './models/DatasetFormat';
 export { DatasetState } from './models/DatasetState';
 export { DatasetVersionState } from './models/DatasetVersionState';
+export type { GetComment_Out } from './models/GetComment_Out';
+export type { GetCommentChain_Out } from './models/GetCommentChain_Out';
 export type { GetDataFederation_Out } from './models/GetDataFederation_Out';
 export type { GetDataModel_Out } from './models/GetDataModel_Out';
 export type { GetDataModelVersion_Out } from './models/GetDataModelVersion_Out';

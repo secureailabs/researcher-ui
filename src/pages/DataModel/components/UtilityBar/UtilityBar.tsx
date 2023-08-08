@@ -3,10 +3,10 @@ import { Drawer } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import MenuIcon from '@mui/icons-material/Menu';
 import styles from './UtilityBar.module.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import IconButton from 'src/components/extended/IconButton';
 import {
-  DataModelVersionBasicInfo,
+  DataModelState,
   DataModelVersionState,
   DefaultService,
   GetDataModelVersion_Out,
@@ -18,8 +18,9 @@ import {
 } from 'src/client';
 import { connect } from 'react-redux';
 import useNotification from 'src/hooks/useNotification';
-import { v4 as uuidv4 } from 'uuid';
+import uuid from 'react-uuid';
 import DataModelRevisionHistoryCard from 'src/pages/DataModel/components/DataModelRevisionHistoryCard';
+import DataModel from '../../DataModel';
 
 export interface IUtilityBar {
   dataModel: GetDataModel_Out;
@@ -56,6 +57,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
   const [openModal, setOpenModal] = useState(false);
   const [openPublishModal, setOpenPublishModal] = useState<boolean>(false);
   const [openCheckoutModal, setOpenCheckoutModal] = useState<boolean>(false);
+  const [openModelPublishModal, setOpenModelPublishModal] = useState<boolean>(false);
   const [newVersionName, setNewVersionName] = useState<string>('');
   const [newVersionDescription, setNewVersionDescription] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -79,41 +81,29 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
     setOpenPublishModal(false);
   };
 
+  const handleCloseModelPublishModal = () => {
+    setOpenModelPublishModal(false);
+  };
+
   const handleCloseModal = () => {
     setOpenModal(false);
   };
 
-  const map_name_to_id = (name: string) => {
+  const map_name_to_id = (name: string, show_error: boolean) => {
     let version_id = Object.keys(publishedVersions).find((key) => publishedVersions[key] === name);
     if (!version_id) {
       version_id = Object.keys(draftVersions).find((key) => draftVersions[key] === name);
       if (!version_id) {
-        sendNotification({
-          msg: 'Version not found',
-          variant: 'error'
-        });
+        if (show_error) {
+          sendNotification({
+            msg: 'Version not found',
+            variant: 'error'
+          });
+        }
         return '';
       }
     }
     return version_id;
-  };
-
-  const setDefaultVersion = async () => {
-    const req_body: UpdateDataModel_In = {
-      current_version_id: dataModelVersion.id
-    };
-    await DefaultService.updateDataModel(dataModel.id, req_body);
-
-    sendNotification({
-      msg: 'Current version updated successfully to' + dataModelVersion.name,
-      variant: 'success'
-    });
-
-    setSelectedVersion(dataModelVersion.name);
-
-    // Update the data model
-    const dataModelInfo = await DefaultService.getDataModelInfo(dataModel.id);
-    setDataModelInfo(dataModelInfo);
   };
 
   const handleCheckout = async () => {
@@ -126,7 +116,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
     }
 
     // check if there is a draft version with the same name
-    const existing_id = map_name_to_id(newVersionName);
+    const existing_id = map_name_to_id(newVersionName, false);
     if (existing_id) {
       sendNotification({
         msg: 'A version with the same name already exists',
@@ -157,6 +147,34 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
     setOpenCheckoutModal(false);
     setAllVersions();
     setSelectedVersion(newVersionName);
+
+    // Update the data model
+    const dataModelInfo = await DefaultService.getDataModelInfo(dataModel.id);
+    setDataModelInfo(dataModelInfo);
+  };
+
+  const handleModelPublish = async () => {
+    const publish_req: UpdateDataModel_In = {
+      state: DataModelState.PUBLISHED
+    };
+    try {
+      await DefaultService.updateDataModel(dataModel.id, publish_req);
+    } catch (error) {
+      sendNotification({
+        msg: 'Error publishing model',
+        variant: 'error'
+      });
+      return;
+    }
+    sendNotification({
+      msg: 'Model published successfully',
+      variant: 'success'
+    });
+    setOpenModelPublishModal(false);
+
+    // Update the data model
+    const dataModelInfo = await DefaultService.getDataModelInfo(dataModel.id);
+    setDataModelInfo(dataModelInfo);
   };
 
   const handleAddNewTable = () => {
@@ -175,7 +193,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
       dataframes: [
         ...dataModelVersion.dataframes,
         {
-          id: uuidv4(),
+          id: uuid(),
           name: tableName,
           description: tableDescription,
           series: []
@@ -202,12 +220,12 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
               return;
             }
             setSelectedVersion(event.target.value);
-            displaySelectedVersion(map_name_to_id(event.target.value));
+            displaySelectedVersion(map_name_to_id(event.target.value, true));
           }}
         >
           {Object.entries(publishedVersions).map(([key, value]) => (
             <MenuItem key={key} value={value}>
-              {value}
+              {value} {key === dataModel.current_version_id && '(Current)'}
             </MenuItem>
           ))}
         </Select>
@@ -223,7 +241,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
           sx={{ width: '100%', minWidth: '200px' }}
           onChange={(event) => {
             setSelectedVersion(event.target.value);
-            displaySelectedVersion(map_name_to_id(event.target.value));
+            displaySelectedVersion(map_name_to_id(event.target.value, true));
           }}
         >
           {Object.entries(draftVersions).map(([key, value]) => (
@@ -233,7 +251,6 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
           ))}
         </Select>
       </FormControl>
-
       <Box className={styles.bodyContainerLeft}></Box>
       <Box className={styles.bodyContainerRight}>
         {(userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) || userProfile.roles.includes(UserRole.SAIL_ADMIN)) &&
@@ -245,23 +262,30 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
             </Button>
 
             <Button variant="contained" color="primary" className={styles.addTableButton} onClick={() => setOpenPublishModal(true)}>
-              Publish
-            </Button>
-          </>
-        ) : null}
-        {(userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) || userProfile.roles.includes(UserRole.SAIL_ADMIN)) &&
-        dataModelVersion.state === DataModelVersionState.PUBLISHED &&
-        userProfile.organization.id === dataModel.maintainer_organization.id &&
-        dataModelVersion.id !== dataModel.current_version_id ? (
-          <>
-            <Button variant="contained" color="primary" className={styles.addTableButton} onClick={setDefaultVersion}>
-              Set as Current
+              Publish Version
             </Button>
           </>
         ) : null}
 
         {(userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) || userProfile.roles.includes(UserRole.SAIL_ADMIN)) &&
-        dataModelVersion.state === DataModelVersionState.PUBLISHED ? (
+        dataModel.maintainer_organization.id === userProfile.organization.id &&
+        dataModel.current_version_id === dataModelVersion.id &&
+        dataModel.state === DataModelState.DRAFT ? (
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mr: '2px' }}
+            className={styles.addTableButton}
+            onClick={() => setOpenModelPublishModal(true)}
+          >
+            Publish Model
+          </Button>
+        ) : null}
+
+        {(userProfile.roles.includes(UserRole.DATA_MODEL_EDITOR) || userProfile.roles.includes(UserRole.SAIL_ADMIN)) &&
+        dataModel.current_version_id === dataModelVersion.id &&
+        dataModelVersion.state === DataModelVersionState.PUBLISHED &&
+        dataModel.state === DataModelState.DRAFT ? (
           <Button variant="contained" color="primary" className={styles.addTableButton} onClick={() => setOpenCheckoutModal(true)}>
             Checkout
           </Button>
@@ -305,7 +329,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
               setOpenDrawer(true);
             }}
           >
-            Version - {dataModelVersion.name} Revision History
+            Version - {dataModelVersion.name} Revision Changes
           </MenuItem>
         </Menu>
       </Box>
@@ -418,6 +442,43 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
           </Box>
         </Box>
       </Modal>
+      <Modal open={openModelPublishModal} onClose={handleCloseModelPublishModal}>
+        <Box
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: '#fff',
+            padding: '30px',
+            outline: 'none',
+            width: '500px'
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Confirmation - Important
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginTop: '20px'
+            }}
+          >
+            <Typography variant="body1" gutterBottom>
+              Are you sure you want to publish this model? This will make the model available for use by other users and no further changes
+              can be made to the model.
+            </Typography>
+            <Button variant="outlined" color="info" onClick={handleCloseModelPublishModal}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleModelPublish} style={{ marginLeft: '10px' }}>
+              Publish
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
       <Modal open={openCheckoutModal} onClose={handleCloseCheckoutModal}>
         <Box
           style={{
@@ -485,7 +546,7 @@ const UtilityBar: React.FC<IUtilityBar & DispatchProps> = ({
         {/* <Box sx={{ width: '100%' }} className={styles.container}> */}
         <Box className={styles.drawercontainer} sx={{ width: '100%' }}>
           <Typography variant="h4" component="h4" sx={{ marginRight: '1rem' }}>
-            Revision History - {revisionHistoryElement?.name}
+            Revision Changes - {revisionHistoryElement?.name}
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
           <Box className={styles.inputContainer}>

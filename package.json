@@ -54,6 +54,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prepare": "husky install",
+    "generate-client": "openapi --input openapi.json --output ./src/client --client axios",
+    "generate-dataset-upload-client": "openapi --input openapi.json --output ./src/datasetUpload --client axios",
     "lint": "eslint ./src/**/*.ts ./src/**/*.tsx"
   },
   "eslintConfig": {
@@ -92,6 +94,7 @@
     "eslint-plugin-react": "^7.32.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
+    "openapi-typescript-codegen": "^0.23.0",
     "prettier": "^2.8.6",
     "typescript": "^5.0.2"
   },

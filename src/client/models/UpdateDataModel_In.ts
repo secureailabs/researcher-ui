@@ -1,3 +1,4 @@
+/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
@@ -21,5 +22,7 @@ export type UpdateDataModel_In = {
      * The current version id of the data model
      */
     current_version_id?: string;
+    current_editor_id?: string;
+    current_editor_organization_id?: string;
 };
 

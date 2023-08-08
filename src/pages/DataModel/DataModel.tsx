@@ -7,6 +7,7 @@ import { ApiError, DataModelVersionState, DefaultService, GetDataModelVersion_Ou
 import DataModelTableSection from './components/DataModelTableSection';
 import useNotification from 'src/hooks/useNotification';
 import { useEffect } from 'react';
+import CommentSection from './components/CommentSection';
 
 const DataModel: React.FC = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -122,7 +123,14 @@ const DataModel: React.FC = () => {
             setDataModelInfo={setDataModelInfo}
           />
           <Box className={styles.bodyContainerTable}>
-            <DataModelTableSection dataModelVersion={dataModelVersion} setDataModelVersion={saveDataModelVersion} />
+            <DataModelTableSection
+              dataModelVersion={dataModelVersion}
+              dataModel={dataModelInfo}
+              setDataModelVersion={saveDataModelVersion}
+            />
+          </Box>
+          <Box className={styles.bodyContainerTable} style={{ marginTop: '2rem' }}>
+            <CommentSection dataModel={dataModelInfo} />
           </Box>
         </>
       ) : (
