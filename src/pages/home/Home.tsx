@@ -11,7 +11,7 @@ import Analysis from './components/Analysis';
 //import DynamicGroupingDataTable from './components/DynamicGroupingDataModelTable/DynamicGroupingDataModelTable';
 import { useQuery } from 'react-query';
 import { GetDataModel_Out, DefaultService, GetMultipleDataModelDataframe_Out, ApiError } from 'src/client';
-import AntTable from './components/DynamicGroupingDataModelTable/AntDesignTest';
+import FeatureGroupTable from './components/DynamicGroupingDataModelTable/FeatureGroupTable';
 
 export interface IHome {
   sampleTextProp: string;
@@ -107,7 +107,7 @@ const Home: React.FC<IHome> = ({ sampleTextProp }) => {
       </Box>
       <TabPanel value={value} index={0}>
       {data && !isLoading ? (
-      <AntTable />
+      <FeatureGroupTable />
       ) : null}
       </TabPanel>
       <TabPanel value={value} index={1}>
