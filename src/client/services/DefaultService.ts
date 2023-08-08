@@ -1,9 +1,12 @@
+/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { AddComment_In } from '../models/AddComment_In';
 import type { Body_login } from '../models/Body_login';
 import type { CommitDataModelVersion_In } from '../models/CommitDataModelVersion_In';
 import type { DatasetEncryptionKey_Out } from '../models/DatasetEncryptionKey_Out';
+import type { GetCommentChain_Out } from '../models/GetCommentChain_Out';
 import type { GetDataFederation_Out } from '../models/GetDataFederation_Out';
 import type { GetDataModel_Out } from '../models/GetDataModel_Out';
 import type { GetDataModelVersion_Out } from '../models/GetDataModelVersion_Out';
@@ -1091,6 +1094,8 @@ export class DefaultService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
+                403: `Access denied`,
+                404: `Admin user not found`,
                 422: `Validation Error`,
             },
         });
@@ -1542,6 +1547,106 @@ export class DefaultService {
             mediaType: 'application/json',
             errors: {
                 400: `Data model version is not in draft state and cannot be updated. Checkout a new version and try again.`,
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Get All Comment Chains
+     * Get all the comment chains with mentioned query
+     * @param dataModelId Data model Id for which to get comment chains
+     * @param commentChainId Comment chain vesion Id to get
+     * @returns GetCommentChain_Out Requested comment chain
+     * @throws ApiError
+     */
+    public static getAllCommentChain(
+        dataModelId?: string,
+        commentChainId?: string,
+    ): CancelablePromise<GetCommentChain_Out> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/comment-chains',
+            query: {
+                'data_model_id': dataModelId,
+                'comment_chain_id': commentChainId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Get Comment Chains
+     * Get a comment chain version
+     * @param commentChainId Comment chain vesion Id to get
+     * @returns GetCommentChain_Out Requested comment chain
+     * @throws ApiError
+     */
+    public static getCommentChain(
+        commentChainId: string,
+    ): CancelablePromise<GetCommentChain_Out> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/comment-chains/{comment_chain_id}',
+            path: {
+                'comment_chain_id': commentChainId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Add Comment To Comment Chain
+     * Add a comment to a comment chain
+     * @param commentChainId Comment chain vesion Id to update
+     * @param requestBody
+     * @returns GetCommentChain_Out Updated comment chain
+     * @throws ApiError
+     */
+    public static addCommentToCommentChain(
+        commentChainId: string,
+        requestBody: AddComment_In,
+    ): CancelablePromise<GetCommentChain_Out> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/comment-chains/{comment_chain_id}',
+            path: {
+                'comment_chain_id': commentChainId,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Delete Comment From Comment Chain
+     * Delete a comment from a comment chain
+     * @param commentChainId Comment chain vesion Id to update
+     * @param commentId Comment Id to delete
+     * @returns GetCommentChain_Out Updated comment chain
+     * @throws ApiError
+     */
+    public static deleteCommentFromCommentChain(
+        commentChainId: string,
+        commentId: string,
+    ): CancelablePromise<GetCommentChain_Out> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/comment-chains/{comment_chain_id}/comments/{comment_id}',
+            path: {
+                'comment_chain_id': commentChainId,
+                'comment_id': commentId,
+            },
+            errors: {
+                401: `Only the user who created the comment or the data model maintainer can delete it`,
+                404: `Comment not found`,
                 422: `Validation Error`,
             },
         });

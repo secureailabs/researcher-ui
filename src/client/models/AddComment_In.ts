@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type RegisterDatasetVersion_Out = {
-    id: string;
+export type AddComment_In = {
+    comment: string;
 };
 

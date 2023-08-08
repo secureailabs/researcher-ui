@@ -1,16 +1,18 @@
 import { Box, Button, Drawer, Typography } from '@mui/material';
 import styles from './DataModelTableSection.module.css';
 import { useEffect, useState } from 'react';
-import { DataModelDataframe, GetDataModelVersion_Out } from 'src/client';
+import { GetDataModel_Out, DataModelDataframe, GetDataModelVersion_Out, DataModelState } from 'src/client';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import EditDataModelTable from '../EditDataModelTable';
+import { red } from '@mui/material/colors';
 
 export interface IDataModelTableSection {
   dataModelVersion: GetDataModelVersion_Out;
+  dataModel: GetDataModel_Out;
   setDataModelVersion: (dataModelVersion: GetDataModelVersion_Out) => void;
 }
 
-const DataModelTableSection: React.FC<IDataModelTableSection> = ({ dataModelVersion, setDataModelVersion }) => {
+const DataModelTableSection: React.FC<IDataModelTableSection> = ({ dataModelVersion, dataModel, setDataModelVersion }) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [rows, setRows] = useState<DataModelDataframe[]>();
   const [selectedRowId, setSelectedRowId] = useState();
@@ -71,6 +73,28 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ dataModelVers
       <Typography variant="h3" component="h3">
         {dataModelVersion.name}
       </Typography>
+
+      {dataModel.current_version_id !== dataModelVersion.id ? (
+        <>
+          <Typography variant="h5" component="h5" color={red[500]}>
+            Note: This is an older version of the data model. Please use the current data model to edit or use it.
+          </Typography>
+        </>
+      ) : null}
+      {dataModel.state === DataModelState.CHECKED_OUT && dataModel.current_version_id === dataModelVersion.id ? (
+        <>
+          <Typography variant="h5" component="h5">
+            Current Editor: {dataModel.current_editor?.name}
+          </Typography>
+          <Typography variant="h5" component="h5">
+            Current Editor Organization: {dataModel.current_editor_organization?.name}
+          </Typography>
+          <Typography variant="h5" component="h5" color={red[500]}>
+            Note: The data model is currently checked out and is being modified. No other user can edit the data model until the current
+            editor published their version.
+          </Typography>
+        </>
+      ) : null}
 
       {rows && rows.length > 0 ? (
         <Box className={styles.tableContainer}>

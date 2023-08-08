@@ -3,10 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type RegisterDataModelVersion_In = {
-    name: string;
-    description: string;
+import type { GetComment_Out } from './GetComment_Out';
+
+export type GetCommentChain_Out = {
     data_model_id: string;
-    previous_version_id?: string;
+    id?: string;
+    comments?: Array<GetComment_Out>;
 };
 
