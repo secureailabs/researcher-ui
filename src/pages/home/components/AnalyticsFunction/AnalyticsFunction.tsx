@@ -25,6 +25,7 @@ export interface ICHISQUARE {
   handleSaveResult: (result: IAnalyticsResult) => void;
   filters: IFilter[];
   filterOperator: TOperatorString[];
+  featureList: IAutocompleteOptionData[];
 }
 
 export interface IVariance {
@@ -162,12 +163,12 @@ const SKEW: React.FC<ISKEW> = ({ sampleTextProp, handleSaveResult }) => {
   );
 };
 
-const CHISQUARE: React.FC<ICHISQUARE> = ({ sampleTextProp, handleSaveResult, filters, filterOperator }) => {
+const CHISQUARE: React.FC<ICHISQUARE> = ({ sampleTextProp, handleSaveResult, filters, filterOperator, featureList }) => {
   const [feature, setFeature] = React.useState<IAutocompleteOptionData | null>(null);
   const [sendNotification] = useNotification();
   const getAnalyticsResult = async (): Promise<any> => {
     const body = {
-      type: 'chi_squared',
+      type: 'chi_square',
       analysis_parameter: {
         cohort: {
           filter: filters,
@@ -193,6 +194,11 @@ const CHISQUARE: React.FC<ICHISQUARE> = ({ sampleTextProp, handleSaveResult, fil
       getAnalyticsResult().then((data) => {
         if (data !== null && data !== undefined) {
           console.log('ddddddd', data);
+          const result = `Chi Square of ${feature.series_name} :: ${data.res.chi_square}}`;
+          handleSaveResult({
+            data: result,
+            plot: null
+          });
         }
       });
     } else {
@@ -210,7 +216,7 @@ const CHISQUARE: React.FC<ICHISQUARE> = ({ sampleTextProp, handleSaveResult, fil
           className={styles.autocomplete}
           disablePortal
           id="feature-dropdown"
-          options={FEATURE_LIST}
+          options={featureList}
           getOptionLabel={(option) => option.series_name}
           renderInput={(params) => <TextField {...params} label="Feature" />}
           renderOption={renderOption}
