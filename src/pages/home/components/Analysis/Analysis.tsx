@@ -1,6 +1,6 @@
 import { Box, Divider, Tab, Tabs, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { Kurtosis, PairedTTest, SKEW, Variance } from '../AnalyticsFunction/AnalyticsFunction';
+import { CHISQUARE, Kurtosis, PairedTTest, SKEW, Variance } from '../AnalyticsFunction/AnalyticsFunction';
 import AnalyticsResultHistory from '../AnalyticsResultHistory';
 import styles from './Analysis.module.css';
 
@@ -13,33 +13,33 @@ export interface IAnalysis {
 
 const ANALYTICS_FUNCTION_LIST = [
   {
-    name: 'Skew',
+    name: 'Chi Square',
     description: 'Sample Function 1 Description',
-    functionComponent: (handleSaveResult: (result: IAnalyticsResult) => void) => (
-      <SKEW sampleTextProp={''} handleSaveResult={handleSaveResult} />
-    )
-  },
-  {
-    name: 'Variance',
-    description: 'Sample Function 2 Description',
-    functionComponent: (handleSaveResult: (result: IAnalyticsResult) => void) => (
-      <Variance sampleTextProp={''} handleSaveResult={handleSaveResult} />
-    )
-  },
-  {
-    name: 'Kurtosis',
-    description: 'Sample Function 3 Description',
-    functionComponent: (handleSaveResult: (result: IAnalyticsResult) => void) => (
-      <Kurtosis sampleTextProp={''} handleSaveResult={handleSaveResult} />
-    )
-  },
-  {
-    name: 'Paired TTest',
-    description: 'Sample Function 3 Description',
     functionComponent: (handleSaveResult: (result: IAnalyticsResult) => void, filters: IFilter[], filterOperator: TOperatorString[]) => (
-      <PairedTTest sampleTextProp={''} handleSaveResult={handleSaveResult} filters={filters} filterOperator={filterOperator} />
+      <CHISQUARE sampleTextProp={''} handleSaveResult={handleSaveResult} filters={filters} filterOperator={filterOperator} />
     )
   }
+  // {
+  //   name: 'Variance',
+  //   description: 'Sample Function 2 Description',
+  //   functionComponent: (handleSaveResult: (result: IAnalyticsResult) => void) => (
+  //     <Variance sampleTextProp={''} handleSaveResult={handleSaveResult} />
+  //   )
+  // },
+  // {
+  //   name: 'Kurtosis',
+  //   description: 'Sample Function 3 Description',
+  //   functionComponent: (handleSaveResult: (result: IAnalyticsResult) => void) => (
+  //     <Kurtosis sampleTextProp={''} handleSaveResult={handleSaveResult} />
+  //   )
+  // },
+  // {
+  //   name: 'Paired TTest',
+  //   description: 'Sample Function 3 Description',
+  //   functionComponent: (handleSaveResult: (result: IAnalyticsResult) => void, filters: IFilter[], filterOperator: TOperatorString[]) => (
+  //     <PairedTTest sampleTextProp={''} handleSaveResult={handleSaveResult} filters={filters} filterOperator={filterOperator} />
+  //   )
+  // }
 ];
 
 const a11yProps = (index: number): { id: string; 'aria-controls': string } => {

@@ -16,6 +16,15 @@ import { BASE_URL } from 'src/utils/apiServices';
 export interface ISKEW {
   sampleTextProp?: string;
   handleSaveResult: (result: IAnalyticsResult) => void;
+  filters: IFilter[];
+  filterOperator: TOperatorString[];
+}
+
+export interface ICHISQUARE {
+  sampleTextProp?: string;
+  handleSaveResult: (result: IAnalyticsResult) => void;
+  filters: IFilter[];
+  filterOperator: TOperatorString[];
 }
 
 export interface IVariance {
@@ -131,6 +140,71 @@ const SKEW: React.FC<ISKEW> = ({ sampleTextProp, handleSaveResult }) => {
 
   return (
     <AnalyticsFunctionContainerComponent title={'Skew'} handleRunAnalysis={handleRunAnalysis}>
+      <Box className={styles.featureContainer}>
+        <Autocomplete
+          className={styles.autocomplete}
+          disablePortal
+          id="feature-dropdown"
+          options={FEATURE_LIST}
+          getOptionLabel={(option) => option.series_name}
+          renderInput={(params) => <TextField {...params} label="Feature" />}
+          renderOption={renderOption}
+          onChange={(event, newValue) => {
+            if (newValue === null && newValue === undefined) {
+              setFeature(null);
+            } else {
+              setFeature(newValue);
+            }
+          }}
+        />
+      </Box>
+    </AnalyticsFunctionContainerComponent>
+  );
+};
+
+const CHISQUARE: React.FC<ICHISQUARE> = ({ sampleTextProp, handleSaveResult, filters, filterOperator }) => {
+  const [feature, setFeature] = React.useState<IAutocompleteOptionData | null>(null);
+  const [sendNotification] = useNotification();
+  const getAnalyticsResult = async (): Promise<any> => {
+    const body = {
+      type: 'chi_squared',
+      analysis_parameter: {
+        cohort: {
+          filter: filters,
+          filter_operator: filterOperator
+        },
+        series_name: feature?.series_name
+      }
+    };
+
+    try {
+      const response = await axios.post(`${BASE_URL}/analysis`, body);
+      return response.data.data;
+    } catch (error) {
+      sendNotification({
+        msg: 'Error in running analysis',
+        variant: 'error'
+      });
+    }
+  };
+
+  const handleRunAnalysis = (): void => {
+    if (feature !== null && feature !== undefined) {
+      getAnalyticsResult().then((data) => {
+        if (data !== null && data !== undefined) {
+          console.log('ddddddd', data);
+        }
+      });
+    } else {
+      sendNotification({
+        msg: 'Please select two features',
+        variant: 'error'
+      });
+    }
+  };
+
+  return (
+    <AnalyticsFunctionContainerComponent title={'Chi Square'} handleRunAnalysis={handleRunAnalysis}>
       <Box className={styles.featureContainer}>
         <Autocomplete
           className={styles.autocomplete}
@@ -275,4 +349,4 @@ const PairedTTest: React.FC<IPairedTTest> = ({ sampleTextProp, handleSaveResult,
   );
 };
 
-export { Kurtosis, SKEW, Variance, PairedTTest };
+export { Kurtosis, SKEW, Variance, PairedTTest, CHISQUARE };
