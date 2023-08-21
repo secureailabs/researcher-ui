@@ -89,18 +89,19 @@ const other: any = {
       children: [
         {
           id: 'pag-home',
-          title: 'Home',
+          title: 'Dashboard',
           type: 'item',
           url: '/pag-home',
           target: false
-        },
-        {
-          id: 'pag-comparitive-analysis',
-          title: 'Comparative Analysis',
-          type: 'item',
-          url: 'https://sail365-demo-portal1.eastus.cloudapp.azure.com:8501/Comparison%20Metrics',
-          target: true
         }
+        // },
+        // {
+        //   id: 'pag-comparitive-analysis',
+        //   title: 'Comparative Analysis',
+        //   type: 'item',
+        //   url: 'https://sail365-demo-portal1.eastus.cloudapp.azure.com:8501/Comparison%20Metrics',
+        //   target: true
+        // }
       ]
     }
   ].filter(Boolean)

@@ -10,7 +10,7 @@ import BarGraph3 from './components/BarGraph3/BarGraph3';
 import { cp } from 'fs';
 
 const Dashboard = () => {
-  const urlStats = 'http://127.0.0.1:8000/stats';
+  const urlStats = 'http://127.0.0.1:8001/pag/stats';
   const [columnData, setColumnData] = useState<any[]>([]);
   (async () => {
     let response = await fetch(urlStats, {
@@ -21,7 +21,7 @@ const Dashboard = () => {
     const data = await response.json();
     setColumnData(data.data);
   })();
-  const urlGraphs = 'http://127.0.0.1:8000/graphs';
+  const urlGraphs = 'http://127.0.0.1:8001/pag/graphs';
   const [pieData, setPieData] = useState<any[]>([]);
   const [barData, setBarData] = useState<any[]>([]);
   (async () => {
@@ -64,7 +64,7 @@ const Dashboard = () => {
       </Grid>
       {barData.length > 0 ? (
         <Grid container spacing={3} className={styles.bargraphs}>
-          <BarGraph1 BarGraph1Data={barData[0]}/>
+          <BarGraph1 BarGraph1Data={barData[0]} />
           <BarGraph2 BarGraph2Data={barData[1]} />
           <BarGraph3 BarGraph3Data={barData[2]} />
         </Grid>
