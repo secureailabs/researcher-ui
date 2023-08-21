@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Paper, Typography, Box } from '@mui/material';
 import Plot from 'react-plotly.js';
 import styles from './PAG.module.css';
@@ -12,28 +12,33 @@ import { cp } from 'fs';
 const Dashboard = () => {
   const urlStats = 'http://127.0.0.1:8001/pag/stats';
   const [columnData, setColumnData] = useState<any[]>([]);
-  (async () => {
-    let response = await fetch(urlStats, {
-      headers: {
-        accept: 'application/json'
-      }
-    });
-    const data = await response.json();
-    setColumnData(data.data);
-  })();
+
   const urlGraphs = 'http://127.0.0.1:8001/pag/graphs';
   const [pieData, setPieData] = useState<any[]>([]);
   const [barData, setBarData] = useState<any[]>([]);
-  (async () => {
-    let response = await fetch(urlGraphs, {
-      headers: {
-        accept: 'application/json'
-      }
-    });
-    const data = await response.json();
-    setPieData(data.pie_charts);
-    setBarData(data.histograms);
-  })();
+
+  useEffect(() => {
+    (async () => {
+      let response = await fetch(urlGraphs, {
+        headers: {
+          accept: 'application/json'
+        }
+      });
+      const data = await response.json();
+      setPieData(data.pie_charts);
+      setBarData(data.histograms);
+    })();
+    (async () => {
+      let response = await fetch(urlStats, {
+        headers: {
+          accept: 'application/json'
+        }
+      });
+      const data = await response.json();
+      setColumnData(data.data);
+    })();
+  }, []);
+
   return (
     <Box className={styles.container}>
       <Typography

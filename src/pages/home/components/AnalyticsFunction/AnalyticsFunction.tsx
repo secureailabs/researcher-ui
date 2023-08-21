@@ -193,7 +193,6 @@ const CHISQUARE: React.FC<ICHISQUARE> = ({ sampleTextProp, handleSaveResult, fil
     if (feature !== null && feature !== undefined) {
       getAnalyticsResult().then((data) => {
         if (data !== null && data !== undefined) {
-          console.log('ddddddd', data);
           const result = `Chi Square of ${feature.series_name} :: ${data.res.chi_square}}`;
           handleSaveResult({
             data: result,

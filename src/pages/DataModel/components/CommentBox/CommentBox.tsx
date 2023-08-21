@@ -1,8 +1,9 @@
-import { Box, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import styles from './CommentBox.module.css';
 import { connect } from 'react-redux';
 import { DefaultService, GetCommentChain_Out, GetComment_Out } from 'src/client';
 import useNotification from 'src/hooks/useNotification';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 interface CommentProps {
   commentChainId: string;
@@ -24,19 +25,15 @@ const CommentBox: React.FC<CommentProps> = ({ commentChainId, comment, setCommen
 
   return (
     <Box sx={{ marginTop: '20px' }} className={styles.container}>
-      <Box className={styles.commentActions}>
-        <Typography variant="body2" onClick={handleDeleteButtonClicked}>
-          Delete
-        </Typography>
-      </Box>
       <Box className={styles.comment}>
         <Typography variant="body1">{comment.comment}</Typography>
       </Box>
-
-      <Box className={styles.commentInfo}>
-        <Typography variant="body2">{comment.user.name}</Typography>
-        <Typography variant="body2">{comment.time}</Typography>
-        <Typography variant="body2">{comment.organization.name}</Typography>
+      <Typography variant="body2">{comment.user.name}</Typography>
+      {comment.time !== undefined ? <Typography variant="body2">{new Date(comment.time).toLocaleString()} </Typography> : null}
+      <Box className={styles.commentActions}>
+        <IconButton aria-label="delete" color="error" onClick={handleDeleteButtonClicked}>
+          <DeleteOutlineIcon />
+        </IconButton>
       </Box>
     </Box>
   );
