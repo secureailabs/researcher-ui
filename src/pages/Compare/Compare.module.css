@@ -1,3 +1,12 @@
 .container {
-    padding: 1rem 1rem;
-  }
+  padding: 1rem 1rem;
+}
+
+.piechartsection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5%; /* Adjust the gap between cards in the section as needed */
+  margin-bottom: 2.5%;
+  margin-top: 10px;
+  padding: 2rem 2rem;
+}

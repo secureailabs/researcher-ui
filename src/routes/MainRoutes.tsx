@@ -41,7 +41,7 @@ const MainRoutes = {
       element: <PAG />
     },
     {
-      path: 'compare',
+      path: 'pag-compare',
       element: <ComparePage />
     },
     {

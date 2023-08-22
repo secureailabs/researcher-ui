@@ -77,7 +77,7 @@ const Home: React.FC<IHome> = ({ sampleTextProp }) => {
       const df = latest_version.dataframes[0].series;
       const tempLst: any[] = [];
       // converting it into particular object
-      df.map((item) => {
+      df.map((item: any) => {
         tempLst.push({
           series_name: item.name,
           __type__: item.series_schema.type,
