@@ -30,6 +30,24 @@ const ANALYTICS_FUNCTION_LIST = [
         featureList={featureList}
       />
     )
+  },
+  {
+    name: 'Paired TTest',
+    description: 'Sample Function 3 Description',
+    functionComponent: (
+      handleSaveResult: (result: IAnalyticsResult) => void,
+      filters: IFilter[],
+      filterOperator: TOperatorString[],
+      featureList: IAutocompleteOptionData[]
+    ) => (
+      <PairedTTest
+        sampleTextProp={''}
+        handleSaveResult={handleSaveResult}
+        filters={filters}
+        filterOperator={filterOperator}
+        featureList={featureList}
+      />
+    )
   }
   // {
   //   name: 'Variance',
@@ -45,13 +63,6 @@ const ANALYTICS_FUNCTION_LIST = [
   //     <Kurtosis sampleTextProp={''} handleSaveResult={handleSaveResult} />
   //   )
   // },
-  // {
-  //   name: 'Paired TTest',
-  //   description: 'Sample Function 3 Description',
-  //   functionComponent: (handleSaveResult: (result: IAnalyticsResult) => void, filters: IFilter[], filterOperator: TOperatorString[]) => (
-  //     <PairedTTest sampleTextProp={''} handleSaveResult={handleSaveResult} filters={filters} filterOperator={filterOperator} />
-  //   )
-  // }
 ];
 
 const a11yProps = (index: number): { id: string; 'aria-controls': string } => {

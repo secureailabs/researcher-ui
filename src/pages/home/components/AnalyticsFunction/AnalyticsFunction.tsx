@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { forwardRef, type HTMLAttributes, useRef, useImperativeHandle } from 'react';
+import React, { forwardRef, type HTMLAttributes, useRef, useImperativeHandle, useEffect } from 'react';
 
 import { Autocomplete, Box, Button, Checkbox, CircularProgress, TextField, Typography } from '@mui/material';
 import axios from 'axios';
@@ -12,6 +12,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import useNotification from 'src/hooks/useNotification';
 import { BASE_URL } from 'src/utils/apiServices';
+import { DefaultService } from 'src/client';
 
 export interface ISKEW {
   sampleTextProp?: string;
@@ -43,6 +44,7 @@ export interface IPairedTTest {
   handleSaveResult: (result: IAnalyticsResult) => void;
   filters: IFilter[];
   filterOperator: TOperatorString[];
+  featureList: IAutocompleteOptionData[];
 }
 
 export interface IAnalyticsFunctionContainerComponent {
@@ -166,6 +168,16 @@ const SKEW: React.FC<ISKEW> = ({ sampleTextProp, handleSaveResult }) => {
 const CHISQUARE: React.FC<ICHISQUARE> = ({ sampleTextProp, handleSaveResult, filters, filterOperator, featureList }) => {
   const [feature, setFeature] = React.useState<IAutocompleteOptionData | null>(null);
   const [sendNotification] = useNotification();
+  const [baseUrl, setBaseUrl] = React.useState<any>('http://127.0.0.1:8001');
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const res = await DefaultService.getAllSecureComputationNodes();
+  //     const node = res.secure_computation_nodes[0];
+  //     setBaseUrl(`https://${node.url}`);
+  //   })();
+  // }, []);
+
   const getAnalyticsResult = async (): Promise<any> => {
     const body = {
       type: 'chi_square',
@@ -179,7 +191,7 @@ const CHISQUARE: React.FC<ICHISQUARE> = ({ sampleTextProp, handleSaveResult, fil
     };
 
     try {
-      const response = await axios.post(`${BASE_URL}/analysis`, body);
+      const response = await axios.post(`${baseUrl}/analysis`, body);
       return response.data.data;
     } catch (error) {
       sendNotification({
@@ -258,29 +270,41 @@ const Kurtosis: React.FC<IKurtosis> = ({ sampleTextProp }) => {
 
 // =========================================|| Paired T-Test || ========================================= //
 
-const PairedTTest: React.FC<IPairedTTest> = ({ sampleTextProp, handleSaveResult, filters, filterOperator }) => {
+const PairedTTest: React.FC<IPairedTTest> = ({ sampleTextProp, handleSaveResult, filters, filterOperator, featureList }) => {
   const [feature, setFeature] = React.useState<IAutocompleteOptionData[]>([]);
   const [sendNotification] = useNotification();
   const childRef = useRef<AnalyticsFunctionContainerRef>(null);
+  const [baseUrl, setBaseUrl] = React.useState<any>('http://127.0.0.1:8001');
 
   const getAnalyticsResult = async (): Promise<any> => {
     // axios call
+    // const body = {
+    //   cohort: {
+    //     filter: filters,
+    //     filter_operator: filterOperator
+    //   },
+    //   analysis: {
+    //     type: 'paired_t_test',
+    //     parameter: {
+    //       series_name_0: feature[0].series_name,
+    //       series_name_1: feature[1].series_name
+    //     }
+    //   }
+    // };
+
     const body = {
-      cohort: {
-        filter: filters,
-        filter_operator: filterOperator
-      },
-      analysis: {
-        type: 'paired_t_test',
-        parameter: {
-          series_name_0: feature[0].series_name,
-          series_name_1: feature[1].series_name
-        }
+      type: 'paired_t_test',
+      analysis_parameter: {
+        cohort: {
+          filter: filters,
+          filter_operator: filterOperator
+        },
+        series_name_list: [feature[0].series_name, feature[1].series_name]
       }
     };
 
     try {
-      const response = await axios.post(`${BASE_URL}/analysis`, body);
+      const response = await axios.post(`${baseUrl}/analysis`, body);
       return response.data.data;
     } catch (error) {
       sendNotification({
@@ -298,7 +322,7 @@ const PairedTTest: React.FC<IPairedTTest> = ({ sampleTextProp, handleSaveResult,
           if (data !== null && data !== undefined) {
             // remove plot key from data
             // const plot = data.plot;
-            const plot = 'demo';
+            const plot = data.plot;
             delete data.plot;
             const resultDataStr = JSON.stringify(data);
             const result = `Paired TTest result of (${feature[0].series_name}, ${feature[1].series_name}) :: ${resultDataStr}`;
@@ -328,7 +352,7 @@ const PairedTTest: React.FC<IPairedTTest> = ({ sampleTextProp, handleSaveResult,
           disablePortal
           id="feature-dropdown-checkboxes"
           value={feature}
-          options={FEATURE_LIST}
+          options={featureList}
           getOptionLabel={(option) => option.series_name}
           renderInput={(params) => <TextField {...params} label="Feature" />}
           renderOption={renderOptionWithCheckbox}

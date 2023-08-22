@@ -11,6 +11,7 @@ import { ApiError, DefaultService, OpenAPI, UserInfo_Out } from 'src/client';
 import { REACT_APP_SAIL_API_SERVICE_URL } from 'src/config';
 import { useQuery } from 'react-query';
 import { updateUserProfile } from 'src/store/reducers/userprofile';
+import { updateSCNDetails } from 'src/store/reducers/scn_details';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 
@@ -62,6 +63,15 @@ const MinimalLayout = (): JSX.Element => {
       storeLoginCredentials(res);
     } else {
       navigate('/login');
+    }
+
+    try {
+      (async () => {
+        const res = await DefaultService.getAllSecureComputationNodes();
+        const node = res.secure_computation_nodes[0];
+      })();
+    } catch (err) {
+      console.log(err);
     }
   }, []);
 

@@ -23,13 +23,7 @@ interface IAutocompleteOptionData {
 
 interface IAnalyticsResult {
   data: string;
-  plot: string | null;
+  plot: any;
 }
 
-export type {
-  IFilter,
-  TOperatorString,
-  ICohortListData,
-  IAutocompleteOptionData,
-  IAnalyticsResult,
-};
+export type { IFilter, TOperatorString, ICohortListData, IAutocompleteOptionData, IAnalyticsResult };

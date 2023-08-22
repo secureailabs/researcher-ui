@@ -8,12 +8,17 @@ import BarGraph1 from './components/BarGraph1/BarGraph1';
 import BarGraph2 from './components/BarGraph2/BarGraph2';
 import BarGraph3 from './components/BarGraph3/BarGraph3';
 import { cp } from 'fs';
+import { connect } from 'react-redux';
 
-const Dashboard = () => {
-  const urlStats = 'http://127.0.0.1:8001/pag/stats';
+interface IDashboardProps {
+  scnDetails: any;
+}
+
+const Dashboard: React.FC<IDashboardProps> = ({ scnDetails }) => {
+  const urlStats = `https://${scnDetails.baseUrl}/pag/stats`;
   const [columnData, setColumnData] = useState<any[]>([]);
 
-  const urlGraphs = 'http://127.0.0.1:8001/pag/graphs';
+  const urlGraphs = `https://${scnDetails.baseUrl}/pag/graphs`;
   const [pieData, setPieData] = useState<any[]>([]);
   const [barData, setBarData] = useState<any[]>([]);
 
@@ -78,4 +83,8 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+const mapStateToProps = (state: any) => ({
+  scnDetails: state.scn_details
+});
+
+export default connect(mapStateToProps)(Dashboard);

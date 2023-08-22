@@ -76,6 +76,7 @@ const Home: React.FC<IHome> = ({ sampleTextProp }) => {
       const latest_version = await DefaultService.getDataModelVersion(res1.data_models[0].current_version_id);
       const df = latest_version.dataframes[0].series;
       const tempLst: any[] = [];
+      // converting it into particular object
       df.map((item) => {
         tempLst.push({
           series_name: item.name,

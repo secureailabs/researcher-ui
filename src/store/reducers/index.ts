@@ -5,12 +5,14 @@ import { combineReducers } from 'redux';
 import menu from './menu';
 import auth from './Auth';
 import userprofile from './userprofile';
+import scn_details from './scn_details';
 // ==============================|| COMBINE REDUCERS ||============================== //
 
 const reducers = combineReducers({
   menu,
   auth,
-  userprofile
+  userprofile,
+  scn_details
 });
 
 export default reducers;
