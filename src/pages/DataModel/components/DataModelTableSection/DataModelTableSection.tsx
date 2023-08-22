@@ -1,7 +1,7 @@
 import { Box, Button, Drawer, Typography } from '@mui/material';
 import styles from './DataModelTableSection.module.css';
 import { useEffect, useState } from 'react';
-import { GetDataModel_Out, DataModelDataframe, GetDataModelVersion_Out, DataModelState } from 'src/client';
+import { GetDataModel_Out, DataModelDataframe, GetDataModelVersion_Out, DataModelState, DataModelVersionState } from 'src/client';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import EditDataModelTable from '../EditDataModelTable';
 import { red } from '@mui/material/colors';
@@ -71,10 +71,10 @@ const DataModelTableSection: React.FC<IDataModelTableSection> = ({ dataModelVers
   return (
     <Box className={styles.container}>
       <Typography variant="h3" component="h3">
-        {dataModelVersion.name}
+        {dataModelVersion.name} {dataModelVersion.state === DataModelVersionState.DRAFT ? '(Draft)' : null}
       </Typography>
 
-      {dataModel.current_version_id !== dataModelVersion.id ? (
+      {dataModel.current_version_id !== dataModelVersion.id && dataModelVersion.state !== DataModelVersionState.DRAFT ? (
         <>
           <Typography variant="h5" component="h5" color={red[500]}>
             Note: This is an older version of the data model. Please use the current data model to edit or use it.
