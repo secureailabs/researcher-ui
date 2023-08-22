@@ -1,39 +1,27 @@
-# Build stage
-FROM node:16-alpine AS build
+FROM ubuntu:20.04
 
-# Set the working directory to /app
+ENV TZ=America/Toronto
+LABEL authors="aman@arrayinsights.com"
+USER root
+
+# Set time zone data
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get update && \
+  apt-get -y upgrade && \
+  apt-get install -y curl
+
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+  apt-get install -y nodejs
+
+RUN npm install -g yarn
+
 WORKDIR /app
+COPY ./ /app
 
-# Copy package.json and yarn.lock to the container
-COPY package.json yarn.lock ./
-
-# Install dependencies
 RUN yarn install --production --frozen-lockfile
-
-# Copy the rest of the application code to the container
-COPY . .
-
-# Build the application
-# COPY ./build /app/build
-# RUN yarn build
-
-# Production stage
-FROM nginx:alpine
-
-# Remove the default Nginx configuration file
-RUN rm -rf /etc/nginx/conf.d/default.conf
-
-# Copy the custom Nginx configuration file to the container
-COPY docker/nginx.conf /etc/nginx/conf.d/
-
-# Copy the production build files to the Nginx document root directory
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Expose port 80
-EXPOSE 80
-
-# # Start Nginx
-# CMD ["nginx", "-g", "daemon off;"]
+RUN yarn add eslint-config-prettier --dev
+RUN yarn global add serve
 
 COPY docker/Entrypoint.sh /Entrypoint.sh
 RUN chmod +x /Entrypoint.sh
