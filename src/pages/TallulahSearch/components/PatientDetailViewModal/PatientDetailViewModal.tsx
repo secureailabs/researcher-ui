@@ -71,7 +71,37 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             </Box>
             <Box>
               {/* display image  */}
-              <img src={PatientImage} alt="Patient Image" className={styles.image} />
+              <img src={require(`src/assets/images/users/${data._source.imageName}`)} alt="Patient Image" className={styles.image} />
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex'
+            }}
+          >
+            <Box
+              sx={[
+                {
+                  alignSelf: 'flex-start',
+                  backgroundColor: '#439c5c',
+                  padding: '0.2rem 1rem',
+                  color: '#fff',
+                  fontWeight: 'bold'
+                },
+                data._source.storyUsed > 3
+                  ? {
+                      backgroundColor: '#7096cc'
+                    }
+                  : {},
+                data._source.storyUsed > 7
+                  ? {
+                      backgroundColor: '#e83c3c'
+                    }
+                  : {}
+              ]}
+            >
+              <Typography variant="body1">Story Used : {data?._source.storyUsed} times</Typography>
             </Box>
           </Box>
 

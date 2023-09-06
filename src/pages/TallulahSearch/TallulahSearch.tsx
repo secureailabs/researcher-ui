@@ -40,12 +40,12 @@ const storyUsedOptions = [
     value: [0, 3]
   },
   {
-    label: 'Moderate (4-6)',
-    value: [4, 6]
+    label: 'Moderate (4-7)',
+    value: [4, 7]
   },
   {
-    label: 'Many (>7)',
-    value: [7, 2000000000]
+    label: 'Many (>8)',
+    value: [8, 2000000000]
   }
 ];
 

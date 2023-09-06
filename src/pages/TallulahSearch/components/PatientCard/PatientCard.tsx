@@ -38,7 +38,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
         </Box>
         <Box>
           {/* display image  */}
-          <img src={PatientImage} alt="Patient Image" className={styles.image} />
+          <img src={require(`src/assets/images/users/${data._source.imageName}`)} alt="Patient Image" className={styles.image} />
         </Box>
       </Box>
       <Box
