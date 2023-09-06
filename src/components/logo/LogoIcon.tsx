@@ -1,6 +1,6 @@
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import logo from 'src/assets/images/sail-logo-mini.webp';
+import logo from 'src/assets/images/array_insights_small.png';
 
 /**
  * if you want to use image instead of <svg> uncomment following.

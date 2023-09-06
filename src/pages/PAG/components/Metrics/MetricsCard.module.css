@@ -1,0 +1,12 @@
+.container {
+  border: 1px solid #eaeaea;
+  border-left: 2px solid #4287f5 !important;
+  border-radius: 8px;
+  background: '#0000';
+  width: 200px;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.metricData {
+}

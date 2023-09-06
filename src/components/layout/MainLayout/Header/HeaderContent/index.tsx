@@ -1,9 +1,16 @@
 // project import
 
+import { Box } from '@mui/material';
+import Profile from './Profile';
+
 // ==============================|| HEADER - CONTENT ||============================== //
 
 const HeaderContent = () => {
-  return <></>;
+  return (
+    <Box>
+      <Profile />
+    </Box>
+  );
 };
 
 export default HeaderContent;

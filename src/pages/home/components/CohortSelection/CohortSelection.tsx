@@ -2,11 +2,7 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import CohortConditionDropdown from 'src/pages/home/components/CohortConditionDropdown';
 import styles from './CohortSelection.module.css';
-import {
-  type TOperatorString,
-  type IFilter,
-  type ICohortListData,
-} from 'src/shared/types/customTypes';
+import { type TOperatorString, type IFilter, type ICohortListData, IAutocompleteOptionData } from 'src/shared/types/customTypes';
 import OperatorDropdown from '../OperatorDropdown';
 import CohortList from '../CohortList';
 import COHORT_LIST_DATA from 'src/constants/cohortList';
@@ -17,26 +13,22 @@ import AnimateButton from 'src/components/extended/AnimateButton';
 export interface ICohortSelection {
   handleChildFilterChange: (data: IFilter[]) => void;
   handleChildFilterOperatorChange: (data: TOperatorString[]) => void;
+  featureList: IAutocompleteOptionData[];
 }
 
-const CohortSelection: React.FC<ICohortSelection> = ({
-  handleChildFilterChange,
-  handleChildFilterOperatorChange,
-}) => {
+const CohortSelection: React.FC<ICohortSelection> = ({ handleChildFilterChange, handleChildFilterOperatorChange, featureList }) => {
   const [filters, setFilters] = useState<IFilter[]>([]);
   const [filterOperator, setFilterOperator] = useState<TOperatorString[]>([]);
-  const [cohortListData, setCohortListData] = useState<ICohortListData[]>(
-    COHORT_LIST_DATA as ICohortListData[]
-  );
+  const [cohortListData, setCohortListData] = useState<ICohortListData[]>(COHORT_LIST_DATA as ICohortListData[]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-  const [openNewCohortDialog, setOpenNewCohortDialog] =
-    useState<boolean>(false);
+  const [openNewCohortDialog, setOpenNewCohortDialog] = useState<boolean>(false);
 
   const [sendNotification] = useNotification();
 
+  console.log('filters', filters);
+
   const handleAddFilter = (): void => {
-    const lastFilterId =
-      filters.length > 0 ? filters[filters.length - 1].id : 0;
+    const lastFilterId = filters.length > 0 ? filters[filters.length - 1].id : 0;
     const newFilterId = lastFilterId + 1;
     const newFilterState = [
       ...filters,
@@ -44,8 +36,8 @@ const CohortSelection: React.FC<ICohortSelection> = ({
         id: newFilterId,
         series_name: '',
         operator: '',
-        value: '',
-      },
+        value: ''
+      }
     ];
     setFilters(newFilterState);
     handleChildFilterChange(newFilterState);
@@ -85,11 +77,7 @@ const CohortSelection: React.FC<ICohortSelection> = ({
     handleChildFilterChange(newFilterState);
   };
 
-  const handleCohortSelection = (
-    selectedFilter: IFilter[],
-    selectedFilterOperator: TOperatorString[],
-    sIndex: number
-  ): void => {
+  const handleCohortSelection = (selectedFilter: IFilter[], selectedFilterOperator: TOperatorString[], sIndex: number): void => {
     setFilters(selectedFilter);
     setFilterOperator(selectedFilterOperator);
     setSelectedIndex(sIndex);
@@ -98,10 +86,7 @@ const CohortSelection: React.FC<ICohortSelection> = ({
     handleChildFilterOperatorChange(selectedFilterOperator);
   };
 
-  const handleOperatorChange = (
-    index: number,
-    operator: TOperatorString
-  ): void => {
+  const handleOperatorChange = (index: number, operator: TOperatorString): void => {
     const newOperatorState = filterOperator.map((f, i) => {
       if (i === index) {
         return operator;
@@ -117,7 +102,7 @@ const CohortSelection: React.FC<ICohortSelection> = ({
       if (filters.length === 0) {
         sendNotification({
           msg: 'Please add at least one condition',
-          variant: 'error',
+          variant: 'error'
         });
         return;
       }
@@ -128,7 +113,7 @@ const CohortSelection: React.FC<ICohortSelection> = ({
           return {
             ...c,
             filters,
-            filterOperator,
+            filterOperator
           };
         }
         return c;
@@ -136,7 +121,7 @@ const CohortSelection: React.FC<ICohortSelection> = ({
       setCohortListData(newCohortListData);
       sendNotification({
         msg: 'Cohort saved successfully',
-        variant: 'success',
+        variant: 'success'
       });
     }
   };
@@ -145,7 +130,7 @@ const CohortSelection: React.FC<ICohortSelection> = ({
     if (cohortLabel === '') {
       sendNotification({
         msg: 'Please enter cohort label',
-        variant: 'error',
+        variant: 'error'
       });
       return;
     }
@@ -157,15 +142,15 @@ const CohortSelection: React.FC<ICohortSelection> = ({
         cohortName: cohortLabel,
         cohortDescription: 'Sample cohort description',
         filters,
-        filterOperator,
-      },
+        filterOperator
+      }
     ];
     setCohortListData(newCohortListData);
     setOpenNewCohortDialog(false);
     setSelectedIndex(cohortListData.length);
     sendNotification({
       msg: 'Cohort saved successfully',
-      variant: 'success',
+      variant: 'success'
     });
   };
 
@@ -181,11 +166,7 @@ const CohortSelection: React.FC<ICohortSelection> = ({
       <Box className={styles.container2}>
         {/* saved cohort list component */}
         <Box className={styles.cohortListContainer}>
-          <CohortList
-            handleCohortSelection={handleCohortSelection}
-            cohortListData={cohortListData}
-            selectedIndex={selectedIndex}
-          />
+          <CohortList handleCohortSelection={handleCohortSelection} cohortListData={cohortListData} selectedIndex={selectedIndex} />
         </Box>
         {/* cohort condition selection component */}
         <Box className={styles.filterDropdownContainer}>
@@ -194,11 +175,7 @@ const CohortSelection: React.FC<ICohortSelection> = ({
               <React.Fragment key={`fragment-${filter.id}`}>
                 {index > 0 ? (
                   <Box className={styles.operatorDropdownContainer}>
-                    <OperatorDropdown
-                      operator={filterOperator[index - 1]}
-                      index={index - 1}
-                      handleOperatorChange={handleOperatorChange}
-                    />
+                    <OperatorDropdown operator={filterOperator[index - 1]} index={index - 1} handleOperatorChange={handleOperatorChange} />
                   </Box>
                 ) : null}
                 <Grid item xs={12}>
@@ -206,6 +183,7 @@ const CohortSelection: React.FC<ICohortSelection> = ({
                     filter={filter}
                     handleDeleteFilter={handleDeleteFilter}
                     handleFilterChange={handleFilterChange}
+                    featureList={featureList}
                   />
                 </Grid>
               </React.Fragment>
@@ -217,20 +195,12 @@ const CohortSelection: React.FC<ICohortSelection> = ({
       {/* add condition and save cohort button */}
       <Box className={styles.buttonContainer}>
         <AnimateButton>
-          <Button
-            variant="contained"
-            onClick={handleAddFilter}
-            className={styles.addFilterButton}
-          >
+          <Button variant="contained" onClick={handleAddFilter} className={styles.addFilterButton}>
             Add Condition
           </Button>
         </AnimateButton>
         <AnimateButton>
-          <Button
-            variant="outlined"
-            className={styles.saveCohortButton}
-            onClick={handleSaveCohort}
-          >
+          <Button variant="outlined" className={styles.saveCohortButton} onClick={handleSaveCohort}>
             Save Cohort
           </Button>
         </AnimateButton>

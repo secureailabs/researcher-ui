@@ -1,0 +1,16 @@
+.component {
+}
+
+.title {
+  font-weight: bold;
+  color: #000000;
+}
+
+.tableContainer {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.rightAlign {
+  text-align: right;
+}

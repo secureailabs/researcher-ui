@@ -1,0 +1,14 @@
+.component {
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.input {
+  max-width: 80%;
+  margin-top: 10px;
+}

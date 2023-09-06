@@ -1,0 +1,14 @@
+.container {
+  flex: 1;
+  max-width: 100%;
+}
+
+.bodyContainerTable {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 2rem 2rem;
+}
+
+.addTableButton {
+  margin-top: 1rem;
+}

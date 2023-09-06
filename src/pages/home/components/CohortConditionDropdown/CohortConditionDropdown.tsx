@@ -1,15 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Autocomplete,
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from '@mui/material';
+import { Autocomplete, Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, type HTMLAttributes } from 'react';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -23,6 +14,7 @@ export interface ICohortConditionDropdown {
   filter: any;
   handleFilterChange: (data: any) => void;
   handleDeleteFilter: (id: number) => void;
+  featureList: IAutocompleteOptionData[];
 }
 
 interface StyledOptionProps extends HTMLAttributes<HTMLDivElement> {
@@ -33,19 +25,14 @@ const StyledOption = styled('div')<StyledOptionProps>(({ option }) => ({
   display: 'flex',
   alignItems: 'center',
   whiteSpace: 'normal',
-  wordBreak: 'break-word',
+  wordBreak: 'break-word'
 }));
 
 //  ================================= CohortConditionDropdown ================================= //
-const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
-  filter,
-  handleFilterChange,
-  handleDeleteFilter,
-}) => {
-  const [value, setValue] = React.useState<IAutocompleteOptionData | null>(
-    null
-  );
+const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({ filter, handleFilterChange, handleDeleteFilter, featureList }) => {
+  const [value, setValue] = React.useState<IAutocompleteOptionData | null>(null);
   const [inputValue, setInputValue] = React.useState('');
+  const FEATURE_LIST = featureList;
 
   // custom render option : Implemented to handle long text wrapping in dropdown
   const renderOption = (props: any, option: any): JSX.Element => (
@@ -57,15 +44,13 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
   const handleFilterDataChange = (data: any): void => {
     const newFilter = {
       ...filter,
-      ...data,
+      ...data
     };
     handleFilterChange(newFilter);
   };
 
   useEffect(() => {
-    const filterVariable = FEATURE_LIST.find(
-      (feature) => feature.series_name === filter.series_name
-    );
+    const filterVariable = FEATURE_LIST.find((feature: any) => feature.series_name === filter.series_name);
     if (filterVariable === undefined) {
       setValue(null);
     } else {
@@ -85,7 +70,7 @@ const CohortConditionDropdown: React.FC<ICohortConditionDropdown> = ({
           renderOption={renderOption}
           onChange={(event, newValue) => {
             if (newValue != null) {
-              handleFilterDataChange({ variable: newValue?.series_name });
+              handleFilterDataChange({ variable: newValue?.series_name, series_name: newValue?.series_name });
             } else {
               handleFilterDataChange({ variable: '' });
             }

@@ -1,5 +1,5 @@
 // material-ui
-import logo from 'src/assets/images/sail-logo.webp';
+import logo from 'src/assets/images/array-insights.png';
 
 /**
  * if you want to use image instead of <svg> uncomment following.

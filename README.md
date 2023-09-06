@@ -2,7 +2,7 @@
 
 1. Install yarn if you don't have it already: `npm install --global yarn`
 2. Install the dependencies: `yarn`
-3. Start the web app: `yarn start`
+3. Start the web app: `REACT_APP_SAIL_API_SERVICE_URL=http://127.0.0.1:8000 REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL=http://1:8000 REACT_APP_SAIL_API_SERVICE_URL=$REACT_APP_SAIL_API_SERVICE_URL REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL=$REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL yarn start`
 
 ## Guidelines to follow:
 

@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+cd /app
+
+REACT_APP_SAIL_API_SERVICE_URL=$REACT_APP_SAIL_API_SERVICE_URL REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL=$REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL yarn react-scripts build
+
+serve -s build

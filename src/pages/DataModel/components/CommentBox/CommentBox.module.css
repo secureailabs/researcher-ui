@@ -1,0 +1,44 @@
+.container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.comment {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.commentInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.commentActions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.commentActions > * {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.commentActions > *:hover {
+  text-decoration: underline;
+}

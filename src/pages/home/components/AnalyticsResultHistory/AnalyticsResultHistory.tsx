@@ -7,6 +7,7 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import styles from './AnalyticsResultHistory.module.css';
 import { Box } from '@mui/material';
 import { type IAnalyticsResult } from 'src/shared/types/customTypes';
+import Plot from 'react-plotly.js';
 
 export interface IAnalyticsResultHistory {
   sampleTextProp: string;
@@ -24,9 +25,10 @@ const AnalyticsResultHistory: React.FC<IAnalyticsResultHistory> = ({ sampleTextP
         }
       }}
     >
-      {result.map((data, index) => {
+      {result.reverse().map((data, index) => {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        const plotUrl = `http://localhost:3001/plot/${data.plot}`;
+        // get plot url situates in the public folder
+        const plotUrl = `${process.env.PUBLIC_URL}/paired_samples_scatterplot.html`;
         return (
           <TimelineItem key={index}>
             <TimelineSeparator>
@@ -41,13 +43,7 @@ const AnalyticsResultHistory: React.FC<IAnalyticsResultHistory> = ({ sampleTextP
                     padding: 2
                   }}
                 >
-                  {/* plot using iframe */}
-                  <iframe
-                    src={plotUrl}
-                    title="My Scatter Plot"
-                    className={styles.plotIframe}
-                    sandbox="allow-scripts allow-same-origin"
-                  ></iframe>
+                  <Plot data={data.plot.data} layout={data.plot.layout} />
                 </Box>
               ) : null}
             </TimelineContent>
