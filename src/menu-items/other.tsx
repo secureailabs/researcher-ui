@@ -30,75 +30,16 @@ const other: any = {
   type: 'group',
   children: [
     {
-      id: 'researcher-portal',
-      title: 'Researcher Portal',
+      id: 'tallulah',
+      title: 'Tallulah',
       type: 'collapse',
       icon: icons.IconChartHistogram,
       children: [
         {
-          id: 'login',
-          title: 'Static Data',
+          id: 'search',
+          title: 'Search',
           type: 'item',
-          url: '/',
-          target: false
-        },
-        {
-          id: 'register',
-          title: 'Longitudinal Data',
-          type: 'item',
-          url: '/demo-longitudinal',
-          target: false
-        }
-      ]
-    },
-    {
-      id: 'data-model',
-      title: 'Data Model',
-      type: 'collapse',
-      icon: icons.IconDatabaseCog,
-      children: [
-        {
-          id: 'data-model',
-          title: 'Data Model',
-          type: 'item',
-          url: '/data-model',
-          target: false
-        }
-      ]
-    },
-    true && {
-      id: 'data-model-upload',
-      title: 'Data Upload',
-      type: 'collapse',
-      icon: icons.IconUpload,
-      children: [
-        {
-          id: 'upload-datasets',
-          title: 'Upload Datasets',
-          type: 'item',
-          url: '/datasets',
-          target: false
-        }
-      ]
-    },
-    {
-      id: 'patient-advisory-group',
-      title: 'Administrative',
-      type: 'collapse',
-      icon: icons.IconDeviceDesktopAnalytics,
-      children: [
-        {
-          id: 'pag-home',
-          title: 'Dashboard',
-          type: 'item',
-          url: '/pag-home',
-          target: false
-        },
-        {
-          id: 'pag-comparitive-analysis',
-          title: 'Comparative Analysis',
-          type: 'item',
-          url: '/pag-compare',
+          url: '/tallulah-search',
           target: false
         }
       ]

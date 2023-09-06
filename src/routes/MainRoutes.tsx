@@ -13,6 +13,7 @@ const DataModel = Loadable(lazy(async () => await import('src/pages/DataModel'))
 const PAG = Loadable(lazy(async () => await import('src/pages/PAG')));
 const Datasets = Loadable(lazy(async () => await import('src/pages/Datasets')));
 const ComparePage = Loadable(lazy(async () => await import('src/pages/Compare')));
+const TallulahSearch = Loadable(lazy(async () => await import('src/pages/TallulahSearch')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -22,40 +23,48 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <Home />
+      element: <TallulahSearch />
     },
     {
       path: 'home',
-      element: <Home />
+      element: <TallulahSearch />
     },
     {
-      path: 'demo-longitudinal',
-      element: <DemoLongitudinal />
-    },
-    {
-      path: 'data-model',
-      element: <DataModel />
-    },
-    {
-      path: 'pag-home',
-      element: <PAG />
-    },
-    {
-      path: 'pag-compare',
-      element: <ComparePage />
-    },
-    {
-      path: 'datasets',
-      element: <Datasets />
-    },
-    {
-      path: 'datasets/:id',
-      element: <Dataset />
-    },
-    {
-      path: 'datasets/:id/versions/:version',
-      element: <DatasetVersion />
+      path: 'tallulah-search',
+      element: <TallulahSearch />
     }
+    // {
+    //   path: 'home',
+    //   element: <Home />
+    // },
+    // {
+    //   path: 'demo-longitudinal',
+    //   element: <DemoLongitudinal />
+    // },
+    // {
+    //   path: 'data-model',
+    //   element: <DataModel />
+    // },
+    // {
+    //   path: 'pag-home',
+    //   element: <PAG />
+    // },
+    // {
+    //   path: 'pag-compare',
+    //   element: <ComparePage />
+    // },
+    // {
+    //   path: 'datasets',
+    //   element: <Datasets />
+    // },
+    // {
+    //   path: 'datasets/:id',
+    //   element: <Dataset />
+    // },
+    // {
+    //   path: 'datasets/:id/versions/:version',
+    //   element: <DatasetVersion />
+    // }
   ]
 };
 
