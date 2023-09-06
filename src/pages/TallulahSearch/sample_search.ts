@@ -863,7 +863,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'KP*',
       Age: 5,
-      'Life Story': 'Test 123',
+      'Life Story': 'Sample story',
       Tags: ['tag1', 'tag2'],
       storyUsed: 4,
       Picture_source: 'images/like_image2.jpg',

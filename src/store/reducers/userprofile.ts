@@ -15,9 +15,9 @@ export type UserProfileProps = {
 
 // initial state
 const initialState: UserProfileProps = {
-  name: null,
-  email: null,
-  job_title: null,
+  name: 'Admin',
+  email: 'admin@arrayinsights.com',
+  job_title: 'Admin',
   roles: null,
   avatar: null,
   id: null,

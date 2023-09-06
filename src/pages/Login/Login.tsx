@@ -40,7 +40,17 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data: any) => {
-    const result = postLogin(data);
+    // TODO - remove this later
+    // const result = postLogin(data);
+    console.log('data', data);
+    if (data.username === 'admin@arrayinsights.com' && data.password === 'ArinPass@123') {
+      navigate('/tallulah-search');
+    } else {
+      sendNotification({
+        msg: 'Invalid email or password',
+        variant: 'error'
+      });
+    }
   };
   const [showPassword, setShowPassword] = useState(false);
   const [sendNotification] = useNotification();

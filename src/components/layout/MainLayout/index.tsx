@@ -68,7 +68,8 @@ const MinimalLayout = (): JSX.Element => {
         })
       );
     } else {
-      navigate('/login');
+      // TODO : uncomment this later
+      // navigate('/login');
     }
 
     try {
