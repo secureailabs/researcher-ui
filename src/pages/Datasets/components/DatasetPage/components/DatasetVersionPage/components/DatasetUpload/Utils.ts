@@ -10,9 +10,9 @@ export function uploadAndPublish(
 ) {
   let notes = '';
   OpenAPI.BASE = REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL;
-  if (!process.env.REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL) throw new Error('REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL not set');
+  // if (!process.env.REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL) throw new Error('REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL not set');
 
-  OpenAPI.BASE = process.env.REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL;
+  // OpenAPI.BASE = process.env.REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL;
 
   OpenAPI.TOKEN = localStorage.getItem('accessToken') || '';
   if (selectedFiles) {
