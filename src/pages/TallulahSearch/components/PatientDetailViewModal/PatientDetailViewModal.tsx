@@ -1,8 +1,11 @@
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material';
 import styles from './PatientDetailViewModal.module.css';
 import PatientImage from 'src/assets/images/users/sample-face-image-1.png';
+import InstagramIcon from '@mui/icons-material/Instagram';
 import CloseIcon from '@mui/icons-material/Close';
-
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 export interface IPatientDetailViewModal {
   openModal: boolean;
   handleCloseModal: () => void;
@@ -53,14 +56,43 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
                 {data?._source.Name}
               </Typography>
               <Typography variant="body1" className={styles.age}>
-                {data?._source.Age} years, {data?._source.ethnicity}, {data?._source.location}
+                Age : {data?._source.Age} years
+                <Typography>Location : {data?._source.location}</Typography>
               </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  marginTop: '1rem'
+                }}
+              >
+                <Box
+                  sx={[
+                    {
+                      alignSelf: 'flex-start',
+                      padding: '0.2rem 1rem',
+                      color: '#fff',
+                      fontWeight: 'bold'
+                    },
+                    data._source.consentStatus.includes('Granted')
+                      ? {
+                          backgroundColor: '#439c5c'
+                        }
+                      : {},
+                    data._source.consentStatus.includes('Pending')
+                      ? {
+                          backgroundColor: '#c99a4f'
+                        }
+                      : {}
+                  ]}
+                >
+                  <Typography variant="body1">Consent To Use : {data?._source.consentStatus}</Typography>
+                </Box>
+              </Box>
               <Box
                 sx={{
                   display: 'flex',
                   flexWrap: 'wrap',
                   gap: '0.5rem',
-                  marginBottom: '1rem',
                   marginTop: '1rem'
                 }}
               >
@@ -75,41 +107,24 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             </Box>
           </Box>
 
-          <Box
-            sx={{
-              display: 'flex'
-            }}
-          >
-            <Box
-              sx={[
-                {
-                  alignSelf: 'flex-start',
-                  padding: '0.2rem 1rem',
-                  color: '#fff',
-                  fontWeight: 'bold'
-                },
-                data._source.consentStatus === 'GRANTED'
-                  ? {
-                      backgroundColor: '#439c5c'
-                    }
-                  : {},
-                data._source.consentStatus === 'PENDING'
-                  ? {
-                      backgroundColor: '#c99a4f'
-                    }
-                  : {}
-              ]}
-            >
-              <Typography variant="body1">Consent Details : {data?._source.consentStatus}</Typography>
-            </Box>
-          </Box>
           <Box className={styles.section1}>
             <Box>
               <Typography variant="body1" className={styles.label}>
-                Related Disease
+                Life Story
               </Typography>
               <Typography variant="body1" className={styles.value}>
-                {data?._source.relatedDisease}
+                {data?._source['Life Story']}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box className={styles.section1}>
+            <Box>
+              <Typography variant="body1" className={styles.label}>
+                Barrier to Care
+              </Typography>
+              <Typography variant="body1" className={styles.value}>
+                {data?._source.barriersToCare}
               </Typography>
             </Box>
           </Box>
@@ -128,10 +143,10 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           <Box className={styles.section1}>
             <Box>
               <Typography variant="body1" className={styles.label}>
-                Life Story
+                Tone
               </Typography>
               <Typography variant="body1" className={styles.value}>
-                {data?._source['Life Story']}
+                {data?._source.tone}
               </Typography>
             </Box>
           </Box>
@@ -139,10 +154,100 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           <Box className={styles.section1}>
             <Box>
               <Typography variant="body1" className={styles.label}>
-                Insurance Access
+                Social Media
+              </Typography>
+              <Box
+                sx={{
+                  display: 'flex'
+                }}
+              >
+                <IconButton aria-label="delete">
+                  <InstagramIcon />
+                </IconButton>
+                <IconButton aria-label="delete">
+                  <LinkedInIcon />
+                </IconButton>
+                <IconButton aria-label="delete">
+                  <FacebookIcon />
+                </IconButton>
+              </Box>
+            </Box>
+          </Box>
+
+          <Box className={styles.section1}>
+            <Box>
+              <Typography variant="body1" className={styles.label}>
+                Media
+              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  marginTop: '1rem',
+                  gap: '1rem'
+                }}
+              >
+                {data._source.media1 ? (
+                  <img src={require(`src/assets/images/${data._source.media1}`)} alt="Patient Image" className={styles.mediaImage} />
+                ) : null}
+                {data._source.media2 ? (
+                  <img src={require(`src/assets/images/${data._source.media2}`)} alt="Patient Image" className={styles.mediaImage} />
+                ) : null}
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex'
+                }}
+              >
+                <Box
+                  sx={{
+                    padding: '0.5rem',
+                    display: 'flex',
+                    gap: '1rem'
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <IconButton aria-label="delete">
+                      <DocumentScannerIcon />
+                    </IconButton>
+                    <Typography variant="body1" className={styles.link}>
+                      {data?._source.documentName}
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <IconButton aria-label="delete">
+                      <DocumentScannerIcon />
+                    </IconButton>
+                    <Typography variant="body1" className={styles.link}>
+                      {data?._source.documentName2}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+
+          <Box className={styles.section1}>
+            <Box>
+              <Typography variant="body1" className={styles.label}>
+                Story Usage
               </Typography>
               <Typography variant="body1" className={styles.value}>
-                {data?._source.insuranceAccess}
+                {data?._source.storyUsage}
               </Typography>
             </Box>
           </Box>
@@ -150,10 +255,10 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           <Box className={styles.section2}>
             <Box>
               <Typography variant="body1" className={styles.label}>
-                Additional Comments
+                Outbound Communication
               </Typography>
               <Typography variant="body1" className={styles.value}>
-                {data?._source['Additional Documents_content'] || 'No additional comments'}
+                {data?._source.outboundCommunication}
               </Typography>
             </Box>
           </Box>

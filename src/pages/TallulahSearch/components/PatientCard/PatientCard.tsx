@@ -16,7 +16,8 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
             {data._source.Name}
           </Typography>
           <Typography variant="body1" className={styles.age}>
-            {data?._source.Age} years, {data?._source.ethnicity}, {data?._source.location}
+            Age : {data?._source.Age} years
+            <Typography>Location : {data?._source.location}</Typography>
           </Typography>
         </Box>
         <Box>
@@ -55,28 +56,6 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
             {data._source['Life Story']}
           </Typography>
         </Box>
-      </Box>
-      <Box className={styles.footer1}>
-        <Typography
-          variant="body1"
-          sx={[
-            {
-              fontStyle: 'italic'
-            },
-            data._source.consentStatus === 'GRANTED'
-              ? {
-                  color: '#439c5c'
-                }
-              : {},
-            data._source.consentStatus === 'PENDING'
-              ? {
-                  color: '#c99a4f'
-                }
-              : {}
-          ]}
-        >
-          Consent Details : {data?._source.consentStatus}
-        </Typography>
       </Box>
     </Box>
   );

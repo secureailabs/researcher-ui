@@ -8,8 +8,8 @@ const SAMPLE_DATA = [
       Name: 'John Miller',
       Age: 25,
       'Life Story':
-        "In the picturesque town of Oakridge, California, a resilient young man named John Miller is rewriting the story of his life. At just 25 years old, John faced a daunting health challenge that would test his strength and determination. John's journey began when he received the news that he needed a lumpectomy due to a health concern. While the prospect of surgery was undoubtedly daunting, John approached it with an unwavering sense of optimism. He knew that this surgery was a crucial step in regaining control of his life and health. John's positive outlook on life has always been his defining trait. Growing up in Oakridge, he was known for his infectious smile and unwavering optimism. He was the kind of person who could brighten anyone's day with his warm-hearted nature and sense of humor. Throughout his lumpectomy journey, John's family and friends rallied around him, providing unwavering support and encouragement. They witnessed his courage in the face of uncertainty and admired his determination to emerge from this experience stronger than ever. As John continues on his path to recovery, he has set his sights on a brighter future. He dreams of completing his college degree and pursuing a career that allows him to give back to his community. However, the medical expenses have placed a significant burden on his family's finances. Now, the Oakridge community is coming together to support John on his journey to recovery. A fundraising campaign has been launched to help cover his medical expenses and provide him with the financial support he needs to pursue his dreams. With the same unwavering optimism that has defined his life, John is looking forward to a future filled with hope, health, and endless possibilities.",
-      Tags: ['fundraising', 'patient'],
+        'John was diagnosed with AML after feeling extremely fatigued for 3 weeks in January 2022. He was always very active and was having trouble working out for more than 2 minutes. He and has undergone an aggressive treatment plan, including chemotherapy. Despite experiencing side effects like fatigue, nausea, and hair loss, John remained committed to his treatment plan. He responded well to treatment and is currently in remission. John faced challenges related to his job during treatment but received support from his employer, allowing him to work remotely when needed. John heard about Leukaemia Warriors United from his physician at Stanford and said he used the online education resources to learn more about what to expect during treatment. He also signed up for the patient registry. Now that he is in remission, he is fundraising for the upcoming 5k and is training to run.',
+      Tags: ['Patient', 'Acute Myeloid Leukaemia', 'White/Caucasian', 'Registry Member'],
       gender: 'MALE',
       ethnicity: 'White',
       location: 'Oakridge, California',
@@ -21,7 +21,15 @@ const SAMPLE_DATA = [
       },
       relatedDisease: 'Lumpectomy',
       outcome: 'Partial Remission',
+      tone: 'Upbeat, Hero’s Journey',
+      barriersToCare: 'Time off work',
+      storyUsage: 'Summer Campaign 2023',
+      outboundCommunication: 'Monthly Newsletter, West Coast Events, National Events',
       insuranceAccess: 'Medicare',
+      documentName: 'John Interview July 2022.docx',
+      documentName2: 'Web Story Intake Form_6.10.2022.docx',
+      media1: 'media_1.png',
+      media2: 'media_2.png',
       Picture_gender: {
         Value: 'Male',
         Confidence: 99.60623168945312
@@ -123,7 +131,7 @@ const SAMPLE_DATA = [
       'Additional Documents_source': 'Amazon-Textract-Pdf.pdf',
       'Additional Documents_content': 'NA ',
       storyUsed: 2,
-      consentStatus: 'GRANTED'
+      consentStatus: 'Granted June 2022'
     }
   },
   {
@@ -135,8 +143,15 @@ const SAMPLE_DATA = [
       Name: 'Sarah Mitchell',
       Age: 42,
       'Life Story':
-        "In the heart of Willowbrook, Texas, a town known for its close-knit community, lives an extraordinary woman named Sarah Mitchell. At 42 years old, Sarah is facing one of the most formidable challenges of her life with incredible grace and strength—she is courageously battling breast cancer.Sarah's journey with breast cancer began when she received her diagnosis a few years ago. Instead of allowing fear to consume her, Sarah decided to confront the disease head-on. She drew her strength from the love and support of her family and friends, who rallied around her with unwavering determination.A mother of two, Sarah's primary motivation has always been her children. She dreamed of seeing them grow up, achieve their dreams, and experience the joys of life. This unwavering love for her family became her driving force to fight cancer with all her might.Sarah's positive attitude has been a beacon of hope not only for herself but for those around her. Her friends and neighbors in Willowbrook admire her resilience and the way she continues to embrace life with a smile, even on the toughest days.As she navigates the challenging path of treatment and recovery, Sarah's community has come together to support her in every way possible. A fundraising campaign has been launched to help cover her medical expenses and provide financial support for her family during this challenging time.Sarah's story is one of strength, hope, and the incredible power of community. As she battles breast cancer, she does so with the knowledge that she is not alone. With the support of her loved ones and the generosity of her community, Sarah is determined to overcome this obstacle and continue embracing life with the same enthusiasm and joy that have always defined her.",
-      Tags: ['fundraising', 'patient'],
+        "Sarah Mitchell, is a 42-year-old woman, was diagnosed with Chronic Lymphocytic Leukaemia (CLL). Sarah received her CLL diagnosis after her general physician noticed enlarged lymph nodes during her annual physical. Her doctor recommended participation in a clinical trial for a bone marrow transplant, which offered a potentially curative treatment option. However, the clinical trial was located in another state, creating significant financial and logistical challenges. Sarah was an elementary school teacher and the transplant recovery required her to take an extended, unpaid leave of absence from her job. This loss of income, combined with the added expenses associated with her medical care and travel, was the primary reason why she needed financial assistance from the patient organization. In her search for assistance, she came across Leukaemia Warriors United and applied financial assistance to cover travel and lodging expenses. She underwent a bone marrow transplant as part of the trial, facing both physical and emotional challenges during treatment. Sarah's perseverance paid off, and the bone marrow transplant was successful. Over time, she saw a significant improvement in her health, and her CLL went into remission. Sarah's journey, while challenging, ultimately led to a positive outcome, and she was able to return to her normal life with a renewed sense of hope. ",
+      Tags: [
+        'Patient',
+        'Chronic Lymphocytic Leukaemia',
+        'Black/African-American',
+        'Financial Assistant Recipient',
+        'Clinical Trial',
+        'Transplant Recipient'
+      ],
       Picture_source: 'images/like_image2_2.jpeg',
       imageName: 'sf-2.png',
       Picture_age: {
@@ -148,8 +163,14 @@ const SAMPLE_DATA = [
       ethnicity: 'Black',
       location: 'Willowbrook, Texas',
       relatedDisease: 'Breast Cancer',
-      outcome: 'Complete Remission',
+      outcome: 'Remission',
+      tone: 'Hopeful',
+      barriersToCare: 'Financial, Travel',
+      storyUsage: 'Spring 2023 Direct Mailing, December 2022 Blog Post',
+      outboundCommunication: 'Monthly Newsletter, West Coast Events, National Events',
       insuranceAccess: 'Financial Assistance',
+      documentName: 'Sarah Interview 1.docx',
+      documentName2: 'Web Story Intake Form_6.10.2022.docx',
       Picture_gender: {
         Value: 'Female',
         Confidence: 99.67730712890625
@@ -248,7 +269,7 @@ const SAMPLE_DATA = [
         0.2205432653427124, 0.12845197319984436, 0.7386432886123657, 0.3534476161003113, -0.2556779980659485, -0.3604913651943207,
         0.014254175126552582, -0.3860441744327545
       ],
-      consentStatus: 'GRANTED'
+      consentStatus: 'Granted January 2021'
     }
   },
   {
@@ -257,14 +278,14 @@ const SAMPLE_DATA = [
     _score: 1.0,
     _ignored: ['Life Story.keyword', 'Additional Documents_content.keyword'],
     _source: {
-      Name: 'Alex Turner',
-      Age: 20,
+      Name: 'Alex Rodriguez ',
+      Age: 50,
       'Life Story':
-        "In the vibrant city of Denver, Colorado, a young man named Alex Turner is embarking on a journey of self-discovery and resilience. At just 20 years old, Alex is navigating the uncharted waters of hormone therapy.Alex's story began when he made the brave decision to embrace his true self. Recognizing his identity as a transgender man, he embarked on the path of hormone therapy as a crucial step toward aligning his body with his authentic self.Despite the challenges and uncertainties that often accompany such a significant transition, Alex has been unwavering in his determination. He draws strength from the support of his friends and family, who have stood by his side throughout this transformative process.Growing up in Denver, Alex was known for his artistic talents and his passion for advocating for LGBTQ+ rights. He was a beacon of positivity, always using his creativity and charisma to foster inclusivity and acceptance within his community.Now, as he undergoes hormone therapy, Alex faces both emotional and financial hurdles. The cost of treatment can be substantial, and he is determined not to let it deter him from living authentically.In response to his journey, the Denver community has rallied around Alex. A fundraising campaign has been initiated to help cover the expenses associated with hormone therapy and support his dreams of advocating for transgender rights on an even larger scale.Alex's story is a testament to the power of self-acceptance and the strength that comes from embracing one's true identity. With the support of his community, he's not just transforming his own life; he's also contributing to a more inclusive and accepting world for others like him.",
-      Tags: ['fundraising', 'patient'],
+        "Alex Rodriguez’s wife Jennifer was diagnosed with ALL in December of 2029. Alex instantly became her caregiver, taking her to appointments for chemo and having regular visits to the ER. Jennifer was not responding to treatment, and he had to take a leave of absence from work as a government employee to care for her for the last two months of her life while her condition continued to deteriorate. Jennifer passed away from complications of ALL in June 2021. In the wake of Jennifer's passing, Alex channelled his grief into raising awareness about ALL and supporting leukaemia research. He started a fundraising page in Jennifer's memory, ensuring that her legacy would continue to make a positive impact in the fight against leukaemia.'It all happened so quickly. One day she was feeling fine, the next she was diagnosed with this disease, and we were thrust into a whirlwind of appointments, treatment options, and ER visits. We were thankful for her care team and tried to appreciate the time we had left together. Leukaemia Warriors United was there for us when we had questions and helped us navigate the craziness. Once she passed, I knew I wanted to give back. I am grateful to be able to provide financial support to their amazing mission and to dedicate my time to helping others as they try to get through their most challenging times.'",
+      Tags: ['Caregiver', 'Acute Lymphoblastic Leukaemia', 'Hispanic', 'Peer-to-Peer'],
       storyUsed: 3,
       Picture_source: 'images/like_image2.jpg',
-      imageName: 'sf-3.png',
+      imageName: 'sf-7.png',
       Picture_age: {
         Low: 34,
         High: 42
@@ -274,7 +295,13 @@ const SAMPLE_DATA = [
       location: 'Denver, Colorado',
       relatedDisease: 'Hormone Therapy',
       insuranceAccess: 'Grant Recipient',
-      outcome: 'Relapse',
+      documentName: 'Alex Rodriguez 2020.docx',
+      documentName2: 'Web Story Intake Form_6.10.2022.docx',
+      outcome: 'Unsuccessful',
+      tone: 'Somber, Reflective, Hope',
+      barriersToCare: 'N/A',
+      storyUsage: 'Annual Giving Campaign 2022, Peer-to-peer Website Page, Monthly Newsletter (Aug. 21)',
+      outboundCommunication: 'Peer-to-peer, Monthly Newsletter, National Events ',
       Picture_gender: {
         Value: 'Female',
         Confidence: 99.99440002441406
@@ -375,7 +402,140 @@ const SAMPLE_DATA = [
       ],
       'Additional Documents_source': 'mary_demo_doc.docx',
       'Additional Documents_content': '',
-      consentStatus: 'PENDING'
+      consentStatus: 'Granted November 2020'
+    }
+  },
+  {
+    _index: 'patient_stories_v2',
+    _id: 'jM-XsokBcSxl6T_-Y7IB',
+    _score: 1.0,
+    _ignored: ['Life Story.keyword', 'Additional Documents_content.keyword'],
+    _source: {
+      Name: 'Emily Chen',
+      Age: 3,
+      'Life Story':
+        'Emily is a patient, a 3-year-old girl of Asia/Pacific Islander with Acute Lymphoblastic Leukemia. Emily was diagnosed with ALL at 18 months, and her medical team at CHOP immediately started her on chemotherapy to control the disease. Because Emily’s mom Lisa had to stop working to care for her during this time, they had issues with their insurance coverage. They reached out to Leukemia Warriors United to ask about financial assistance and applied. They were so thankful to receive the financial support - it helped them concentrate on Emily getting better, rather than how they were going to pay for treatment. Emily initially went into remission, however, she relapsed and the best treatment option is now a bone marrow transplant. She joined the patient registry and did family testing and they found that her older sister Sarah was a match. Emily’s transplant is scheduled for August 2023. Update 9/23: Initial transplant was successful, Emily and sister are doing well. Waiting for engraftment - see social media by mom Lisa @MonaLisaMom for updates ',
+      Tags: ['Patient', 'Pediatric', 'Acute Lymphoblastic Leukaemia', 'Asia/Pacific Islander', 'Patient Registry', 'Transplant Recipient'],
+      storyUsed: 3,
+      Picture_source: 'images/like_image2.jpg',
+      imageName: 'sf-8.png',
+      Picture_age: {
+        Low: 34,
+        High: 42
+      },
+      gender: 'FEMALE',
+      ethnicity: 'White',
+      location: 'Scranton, Pennsylvania',
+      relatedDisease: 'Hormone Therapy',
+      insuranceAccess: 'Grant Recipient',
+      documentName: '7.28.22 Chen Family.docx',
+      documentName2: '9.23 Phone Call Notes.pdf',
+      outcome: 'Remission',
+      tone: 'Happy, Family',
+      barriersToCare: 'N/A',
+      storyUsage: '',
+      outboundCommunication: 'Monthly Newsletter',
+      Picture_gender: {
+        Value: 'Female',
+        Confidence: 99.99440002441406
+      },
+      Picture_emotions: ['CALM'],
+      Picture_face_occulded: {
+        Value: false,
+        Confidence: 99.65045928955078
+      },
+      Picture_labels: ['Face', 'Head', 'Person', 'Photography', 'Portrait', 'Adult', 'Female', 'Woman', 'Hair'],
+      Picture_image_embedding: [
+        0.4802950918674469, -0.12980349361896515, -0.10460399091243744, -0.34718990325927734, 0.1639590710401535, -0.18636730313301086,
+        0.13799293339252472, -0.8088561296463013, -0.11530765146017075, -0.3602466583251953, 0.4559871554374695, 0.15536831319332123,
+        -0.2648342251777649, 0.1054317057132721, 0.3184787333011627, 0.25079578161239624, 1.2109737396240234, 0.26263394951820374,
+        0.14487943053245544, 0.08910800516605377, -0.1104954183101654, -0.1725497990846634, -0.0018242858350276947, -0.3494516909122467,
+        -0.5465412139892578, 0.2785351872444153, -0.042275719344615936, 0.11061618477106094, 0.4969937801361084, 0.39708220958709717,
+        0.04663310572504997, 0.16952139139175415, 0.09145096689462662, 0.16026747226715088, -0.11949649453163147, -0.10608536005020142,
+        -0.5905963778495789, 0.44416543841362, -0.08211946487426758, 2.490216016769409, 0.21953678131103516, -0.3357625901699066,
+        0.4453897178173065, 0.2698517441749573, 0.29862308502197266, 1.2211966514587402, 0.00031469017267227173, 0.512335479259491,
+        -0.15108898282051086, 0.5396921038627625, -0.40102359652519226, 0.13127146661281586, 0.04481130465865135, 0.19410473108291626,
+        -0.573300838470459, -0.08422824740409851, 0.7622261047363281, 0.10691215842962265, 0.13426490128040314, -0.2587600648403168,
+        0.5614129900932312, 0.21719424426555634, -0.39983856678009033, -0.2108798325061798, 0.5137231349945068, -0.3203563094139099,
+        0.1786687970161438, -1.0897128582000732, -0.35359513759613037, -0.559489369392395, -0.06894681602716446, 0.129357248544693,
+        0.2291739284992218, 0.6854923963546753, 0.0789424255490303, -0.17370043694972992, -0.3598232865333557, -0.2846105098724365,
+        -0.30722731351852417, 0.16863961517810822, 0.22992563247680664, 0.4696367383003235, 0.4850079119205475, -0.3894296884536743,
+        -0.07012969255447388, -0.4240717887878418, 0.9508344531059265, -0.028796741738915443, -0.12865936756134033, -0.06975604593753815,
+        -0.4561261832714081, -0.15722472965717316, -4.483893871307373, 0.0886833518743515, -0.41689833998680115, -0.2238229662179947,
+        0.006754577159881592, 0.3180219829082489, 0.18099677562713623, 0.1953582912683487, -0.3945227563381195, -0.27883273363113403,
+        -0.1415267139673233, 0.2918177545070648, -0.45584237575531006, 0.019175000488758087, 0.6702141761779785, 0.02330254763364792,
+        -0.5834634900093079, -0.1357293426990509, 0.3989419937133789, -1.4015774726867676, 0.07405821233987808, 0.23671379685401917,
+        -0.14741812646389008, -0.13387127220630646, 0.40411177277565, 0.040470194071531296, -0.020800597965717316, -0.11899653822183609,
+        0.04583045840263367, -0.149576798081398, 0.31548500061035156, -0.376470685005188, -0.011117808520793915, 0.07974402606487274,
+        0.3723333775997162, 0.33466199040412903, -0.46046337485313416, 0.22034460306167603, 0.011785564944148064, -0.08975501358509064,
+        0.047722794115543365, 0.755796492099762, -0.3525392413139343, 0.2014230489730835, 0.40382224321365356, -0.061494823545217514,
+        -0.47864165902137756, 0.2892090678215027, -0.027828048914670944, 0.16592174768447876, -0.2181738018989563, -0.08618044853210449,
+        -0.1401066780090332, -0.5246895551681519, -0.08252622187137604, 0.5954075455665588, -0.49440574645996094, 0.09869210422039032,
+        -0.25441595911979675, 0.061910875141620636, 0.8375722169876099, -0.6057882308959961, 0.14326806366443634, 0.42656373977661133,
+        0.04224802181124687, 0.14429201185703278, -0.41756075620651245, 0.4897744357585907, -0.9784039258956909, -0.14629222452640533,
+        -0.028241684660315514, 0.3527488708496094, 0.49481773376464844, 0.01836366206407547, -0.17853662371635437, 0.13034626841545105,
+        0.5599750876426697, 0.18853768706321716, 0.04800737276673317, 0.5507550239562988, 0.26304495334625244, -0.41334542632102966,
+        -0.03941173851490021, 0.11678209900856018, 0.8136245012283325, -0.09621736407279968, 0.6329110264778137, 0.08956707268953323,
+        0.4774168133735657, 0.20343686640262604, 0.26439008116722107, -0.5639755129814148, -0.03686296194791794, 0.19904924929141998,
+        0.027485627681016922, -0.15238553285598755, -0.41105934977531433, -0.02226942777633667, -0.24573466181755066, -0.17887413501739502,
+        0.1821857988834381, -0.10323122143745422, -0.023852691054344177, -0.0351286455988884, 0.07983401417732239, -0.3515721559524536,
+        0.5727403163909912, 0.04716411605477333, 0.5596858859062195, -0.0415690541267395, -0.21756023168563843, -0.07089944928884506,
+        0.18084439635276794, -0.34383586049079895, 0.010849447920918465, -0.2656928598880768, 0.394962340593338, -0.03122231364250183,
+        0.13371488451957703, 0.49565720558166504, 0.03800174593925476, 0.03420115262269974, 0.151461660861969, 0.34637781977653503,
+        0.20732897520065308, 0.1801987588405609, 0.7239657640457153, 0.00797336082905531, -0.2720884084701538, -0.08364251255989075,
+        0.01868651807308197, 0.2214442640542984, -0.371224045753479, 0.4910954535007477, -0.1089826449751854, -0.12665970623493195,
+        -0.13056693971157074, -0.28661760687828064, 0.014838200062513351, 0.1577417254447937, -0.23563382029533386, -0.20014341175556183,
+        0.04038311168551445, 0.19469119608402252, 0.15074321627616882, -0.3133559226989746, -0.2795540392398834, 0.0464986115694046,
+        0.1482841968536377, 0.3843024671077728, -0.1759089231491089, 0.43173977732658386, -0.14479279518127441, 0.23960140347480774,
+        -0.08346650004386902, -0.30433762073516846, -0.14591239392757416, -0.007576333358883858, -0.09674078971147537, 0.1077820360660553,
+        0.24207982420921326, 0.12594662606716156, -0.004760207608342171, -0.045759156346321106, -0.008853156119585037, 0.36088719964027405,
+        -2.3793280124664307, 0.3020384907722473, 0.2723025977611542, -0.353800892829895, 0.1175345927476883, -0.03458915650844574,
+        0.4082823097705841, 0.04707343876361847, -0.32189324498176575, -0.1535632610321045, -0.26188817620277405, -0.40561768412590027,
+        -0.06949450075626373, -0.18384987115859985, 0.6897702217102051, -0.3604189157485962, 0.05874216556549072, 0.037711597979068756,
+        -0.11049636453390121, -0.24779632687568665, -0.2146194577217102, -0.3974835276603699, 0.24555949866771698, 0.7166829109191895,
+        -0.10976038873195648, 0.3301927149295807, -0.21914146840572357, -0.1774194836616516, -0.8200984597206116, 0.010640566237270832,
+        -0.3412906229496002, -0.2785337567329407, 0.27939072251319885, -0.1321449875831604, -0.5429534912109375, 0.11300961673259735,
+        -0.1809132844209671, -0.20041540265083313, -0.3435947000980377, -0.2112668752670288, -0.05455439165234566, 0.03200617432594299,
+        -0.21106718480587006, -0.04372064024209976, -0.005969740450382233, 0.26592111587524414, 0.2442258894443512, 0.40125226974487305,
+        -0.09037154167890549, 0.3421633839607239, 0.23877401649951935, 0.4248712956905365, -0.3827936351299286, 0.12965404987335205,
+        0.7530980110168457, 0.19622255861759186, -0.2157333791255951, 0.364543080329895, 0.23751524090766907, -0.1396566927433014,
+        0.03313387185335159, -0.4989427924156189, 0.20275413990020752, -0.6661778688430786, -0.05573449656367302, 0.293046236038208,
+        0.13670185208320618, -0.2964507043361664, -0.07767530530691147, -0.27950000762939453, -0.048083219677209854, -0.7671283483505249,
+        0.2560710310935974, -0.006775795016437769, 0.47582146525382996, -0.3749958574771881, 0.2699919641017914, -0.08694036304950714,
+        0.22829577326774597, 0.5234016180038452, -0.2041928768157959, 0.03771703690290451, 0.17749495804309845, -0.24641647934913635,
+        0.19400301575660706, 0.550452709197998, -0.43127870559692383, -0.01704365760087967, -0.07949759066104889, 0.044608987867832184,
+        0.320019006729126, 0.6806632280349731, 0.2349870204925537, -0.18961165845394135, 0.25359979271888733, 0.06009962782263756,
+        0.11851754039525986, -0.7527832984924316, -0.35291779041290283, -0.2376631647348404, 0.16266459226608276, -0.10496029257774353,
+        0.3155660331249237, 0.1064072996377945, 0.38525864481925964, -0.24603575468063354, -1.2722711563110352, -0.0581207275390625,
+        0.42604508996009827, -1.6970741748809814, 0.3089729845523834, -0.5096109509468079, -0.12285473942756653, 0.10717549920082092,
+        -0.24821001291275024, 0.22365713119506836, 0.00904667004942894, -0.2187424749135971, 0.9066964387893677, -0.27163660526275635,
+        -0.022107712924480438, 0.18090763688087463, -0.03801066800951958, -0.13976188004016876, 0.09100604057312012, -0.09471816569566727,
+        0.32311660051345825, 0.30093762278556824, -0.06964750587940216, -0.24991872906684875, 0.07087980210781097, 1.4098622798919678,
+        -0.8344826698303223, 0.1500636488199234, -0.026219647377729416, 0.3435290455818176, -0.3936850428581238, -0.11163847148418427,
+        0.3880414068698883, -0.06054628640413284, 0.5212750434875488, -0.5253461599349976, 0.21846304833889008, 0.22267064452171326,
+        -0.05048595368862152, 0.17715369164943695, 0.17058798670768738, -0.0008265264332294464, 0.18834605813026428, 0.3046243190765381,
+        -0.12055175006389618, 0.015294547192752361, -0.4671124815940857, -0.1905469447374344, -0.010933665558695793, -0.2840155363082886,
+        0.1316567361354828, 0.5430492758750916, -0.6722157001495361, 0.06198491156101227, 0.21256886422634125, -0.4843040108680725,
+        -0.6113529205322266, -0.023021619766950607, 0.38762906193733215, 0.12065933644771576, -0.3375609219074249, -0.40855902433395386,
+        0.10753343999385834, 0.10243739187717438, 1.2540374994277954, -0.30562400817871094, 0.013443954288959503, -0.06636659801006317,
+        0.4408190846443176, -0.08404508978128433, -0.1473708599805832, 0.19351866841316223, 0.24239365756511688, -0.4107913672924042,
+        -0.07094816118478775, 0.705548882484436, -0.32699766755104065, 0.3790437877178192, 0.3971920609474182, -0.2018936574459076,
+        0.08616266399621964, 0.2920597493648529, 0.0334663949906826, 0.015597973018884659, 0.3372119963169098, -0.22067952156066895,
+        0.02642587572336197, -0.3003386855125427, 0.021566268056631088, -0.45110267400741577, -0.4358496069908142, -0.06277739256620407,
+        0.28295254707336426, 0.3095371425151825, 0.10292147845029831, 0.04449985921382904, 0.49371612071990967, -0.09464141726493835,
+        -0.056485727429389954, 0.38368648290634155, 0.4149667024612427, 0.5359260439872742, 0.13552013039588928, -0.02025395631790161,
+        0.13549719750881195, -0.39234721660614014, -0.1380942463874817, -0.3866980969905853, 0.36989033222198486, -0.1043267771601677,
+        -0.07704219222068787, -0.11173981428146362, 0.17166434228420258, -0.07976428419351578, -0.8428518772125244, 0.2687316834926605,
+        -0.2210599184036255, 0.28140586614608765, 0.3135364353656769, -0.07892051339149475, -0.14037466049194336, -0.10707823932170868,
+        -0.1777641922235489, 0.0853254422545433, -0.3901754915714264, -0.0605507455766201, 0.35775572061538696, 0.23069018125534058,
+        -0.1976582258939743, -0.3293566405773163, 0.04599381610751152, -0.5408611297607422, -0.05607686564326286, 0.1123603880405426,
+        -0.03667869418859482, -0.0813474953174591, 0.11664159595966339, 0.4022381901741028, 0.26925790309906006, -0.09838257730007172,
+        0.05455871298909187, 0.13878291845321655, 0.5492027997970581, 0.19990850985050201, -0.02067607454955578, 0.5719597935676575,
+        0.047305695712566376, -0.3888516128063202
+      ],
+      'Additional Documents_source': 'mary_demo_doc.docx',
+      'Additional Documents_content': '',
+      consentStatus: 'Granted November 2020'
     }
   }
 ];
