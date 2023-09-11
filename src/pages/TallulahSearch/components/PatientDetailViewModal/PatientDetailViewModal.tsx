@@ -53,7 +53,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
                 {data?._source.Name}
               </Typography>
               <Typography variant="body1" className={styles.age}>
-                {data?._source.Age} years
+                {data?._source.Age} years, {data?._source.ethnicity}, {data?._source.location}
               </Typography>
               <Box
                 sx={{
@@ -84,24 +84,44 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
               sx={[
                 {
                   alignSelf: 'flex-start',
-                  backgroundColor: '#439c5c',
                   padding: '0.2rem 1rem',
                   color: '#fff',
                   fontWeight: 'bold'
                 },
-                data._source.storyUsed > 3
+                data._source.consentStatus === 'GRANTED'
                   ? {
-                      backgroundColor: '#7096cc'
+                      backgroundColor: '#439c5c'
                     }
                   : {},
-                data._source.storyUsed > 7
+                data._source.consentStatus === 'PENDING'
                   ? {
-                      backgroundColor: '#e83c3c'
+                      backgroundColor: '#c99a4f'
                     }
                   : {}
               ]}
             >
-              <Typography variant="body1">Story Used : {data?._source.storyUsed} times</Typography>
+              <Typography variant="body1">Consent Details : {data?._source.consentStatus}</Typography>
+            </Box>
+          </Box>
+          <Box className={styles.section1}>
+            <Box>
+              <Typography variant="body1" className={styles.label}>
+                Related Disease
+              </Typography>
+              <Typography variant="body1" className={styles.value}>
+                {data?._source.relatedDisease}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box className={styles.section1}>
+            <Box>
+              <Typography variant="body1" className={styles.label}>
+                Outcome
+              </Typography>
+              <Typography variant="body1" className={styles.value}>
+                {data?._source.outcome}
+              </Typography>
             </Box>
           </Box>
 
@@ -115,6 +135,18 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
               </Typography>
             </Box>
           </Box>
+
+          <Box className={styles.section1}>
+            <Box>
+              <Typography variant="body1" className={styles.label}>
+                Insurance Access
+              </Typography>
+              <Typography variant="body1" className={styles.value}>
+                {data?._source.insuranceAccess}
+              </Typography>
+            </Box>
+          </Box>
+
           <Box className={styles.section2}>
             <Box>
               <Typography variant="body1" className={styles.label}>
@@ -124,14 +156,6 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
                 {data?._source['Additional Documents_content'] || 'No additional comments'}
               </Typography>
             </Box>
-          </Box>
-          <Box className={styles.section2}>
-            <Typography variant="body1" className={styles.label}>
-              Consent Details
-            </Typography>
-            <Typography variant="body1" className={styles.value}>
-              Consent granted by Aman on 12/12/2021
-            </Typography>
           </Box>
         </Box>
       </Box>

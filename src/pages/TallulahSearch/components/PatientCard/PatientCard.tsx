@@ -8,24 +8,7 @@ export interface IPatientCard {
 
 const PatientCard: React.FC<IPatientCard> = ({ data }) => {
   return (
-    <Box
-      className={styles.container}
-      sx={[
-        {
-          border: '1px solid #439c5c'
-        },
-        data._source.storyUsed > 3
-          ? {
-              border: '1px solid #7096cc'
-            }
-          : {},
-        data._source.storyUsed > 7
-          ? {
-              border: '1px solid #ff0000'
-            }
-          : {}
-      ]}
-    >
+    <Box className={styles.container}>
       {/* Patient Details */}
       <Box className={styles.cardHeaderLayout}>
         <Box>
@@ -33,7 +16,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
             {data._source.Name}
           </Typography>
           <Typography variant="body1" className={styles.age}>
-            {data._source.Age} years
+            {data?._source.Age} years, {data?._source.ethnicity}, {data?._source.location}
           </Typography>
         </Box>
         <Box>
@@ -80,22 +63,19 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
             {
               fontStyle: 'italic'
             },
-            {
-              color: '#439c5c'
-            },
-            data._source.storyUsed > 3
+            data._source.consentStatus === 'GRANTED'
               ? {
-                  color: '#7096cc'
+                  color: '#439c5c'
                 }
               : {},
-            data._source.storyUsed > 7
+            data._source.consentStatus === 'PENDING'
               ? {
-                  color: '#ff0000'
+                  color: '#c99a4f'
                 }
               : {}
           ]}
         >
-          Story Used : {data._source.storyUsed} times
+          Consent Details : {data?._source.consentStatus}
         </Typography>
       </Box>
     </Box>
