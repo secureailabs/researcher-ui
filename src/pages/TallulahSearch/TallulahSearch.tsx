@@ -234,39 +234,6 @@ const TallulahSearch: React.FC<ITallulahSearch> = ({ sampleTextProp }) => {
               ) : null}
             </Search>
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            <FormControl sx={{ width: 300, backgroundColor: '#fff' }}>
-              <InputLabel id="demo-multiple-chip-label">Story Used</InputLabel>
-              <Select
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
-                multiple
-                value={storyUsedFilter}
-                onChange={handleFilterChange}
-                input={<OutlinedInput label="Story Used" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value: any) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {storyUsedOptions.map((option) => (
-                  <MenuItem key={option.label} value={option.label}>
-                    <Checkbox checked={storyUsedFilter.indexOf(option.label) > -1} />
-                    <ListItemText primary={option.label} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
         </Box>
       </Box>
       <Box>

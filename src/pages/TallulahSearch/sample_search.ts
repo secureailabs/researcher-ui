@@ -418,7 +418,7 @@ const SAMPLE_DATA = [
       Tags: ['Patient', 'Pediatric', 'Acute Lymphoblastic Leukaemia', 'Asia/Pacific Islander', 'Patient Registry', 'Transplant Recipient'],
       storyUsed: 3,
       Picture_source: 'images/like_image2.jpg',
-      imageName: 'sf-8.png',
+      imageName: 'sf-9.png',
       Picture_age: {
         Low: 34,
         High: 42
@@ -535,7 +535,7 @@ const SAMPLE_DATA = [
       ],
       'Additional Documents_source': 'mary_demo_doc.docx',
       'Additional Documents_content': '',
-      consentStatus: 'Granted November 2020'
+      consentStatus: 'Granted July  2023'
     }
   }
 ];

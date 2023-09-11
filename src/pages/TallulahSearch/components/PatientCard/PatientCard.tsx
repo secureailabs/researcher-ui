@@ -41,7 +41,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
       <Box className={styles.section1}>
         <Box>
           <Typography variant="body1" className={styles.label}>
-            Life Story
+            Journey
           </Typography>
           <Typography
             variant="body1"
