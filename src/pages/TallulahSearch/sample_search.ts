@@ -7,6 +7,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'KP55',
       Age: 5,
+      Location: [10.000345, -45.90333],
       'Life Story':
         "John was a healthy, active 35-year-old who loved hiking and playing soccer. In 2015, he was diagnosed with Acute Myeloid Leukemia (AML), a type of cancer that starts in the bone marrow. He was shocked and frightened, but he was ready to fight.\n\nAfter a round of chemotherapy, his doctors informed him that he would need a bone marrow transplant to survive. His family members were tested, but none were a match. That's when John's doctor recommended 'Be The Match'.\n\n'Be The Match' facilitates bone marrow and cord blood transplants for patients who do not have a matching donor in their family. They manage the largest and most diverse marrow registry in the world.\n\nJohn, with the help of 'Be The Match', found a compatible donor within a few months, a 26-year-old woman from Germany. She had signed up at a bone marrow donor drive at her local community center.\n\nJohn underwent the transplant in late 2015. The recovery was tough and took several months, but John was determined to get back to his old self. The transplant was successful, and John went into remission.\n\nToday, John is back to hiking and playing soccer. He is incredibly grateful to his donor and 'Be The Match' for giving him a second chance at life. He now works tirelessly to raise awareness about the importance of becoming a bone marrow donor, often sharing his story and encouraging others to register with 'Be The Match'.",
       Tags: ['test', 'test1'],
@@ -127,6 +128,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'PL',
       Age: 67,
+      Location: [50.000345, -5.90333],
       'Life Story':
         "Emma was a vibrant, energetic 7-year-old girl who loved ballet and playing with her friends. In 2018, her life took a sudden turn when she was diagnosed with Severe Aplastic Anemia, a rare condition where the bone marrow does not make enough new blood cells.\n\nEmma needed a life-saving bone marrow transplant. Unfortunately, no one in her immediate family was a match. The search for a suitable donor began, and it was a race against time. Emma's parents contacted 'Be The Match', hoping to find a perfect stranger who could save their little girl's life.\n\n'Be The Match' operates the world's largest and most diverse bone marrow registry. They started a worldwide search for Emma. Meanwhile, Emma's community rallied around her, organizing local donor drives and spreading the word about her need.\n\nAfter several anxious months, 'Be The Match' found a match for Emma, a 29-year-old man named Alex from Canada. Alex had joined the registry on a whim when he saw a donor drive at his university several years prior. He never thought he would actually be a match for someone, but when he got the call, he didn't hesitate.\n\nEmma received her bone marrow transplant in early 2019. The road to recovery was long and often challenging, but Emma was a fighter. With the support of her family, friends, and countless well-wishers, she gradually regained her strength.\n",
       Tags: ['test1', 'test2'],
@@ -244,6 +246,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'Mary',
       Age: 5,
+      Location: [1.000345, 25.90333],
       'Life Story':
         "Mary was a high school science teacher who was passionate about her job and loved inspiring her students. In 2017, she was diagnosed with Chronic Lymphocytic Leukemia (CLL), a type of cancer that affects the blood and bone marrow.\n\nDespite several rounds of chemotherapy, Mary's condition didn't improve significantly. Her doctor suggested a bone marrow transplant as the best option for her. Unfortunately, none of her family members were a suitable match. That's when Mary's doctor introduced her to 'Be The Match'.\n\n'Be The Match' is a nonprofit organization that maintains the largest and most diverse marrow registry in the world. They began the search for a suitable bone marrow donor for Mary.\n\nAfter several weeks, 'Be The Match' found a potential match, a 23-year-old man named David from the UK. David had registered as a donor after attending a 'Be The Match' donor drive at his university.\n\nDavid was a perfect match, and he agreed to donate his bone marrow to Mary. The transplant procedure took place in mid-2018. It was a long road to recovery for Mary, but she was surrounded by a supportive community of family, friends, and her students.",
       Tags: ['test1'],
@@ -364,6 +367,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'KP67',
       Age: 45,
+      Location: [48.000345, 2.90333],
       'Life Story': 'KP did something somewhere',
       Tags: ['tag1', 'tag2'],
       storyUsed: 10,
@@ -483,6 +487,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'KP67',
       Age: 67,
+      Location: [40.000345, 73.90333],
       'Life Story': 'Life story life story',
       Tags: ['tag1', 'tag2'],
       storyUsed: 0,
@@ -602,6 +607,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'KP678',
       Age: 56,
+      Location: [1.290345, 36.70333],
       'Life Story': 'Had cancer, recovered, date',
       Tags: ['tag1', 'tag2'],
       storyUsed: 5,
@@ -721,6 +727,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'KP7888',
       Age: 45,
+      Location: [3.700345, 38.50333],
       'Life Story': 'Story sotry story',
       Tags: ['tag1', 'tag2', 'tag3'],
       storyUsed: 1,
@@ -856,6 +863,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'KP*',
       Age: 5,
+      Location: [64.3911, 21.2517],
       'Life Story': 'Test 123',
       Tags: ['tag1', 'tag2'],
       storyUsed: 4,
