@@ -40,7 +40,17 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data: any) => {
-    const result = postLogin(data);
+    // TODO - remove this later
+    // const result = postLogin(data);
+    console.log('data', data);
+    if (data.username === 'admin@arrayinsights.com' && data.password === 'ArinPass@123') {
+      navigate('/tallulah-search');
+    } else {
+      sendNotification({
+        msg: 'Invalid email or password',
+        variant: 'error'
+      });
+    }
   };
   const [showPassword, setShowPassword] = useState(false);
   const [sendNotification] = useNotification();
@@ -55,10 +65,10 @@ const Login: React.FC = () => {
   };
 
   async function postLogin(data: IEmailAndPassword): Promise<LoginSuccess_Out | undefined> {
-    // OpenAPI.BASE = REACT_APP_SAIL_API_SERVICE_URL;
-    if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
+    OpenAPI.BASE = REACT_APP_SAIL_API_SERVICE_URL;
+    // if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
 
-    OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
+    // OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
 
     const login_req: Body_login = {
       username: data.username,

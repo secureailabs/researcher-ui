@@ -13,3 +13,9 @@
   padding-left: 10px;
   padding-right: 10px;
 }
+
+.mapImage {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}

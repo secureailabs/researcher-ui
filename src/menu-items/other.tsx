@@ -37,7 +37,7 @@ const other: any = {
       children: [
         {
           id: 'search',
-          title: 'Search',
+          title: 'Patient Story Search',
           type: 'item',
           url: '/tallulah-search',
           target: false

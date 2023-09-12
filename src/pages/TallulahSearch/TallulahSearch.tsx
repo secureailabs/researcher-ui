@@ -40,12 +40,12 @@ const storyUsedOptions = [
     value: [0, 3]
   },
   {
-    label: 'Moderate (4-6)',
-    value: [4, 6]
+    label: 'Moderate (4-7)',
+    value: [4, 7]
   },
   {
-    label: 'Many (>7)',
-    value: [7, 2000000000]
+    label: 'Many (>8)',
+    value: [8, 2000000000]
   }
 ];
 
@@ -199,8 +199,12 @@ const TallulahSearch: React.FC<ITallulahSearch> = ({ sampleTextProp }) => {
     <Box className={styles.container}>
       {/* Search Box area */}
       <Box>
+        <img src={require(`src/assets/images/map-2.png`)} alt="Patient Image" className={styles.mapImage} />
+      </Box>
+      <Box>
         <Box
           sx={{
+            marginTop: '4rem',
             marginBottom: '4rem',
             display: 'flex',
             alignItems: 'center'
@@ -229,39 +233,6 @@ const TallulahSearch: React.FC<ITallulahSearch> = ({ sampleTextProp }) => {
                 </IconButton>
               ) : null}
             </Search>
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            <FormControl sx={{ width: 300, backgroundColor: '#fff' }}>
-              <InputLabel id="demo-multiple-chip-label">Story Used</InputLabel>
-              <Select
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
-                multiple
-                value={storyUsedFilter}
-                onChange={handleFilterChange}
-                input={<OutlinedInput label="Story Used" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value: any) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {storyUsedOptions.map((option) => (
-                  <MenuItem key={option.label} value={option.label}>
-                    <Checkbox checked={storyUsedFilter.indexOf(option.label) > -1} />
-                    <ListItemText primary={option.label} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
           </Box>
         </Box>
       </Box>

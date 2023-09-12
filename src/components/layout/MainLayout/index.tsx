@@ -30,11 +30,11 @@ const MinimalLayout = (): JSX.Element => {
   };
 
   const checkUserSession = async (): Promise<UserInfo_Out> => {
-    // OpenAPI.BASE = REACT_APP_SAIL_API_SERVICE_URL;
+    OpenAPI.BASE = REACT_APP_SAIL_API_SERVICE_URL;
 
-    if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
+    // if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
 
-    OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
+    // OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
 
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -68,7 +68,8 @@ const MinimalLayout = (): JSX.Element => {
         })
       );
     } else {
-      navigate('/login');
+      // TODO : uncomment this later
+      // navigate('/login');
     }
 
     try {

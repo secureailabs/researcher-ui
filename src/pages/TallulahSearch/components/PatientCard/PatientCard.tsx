@@ -8,24 +8,7 @@ export interface IPatientCard {
 
 const PatientCard: React.FC<IPatientCard> = ({ data }) => {
   return (
-    <Box
-      className={styles.container}
-      sx={[
-        {
-          border: '1px solid #439c5c'
-        },
-        data._source.storyUsed > 3
-          ? {
-              border: '1px solid #7096cc'
-            }
-          : {},
-        data._source.storyUsed > 7
-          ? {
-              border: '1px solid #ff0000'
-            }
-          : {}
-      ]}
-    >
+    <Box className={styles.container}>
       {/* Patient Details */}
       <Box className={styles.cardHeaderLayout}>
         <Box>
@@ -33,12 +16,13 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
             {data._source.Name}
           </Typography>
           <Typography variant="body1" className={styles.age}>
-            {data._source.Age} years
+            Age : {data?._source.Age} years
+            <Typography>Location : {data?._source.location}</Typography>
           </Typography>
         </Box>
         <Box>
           {/* display image  */}
-          <img src={PatientImage} alt="Patient Image" className={styles.image} />
+          <img src={require(`src/assets/images/users/${data._source.imageName}`)} alt="Patient Image" className={styles.image} />
         </Box>
       </Box>
       <Box
@@ -57,7 +41,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
       <Box className={styles.section1}>
         <Box>
           <Typography variant="body1" className={styles.label}>
-            Life Story
+            Journey
           </Typography>
           <Typography
             variant="body1"
@@ -72,31 +56,6 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
             {data._source['Life Story']}
           </Typography>
         </Box>
-      </Box>
-      <Box className={styles.footer1}>
-        <Typography
-          variant="body1"
-          sx={[
-            {
-              fontStyle: 'italic'
-            },
-            {
-              color: '#439c5c'
-            },
-            data._source.storyUsed > 3
-              ? {
-                  color: '#7096cc'
-                }
-              : {},
-            data._source.storyUsed > 7
-              ? {
-                  color: '#ff0000'
-                }
-              : {}
-          ]}
-        >
-          Story Used : {data._source.storyUsed} times
-        </Typography>
       </Box>
     </Box>
   );
