@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import styles from './TallulahSearch.module.css';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SAMPLE_DATA from '../TallulahSearch/sample_search';
 import PatientMap from '../TallulahDashboard/components/PatientMap/PatientMap';
 
@@ -9,9 +9,10 @@ export interface ITallulahDb {
   sampleTextProp: string;
 }
 
-interface Coordinates {
-  latitude: number, 
-  longitude: number
+export interface Coordinates {
+  key: React.Key,
+  lat: number, 
+  lng: number
 }
 
 const TallulahDashboard: React.FC<ITallulahDb> = ({ sampleTextProp }) => {
@@ -19,7 +20,7 @@ const TallulahDashboard: React.FC<ITallulahDb> = ({ sampleTextProp }) => {
 
   const coordinates: Coordinates[] = [];
   SAMPLE_DATA.forEach((patient: any) => {
-    coordinates.push({latitude: patient._source.Location[0], longitude: patient._source.Location[1]});
+    coordinates.push({key: patient._id, lat: patient._source.Location[0], lng: patient._source.Location[1]});
   });
   console.log(coordinates, 'coordinates');
 

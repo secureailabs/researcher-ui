@@ -7,6 +7,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'John Miller',
       Age: 25,
+      Location: [2.009, 13.9944],
       'Life Story':
         'John was diagnosed with AML after feeling extremely fatigued for 3 weeks in January 2022. He was always very active and was having trouble working out for more than 2 minutes. He and has undergone an aggressive treatment plan, including chemotherapy. Despite experiencing side effects like fatigue, nausea, and hair loss, John remained committed to his treatment plan. He responded well to treatment and is currently in remission. John faced challenges related to his job during treatment but received support from his employer, allowing him to work remotely when needed. John heard about Leukaemia Warriors United from his physician at Stanford and said he used the online education resources to learn more about what to expect during treatment. He also signed up for the patient registry. Now that he is in remission, he is fundraising for the upcoming 5k and is training to run.',
       Tags: ['Patient', 'Acute Myeloid Leukaemia', 'White/Caucasian', 'Registry Member'],
@@ -142,6 +143,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'Sarah Mitchell',
       Age: 42,
+      Location: [30.009, 3.9944],
       'Life Story':
         "Sarah Mitchell, is a 42-year-old woman, was diagnosed with Chronic Lymphocytic Leukaemia (CLL). Sarah received her CLL diagnosis after her general physician noticed enlarged lymph nodes during her annual physical. Her doctor recommended participation in a clinical trial for a bone marrow transplant, which offered a potentially curative treatment option. However, the clinical trial was located in another state, creating significant financial and logistical challenges. Sarah was an elementary school teacher and the transplant recovery required her to take an extended, unpaid leave of absence from her job. This loss of income, combined with the added expenses associated with her medical care and travel, was the primary reason why she needed financial assistance from the patient organization. In her search for assistance, she came across Leukaemia Warriors United and applied financial assistance to cover travel and lodging expenses. She underwent a bone marrow transplant as part of the trial, facing both physical and emotional challenges during treatment. Sarah's perseverance paid off, and the bone marrow transplant was successful. Over time, she saw a significant improvement in her health, and her CLL went into remission. Sarah's journey, while challenging, ultimately led to a positive outcome, and she was able to return to her normal life with a renewed sense of hope. ",
       Tags: [
@@ -280,6 +282,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'Alex Rodriguez ',
       Age: 50,
+      Location: [32.009, 13.9944],
       'Life Story':
         "Alex Rodriguez’s wife Jennifer was diagnosed with ALL in December of 2029. Alex instantly became her caregiver, taking her to appointments for chemo and having regular visits to the ER. Jennifer was not responding to treatment, and he had to take a leave of absence from work as a government employee to care for her for the last two months of her life while her condition continued to deteriorate. Jennifer passed away from complications of ALL in June 2021. In the wake of Jennifer's passing, Alex channelled his grief into raising awareness about ALL and supporting leukaemia research. He started a fundraising page in Jennifer's memory, ensuring that her legacy would continue to make a positive impact in the fight against leukaemia.'It all happened so quickly. One day she was feeling fine, the next she was diagnosed with this disease, and we were thrust into a whirlwind of appointments, treatment options, and ER visits. We were thankful for her care team and tried to appreciate the time we had left together. Leukaemia Warriors United was there for us when we had questions and helped us navigate the craziness. Once she passed, I knew I wanted to give back. I am grateful to be able to provide financial support to their amazing mission and to dedicate my time to helping others as they try to get through their most challenging times.'",
       Tags: ['Caregiver', 'Acute Lymphoblastic Leukaemia', 'Hispanic', 'Peer-to-Peer'],
@@ -413,6 +416,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'Emily Chen',
       Age: 3,
+      Location: [22.009, 3.9944],
       'Life Story':
         'Emily is a patient, a 3-year-old girl of Asia/Pacific Islander with Acute Lymphoblastic Leukemia. Emily was diagnosed with ALL at 18 months, and her medical team at CHOP immediately started her on chemotherapy to control the disease. Because Emily’s mom Lisa had to stop working to care for her during this time, they had issues with their insurance coverage. They reached out to Leukemia Warriors United to ask about financial assistance and applied. They were so thankful to receive the financial support - it helped them concentrate on Emily getting better, rather than how they were going to pay for treatment. Emily initially went into remission, however, she relapsed and the best treatment option is now a bone marrow transplant. She joined the patient registry and did family testing and they found that her older sister Sarah was a match. Emily’s transplant is scheduled for August 2023. Update 9/23: Initial transplant was successful, Emily and sister are doing well. Waiting for engraftment - see social media by mom Lisa @MonaLisaMom for updates ',
       Tags: ['Patient', 'Pediatric', 'Acute Lymphoblastic Leukaemia', 'Asia/Pacific Islander', 'Patient Registry', 'Transplant Recipient'],
