@@ -41,6 +41,13 @@ const other: any = {
           type: 'item',
           url: '/tallulah-search',
           target: false
+        },
+        {
+          id: 'story-assistant',
+          title: 'Story Assistant',
+          type: 'item',
+          url: '/tallulah-story-assistant',
+          target: false
         }
       ]
     }

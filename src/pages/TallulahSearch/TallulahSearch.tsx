@@ -96,14 +96,11 @@ const TallulahSearch: React.FC<ITallulahSearch> = ({ sampleTextProp }) => {
 
   const [storyUsedFilter, setStoryUsedFilter] = useState<any[]>([]);
 
-  console.log('stpry used filter', storyUsedFilter);
-
   const handleFilterChange = (event: SelectChangeEvent<typeof storyUsedFilter>) => {
     const {
       target: { value }
     } = event;
 
-    console.log('value', value);
     setStoryUsedFilter(
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value
