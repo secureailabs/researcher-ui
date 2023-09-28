@@ -1,23 +1,18 @@
 // using the Google Maps JS API for a React component
 //https://developers.google.com/maps/documentation/javascript/
 
-import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
+import { useJsApiLoader, GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import React from "react";
-import { useCallback, useMemo, useState } from "react";
-import { Coordinates } from "../../TallulahDashboard";
+import { useState } from "react";
+import { Coordinates } from "../PatientMetricCard";
 
 export interface IPatientMap {
   locations: Coordinates[];
 }
 
 const containerStyle = {
-  width: '700px',
-  height: '500px'
-};
-
-const center = {
-  lat: 22,
-  lng: 3
+  width: '100%',
+  height: '300px'
 };
 
 const PatientMap: React.FC<IPatientMap> = ({ locations }) => {
@@ -26,56 +21,59 @@ const PatientMap: React.FC<IPatientMap> = ({ locations }) => {
     googleMapsApiKey: "AIzaSyCQBK2nekthzHxf-3ccXwtb6WZ769Cygnw"
   });
 
-  const [map, setMap] = useState(null)
+  const [map, setMap] = useState<google.maps.Map | null>(null)
+  const [isOpen, setIsOpen] = useState(false);
+  const [infoWindowData, setInfoWindowData] = useState({ id: 0, address: ""});
 
-  const onLoad = useCallback(function callback(map: any) {
-    const bounds = new window.google.maps.LatLngBounds(center);
+  const markers = [
+    { address: "Address1", lat: 18.5204, lng: 73.8567 },
+    { address: "Address2", lat: 18.5314, lng: 73.8446 },
+    { address: "Address3", lat: 18.5642, lng: 73.7769 },
+  ];
+
+  console.log(locations, "locations");
+
+  const onLoad = (map: google.maps.Map) => {
+    setMap(map);
+    const bounds = new google.maps.LatLngBounds();
+    locations?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
     map.fitBounds(bounds);
+  };
 
-    setMap(map)
-  }, []);
-
-  const onUnmount = useCallback(function callback(map: any) {
-    setMap(null)
-  }, []);
+  const handleMarkerClick = (id: any, lat:number, lng:number, address: string) => {
+    map?.panTo({ lat, lng });
+    setInfoWindowData({ id, address });
+    setIsOpen(true);
+  };
 
   return isLoaded ? (
     <GoogleMap
+      onClick={() => setIsOpen(false)}
       mapContainerStyle={containerStyle}
-      center={center}
       zoom={3}
       onLoad={onLoad}
-      onUnmount={onUnmount}
     >
-      {locations.map(({ key, lat, lng }) => (
-        <Marker key={key} position={{ lat, lng }} />
-      ))}
-      <></>
+      {locations.map(({ address, lat, lng }, ind) => (
+            <Marker
+              key={ind}
+              position={{ lat, lng }}
+              onClick={() => {
+                handleMarkerClick(ind, lat, lng, address);
+              }}
+            >
+              {isOpen && infoWindowData?.id === ind ? (
+                <InfoWindow
+                  onCloseClick={() => {
+                    setIsOpen(false);
+                  }}
+                >
+                  <h3>{infoWindowData.address}</h3>
+                </InfoWindow>
+              ) : null}
+            </Marker>
+          ))}
     </GoogleMap>
   ) : <></>
 }
-
-/*
-
-const center = useMemo(() => ({ lat: 18.52043, lng: 73.856743 }), []);
-
-return (
-  <div className="Map">
-    {!isLoaded ? (
-      <h1>Loading...</h1>
-    ) : (
-      <GoogleMap
-        mapContainerClassName="map-container"
-        center={center}
-        zoom={10}
-      >
-        <Marker position={{ lat: 18.52043, lng: 73.856743 }} />
-      </GoogleMap>
-      
-    )}
-  </div>
-);
-};
-*/
 
 export default PatientMap;
