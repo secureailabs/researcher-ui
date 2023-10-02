@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import PatientMetricCard from './components/PatientMetricCard';
+import React from 'react';
+import StoriesMetricCard from './components/StoriesMetricCard';
 
 
 export interface ITallulahDb {
@@ -50,7 +50,7 @@ const TallulahDashboard: React.FC<ITallulahDb> = ({ sampleTextProp }) => {
           {cards.map((item, index) => {
             return (
               <Grid key={item.title + index} item xs={item.size}>
-                <PatientMetricCard title={item.title} description={item.description} metric={item.metric} />
+                <StoriesMetricCard title={item.title} description={item.description} metric={item.metric} />
               </Grid>
             );
           })}

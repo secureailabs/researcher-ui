@@ -4,7 +4,9 @@
 import { useJsApiLoader, GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import React from "react";
 import { useState } from "react";
-import { Coordinates } from "../PatientMetricCard";
+import { Coordinates } from "../StoriesMetricCard";
+import SAMPLE_DATA from "src/pages/TallulahSearch/sample_search";
+import PatientCard from "src/pages/TallulahSearch/components/PatientCard";
 
 export interface IPatientMap {
   locations: Coordinates[];
@@ -20,18 +22,10 @@ const PatientMap: React.FC<IPatientMap> = ({ locations }) => {
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyCQBK2nekthzHxf-3ccXwtb6WZ769Cygnw"
   });
-
   const [map, setMap] = useState<google.maps.Map | null>(null)
   const [isOpen, setIsOpen] = useState(false);
   const [infoWindowData, setInfoWindowData] = useState({ id: 0, address: ""});
-
-  const markers = [
-    { address: "Address1", lat: 18.5204, lng: 73.8567 },
-    { address: "Address2", lat: 18.5314, lng: 73.8446 },
-    { address: "Address3", lat: 18.5642, lng: 73.7769 },
-  ];
-
-  console.log(locations, "locations");
+  const [patientToDisplay, setPatientToDisplay] = useState<any>(null);
 
   const onLoad = (map: google.maps.Map) => {
     setMap(map);
@@ -43,6 +37,7 @@ const PatientMap: React.FC<IPatientMap> = ({ locations }) => {
   const handleMarkerClick = (id: any, lat:number, lng:number, address: string) => {
     map?.panTo({ lat, lng });
     setInfoWindowData({ id, address });
+    setPatientToDisplay(SAMPLE_DATA.find((patient) => patient._source.location === address));
     setIsOpen(true);
   };
 
@@ -67,7 +62,7 @@ const PatientMap: React.FC<IPatientMap> = ({ locations }) => {
                     setIsOpen(false);
                   }}
                 >
-                  <h3>{infoWindowData.address}</h3>
+                  <PatientCard data={patientToDisplay} />
                 </InfoWindow>
               ) : null}
             </Marker>

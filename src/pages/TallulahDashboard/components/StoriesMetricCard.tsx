@@ -22,7 +22,7 @@ export interface Coordinates {
   lng: number
 }
 
-const PatientMetricCard: React.FC<PatientMetrics> = ({title, description, metric}) => {
+const StoriesMetricCard: React.FC<PatientMetrics> = ({title, description, metric}) => {
   const coordinates: Coordinates[] = [];
   SAMPLE_DATA.forEach((patient: any) => {
     coordinates.push({ key: patient._id, address: patient._source.location, lat: patient._source.Location[0], lng: patient._source.Location[1] });
@@ -51,4 +51,4 @@ const PatientMetricCard: React.FC<PatientMetrics> = ({title, description, metric
   );
 };
 
-export default PatientMetricCard;
+export default StoriesMetricCard;
