@@ -21,7 +21,7 @@ const cards = [
     size: 3
   },
   {
-    title: 'Key Features',
+    title: 'Key Tags',
     description: 'Notable features from patients',
     metric: 'Tags',
     size: 6
