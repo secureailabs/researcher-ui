@@ -24,7 +24,7 @@ const conversation = [
     <p>Together, we can make a difference in the lives of leukemia warriors like John and pave the way for a leukemia-free world. Join us in supporting John's mission today!</p>`
   },
   {
-    question: 'tone',
+    question: 'hopeful',
     answer: `<h1>John's Journey: Lighting the Path to a Leukemia-Free Future</h1>
 
     <p><strong>Meet John Miller</strong>, a <strong>25-year-old</strong> warrior who has faced the battle of his life with unwavering hope and determination. In January 2022, John's world was turned upside down when he began to experience extreme fatigue, robbing him of the active lifestyle he had always cherished. Little did he know that this fatigue was the first sign of a life-changing diagnosis - <strong>Acute Myeloid Leukemia (AML)</strong>.</p>
@@ -55,10 +55,34 @@ const conversation = [
     `
   },
   {
+    question: 'commanding',
+    answer: `<h1>Join John's Journey: Racing Towards a Cure for AML!</h1>\n
+
+    <p><strong>Meet John Miller</strong>, a <strong>25-year-old</strong> warrior whose unmatched determination has led him through the fiercest battle of his life. In January 2022, John's world was brutally upended as he began to endure extreme fatigue, robbing him of the active life he'd always cherished. Unbeknownst to him, this fatigue was the harbinger of a life-altering diagnosis - <strong>Acute Myeloid Leukemia (AML)</strong>.</p>
+    
+    <p>John's fight wasn't just physical; it was a relentless emotional and financial struggle. Balancing treatment with work proved a Herculean task, but he was fortunate to have an employer who stood by him, allowing remote work when necessary.</p>
+    
+    <p>Today, John stands tall as an <strong>AML survivor</strong>, in remission, and primed for his next mission – a <strong> 5k run </strong>. His journey isn't just about survival; it's about thriving. He's resolute in using this opportunity to give back, to raise funds that will sustain others locked in their own battles against leukemia.</p>
+    
+    <p><strong>Don't wait! Join John in his mission right now</strong>:</p>
+    
+    <p>1. DONATE NOW: Your contribution, no matter the size, CAN and WILL make a monumental difference in the lives of those waging war against leukemia. Your support fuels critical research, extends a lifeline to patients, and kindles hope in families grappling with this relentless adversary.</p>
+    
+    <p>2. SHARE JOHN'S STORY: SPREAD THE WORD about John's awe-inspiring odyssey and his relentless fundraising crusade. The more people who know, the more formidable our united front becomes in supporting this cause.</p>
+    
+    <p>3. JOIN THE 5K: If you're feeling even the slightest inkling of inspiration and are up for the challenge, DO NOT HESITATE to participate in the 5k alongside John. Your presence won't just boost his spirits; it will symbolize unwavering solidarity with all leukemia warriors.</p>
+    
+    <p>To make a donation or LEARN MORE about John's unwavering fundraising drive, head to [link to John's fundraising page].</p>
+    
+    <p>TOGETHER, WE POSSESS THE POWER to alter the course of destiny for leukemia warriors like John and pave the road to a world FREE from leukemia. JOIN US NOW in rallying behind John's mission!</p>
+    
+    <p>The clock is ticking, and YOUR URGENT ACTION IS REQUIRED to help turn the tide in the fight against AML. Don't wait – ACT NOW!</p>`
+  },
+  {
     question: 'tweet',
     answer: `<p>Join John's Journey: Running Towards a Cure for AML 🏃‍♂️</p>
     
-    <p> Meet John Miller, a true warrior who conquered AML. Now, he's taking on a 5k run to give back and support others battling leukemia. </p>
+    <p><strong>Meet John Miller</strong>, a true warrior who conquered AML. Now, he's taking on a 5k run to give back and support others battling leukemia. </p>
     
    <p> 🤝 Here's how you can help: </p>
    <p> 1️⃣ <strong>Donate</strong>: Every contribution matters! </p>
