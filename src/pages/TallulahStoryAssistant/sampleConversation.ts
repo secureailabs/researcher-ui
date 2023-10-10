@@ -68,6 +68,18 @@ const conversation = [
    <p> Let's make a difference together. Learn more & donate: [Insert Link] 💪 #RunForACure #LeukemiaWarrior #JohnsJourney #AMLfundraiser </p>`
   },
   {
+    question: 'different types',
+    answer: `<p>1. 🏃‍♂️ Join John Miller on his incredible journey from leukemia survivor to 5k runner! 🌟 Help him raise funds to support others battling AML. Every donation counts! 💪 #JohnsJourney #AML #Fundraiser [Link to Donate] </p>
+
+    <p>2. 🙌 Let's stand with John as he conquers a 5k after defeating AML! 🎗️ Your donation can bring hope to leukemia warriors. Join us in making a difference! #RunForACure #DonateNow #JohnsJourney [Link to Support]</p>
+    
+    <p>3. 🌟 Meet John, the AML survivor who's turning his battle into hope for others! 🏃‍♂️ Join him in the 5k or donate to support the cause. Together, we can run towards a cure! 🏁 #AMLWarrior #SupportJohn #DonateToday [Link to Join]</p>
+    
+    <p>4. 📣 Help us spread the word about John's inspiring story and his mission to fight AML! 💪 Your support matters. Share, donate, and make a difference today! 🙏 #AMLAwareness #ShareJohnsStory #JoinTheMission [Link to Share]</p>
+    
+    <p>5. 🏁 John's journey from AML diagnosis to 5k runner is nothing short of remarkable. 🌟 Be a part of his mission to raise funds for leukemia warriors. Donate now and make an impact! 🎗️ #RunForACause #SupportLeukemiaWarriors #JohnsJourney [Link to Donate]</p>`
+  },
+  {
     question: 'news',
     answer: `<p>Subject: Feature Request: John's Journey - Running Towards a Cure for AML</p>
 
@@ -169,7 +181,42 @@ const conversation = [
 <p>[Your Name]</p>
 <p>[Your Organization]</p>
 <p>[Contact Information]</p>`
-  }
+},
+{
+  question: 'Facebook',
+  answer: `<p>Here are several different ways you can announce John's journey and fundraising efforts on Facebook:</p>
+
+  <p>1. <strong>Simple Announcement:</strong></p>
+  <p>   🏃‍♂️ John's Journey: Running Towards a Cure for AML 🏃‍♂️</p>
+  <p>   Meet John Miller, a true warrior who battled Acute Myeloid Leukemia with unwavering determination. Join us in supporting his mission to raise funds for leukemia warriors. Donate, share, or even join the 5k run alongside John! Learn more: [link]</p>
+  
+  <p>2. <strong>Heartfelt Storytelling:</strong></p>
+  <p>   From Diagnosis to Triumph: John's Journey</p>
+  <p>   In January 2022, John's life took an unexpected turn when he was diagnosed with AML. Today, he's not just a survivor but an inspiration. Read his incredible story and find out how you can be a part of his mission to support leukemia warriors. Join us on this journey: [link]</p>
+  
+  <p>3. <strong>Call to Action:</strong></p>
+  <p>   Join the Fight Against AML with John </p>
+  <p>   John Miller's resilience is unmatched. Let's stand with him as he takes on a 5k run to raise funds for AML research and support. Your donation, your share, or your participation in the 5k can make a real difference. Together, we can beat leukemia! Learn more: [link]</p>
+  
+  <p>4. <strong>Inspiring Quote with Link:</strong></p>
+  <p>"Surviving is important, but thriving is even more crucial." - John Miller</p>
+  <p>Join us in supporting John's mission to thrive and give hope to leukemia warriors. Click the link to donate, share, or sign up for the 5k: [link]</p>
+  
+  <p>5. <strong>Personalized Invitation:</strong></p>
+  <p>Hey friends, I wanted to introduce you to John, an incredible survivor and fighter. He's on a mission to run a 5k for AML and raise funds to support others on their journey. I know we can help him reach his goal! Please consider donating, sharing his story, or even joining the 5k if you're up for the challenge. Let's do this together! Learn more: [link]</p>
+  
+  <p>6. <strong>Event Countdown:</strong></p>
+  <p>📅 Save the Date: John's 5k Run for AML 📅
+  <p>On [date], John will be lacing up his running shoes to make a difference in the fight against AML. Stay tuned as we count down to this inspiring event! Learn how you can get involved here: [link]</p>
+  
+  <p>7. <strong>Impactful Visual Announcement:</strong></p>
+  <p>Create a visually appealing graphic with John's photo, a brief description of his journey, and the call to action. Include the link to his fundraising page for more details.</p>
+  
+  <p>8. <strong>Live Video or Interview:</strong></p>
+  <p>Host a live video or interview with John where he can share his story, his goals, and why this cause is so important. Encourage viewers to participate and donate during the live session.</p>
+  
+  <p>Feel free to mix and match these ideas or adapt them to your own writing style and personality when sharing John's story and mission on Facebook.</p>`
+}
 ];
 
 export default conversation;
