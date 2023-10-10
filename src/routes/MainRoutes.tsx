@@ -36,7 +36,7 @@ const MainRoutes = {
       element: <TallulahSearch />
     },
     {
-      path: 'tallulah-story-assistant',
+      path: 'tallulah-copy-assistant',
       element: <TallulahStoryAssistant />
     },
     {

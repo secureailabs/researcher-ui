@@ -43,10 +43,17 @@ const other: any = {
           target: false
         },
         {
-          id: 'story-assistant',
-          title: 'Story Assistant',
+          id: 'copy-assistant',
+          title: 'Copy Assistant',
           type: 'item',
-          url: '/tallulah-story-assistant',
+          url: '/tallulah-copy-assistant',
+          target: false
+        },
+        {
+          id: 'patient-dashboard',
+          title: 'Tallulah Dashboard',
+          type: 'item',
+          url: '/tallulah-dashboard',
           target: false
         }
       ]
