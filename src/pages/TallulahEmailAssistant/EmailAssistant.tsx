@@ -3,6 +3,8 @@ import styles from './EmailAssistant.module.css';
 import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import EmailDisplaySection from './components/EmailDisplaySection';
+import Filter from './components/Filter';
+import Sort from './components/Sort';
 
 export interface IEmailAssistant {
   sampleTextProp: string;
@@ -55,16 +57,23 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
               marginTop: '2rem',
               marginBottom: '4rem',
               display: 'flex',
-              alignItems: 'center'
+              alignItems: 'center',
+              justifyContent: 'space-between'
             }}
           >
-            <Box sx={{ flex: 1, marginRight: '20px' }}>
+            <Box sx={{ flex: 7, marginRight: '20px' }}>
               <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
                 <StyledInputBase placeholder="Search by Body, Tags" inputProps={{ 'aria-label': 'search' }} />
               </Search>
+            </Box>
+            <Box sx={{ flex: 1, display: 'flex' }}>
+              <Filter />
+            </Box>
+            <Box sx={{ flex: 1, display: 'flex' }}>
+              <Sort />
             </Box>
           </Box>
           <Box>

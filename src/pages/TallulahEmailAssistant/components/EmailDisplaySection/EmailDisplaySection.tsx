@@ -1,10 +1,11 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Drawer, Typography } from '@mui/material';
 import styles from './EmailDisplaySection.module.css';
 import { GridColDef } from '@mui/x-data-grid';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import { useEffect, useState } from 'react';
-import { EmailsService } from 'src/tallulah-ts-client';
+import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
 import { render } from '@testing-library/react';
+import EmailDetailedView from '../EmailDetailedView';
 
 export interface IEmailDisplaySection {}
 
@@ -39,8 +40,10 @@ const formatReceivedTime = (receivedTime: string) => {
 };
 
 const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({}) => {
-  const [rows, setRows] = useState<any[]>([]);
+  const [rows, setRows] = useState<GetEmail_Out[]>([]);
   const [paginationData, setPaginationData] = useState(resetPaginationData);
+  const [selectedRow, setSelectedRow] = useState<any>(null);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
   const getEmails = async () => {
     console.log('get emails');
@@ -169,7 +172,8 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({}) => {
         pageSizeOptions={[25]}
         pageSize={25}
         onPageChange={() => getEmails()}
-        rowHeight={60}
+        checkboxSelection
+        disableSelectionOnClick
         getRowId={(row: any) => row._id}
         getCellClassName={(params: any) => {
           return styles.cell;
@@ -177,7 +181,24 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({}) => {
         getRowHeight={(params: any) => {
           return 70;
         }}
+        onRowClick={(params: any) => {
+          console.log('row clicked', params);
+          // filter row with selected row id and
+          const filteredRows = rows.filter((row) => row._id === params.row._id);
+          setSelectedRow(filteredRows[0]);
+          setOpenDrawer(true);
+        }}
       />
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        PaperProps={{
+          sx: { width: '60%', padding: '20px 0 0 20px' }
+        }}
+      >
+        <EmailDetailedView data={selectedRow} />
+      </Drawer>
     </Box>
   );
 };
