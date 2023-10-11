@@ -5,6 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import EmailDisplaySection from './components/EmailDisplaySection';
 import Filter from './components/Filter';
 import Sort from './components/Sort';
+import { GoogleOutlined, WindowsOutlined } from '@ant-design/icons';
 
 export interface IEmailAssistant {
   sampleTextProp: string;
@@ -93,11 +94,27 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
           <Box>No mails added yet. Please add a mail.</Box>
           <Box
             sx={{
-              marginTop: '20px'
+              marginTop: '20px',
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '20px'
             }}
           >
-            <Button variant="contained" color="primary">
-              Add Mail
+            <Button
+              variant="contained"
+              color="primary"
+              href="https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?client_id=5f247444-fff8-42b2-9362-1d2fe5246de1&response_type=code&redirect_uri=https%3A%2F%2F127.0.0.1%3A8000%2Fauthorize&scope=Mail.Read+Mail.Send+User.Read+offline_access+openid+profile"
+              startIcon={<WindowsOutlined />}
+            >
+              Login With Microsoft
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              href="https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?client_id=5f247444-fff8-42b2-9362-1d2fe5246de1&response_type=code&redirect_uri=https%3A%2F%2F127.0.0.1%3A8000%2Fauthorize&scope=Mail.Read+Mail.Send+User.Read+offline_access+openid+profile"
+              startIcon={<GoogleOutlined />}
+            >
+              Login With Google
             </Button>
           </Box>
         </Box>

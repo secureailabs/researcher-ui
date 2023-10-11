@@ -15,7 +15,7 @@ const resetPaginationData = {
   limit: 25
 };
 
-const MAIL_BOX_ID = 'a778894d-bac9-4005-8406-bf938af69291';
+const MAIL_BOX_ID = '3b491c34-1b8b-47f2-99d6-3fbf2f4616f1';
 
 const formatReceivedTime = (receivedTime: string) => {
   const currentDate = new Date();
