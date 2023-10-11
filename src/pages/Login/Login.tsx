@@ -12,8 +12,8 @@ import styles from './Login.module.css';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { LoginSuccess_Out, OpenAPI } from 'src/client';
-import { DefaultService, Body_login } from 'src/client';
+import { LoginSuccess_Out, OpenAPI } from 'src/tallulah-ts-client';
+import { DefaultService, Body_login } from 'src/tallulah-ts-client';
 import useNotification from 'src/hooks/useNotification';
 import { activeAccessToken, activeRefreshToken, tokenType, updateAuthState } from 'src/store/reducers/Auth';
 import { dispatch } from 'src/store';
@@ -40,17 +40,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data: any) => {
-    // TODO - remove this later
-    // const result = postLogin(data);
-    console.log('data', data);
-    if (data.username === 'admin@arrayinsights.com' && data.password === 'ArinPass@123') {
-      navigate('/tallulah-search');
-    } else {
-      sendNotification({
-        msg: 'Invalid email or password',
-        variant: 'error'
-      });
-    }
+    const result = postLogin(data);
   };
   const [showPassword, setShowPassword] = useState(false);
   const [sendNotification] = useNotification();

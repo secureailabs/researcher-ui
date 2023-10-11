@@ -54,7 +54,6 @@ const MinimalLayout = (): JSX.Element => {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
     const tokenType = localStorage.getItem('tokenType');
-    const scnUrl = localStorage.getItem('scnUrl');
     if (accessToken && refreshToken && tokenType) {
       const res = {
         access_token: accessToken,
@@ -62,32 +61,26 @@ const MinimalLayout = (): JSX.Element => {
         token_type: tokenType
       };
       storeLoginCredentials(res);
-      dispatch(
-        updateSCNDetails({
-          baseUrl: scnUrl
-        })
-      );
     } else {
-      // TODO : uncomment this later
-      // navigate('/login');
+      navigate('/login');
     }
 
-    try {
-      (async () => {
-        const res = await DefaultService.getAllSecureComputationNodes();
-        const node = res.secure_computation_nodes[0];
-        if (node.url) {
-          localStorage.setItem('scnUrl', node.url);
-        }
-        dispatch(
-          updateSCNDetails({
-            baseUrl: node.url
-          })
-        );
-      })();
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   (async () => {
+    //     const res = await DefaultService.getAllSecureComputationNodes();
+    //     const node = res.secure_computation_nodes[0];
+    //     if (node.url) {
+    //       localStorage.setItem('scnUrl', node.url);
+    //     }
+    //     dispatch(
+    //       updateSCNDetails({
+    //         baseUrl: node.url
+    //       })
+    //     );
+    //   })();
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }, []);
 
   useQuery<UserInfo_Out, ApiError>('userData', checkUserSession, {

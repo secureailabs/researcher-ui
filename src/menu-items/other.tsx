@@ -36,17 +36,10 @@ const other: any = {
       icon: icons.IconChartHistogram,
       children: [
         {
-          id: 'search',
-          title: 'Patient Story Search',
+          id: 'email-assistant',
+          title: 'Email Assistant',
           type: 'item',
-          url: '/tallulah-search',
-          target: false
-        },
-        {
-          id: 'story-assistant',
-          title: 'Story Assistant',
-          type: 'item',
-          url: '/tallulah-story-assistant',
+          url: '/email-assistant',
           target: false
         }
       ]
