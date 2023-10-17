@@ -62,6 +62,13 @@ const other: any = {
           type: 'item',
           url: '/tallulah-social-search',
           target: false
+        },
+        {
+          id: 'patient-intake',
+          title: 'Patient Intake',
+          type: 'item',
+          url: '/tallulah-patient-intake',
+          target: false
         }
       ]
     }

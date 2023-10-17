@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+}
+
+.stack {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
