@@ -55,6 +55,13 @@ const other: any = {
           type: 'item',
           url: '/tallulah-dashboard',
           target: false
+        },
+        {
+          id: 'social-search',
+          title: 'Social Search',
+          type: 'item',
+          url: '/tallulah-social-search',
+          target: false
         }
       ]
     }

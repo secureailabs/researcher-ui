@@ -16,6 +16,7 @@ const ComparePage = Loadable(lazy(async () => await import('src/pages/Compare'))
 const TallulahSearch = Loadable(lazy(async () => await import('src/pages/TallulahSearch')));
 const TallulahStoryAssistant = Loadable(lazy(async () => await import('src/pages/TallulahStoryAssistant')));
 const TallulahDashboard = Loadable(lazy(async () => await import('src/pages/TallulahDashboard')));
+const SocialSearch = Loadable(lazy(async () => await import('src/pages/TallulahSocialSearch')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -42,6 +43,10 @@ const MainRoutes = {
     {
       path: 'tallulah-dashboard',
       element: <TallulahDashboard />
+    },
+    {
+      path: 'tallulah-social-search',
+      element: <SocialSearch />
     }
     // {
     //   path: 'home',
