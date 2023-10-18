@@ -7,15 +7,15 @@ import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
 import { render } from '@testing-library/react';
 import EmailDetailedView from '../EmailDetailedView';
 
-export interface IEmailDisplaySection {}
+export interface IEmailDisplaySection {
+  mailboxes: any[];
+}
 
 const resetPaginationData = {
   count: 0,
   offset: 0,
   limit: 25
 };
-
-const MAIL_BOX_ID = '3b491c34-1b8b-47f2-99d6-3fbf2f4616f1';
 
 const formatReceivedTime = (receivedTime: string) => {
   const currentDate = new Date();
@@ -39,14 +39,15 @@ const formatReceivedTime = (receivedTime: string) => {
   }
 };
 
-const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({}) => {
+const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes }) => {
   const [rows, setRows] = useState<GetEmail_Out[]>([]);
   const [paginationData, setPaginationData] = useState(resetPaginationData);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
+  const MAIL_BOX_ID = mailboxes[0]._id;
+
   const getEmails = async () => {
-    console.log('get emails');
     const response = await EmailsService.getAllEmails(MAIL_BOX_ID, paginationData.offset, paginationData.limit);
     setRows([...rows, ...response.messages]);
     setPaginationData({
@@ -182,7 +183,6 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({}) => {
           return 70;
         }}
         onRowClick={(params: any) => {
-          console.log('row clicked', params);
           // filter row with selected row id and
           const filteredRows = rows.filter((row) => row._id === params.row._id);
           setSelectedRow(filteredRows[0]);

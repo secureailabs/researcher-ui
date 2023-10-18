@@ -1,11 +1,12 @@
 import { Box, Button, InputBase, styled } from '@mui/material';
 import styles from './EmailAssistant.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import EmailDisplaySection from './components/EmailDisplaySection';
 import Filter from './components/Filter';
 import Sort from './components/Sort';
 import { GoogleOutlined, WindowsOutlined } from '@ant-design/icons';
+import { MailboxService } from 'src/tallulah-ts-client';
 
 export interface IEmailAssistant {
   sampleTextProp: string;
@@ -47,7 +48,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
-  const [isMailAdded, setIsMailAdded] = useState(true);
+  const [isMailAdded, setIsMailAdded] = useState(false);
+  const [mailboxes, setMailboxes] = useState<any[]>([]);
+
+  const getAllMailBoxes = async () => {
+    try {
+      const response = await MailboxService.getAllMailboxes();
+      if (response.mailboxes.length > 0) {
+        setIsMailAdded(true);
+        setMailboxes(response.mailboxes);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    getAllMailBoxes();
+  }, []);
 
   return (
     <>
@@ -59,27 +77,27 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
               marginBottom: '4rem',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between'
+              justifyContent: 'flex-end',
+              gap: '20px'
             }}
           >
-            <Box sx={{ flex: 7, marginRight: '20px' }}>
+            {/* NOTE: Search boxes commented */}
+            {/* <Box sx={{ flex: 7, marginRight: '20px' }}>
               <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
                 <StyledInputBase placeholder="Search by Body, Tags" inputProps={{ 'aria-label': 'search' }} />
               </Search>
-            </Box>
-            <Box sx={{ flex: 1, display: 'flex' }}>
+            </Box> */}
+            <Box sx={{ display: 'flex' }}>
               <Filter />
             </Box>
-            <Box sx={{ flex: 1, display: 'flex' }}>
+            <Box sx={{ display: 'flex' }}>
               <Sort />
             </Box>
           </Box>
-          <Box>
-            <EmailDisplaySection />
-          </Box>
+          <Box>{mailboxes.length > 0 ? <EmailDisplaySection mailboxes={mailboxes} /> : null}</Box>
         </Box>
       ) : (
         <Box
@@ -108,12 +126,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
             >
               Login With Microsoft
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              href="https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?client_id=5f247444-fff8-42b2-9362-1d2fe5246de1&response_type=code&redirect_uri=https%3A%2F%2F127.0.0.1%3A8000%2Fauthorize&scope=Mail.Read+Mail.Send+User.Read+offline_access+openid+profile"
-              startIcon={<GoogleOutlined />}
-            >
+            <Button variant="contained" color="primary" href="#" startIcon={<GoogleOutlined />}>
               Login With Google
             </Button>
           </Box>
