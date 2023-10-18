@@ -121,7 +121,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
             <Button
               variant="contained"
               color="primary"
-              href="https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?client_id=5f247444-fff8-42b2-9362-1d2fe5246de1&response_type=code&redirect_uri=https%3A%2F%2F127.0.0.1%3A8000%2Fauthorize&scope=Mail.Read+Mail.Send+User.Read+offline_access+openid+profile"
+              href="https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?client_id=5f247444-fff8-42b2-9362-1d2fe5246de1&response_type=code&redirect_uri=https%3A%2F%2Ftbbc.tallulah.ai%2Foutlook-oauth&scope=Mail.Read+Mail.Send+User.Read+offline_access+openid+profile"
               startIcon={<WindowsOutlined />}
             >
               Login With Microsoft

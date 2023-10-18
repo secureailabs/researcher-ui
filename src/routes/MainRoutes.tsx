@@ -50,7 +50,7 @@ const MainRoutes = {
       element: <TallulahEmailAssistant />
     },
     {
-      path: 'authorize',
+      path: 'outlook-oauth',
       element: <MSAuthorize />
     }
     // {
