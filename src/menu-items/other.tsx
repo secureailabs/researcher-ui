@@ -36,6 +36,13 @@ const other: any = {
       icon: icons.IconChartHistogram,
       children: [
         {
+          id: 'patient-dashboard',
+          title: 'Tallulah Dashboard',
+          type: 'item',
+          url: '/tallulah-dashboard',
+          target: false
+        },
+        {
           id: 'search',
           title: 'Patient Story Search',
           type: 'item',
@@ -47,13 +54,6 @@ const other: any = {
           title: 'Copy Assistant',
           type: 'item',
           url: '/tallulah-copy-assistant',
-          target: false
-        },
-        {
-          id: 'patient-dashboard',
-          title: 'Tallulah Dashboard',
-          type: 'item',
-          url: '/tallulah-dashboard',
           target: false
         },
         {

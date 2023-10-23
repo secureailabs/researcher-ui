@@ -27,11 +27,11 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <TallulahSearch />
+      element: <TallulahDashboard />
     },
     {
       path: 'home',
-      element: <TallulahSearch />
+      element: <TallulahDashboard />
     },
     {
       path: 'tallulah-search',

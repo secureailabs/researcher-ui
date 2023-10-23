@@ -2,27 +2,44 @@ import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
 import { Box } from '@mui/material';
+import { Controller, set } from 'react-hook-form';
 
 const tags = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Pulp Fiction', year: 1994 }
+  { title: 'Acute Lymphoblastic Leukaemia' },
+  { title: 'Patient' },
+  { title: 'Asia/Pacific Islander'},
+  { title: 'Pediatric' },
+  { title: 'Patient Registry'},
+  { title: 'Transplant Recipient'}
 ];
 
-const StoryTags: React.FC = () => {
+interface StoryTagReset {
+  resetTags: () => void;
+}
+
+const StoryTags: React.FC<StoryTagReset> = ({resetTags}) => {
+  const [values, setValues] = React.useState<string[]>([]);
+  const onChange = (_: any, value: React.SetStateAction<string[]>) => {
+    setValues(value);
+  };
+ 
+  const clearSelected = () => {
+    setValues([]);
+  };
+
+
   return (
     <Box sx={{ mt: 1, mb: 2 }}>
+      
       <Autocomplete
         multiple
         id="tags-standard"
+        clearText=''
         options={tags.map((option) => option.title)}
         freeSolo
+        value={values}
+        onChange={onChange}
         renderTags={(value: readonly string[], getTagProps) =>
           value.map((option: string, index: number) => (
             <Chip variant="outlined" label={option} {...getTagProps({ index })} />
