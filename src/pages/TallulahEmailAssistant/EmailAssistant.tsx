@@ -7,6 +7,13 @@ import Filter from './components/Filter';
 import Sort from './components/Sort';
 import { GoogleOutlined, WindowsOutlined } from '@ant-design/icons';
 import { MailboxService } from 'src/tallulah-ts-client';
+import { OUTLOOK_REDIRECT_URI } from 'src/config';
+
+const urlToEncodded = (url: string) => {
+  const encodedURL = encodeURIComponent(url);
+  const URL = `https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?client_id=5f247444-fff8-42b2-9362-1d2fe5246de1&response_type=code&redirect_uri=${encodedURL}&scope=Mail.Read+Mail.Send+User.Read+offline_access+openid+profile`;
+  return URL;
+};
 
 export interface IEmailAssistant {
   sampleTextProp: string;
@@ -118,12 +125,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
               gap: '20px'
             }}
           >
-            <Button
-              variant="contained"
-              color="primary"
-              href="https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?client_id=5f247444-fff8-42b2-9362-1d2fe5246de1&response_type=code&redirect_uri=https%3A%2F%2Ftbbc.tallulah.ai%2Foutlook-oauth&scope=Mail.Read+Mail.Send+User.Read+offline_access+openid+profile"
-              startIcon={<WindowsOutlined />}
-            >
+            <Button variant="contained" color="primary" href={urlToEncodded(OUTLOOK_REDIRECT_URI)} startIcon={<WindowsOutlined />}>
               Login With Microsoft
             </Button>
             <Button variant="contained" color="primary" href="#" startIcon={<GoogleOutlined />}>

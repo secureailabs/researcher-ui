@@ -18,6 +18,7 @@ const TallulahStoryAssistant = Loadable(lazy(async () => await import('src/pages
 const TallulahDashboard = Loadable(lazy(async () => await import('src/pages/TallulahDashboard')));
 const TallulahEmailAssistant = Loadable(lazy(async () => await import('src/pages/TallulahEmailAssistant')));
 const MSAuthorize = Loadable(lazy(async () => await import('src/pages/MSAuthorize')));
+const TallulahEmailResponseTemplate = Loadable(lazy(async () => await import('src/pages/TallulahEmailResponseTemplate')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -49,6 +50,12 @@ const MainRoutes = {
       path: 'email-assistant',
       element: <TallulahEmailAssistant />
     },
+
+    {
+      path: 'email-assistant/response-template',
+      element: <TallulahEmailResponseTemplate />
+    },
+
     {
       path: 'outlook-oauth',
       element: <MSAuthorize />

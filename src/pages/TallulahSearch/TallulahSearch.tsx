@@ -194,10 +194,10 @@ const TallulahSearch: React.FC<ITallulahSearch> = ({ sampleTextProp }) => {
 
   return (
     <Box className={styles.container}>
-      {/* Search Box area */}
       <Box>
         <img src={require(`src/assets/images/map-2.png`)} alt="Patient Image" className={styles.mapImage} />
       </Box>
+      {/* Search Box area */}
       <Box>
         <Box
           sx={{
