@@ -1,0 +1,11 @@
+.container {
+  padding: 10px;
+
+  width: 50vw;
+  overflow: hidden;
+}
+
+.textField {
+  width: 100%;
+  margin-bottom: 10px;
+}

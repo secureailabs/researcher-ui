@@ -1,7 +1,10 @@
-import { Box, Button, IconButton, Typography } from '@mui/material';
+import { Box, Button, Icon, IconButton, Typography } from '@mui/material';
 import styles from './ResponseTemplateCard.module.css';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useState } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 export interface IReponseTemplateCard {
   data: any;
@@ -18,7 +21,13 @@ const ReponseTemplateCard: React.FC<IReponseTemplateCard> = ({ data }) => {
           marginBottom: '1rem'
         }}
       >
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
           <Typography
             sx={{
               fontWeight: 'bold'
@@ -26,6 +35,19 @@ const ReponseTemplateCard: React.FC<IReponseTemplateCard> = ({ data }) => {
           >
             {data.name}
           </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '1rem'
+            }}
+          >
+            <IconButton className={styles.editButton}>
+              <EditIcon />
+            </IconButton>
+            <IconButton className={styles.deleteButton}>
+              <DeleteIcon />
+            </IconButton>
+          </Box>
         </Box>
         <Box className={styles.subContainer}>
           <Typography className={styles.subTitle}>
@@ -94,7 +116,7 @@ const ReponseTemplateCard: React.FC<IReponseTemplateCard> = ({ data }) => {
         }}
       >
         <IconButton className={styles.viewMoreButton} onClick={() => setIsExpanded((prev) => !prev)}>
-          <KeyboardArrowDownIcon />
+          {!isExpanded ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
         </IconButton>
       </Box>
     </Box>
