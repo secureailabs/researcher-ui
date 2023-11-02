@@ -132,10 +132,46 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           <Box className={styles.section1}>
             <Box>
               <Typography variant="body1" className={styles.label}>
-                Outcome
+                 Disease Type
+              </Typography>
+              <Typography variant="body1" className={styles.value}>
+                {data?._source.diseaseType}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box className={styles.section1}>
+            <Box>
+              <Typography variant="body1" className={styles.label}>
+                Current Disease State
               </Typography>
               <Typography variant="body1" className={styles.value}>
                 {data?._source.outcome}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box className={styles.section1}>
+            <Box>
+              <Typography variant="body1" className={styles.label}>
+                 Disease Type
+              </Typography>
+              <Typography variant="body1" className={styles.value}>
+                {data?._source.diseaseType}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box className={styles.section1}>
+            <Box>
+              <Typography variant="body1" className={styles.label}>
+                 Important Dates:
+              </Typography>
+              <Typography variant="body1" className={styles.value}>
+                {data?._source.firstSymptomsDate} - Date of first symptoms 
+              </Typography>
+              <Typography variant="body1" className={styles.value}>
+                {data?._source.diagnosisDate} - Date of diagnosis 
               </Typography>
             </Box>
           </Box>

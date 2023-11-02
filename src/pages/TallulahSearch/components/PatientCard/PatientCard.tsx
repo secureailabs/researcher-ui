@@ -18,6 +18,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
           <Typography variant="body1" className={styles.age}>
             Age : {data?._source.Age} years
             <Typography>Location : {data?._source.location}</Typography>
+            <Typography>Disease Type : Acute Lymphoblastic Leukaemia</Typography>
           </Typography>
         </Box>
         <Box>
