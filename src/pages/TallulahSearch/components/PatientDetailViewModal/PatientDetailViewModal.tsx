@@ -58,6 +58,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
               <Typography variant="body1" className={styles.age}>
                 Age : {data?._source.Age} years
                 <Typography>Location : {data?._source.location}</Typography>
+                <Typography>Disease Type : {data?._source.diseaseType}</Typography>
               </Typography>
               <Box
                 sx={{
@@ -132,32 +133,10 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           <Box className={styles.section1}>
             <Box>
               <Typography variant="body1" className={styles.label}>
-                 Disease Type
-              </Typography>
-              <Typography variant="body1" className={styles.value}>
-                {data?._source.diseaseType}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box className={styles.section1}>
-            <Box>
-              <Typography variant="body1" className={styles.label}>
                 Current Disease State
               </Typography>
               <Typography variant="body1" className={styles.value}>
                 {data?._source.outcome}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box className={styles.section1}>
-            <Box>
-              <Typography variant="body1" className={styles.label}>
-                 Disease Type
-              </Typography>
-              <Typography variant="body1" className={styles.value}>
-                {data?._source.diseaseType}
               </Typography>
             </Box>
           </Box>
