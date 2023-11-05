@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Button, Grid, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import SocialsDropdown from './components/SocialsResultDropdown';
+import SocialsDropdown from './components/SocialsDropdown/SocialsResultDropdown';
 
 
 export interface ISocialSearch {
@@ -19,6 +19,10 @@ const searchItems = [
 
 const SocialSearch: React.FC<ISocialSearch> = ({ sampleTextProp }) => {
   const [showResults, setShowResults] = useState(false);
+
+  const handleChange = () => {
+    setShowResults(true);
+  }
 
   return (
     <Box>
@@ -39,7 +43,7 @@ const SocialSearch: React.FC<ISocialSearch> = ({ sampleTextProp }) => {
             />
           )}
         />
-        <Button onClick={() => setShowResults(true)} type="submit" variant="contained" sx={{ my: 2 }}>
+        <Button onClick={() => setTimeout(handleChange, 1000)} type="submit" variant="contained" sx={{ my: 2 }}>
           Social Search</Button>
 
         {showResults ?

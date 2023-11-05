@@ -1,10 +1,12 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { Box, Accordion } from '@mui/material';
+import { Box, Accordion, Stack } from '@mui/material';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
+import YOUTUBE_DATA from '../../default_youtube_results';
+import YoutubeResultCard from './components/YoutubeResultCards/YoutubeResultCard';
 
 
 interface ISocialDropdown {
@@ -31,10 +33,11 @@ const SocialsDropdown: React.FC<ISocialDropdown> = ({ sampleTextProp }) => {
           <Typography>YouTube</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          <Stack flexDirection={'row'} alignContent={'center'}>
+            <YoutubeResultCard data={YOUTUBE_DATA} index={0} />
+            <YoutubeResultCard data={YOUTUBE_DATA} index={1} />
+            <YoutubeResultCard data={YOUTUBE_DATA} index={2} />
+          </Stack>
         </AccordionDetails>
       </Accordion>
       <Accordion defaultExpanded={true} onChange={handleChange('tiktok')}>
@@ -46,10 +49,7 @@ const SocialsDropdown: React.FC<ISocialDropdown> = ({ sampleTextProp }) => {
           <Typography>TikTok</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          <YoutubeResultCard data={YOUTUBE_DATA} index={0} />
         </AccordionDetails>
       </Accordion>
       <Accordion defaultExpanded={true} onChange={handleChange('reddit')}>
@@ -61,10 +61,7 @@ const SocialsDropdown: React.FC<ISocialDropdown> = ({ sampleTextProp }) => {
           <Typography>Disabled Accordion</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          <YoutubeResultCard data={YOUTUBE_DATA} index={0} />
         </AccordionDetails>
       </Accordion>
     </Box>
