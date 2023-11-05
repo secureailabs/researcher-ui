@@ -1,4 +1,4 @@
-const YOUTUBE_DATA = [{
+const YOUTUBE_RESULTS = [{
     kidneycancer: {
         kind: "youtube#searchListResponse",
         etag: "IZBaN7ZqxtZBHChkknnFWF0E0vE",
@@ -344,4 +344,4 @@ const YOUTUBE_DATA = [{
     }
 }];
 
-export default YOUTUBE_DATA;
+export default YOUTUBE_RESULTS;

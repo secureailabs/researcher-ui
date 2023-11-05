@@ -5,8 +5,10 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
-import YOUTUBE_DATA from '../../default_youtube_results';
+import YOUTUBE_RESULTS from '../../default_youtube_results';
 import YoutubeResultCard from './components/YoutubeResultCards/YoutubeResultCard';
+import TIKTOK_RESULTS from '../../default_tiktok_results';
+import TiktokResultCard from './components/TiktokResultCards/TiktokResultCard';
 
 
 interface ISocialDropdown {
@@ -34,9 +36,9 @@ const SocialsDropdown: React.FC<ISocialDropdown> = ({ sampleTextProp }) => {
         </AccordionSummary>
         <AccordionDetails>
           <Stack flexDirection={'row'} alignContent={'center'}>
-            <YoutubeResultCard data={YOUTUBE_DATA} index={0} />
-            <YoutubeResultCard data={YOUTUBE_DATA} index={1} />
-            <YoutubeResultCard data={YOUTUBE_DATA} index={2} />
+            <YoutubeResultCard data={YOUTUBE_RESULTS} index={0} />
+            <YoutubeResultCard data={YOUTUBE_RESULTS} index={1} />
+            <YoutubeResultCard data={YOUTUBE_RESULTS} index={2} />
           </Stack>
         </AccordionDetails>
       </Accordion>
@@ -49,7 +51,11 @@ const SocialsDropdown: React.FC<ISocialDropdown> = ({ sampleTextProp }) => {
           <Typography>TikTok</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <YoutubeResultCard data={YOUTUBE_DATA} index={0} />
+          <Stack flexDirection={'row'} alignContent={'center'}>
+            <TiktokResultCard data={TIKTOK_RESULTS} index={0} />
+            <TiktokResultCard data={TIKTOK_RESULTS} index={1} />
+            <TiktokResultCard data={TIKTOK_RESULTS} index={2} />
+          </Stack>
         </AccordionDetails>
       </Accordion>
       <Accordion defaultExpanded={true} onChange={handleChange('reddit')}>
@@ -61,7 +67,7 @@ const SocialsDropdown: React.FC<ISocialDropdown> = ({ sampleTextProp }) => {
           <Typography>Disabled Accordion</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <YoutubeResultCard data={YOUTUBE_DATA} index={0} />
+          <YoutubeResultCard data={YOUTUBE_RESULTS} index={0} />
         </AccordionDetails>
       </Accordion>
     </Box>

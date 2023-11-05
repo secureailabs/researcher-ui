@@ -10,6 +10,7 @@
   position: relative;
   margin: 6px;
 }
+
 .cardHeaderLayout {
   display: flex;
   flex-direction: row;
@@ -29,6 +30,14 @@
   margin-bottom: 10px;
 }
 
+.link {
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #007bff;
+  text-decoration: underline;
+}
+
 .image {
   width: 60px;
   height: 60px;
@@ -37,9 +46,10 @@
   margin-right: 10px;
 }
 
-.section1 {
+.video {
   margin-top: 10px;
   margin-bottom: 10px;
+  border: 0px;
 }
 
 .tag {
