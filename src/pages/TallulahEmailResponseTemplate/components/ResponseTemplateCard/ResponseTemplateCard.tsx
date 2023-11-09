@@ -10,9 +10,10 @@ import EditResponseTemplate from '../EditResponseTemplate';
 
 export interface IResponseTemplateCard {
   data: GetResponseTemplate_Out;
+  handleRefresh: () => void;
 }
 
-const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data }) => {
+const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, handleRefresh }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState<boolean>(false);
 
@@ -133,7 +134,7 @@ const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data }) => {
           setIsTemplateDialogOpen(false);
         }}
       >
-        <EditResponseTemplate initialData={data} />
+        <EditResponseTemplate initialData={data} setIsModalOpen={setIsTemplateDialogOpen} handleRefresh={handleRefresh} />
       </Dialog>
     </Box>
   );
