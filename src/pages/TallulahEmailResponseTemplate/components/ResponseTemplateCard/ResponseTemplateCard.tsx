@@ -7,13 +7,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { GetResponseTemplate_Out } from 'src/tallulah-ts-client';
 
-export interface IReponseTemplateCard {
+export interface IResponseTemplateCard {
   data: GetResponseTemplate_Out;
 }
 
-const ReponseTemplateCard: React.FC<IReponseTemplateCard> = ({ data }) => {
+const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  console.log('data', data);
 
   return (
     <Box className={styles.container}>
@@ -125,4 +124,4 @@ const ReponseTemplateCard: React.FC<IReponseTemplateCard> = ({ data }) => {
   );
 };
 
-export default ReponseTemplateCard;
+export default ResponseTemplateCard;
