@@ -3,14 +3,17 @@ import styles from './EditResponseTemplate.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useState } from 'react';
-import { RegisterResponseTemplate_In, ResponseTemplatesService } from 'src/tallulah-ts-client';
+import { GetResponseTemplate_Out, RegisterResponseTemplate_In, ResponseTemplatesService } from 'src/tallulah-ts-client';
 
-export interface IEditResponseTemplate {}
+export interface IEditResponseTemplate {
+  initialData?: GetResponseTemplate_Out;
+}
 
-const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({}) => {
-  const [templateName, setTemplateName] = useState<string>('');
-  const [templateSubject, setTemplateSubject] = useState<string>('');
-  const [templateBody, setTemplateBody] = useState<string>('');
+const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData }) => {
+  const [templateName, setTemplateName] = useState<string>(initialData ? initialData.name : '');
+  const [templateSubject, setTemplateSubject] = useState<string>(initialData && initialData.subject ? initialData.subject : '');
+  const [templateBody, setTemplateBody] = useState<string>(initialData && initialData.body?.content ? initialData.body.content : '');
+  const [isEditMode, setIsEditMode] = useState<boolean>(initialData ? true : false);
 
   const handleOnSaveClicked = async () => {
     const body: RegisterResponseTemplate_In = {
@@ -23,6 +26,21 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({}) => {
     };
     try {
       const response = await ResponseTemplatesService.addNewResponseTemplate(body);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleOnEditClicked = () => {
+    const body = {
+      subject: templateSubject,
+      body: {
+        contentType: 'text/html',
+        content: templateBody
+      }
+    };
+    try {
+      const response = ResponseTemplatesService.updateResponseTemplate(initialData!._id, body);
     } catch (error) {
       console.log(error);
     }
@@ -72,7 +90,7 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({}) => {
           marginTop: '20px'
         }}
       >
-        <Button fullWidth variant="contained" className={styles.button} onClick={handleOnSaveClicked}>
+        <Button fullWidth variant="contained" className={styles.button} onClick={isEditMode ? handleOnEditClicked : handleOnSaveClicked}>
           Save
         </Button>
       </Box>

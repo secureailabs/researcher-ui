@@ -1,4 +1,4 @@
-import { Box, Button, Icon, IconButton, Typography } from '@mui/material';
+import { Box, Button, Dialog, Icon, IconButton, Typography } from '@mui/material';
 import styles from './ResponseTemplateCard.module.css';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -6,6 +6,7 @@ import { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { GetResponseTemplate_Out } from 'src/tallulah-ts-client';
+import EditResponseTemplate from '../EditResponseTemplate';
 
 export interface IResponseTemplateCard {
   data: GetResponseTemplate_Out;
@@ -13,6 +14,7 @@ export interface IResponseTemplateCard {
 
 const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState<boolean>(false);
 
   return (
     <Box className={styles.container}>
@@ -42,7 +44,12 @@ const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data }) => {
               gap: '1rem'
             }}
           >
-            <IconButton className={styles.editButton}>
+            <IconButton
+              className={styles.editButton}
+              onClick={() => {
+                setIsTemplateDialogOpen(true);
+              }}
+            >
               <EditIcon />
             </IconButton>
             <IconButton className={styles.deleteButton}>
@@ -120,6 +127,14 @@ const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data }) => {
           {!isExpanded ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
         </IconButton>
       </Box>
+      <Dialog
+        open={isTemplateDialogOpen}
+        onClose={() => {
+          setIsTemplateDialogOpen(false);
+        }}
+      >
+        <EditResponseTemplate initialData={data} />
+      </Dialog>
     </Box>
   );
 };
