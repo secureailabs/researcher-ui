@@ -5,13 +5,15 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { GetResponseTemplate_Out } from 'src/tallulah-ts-client';
 
 export interface IReponseTemplateCard {
-  data: any;
+  data: GetResponseTemplate_Out;
 }
 
 const ReponseTemplateCard: React.FC<IReponseTemplateCard> = ({ data }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  console.log('data', data);
 
   return (
     <Box className={styles.container}>
@@ -73,14 +75,14 @@ const ReponseTemplateCard: React.FC<IReponseTemplateCard> = ({ data }) => {
                 className={styles.subText}
               >
                 {/* remove all htrml tags and display only text */}
-                {data.body.replace(/<[^>]*>?/gm, '')}
+                {data.body?.content.replace(/<[^>]*>?/gm, '')}
               </Typography>
             ) : (
               <Typography
                 variant="body1"
                 display="inline"
                 className={styles.subText}
-                dangerouslySetInnerHTML={{ __html: data.body }}
+                dangerouslySetInnerHTML={data?.body?.content ? { __html: data.body.content } : { __html: '' }}
               ></Typography>
             )}
           </Typography>
@@ -102,7 +104,7 @@ const ReponseTemplateCard: React.FC<IReponseTemplateCard> = ({ data }) => {
           >
             Last Updated: &nbsp;
             <Typography variant="body1" component={'span'}>
-              {data.lastUpdated}
+              {data.last_edit_time}
             </Typography>
           </Typography>
         </Box>

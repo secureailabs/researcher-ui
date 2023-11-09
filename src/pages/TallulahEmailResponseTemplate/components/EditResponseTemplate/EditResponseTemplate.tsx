@@ -23,7 +23,6 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({}) => {
     };
     try {
       const response = await ResponseTemplatesService.addNewResponseTemplate(body);
-      console.log('response', response);
     } catch (error) {
       console.log(error);
     }
