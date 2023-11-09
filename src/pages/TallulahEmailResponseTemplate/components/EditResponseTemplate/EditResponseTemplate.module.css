@@ -1,8 +1,7 @@
 .container {
   padding: 10px;
-
   width: 50vw;
-  overflow: hidden;
+  height: 90vh;
 }
 
 .textField {

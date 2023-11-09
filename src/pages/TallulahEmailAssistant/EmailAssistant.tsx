@@ -1,13 +1,15 @@
-import { Box, Button, InputBase, styled } from '@mui/material';
+import { Box, Button, IconButton, InputBase, styled } from '@mui/material';
 import styles from './EmailAssistant.module.css';
 import { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
+import SettingsIcon from '@mui/icons-material/Settings';
 import EmailDisplaySection from './components/EmailDisplaySection';
 import Filter from './components/Filter';
 import Sort from './components/Sort';
 import { GoogleOutlined, WindowsOutlined } from '@ant-design/icons';
 import { MailboxService } from 'src/tallulah-ts-client';
 import { OUTLOOK_REDIRECT_URI } from 'src/config';
+import { useNavigate } from 'react-router-dom';
 
 const urlToEncodded = (url: string) => {
   const encodedURL = encodeURIComponent(url);
@@ -58,6 +60,8 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
   const [isMailAdded, setIsMailAdded] = useState(false);
   const [mailboxes, setMailboxes] = useState<any[]>([]);
 
+  const navigate = useNavigate();
+
   const getAllMailBoxes = async () => {
     try {
       const response = await MailboxService.getAllMailboxes();
@@ -102,6 +106,15 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
             </Box>
             <Box sx={{ display: 'flex' }}>
               <Sort />
+            </Box>
+            <Box sx={{ display: 'flex' }}>
+              <IconButton
+                onClick={() => {
+                  navigate('/email-assistant/response-template');
+                }}
+              >
+                <SettingsIcon />
+              </IconButton>
             </Box>
           </Box>
           <Box>{mailboxes.length > 0 ? <EmailDisplaySection mailboxes={mailboxes} /> : null}</Box>

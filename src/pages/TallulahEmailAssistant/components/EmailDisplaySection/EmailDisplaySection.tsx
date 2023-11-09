@@ -106,7 +106,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes }) => {
               fontSize: '0.8rem'
             }}
           >
-            {params.row.body.content}
+            {params.row.body.content.replace(/<[^>]*>?/gm, '')}
           </Typography>
           <Box
             sx={{
