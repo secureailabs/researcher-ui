@@ -7,7 +7,7 @@ import Drawer from './Drawer';
 import { RootStateProps } from 'src/types/root';
 import { openDrawer } from 'src/store/reducers/menu';
 import { storeLoginCredentials } from 'src/pages/Login/Login';
-import { ApiError, DefaultService, OpenAPI, UserInfo_Out } from 'src/client';
+import { ApiError, DefaultService, OpenAPI, UserInfo_Out } from 'src/tallulah-ts-client';
 import { REACT_APP_SAIL_API_SERVICE_URL } from 'src/config';
 import { useQuery } from 'react-query';
 import { updateUserProfile } from 'src/store/reducers/userprofile';
@@ -30,11 +30,11 @@ const MinimalLayout = (): JSX.Element => {
   };
 
   const checkUserSession = async (): Promise<UserInfo_Out> => {
-    // OpenAPI.BASE = REACT_APP_SAIL_API_SERVICE_URL;
+    OpenAPI.BASE = REACT_APP_SAIL_API_SERVICE_URL;
 
-    if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
+    // if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
 
-    OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
+    // OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
 
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -54,7 +54,6 @@ const MinimalLayout = (): JSX.Element => {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
     const tokenType = localStorage.getItem('tokenType');
-    const scnUrl = localStorage.getItem('scnUrl');
     if (accessToken && refreshToken && tokenType) {
       const res = {
         access_token: accessToken,
@@ -62,31 +61,26 @@ const MinimalLayout = (): JSX.Element => {
         token_type: tokenType
       };
       storeLoginCredentials(res);
-      dispatch(
-        updateSCNDetails({
-          baseUrl: scnUrl
-        })
-      );
     } else {
       navigate('/login');
     }
 
-    try {
-      (async () => {
-        const res = await DefaultService.getAllSecureComputationNodes();
-        const node = res.secure_computation_nodes[0];
-        if (node.url) {
-          localStorage.setItem('scnUrl', node.url);
-        }
-        dispatch(
-          updateSCNDetails({
-            baseUrl: node.url
-          })
-        );
-      })();
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   (async () => {
+    //     const res = await DefaultService.getAllSecureComputationNodes();
+    //     const node = res.secure_computation_nodes[0];
+    //     if (node.url) {
+    //       localStorage.setItem('scnUrl', node.url);
+    //     }
+    //     dispatch(
+    //       updateSCNDetails({
+    //         baseUrl: node.url
+    //       })
+    //     );
+    //   })();
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }, []);
 
   useQuery<UserInfo_Out, ApiError>('userData', checkUserSession, {

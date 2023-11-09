@@ -1,5 +1,6 @@
 // types
 import { DefaultConfigProps } from 'src/types/config';
+// import { BASE_URL } from './utils/apiServices';
 
 // ==============================|| THEME CONSTANT  ||============================== //
 
@@ -15,8 +16,16 @@ export const DRAWER_WIDTH = 260;
 // export const REACT_APP_SAIL_API_SERVICE_URL = 'http://127.0.0.1:8000';
 // export const REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL = 'http://127.0.0.1:8000';
 
-export const REACT_APP_SAIL_API_SERVICE_URL = 'http://172.20.100.7:8000';
-export const REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL = 'http://172.20.100.8:8000';
+// export const REACT_APP_SAIL_API_SERVICE_URL = 'https://api.tbbc.tallulah.ai';
+// export const REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL = 'https://api.tbbc.tallulah.ai';
+// export const REACT_APP_GOOGLE_API_KEY = 'AIzaSyCQBK2nekthzHxf-3ccXwtb6WZ769Cygnw';
+// export const BASE_URL = 'https://api.tbbc.tallulah.ai';
+
+export const REACT_APP_SAIL_API_SERVICE_URL = 'https://tallulah-backend.proudwave-bf1b2d7c.westus.azurecontainerapps.io/';
+export const REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL = 'https://tallulah-backend.proudwave-bf1b2d7c.westus.azurecontainerapps.io/';
+export const REACT_APP_GOOGLE_API_KEY = 'https://tallulah-backend.proudwave-bf1b2d7c.westus.azurecontainerapps.io/';
+export const BASE_URL = 'https://tallulah-backend.proudwave-bf1b2d7c.westus.azurecontainerapps.io/';
+export const OUTLOOK_REDIRECT_URI = 'https://tallulah-backend.proudwave-bf1b2d7c.westus.azurecontainerapps.io/mailbox/authorize';
 
 // export const REACT_APP_SAIL_API_SERVICE_URL = 'https://api.demo.arrayinsights.net';
 // export const REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL = 'https://api.demo.arrayinsights.net';

@@ -1,0 +1,31 @@
+.container {
+  width: 100%;
+}
+
+.chatInputBox {
+  display: flex;
+  width: 75%;
+  position: fixed;
+  bottom: 0;
+  left: auto;
+  right: auto;
+  padding: 30px;
+}
+
+.conversationBox {
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 75%;
+}
+
+.gptCompletion {
+  display: flex;
+  padding: 10px;
+  margin-bottom: 20px;
+  align-self: flex-end;
+  align-content: flex-end;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 75%;
+}

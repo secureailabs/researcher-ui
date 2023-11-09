@@ -1,0 +1,10 @@
+.container {
+  padding: 10px;
+  width: 50vw;
+  height: 90vh;
+}
+
+.textField {
+  width: 100%;
+  margin-bottom: 10px;
+}

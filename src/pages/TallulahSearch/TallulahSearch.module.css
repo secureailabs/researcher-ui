@@ -1,0 +1,21 @@
+.component {
+}
+
+/* on hover change to pointer */
+.patientCardGridItem:hover {
+  cursor: pointer;
+}
+
+.filterTag {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mapImage {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}

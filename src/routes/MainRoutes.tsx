@@ -13,6 +13,12 @@ const DataModel = Loadable(lazy(async () => await import('src/pages/DataModel'))
 const PAG = Loadable(lazy(async () => await import('src/pages/PAG')));
 const Datasets = Loadable(lazy(async () => await import('src/pages/Datasets')));
 const ComparePage = Loadable(lazy(async () => await import('src/pages/Compare')));
+const TallulahSearch = Loadable(lazy(async () => await import('src/pages/TallulahSearch')));
+const TallulahStoryAssistant = Loadable(lazy(async () => await import('src/pages/TallulahStoryAssistant')));
+const TallulahDashboard = Loadable(lazy(async () => await import('src/pages/TallulahDashboard')));
+const TallulahEmailAssistant = Loadable(lazy(async () => await import('src/pages/TallulahEmailAssistant')));
+const MSAuthorize = Loadable(lazy(async () => await import('src/pages/MSAuthorize')));
+const TallulahEmailResponseTemplate = Loadable(lazy(async () => await import('src/pages/TallulahEmailResponseTemplate')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -22,40 +28,70 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <Home />
+      element: <TallulahEmailAssistant />
     },
     {
       path: 'home',
-      element: <Home />
+      element: <TallulahEmailAssistant />
     },
     {
-      path: 'demo-longitudinal',
-      element: <DemoLongitudinal />
+      path: 'tallulah-search',
+      element: <TallulahSearch />
     },
     {
-      path: 'data-model',
-      element: <DataModel />
+      path: 'tallulah-story-assistant',
+      element: <TallulahStoryAssistant />
     },
     {
-      path: 'pag-home',
-      element: <PAG />
+      path: 'tallulah-dashboard',
+      element: <TallulahDashboard />
     },
     {
-      path: 'pag-compare',
-      element: <ComparePage />
+      path: 'email-assistant',
+      element: <TallulahEmailAssistant />
     },
+
     {
-      path: 'datasets',
-      element: <Datasets />
+      path: 'email-assistant/response-template',
+      element: <TallulahEmailResponseTemplate />
     },
+
     {
-      path: 'datasets/:id',
-      element: <Dataset />
-    },
-    {
-      path: 'datasets/:id/versions/:version',
-      element: <DatasetVersion />
+      path: 'outlook-oauth',
+      element: <MSAuthorize />
     }
+    // {
+    //   path: 'home',
+    //   element: <Home />
+    // },
+    // {
+    //   path: 'demo-longitudinal',
+    //   element: <DemoLongitudinal />
+    // },
+    // {
+    //   path: 'data-model',
+    //   element: <DataModel />
+    // },
+    // {
+    //   path: 'pag-home',
+    //   element: <PAG />
+    // },
+    // {
+    //   path: 'pag-compare',
+    //   element: <ComparePage />
+    // },
+    // {
+    //   path: 'datasets',
+    //   element: <Datasets />
+    // },
+    // {
+    //   path: 'datasets/:id',
+    //   element: <Dataset />
+    // },
+    // {
+    //   path: 'datasets/:id/versions/:version',
+    //   element: <DatasetVersion />
+    // }
   ]
 };
 

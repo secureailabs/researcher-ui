@@ -12,8 +12,8 @@ import styles from './Login.module.css';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { LoginSuccess_Out, OpenAPI } from 'src/client';
-import { DefaultService, Body_login } from 'src/client';
+import { LoginSuccess_Out, OpenAPI } from 'src/tallulah-ts-client';
+import { DefaultService, Body_login } from 'src/tallulah-ts-client';
 import useNotification from 'src/hooks/useNotification';
 import { activeAccessToken, activeRefreshToken, tokenType, updateAuthState } from 'src/store/reducers/Auth';
 import { dispatch } from 'src/store';
@@ -55,10 +55,10 @@ const Login: React.FC = () => {
   };
 
   async function postLogin(data: IEmailAndPassword): Promise<LoginSuccess_Out | undefined> {
-    // OpenAPI.BASE = REACT_APP_SAIL_API_SERVICE_URL;
-    if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
+    OpenAPI.BASE = REACT_APP_SAIL_API_SERVICE_URL;
+    // if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
 
-    OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
+    // OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
 
     const login_req: Body_login = {
       username: data.username,
