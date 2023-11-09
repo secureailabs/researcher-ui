@@ -20,13 +20,17 @@
 
 .name {
   font-weight: 600;
-  margin-bottom: 20px;
   margin-top: 10px;
 }
 
 .fields {
   font-size: 14px;
-  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
   margin-bottom: 10px;
 }
 
@@ -36,14 +40,6 @@
   margin-bottom: 10px;
   color: #007bff;
   text-decoration: underline;
-}
-
-.image {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 10px;
 }
 
 .video {

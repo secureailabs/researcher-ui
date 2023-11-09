@@ -52,7 +52,7 @@ const MainRoutes = {
     {
       path: 'tallulah-patient-intake',
       element: <PatientIntake />
-    }
+    },
     // {
     //   path: 'home',
     //   element: <Home />

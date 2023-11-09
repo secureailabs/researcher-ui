@@ -1,16 +1,15 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import styles from '../SocialResultCard.module.css';
+import { Transcribe } from '@mui/icons-material';
+import TranscribeVideoModal from '../TranscribeVideoModal/TranscribeVideoModal';
+import TRANSCRIPTION_RESULTS from 'src/pages/TallulahSocialSearch/default_transcription_mapping';
 
 export interface ISocialResultCard {
   data: any;
-  index: number;
 }
 
-const YoutubeResultCard: React.FC<ISocialResultCard> = ({ data, index }) => {
-
-  console.log(data[0].kidneycancer.items[index].snippet.title, 'data');
-
-  const kidneyCancerResult = data[0].kidneycancer.items[index];
+const YoutubeResultCard: React.FC<ISocialResultCard> = ({ data }) => {
+  const kidneyCancerResult = data;
   const videoId = kidneyCancerResult.id.videoId;
   const embedUrl = `https://www.youtube.com/embed/${videoId}`;
 
@@ -23,10 +22,21 @@ const YoutubeResultCard: React.FC<ISocialResultCard> = ({ data, index }) => {
               {kidneyCancerResult.snippet.title}
             </Typography>
           </Box>
-          <Typography variant="body1" className={styles.fields}>
-            Description : {kidneyCancerResult.snippet.description}</Typography>
-          <Typography className={styles.fields}>Published At : {kidneyCancerResult.snippet.publishedAt}</Typography>
-          <Typography className={styles.fields}>Channel : {kidneyCancerResult.snippet.channelTitle}</Typography>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body1" display="inline" className={styles.title}>
+              Description : </Typography>
+            <Typography display="inline">{kidneyCancerResult.snippet.description}</Typography>
+          </Box>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body1" display="inline" className={styles.title}>
+              Published At : </Typography>
+            <Typography display="inline">{kidneyCancerResult.snippet.publishedAt}</Typography>
+          </Box>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body1" display="inline" className={styles.title}>
+              Channel : </Typography>
+            <Typography display="inline">{kidneyCancerResult.snippet.channelTitle}</Typography>
+          </Box>
         </Box>
       </Box>
       <Box className={styles.video}>
@@ -38,6 +48,11 @@ const YoutubeResultCard: React.FC<ISocialResultCard> = ({ data, index }) => {
           allowFullScreen
         ></iframe>
       </Box>
+      <TranscribeVideoModal
+        title={kidneyCancerResult.snippet.title}
+        refetch={() => {}}
+        transcription={kidneyCancerResult.snippet.title == "Stage IV Kidney Cancer" ?
+          TRANSCRIPTION_RESULTS[0].kidneycancer.items[2].transcription : ""}/>
     </Box>
   );
 };

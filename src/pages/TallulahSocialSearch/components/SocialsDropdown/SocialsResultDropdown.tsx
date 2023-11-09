@@ -9,6 +9,8 @@ import YOUTUBE_RESULTS from '../../default_youtube_results';
 import YoutubeResultCard from './components/YoutubeResultCards/YoutubeResultCard';
 import TIKTOK_RESULTS from '../../default_tiktok_results';
 import TiktokResultCard from './components/TiktokResultCards/TiktokResultCard';
+import REDDIT_RESULTS from '../../default_reddit_results';
+import RedditResultCard from './components/RedditResultCards/RedditResultCard';
 
 
 interface ISocialDropdown {
@@ -36,9 +38,9 @@ const SocialsDropdown: React.FC<ISocialDropdown> = ({ sampleTextProp }) => {
         </AccordionSummary>
         <AccordionDetails>
           <Stack flexDirection={'row'} alignContent={'center'}>
-            <YoutubeResultCard data={YOUTUBE_RESULTS} index={0} />
-            <YoutubeResultCard data={YOUTUBE_RESULTS} index={1} />
-            <YoutubeResultCard data={YOUTUBE_RESULTS} index={2} />
+            <YoutubeResultCard data={YOUTUBE_RESULTS[0].kidneycancer.items[0]} />
+            <YoutubeResultCard data={YOUTUBE_RESULTS[0].kidneycancer.items[1]} />
+            <YoutubeResultCard data={YOUTUBE_RESULTS[0].kidneycancer_stage.items[1]} />
           </Stack>
         </AccordionDetails>
       </Accordion>
@@ -64,10 +66,14 @@ const SocialsDropdown: React.FC<ISocialDropdown> = ({ sampleTextProp }) => {
           aria-controls="panel3a-content"
           id="panel3a-header"
         >
-          <Typography>Disabled Accordion</Typography>
+          <Typography>Reddit</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <YoutubeResultCard data={YOUTUBE_RESULTS} index={0} />
+          <Stack flexDirection={'row'} alignContent={'center'}>
+            <RedditResultCard data={REDDIT_RESULTS} index={0} />
+            <RedditResultCard data={REDDIT_RESULTS} index={1} />
+            <RedditResultCard data={REDDIT_RESULTS} index={2} />
+          </Stack>
         </AccordionDetails>
       </Accordion>
     </Box>
