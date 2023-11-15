@@ -3,11 +3,10 @@ import styles from '../SocialResultCard.module.css';
 
 export interface ISocialResultCard {
   data: any;
-  index: number;
 }
 
-const RedditResultCard: React.FC<ISocialResultCard> = ({ data, index }) => {
-  const kidneyCancerResult = data[0].kidneycancer[index];
+const RedditResultCard: React.FC<ISocialResultCard> = ({ data }) => {
+  const kidneyCancerResult = data;
 
   return (
     <Box className={styles.container}>

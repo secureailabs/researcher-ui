@@ -5,11 +5,10 @@ import TRANSCRIPTION_RESULTS from 'src/pages/TallulahSocialSearch/default_transc
 
 export interface ISocialResultCard {
   data: any;
-  index: number;
 }
 
-const TiktokResultCard: React.FC<ISocialResultCard> = ({ data, index }) => {
-  const kidneyCancerResult = data[0].kidneycancer[index];
+const TiktokResultCard: React.FC<ISocialResultCard> = ({ data }) => {
+  const kidneyCancerResult = data;
   const description: string = kidneyCancerResult.text.slice(0, 50);
   const hashtags: string[] = kidneyCancerResult.hashtags.map((hashtag: any) => hashtag.name).join(', ').slice(0, 100);
   const embedUrl = kidneyCancerResult.mediaUrls[0];

@@ -1,4 +1,4 @@
-import * as React from 'react';
+/*import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { Box, Accordion, Stack } from '@mui/material';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -81,3 +81,4 @@ const SocialsDropdown: React.FC<ISocialDropdown> = ({ sampleTextProp }) => {
 };
 
 export default SocialsDropdown;
+*/

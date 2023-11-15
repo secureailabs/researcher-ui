@@ -1,7 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Button, Grid, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import SocialsDropdown from './components/SocialsDropdown/SocialsResultDropdown';
+import SocialsTabs from './components/SocialsTabs/SocialsTabs';
 
 
 export interface ISocialSearch {
@@ -14,8 +13,6 @@ const searchItems = [
   { field: 'remission'},
   { field: 'chemotherapy'}
 ];
-
-
 
 const SocialSearch: React.FC<ISocialSearch> = ({ sampleTextProp }) => {
   const [showResults, setShowResults] = useState(false);
@@ -48,7 +45,7 @@ const SocialSearch: React.FC<ISocialSearch> = ({ sampleTextProp }) => {
 
         {showResults ?
           <Box>
-            <SocialsDropdown sampleTextProp={''}/>
+            <SocialsTabs />
           </Box> : null}
       </Box>
     </Box>
