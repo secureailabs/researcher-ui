@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, InputBase, styled } from '@mui/material';
+import { Box, Button, Dialog, Drawer, IconButton, InputBase, styled } from '@mui/material';
 import styles from './EmailAssistant.module.css';
 import { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
@@ -11,6 +11,7 @@ import { MailboxService } from 'src/tallulah-ts-client';
 import { OUTLOOK_REDIRECT_URI } from 'src/config';
 import { useNavigate } from 'react-router-dom';
 import { GridSelectionModel } from '@mui/x-data-grid';
+import EmailReply from './components/EmailReply';
 
 const urlToEncodded = (url: string) => {
   const encodedURL = encodeURIComponent(url);
@@ -61,6 +62,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
   const [isMailAdded, setIsMailAdded] = useState(false);
   const [mailboxes, setMailboxes] = useState<any[]>([]);
   const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+  const [openReplyModal, setOpenReplyModal] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -95,7 +97,9 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
               backgroundColor: '#f5f5f5',
               zIndex: 1,
               paddingTop: '20px',
-              paddingBottom: '20px'
+              paddingBottom: '20px',
+              boxShadow: '0px 3px 0px rgba(0, 0, 0, 0.02)',
+              borderBottom: '1px solid #e3e3e3'
             }}
           >
             <Box
@@ -134,7 +138,14 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
             </Box>
             {selectionModel.length > 0 ? (
               <Box>
-                <Button variant="contained">Reply All</Button>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setOpenReplyModal(true);
+                  }}
+                >
+                  Reply Selected
+                </Button>
               </Box>
             ) : null}
           </Box>
@@ -143,6 +154,14 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
               <EmailDisplaySection mailboxes={mailboxes} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
             ) : null}
           </Box>
+          <Dialog
+            open={openReplyModal}
+            onClose={() => {
+              setOpenReplyModal(false);
+            }}
+          >
+            <EmailReply />
+          </Dialog>
         </Box>
       ) : (
         <Box

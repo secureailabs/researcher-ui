@@ -10,9 +10,12 @@ import EditResponseTemplate from '../EditResponseTemplate';
 
 export interface IResponseTemplateCard {
   data: GetResponseTemplate_Out;
+  editable?: boolean;
+  selection?: boolean;
+  onSelect?: (template: GetResponseTemplate_Out) => void;
 }
 
-const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data }) => {
+const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, editable = true, selection = false, onSelect }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState<boolean>(false);
 
@@ -38,24 +41,44 @@ const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data }) => {
           >
             {data.name}
           </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              gap: '1rem'
-            }}
-          >
-            <IconButton
-              className={styles.editButton}
-              onClick={() => {
-                setIsTemplateDialogOpen(true);
+          {editable ? (
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '1rem'
               }}
             >
-              <EditIcon />
-            </IconButton>
-            <IconButton className={styles.deleteButton}>
-              <DeleteIcon />
-            </IconButton>
-          </Box>
+              <IconButton
+                className={styles.editButton}
+                onClick={() => {
+                  setIsTemplateDialogOpen(true);
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton className={styles.deleteButton}>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          ) : null}
+
+          {selection && onSelect ? (
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '1rem'
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  onSelect(data);
+                }}
+              >
+                Use Template
+              </Button>
+            </Box>
+          ) : null}
         </Box>
         <Box className={styles.subContainer}>
           <Typography className={styles.subTitle}>

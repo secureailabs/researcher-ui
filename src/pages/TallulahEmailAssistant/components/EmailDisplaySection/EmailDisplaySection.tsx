@@ -4,7 +4,6 @@ import { GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import { useEffect, useState } from 'react';
 import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
-import { render } from '@testing-library/react';
 import EmailDetailedView from '../EmailDetailedView';
 
 export interface IEmailDisplaySection {
@@ -161,6 +160,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, select
       )
     }
   ];
+
   return (
     <Box
       sx={{
