@@ -10,6 +10,7 @@ import { GoogleOutlined, WindowsOutlined } from '@ant-design/icons';
 import { MailboxService } from 'src/tallulah-ts-client';
 import { OUTLOOK_REDIRECT_URI } from 'src/config';
 import { useNavigate } from 'react-router-dom';
+import { GridSelectionModel } from '@mui/x-data-grid';
 
 const urlToEncodded = (url: string) => {
   const encodedURL = encodeURIComponent(url);
@@ -59,6 +60,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
   const [isMailAdded, setIsMailAdded] = useState(false);
   const [mailboxes, setMailboxes] = useState<any[]>([]);
+  const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
 
   const navigate = useNavigate();
 
@@ -81,19 +83,31 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
   return (
     <>
       {isMailAdded ? (
-        <Box>
+        <Box
+          sx={{
+            position: 'relative'
+          }}
+        >
           <Box
             sx={{
-              marginTop: '2rem',
-              marginBottom: '4rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              gap: '20px'
+              position: 'sticky',
+              top: '60px',
+              backgroundColor: '#f5f5f5',
+              zIndex: 1,
+              paddingTop: '20px',
+              paddingBottom: '20px'
             }}
           >
-            {/* NOTE: Search boxes commented */}
-            {/* <Box sx={{ flex: 7, marginRight: '20px' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                gap: '20px'
+              }}
+            >
+              {/* NOTE: Search boxes commented */}
+              {/* <Box sx={{ flex: 7, marginRight: '20px' }}>
               <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
@@ -101,23 +115,34 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
                 <StyledInputBase placeholder="Search by Body, Tags" inputProps={{ 'aria-label': 'search' }} />
               </Search>
             </Box> */}
-            <Box sx={{ display: 'flex' }}>
-              <Filter />
+              <Box></Box>
+              <Box sx={{ display: 'flex' }}>
+                <Filter />
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <Sort />
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <IconButton
+                  onClick={() => {
+                    navigate('/email-assistant/response-template');
+                  }}
+                >
+                  <SettingsIcon />
+                </IconButton>
+              </Box>
             </Box>
-            <Box sx={{ display: 'flex' }}>
-              <Sort />
-            </Box>
-            <Box sx={{ display: 'flex' }}>
-              <IconButton
-                onClick={() => {
-                  navigate('/email-assistant/response-template');
-                }}
-              >
-                <SettingsIcon />
-              </IconButton>
-            </Box>
+            {selectionModel.length > 0 ? (
+              <Box>
+                <Button variant="contained">Reply All</Button>
+              </Box>
+            ) : null}
           </Box>
-          <Box>{mailboxes.length > 0 ? <EmailDisplaySection mailboxes={mailboxes} /> : null}</Box>
+          <Box>
+            {mailboxes.length > 0 ? (
+              <EmailDisplaySection mailboxes={mailboxes} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
+            ) : null}
+          </Box>
         </Box>
       ) : (
         <Box

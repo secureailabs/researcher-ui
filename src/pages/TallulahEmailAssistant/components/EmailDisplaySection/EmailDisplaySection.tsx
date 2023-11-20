@@ -1,6 +1,6 @@
 import { Box, Drawer, Typography } from '@mui/material';
 import styles from './EmailDisplaySection.module.css';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import { useEffect, useState } from 'react';
 import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
@@ -9,6 +9,8 @@ import EmailDetailedView from '../EmailDetailedView';
 
 export interface IEmailDisplaySection {
   mailboxes: any[];
+  setSelectionModel: (selectionModel: GridSelectionModel) => void;
+  selectionModel: GridSelectionModel;
 }
 
 const resetPaginationData = {
@@ -39,7 +41,7 @@ const formatReceivedTime = (receivedTime: string) => {
   }
 };
 
-const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes }) => {
+const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, selectionModel, setSelectionModel }) => {
   const [rows, setRows] = useState<GetEmail_Out[]>([]);
   const [paginationData, setPaginationData] = useState(resetPaginationData);
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -188,6 +190,11 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes }) => {
           setSelectedRow(filteredRows[0]);
           setOpenDrawer(true);
         }}
+        onSelectionModelChange={(newSelectionModel: GridSelectionModel) => {
+          console.log('selectionmode', newSelectionModel);
+          setSelectionModel(newSelectionModel);
+        }}
+        selectionModel={selectionModel}
       />
       <Drawer
         anchor="right"
