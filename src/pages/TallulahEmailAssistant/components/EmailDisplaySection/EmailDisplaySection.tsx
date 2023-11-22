@@ -8,8 +8,8 @@ import EmailDetailedView from '../EmailDetailedView';
 
 export interface IEmailDisplaySection {
   mailboxes: any[];
-  setSelectionModel: (selectionModel: GridSelectionModel) => void;
-  selectionModel: GridSelectionModel;
+  setSelectionModel: (selectionModel: any) => void;
+  selectionModel: string[];
 }
 
 const resetPaginationData = {

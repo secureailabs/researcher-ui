@@ -5,14 +5,41 @@ import 'react-quill/dist/quill.snow.css';
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import ResponseTemplateSelection from '../ResponseTemplateSelection';
+import { GridSelectionModel } from '@mui/x-data-grid';
+import { EmailBody, EmailsService } from 'src/tallulah-ts-client';
+import useNotification from 'src/hooks/useNotification';
 
-export interface IEmailReply {}
+export interface IEmailReply {
+  setOpenReplyModal: (isOpen: boolean) => void;
+  selectedEmailsIds: string[];
+  mailBoxId: string;
+}
 
-const EmailReply: React.FC<IEmailReply> = ({}) => {
-  const [toField, setToField] = useState<string>('2 selected emails');
+const EmailReply: React.FC<IEmailReply> = ({ setOpenReplyModal, mailBoxId, selectedEmailsIds }) => {
+  const [toField, setToField] = useState<string>(`${selectedEmailsIds.length} selected emails`);
   const [emailSubject, setEmailSubject] = useState<string>('');
   const [emailBody, setEmailBody] = useState<string>('');
   const [isTemplateSelectionModalOpen, setIsTemplateSelectionModalOpen] = useState<boolean>(false);
+  const [sendNotification] = useNotification();
+
+  const handleSendEmail = async () => {
+    const body: EmailBody = {
+      contentType: 'html',
+      content: emailBody
+    };
+    const tags = undefined;
+    try {
+      const response = await EmailsService.replyToEmails(mailBoxId, selectedEmailsIds, tags, body);
+
+      sendNotification({
+        msg: 'Response sent successfully',
+        variant: 'success'
+      });
+      setOpenReplyModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box className={styles.container}>
@@ -23,12 +50,17 @@ const EmailReply: React.FC<IEmailReply> = ({}) => {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.10)'
         }}
       >
-        <Typography variant="h6">New Message</Typography>
+        <Typography variant="h6">Reply to selected emails</Typography>
         <Box>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              setOpenReplyModal(false);
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Box>
@@ -126,10 +158,17 @@ const EmailReply: React.FC<IEmailReply> = ({}) => {
             marginTop: '40px'
           }}
         >
-          <Button variant="outlined" fullWidth sx={{ marginTop: '20px' }}>
+          <Button
+            variant="outlined"
+            fullWidth
+            sx={{ marginTop: '20px' }}
+            onClick={() => {
+              setOpenReplyModal(false);
+            }}
+          >
             Cancel
           </Button>
-          <Button variant="contained" fullWidth sx={{ marginTop: '20px', marginLeft: '10px' }}>
+          <Button variant="contained" fullWidth sx={{ marginTop: '20px', marginLeft: '10px' }} onClick={handleSendEmail}>
             Send
           </Button>
         </Box>

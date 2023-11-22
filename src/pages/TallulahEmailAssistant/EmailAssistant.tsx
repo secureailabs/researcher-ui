@@ -19,9 +19,7 @@ const urlToEncodded = (url: string) => {
   return URL;
 };
 
-export interface IEmailAssistant {
-  sampleTextProp: string;
-}
+export interface IEmailAssistant {}
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -58,11 +56,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }
 }));
 
-const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
+const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const [isMailAdded, setIsMailAdded] = useState(false);
   const [mailboxes, setMailboxes] = useState<any[]>([]);
-  const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+  const [selectedEmailsIds, setselectedEmailsIds] = useState<string[]>([]);
   const [openReplyModal, setOpenReplyModal] = useState<boolean>(false);
+  const [mailBoxId, setMailBoxId] = useState<string>('');
 
   const navigate = useNavigate();
 
@@ -72,6 +71,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
       if (response.mailboxes.length > 0) {
         setIsMailAdded(true);
         setMailboxes(response.mailboxes);
+        setMailBoxId(response.mailboxes[0]._id);
       }
     } catch (e) {
       console.log(e);
@@ -136,7 +136,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
                 </IconButton>
               </Box>
             </Box>
-            {selectionModel.length > 0 ? (
+            {selectedEmailsIds.length > 0 ? (
               <Box>
                 <Button
                   variant="contained"
@@ -151,7 +151,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
           </Box>
           <Box>
             {mailboxes.length > 0 ? (
-              <EmailDisplaySection mailboxes={mailboxes} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
+              <EmailDisplaySection mailboxes={mailboxes} selectionModel={selectedEmailsIds} setSelectionModel={setselectedEmailsIds} />
             ) : null}
           </Box>
           <Dialog
@@ -160,7 +160,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
               setOpenReplyModal(false);
             }}
           >
-            <EmailReply />
+            <EmailReply setOpenReplyModal={setOpenReplyModal} selectedEmailsIds={selectedEmailsIds} mailBoxId={mailBoxId} />
           </Dialog>
         </Box>
       ) : (
