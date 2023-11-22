@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Drawer, IconButton, InputBase, styled } from '@mui/material';
+import { Box, Button, Dialog, Drawer, Icon, IconButton, InputBase, Menu, MenuItem, styled } from '@mui/material';
 import styles from './EmailAssistant.module.css';
 import { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
@@ -12,6 +12,7 @@ import { OUTLOOK_REDIRECT_URI } from 'src/config';
 import { useNavigate } from 'react-router-dom';
 import { GridSelectionModel } from '@mui/x-data-grid';
 import EmailReply from './components/EmailReply';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const urlToEncodded = (url: string) => {
   const encodedURL = encodeURIComponent(url);
@@ -63,6 +64,16 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const [selectedEmails, setSelectedEmails] = useState<any[]>([]);
   const [openReplyModal, setOpenReplyModal] = useState<boolean>(false);
   const [mailBoxId, setMailBoxId] = useState<string>('');
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const navigate = useNavigate();
 
@@ -74,6 +85,16 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
         setMailboxes(response.mailboxes);
         setMailBoxId(response.mailboxes[0]._id);
       }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleRemoveMailBoxClicked = async () => {
+    try {
+      const response = await MailboxService.deleteMailbox(mailBoxId);
+      setIsMailAdded(false);
+      setMailboxes([]);
     } catch (e) {
       console.log(e);
     }
@@ -120,7 +141,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                 <StyledInputBase placeholder="Search by Body, Tags" inputProps={{ 'aria-label': 'search' }} />
               </Search>
             </Box> */}
-              <Box></Box>
+
               <Box sx={{ display: 'flex' }}>
                 <Filter />
               </Box>
@@ -135,6 +156,29 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                 >
                   <SettingsIcon />
                 </IconButton>
+              </Box>
+              {/* dropdown menu */}
+              <Box>
+                <IconButton
+                  id="menu-button"
+                  aria-controls={open ? 'basic-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button'
+                  }}
+                >
+                  <MenuItem onClick={handleRemoveMailBoxClicked}>Remove Mailbox</MenuItem>
+                </Menu>
               </Box>
             </Box>
             {selectedEmailsIds.length > 0 ? (
