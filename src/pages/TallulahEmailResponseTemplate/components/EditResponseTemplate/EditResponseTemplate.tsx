@@ -7,9 +7,11 @@ import { GetResponseTemplate_Out, RegisterResponseTemplate_In, ResponseTemplates
 
 export interface IEditResponseTemplate {
   initialData?: GetResponseTemplate_Out;
+  setIsModalOpen: (isOpen: boolean) => void;
+  handleRefresh: () => void;
 }
 
-const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData }) => {
+const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData, setIsModalOpen, handleRefresh }) => {
   const [templateName, setTemplateName] = useState<string>(initialData ? initialData.name : '');
   const [templateSubject, setTemplateSubject] = useState<string>(initialData && initialData.subject ? initialData.subject : '');
   const [templateBody, setTemplateBody] = useState<string>(initialData && initialData.body?.content ? initialData.body.content : '');
@@ -26,6 +28,8 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData }) 
     };
     try {
       const response = await ResponseTemplatesService.addNewResponseTemplate(body);
+      setIsModalOpen(false);
+      handleRefresh();
     } catch (error) {
       console.log(error);
     }
@@ -41,6 +45,8 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData }) 
     };
     try {
       const response = ResponseTemplatesService.updateResponseTemplate(initialData!._id, body);
+      setIsModalOpen(false);
+      handleRefresh();
     } catch (error) {
       console.log(error);
     }

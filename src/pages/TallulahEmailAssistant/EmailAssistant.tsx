@@ -7,7 +7,7 @@ import EmailDisplaySection from './components/EmailDisplaySection';
 import Filter from './components/Filter';
 import Sort from './components/Sort';
 import { GoogleOutlined, WindowsOutlined } from '@ant-design/icons';
-import { MailboxService } from 'src/tallulah-ts-client';
+import { GetMailbox_Out, MailboxService } from 'src/tallulah-ts-client';
 import { OUTLOOK_REDIRECT_URI } from 'src/config';
 import { useNavigate } from 'react-router-dom';
 
@@ -58,7 +58,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
   const [isMailAdded, setIsMailAdded] = useState(false);
-  const [mailboxes, setMailboxes] = useState<any[]>([]);
+  const [mailboxes, setMailboxes] = useState<GetMailbox_Out[]>([]);
+  const [sortKey, setSortKey] = useState<string>('received_time');
+  const [sortDirection, setSortDirection] = useState<-1 | 1>(-1);
 
   const navigate = useNavigate();
 
@@ -77,6 +79,10 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
   useEffect(() => {
     getAllMailBoxes();
   }, []);
+
+  useEffect(() => {
+    getAllMailBoxes();
+  }, [sortDirection]);
 
   return (
     <>
@@ -105,7 +111,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
               <Filter />
             </Box>
             <Box sx={{ display: 'flex' }}>
-              <Sort />
+              <Sort sortDirection={sortDirection} setSortDirection={setSortDirection} />
             </Box>
             <Box sx={{ display: 'flex' }}>
               <IconButton
@@ -117,7 +123,9 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({ sampleTextProp }) => {
               </IconButton>
             </Box>
           </Box>
-          <Box>{mailboxes.length > 0 ? <EmailDisplaySection mailboxes={mailboxes} /> : null}</Box>
+          <Box>
+            {mailboxes.length > 0 ? <EmailDisplaySection mailboxes={mailboxes} sortKey={sortKey} sortDirection={sortDirection} /> : null}
+          </Box>
         </Box>
       ) : (
         <Box

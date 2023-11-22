@@ -1,4 +1,4 @@
-import { Box, Drawer, Typography } from '@mui/material';
+import { Box, CircularProgress, Drawer, Typography } from '@mui/material';
 import styles from './EmailDisplaySection.module.css';
 import { GridColDef } from '@mui/x-data-grid';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
@@ -9,6 +9,8 @@ import EmailDetailedView from '../EmailDetailedView';
 
 export interface IEmailDisplaySection {
   mailboxes: any[];
+  sortKey: string;
+  sortDirection: -1 | 1;
 }
 
 const resetPaginationData = {
@@ -39,26 +41,39 @@ const formatReceivedTime = (receivedTime: string) => {
   }
 };
 
-const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes }) => {
+const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, ...props }) => {
   const [rows, setRows] = useState<GetEmail_Out[]>([]);
   const [paginationData, setPaginationData] = useState(resetPaginationData);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const MAIL_BOX_ID = mailboxes[0]._id;
 
-  const getEmails = async () => {
-    const response = await EmailsService.getAllEmails(MAIL_BOX_ID, paginationData.offset, paginationData.limit);
-    setRows([...rows, ...response.messages]);
+  const getEmails = async (pagData = paginationData, resetRows = false) => {
+    setIsFetching(true);
+    const response = await EmailsService.getAllEmails(MAIL_BOX_ID, pagData.offset, pagData.limit, props.sortKey, props.sortDirection);
+    if (resetRows) {
+      setRows(response.messages);
+    } else {
+      setRows([...rows, ...response.messages]);
+    }
     setPaginationData({
       ...paginationData,
-      offset: paginationData.offset + paginationData.limit
+      offset: pagData.offset + pagData.limit
     });
+    setIsFetching(false);
   };
 
   useEffect(() => {
     getEmails();
   }, []);
+
+  useEffect(() => {
+    setPaginationData(resetPaginationData);
+    getEmails(resetPaginationData, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.sortDirection]);
 
   const columns: GridColDef[] = [
     {
@@ -160,46 +175,64 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes }) => {
     }
   ];
   return (
-    <Box
-      sx={{
-        backgroundColor: '#fff'
-      }}
-    >
-      <AppStripedDataGrid
-        autoHeight
-        rows={rows}
-        columns={columns}
-        rowCount={2000}
-        pageSizeOptions={[25]}
-        pageSize={25}
-        onPageChange={() => getEmails()}
-        checkboxSelection
-        disableSelectionOnClick
-        getRowId={(row: any) => row._id}
-        getCellClassName={(params: any) => {
-          return styles.cell;
-        }}
-        getRowHeight={(params: any) => {
-          return 70;
-        }}
-        onRowClick={(params: any) => {
-          // filter row with selected row id and
-          const filteredRows = rows.filter((row) => row._id === params.row._id);
-          setSelectedRow(filteredRows[0]);
-          setOpenDrawer(true);
-        }}
-      />
-      <Drawer
-        anchor="right"
-        open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
-        PaperProps={{
-          sx: { width: '60%', padding: '20px 0 0 20px' }
+    <>
+      {isFetching ? (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '20px'
+          }}
+        >
+          <CircularProgress sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} />
+          <Typography variant="body1" sx={{ marginLeft: '10px' }}>
+            Fetching...
+          </Typography>
+        </Box>
+      ) : null}
+      <Box
+        sx={{
+          backgroundColor: '#fff'
         }}
       >
-        <EmailDetailedView data={selectedRow} />
-      </Drawer>
-    </Box>
+        <AppStripedDataGrid
+          autoHeight
+          rows={rows}
+          columns={columns}
+          rowCount={2000}
+          pageSizeOptions={[25]}
+          pageSize={25}
+          onPageChange={() => getEmails()}
+          checkboxSelection
+          disableSelectionOnClick
+          getRowId={(row: any) => row._id}
+          getCellClassName={(params: any) => {
+            return styles.cell;
+          }}
+          getRowHeight={(params: any) => {
+            return 70;
+          }}
+          onRowClick={(params: any) => {
+            // filter row with selected row id and
+            const filteredRows = rows.filter((row) => row._id === params.row._id);
+            setSelectedRow(filteredRows[0]);
+            setOpenDrawer(true);
+          }}
+        />
+        <Drawer
+          anchor="right"
+          open={openDrawer}
+          onClose={() => setOpenDrawer(false)}
+          PaperProps={{
+            sx: { width: '60%', padding: '20px 0 0 20px' }
+          }}
+        >
+          <EmailDetailedView data={selectedRow} />
+        </Drawer>
+      </Box>
+    </>
   );
 };
 

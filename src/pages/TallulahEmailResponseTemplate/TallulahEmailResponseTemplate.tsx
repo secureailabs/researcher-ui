@@ -3,8 +3,9 @@ import styles from './TallulahEmailResponseTemplate.module.css';
 import TemplateResponseListSection from './components/TemplateResponseListSection';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EditResponseTemplate from './components/EditResponseTemplate';
+import { GetResponseTemplate_Out, ResponseTemplatesService } from 'src/tallulah-ts-client';
 
 export interface ITallulahEmailResponseTemplate {}
 
@@ -46,6 +47,27 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = ({}) => {
   const [searchText, setSearchText] = useState<string>('');
   const [isAddNewTemplateDialogOpen, setIsAddNewTemplateDialogOpen] = useState<boolean>(false);
+  const [templateList, setTemplateList] = useState<GetResponseTemplate_Out[]>([]);
+
+  const fetchResponseTemplates = async () => {
+    try {
+      const response = await ResponseTemplatesService.getAllResponseTemplates();
+      setTemplateList(response.templates);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchResponseTemplates();
+  }, []);
+
+  const handleRefresh = () => {
+    console.log('handleRefresh cvalled');
+    setTemplateList([]);
+    fetchResponseTemplates();
+  };
+
   return (
     <Box>
       <Box
@@ -79,7 +101,7 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
         </Button>
       </Box>
       <Box>
-        <TemplateResponseListSection />
+        <TemplateResponseListSection templateList={templateList} handleRefresh={handleRefresh} />
       </Box>
       <Dialog
         open={isAddNewTemplateDialogOpen}
@@ -87,7 +109,7 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
           setIsAddNewTemplateDialogOpen(false);
         }}
       >
-        <EditResponseTemplate />
+        <EditResponseTemplate setIsModalOpen={setIsAddNewTemplateDialogOpen} handleRefresh={handleRefresh} />
       </Dialog>
     </Box>
   );

@@ -3,8 +3,11 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SortIcon from '@mui/icons-material/Sort';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { MenuItemData, NestedDropdown } from 'mui-nested-menu';
+import { useState } from 'react';
 
 const Sort = (props: any) => {
+  // const [sortDirection, setSortDirection] = useState(props.sortDirection);
+
   const MenuItems: MenuItemData = {
     label: 'Sort',
     items: [
@@ -13,10 +16,16 @@ const Sort = (props: any) => {
         rightIcon: <ChevronRightIcon />,
         items: [
           {
-            label: 'Asc'
+            label: 'Asc',
+            callback: (event, item) => {
+              props.setSortDirection(1);
+            }
           },
           {
-            label: 'Desc'
+            label: 'Desc',
+            callback: (event, item) => {
+              props.setSortDirection(-1);
+            }
           }
         ]
       }
