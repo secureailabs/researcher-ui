@@ -42,24 +42,41 @@ const formatReceivedTime = (receivedTime: string) => {
 
 const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, selectionModel, setSelectionModel }) => {
   const [rows, setRows] = useState<GetEmail_Out[]>([]);
-  const [paginationData, setPaginationData] = useState(resetPaginationData);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const MAIL_BOX_ID = mailboxes[0]._id;
 
-  const getEmails = async () => {
-    const response = await EmailsService.getAllEmails(MAIL_BOX_ID, paginationData.offset, paginationData.limit);
-    setRows([...rows, ...response.messages]);
-    setPaginationData({
-      ...paginationData,
-      offset: paginationData.offset + paginationData.limit
-    });
+  const getEmails = async (offset = 0) => {
+    setLoading(true);
+    const response = await EmailsService.getAllEmails(MAIL_BOX_ID, offset, resetPaginationData.limit);
+    setLoading(false);
+    setRows([...response.messages]);
   };
 
   useEffect(() => {
     getEmails();
   }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      if (!active) {
+        return;
+      }
+
+      const newOffset = page * resetPaginationData.limit;
+
+      getEmails(newOffset);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [page]);
 
   const columns: GridColDef[] = [
     {
@@ -171,11 +188,16 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, select
         autoHeight
         rows={rows}
         columns={columns}
-        rowCount={2000}
-        pageSizeOptions={[25]}
-        pageSize={25}
-        onPageChange={() => getEmails()}
+        pagination
         checkboxSelection
+        pageSize={25}
+        rowsPerPageOptions={[25]}
+        rowCount={2000}
+        paginationMode="server"
+        onPageChange={(newPage: any) => {
+          console.log('page changed', newPage);
+          setPage(newPage);
+        }}
         disableSelectionOnClick
         getRowId={(row: any) => row._id}
         getCellClassName={(params: any) => {
@@ -195,6 +217,8 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, select
           setSelectionModel(newSelectionModel);
         }}
         selectionModel={selectionModel}
+        loading={loading}
+        keepNonExistentRowsSelected
       />
       <Drawer
         anchor="right"

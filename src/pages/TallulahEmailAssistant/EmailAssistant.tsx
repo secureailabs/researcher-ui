@@ -60,6 +60,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const [isMailAdded, setIsMailAdded] = useState(false);
   const [mailboxes, setMailboxes] = useState<any[]>([]);
   const [selectedEmailsIds, setselectedEmailsIds] = useState<string[]>([]);
+  const [selectedEmails, setSelectedEmails] = useState<any[]>([]);
   const [openReplyModal, setOpenReplyModal] = useState<boolean>(false);
   const [mailBoxId, setMailBoxId] = useState<string>('');
 

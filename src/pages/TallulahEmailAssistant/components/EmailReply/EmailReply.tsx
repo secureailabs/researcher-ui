@@ -92,13 +92,6 @@ const EmailReply: React.FC<IEmailReply> = ({ setOpenReplyModal, mailBoxId, selec
               flex: 3
             }}
           />
-          <Button
-            sx={{
-              flex: 1
-            }}
-          >
-            View selected emails
-          </Button>
         </Box>
         <Box
           sx={{
