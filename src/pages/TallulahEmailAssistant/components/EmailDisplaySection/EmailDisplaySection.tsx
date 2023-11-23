@@ -93,6 +93,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, select
       headerClassName: 'table--header',
       headerName: 'Name',
       flex: 1,
+      sortable: false,
       renderCell: (params) => (
         <Typography
           variant="body1"
@@ -114,6 +115,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, select
       headerName: 'Body',
       flex: 3,
       type: 'string',
+      sortable: false,
       renderCell: (params) => (
         <Box
           sx={{
@@ -162,6 +164,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, select
       headerName: '',
       flex: 0.3,
       type: 'string',
+      sortable: false,
       renderCell: (params) => (
         <Box
           sx={{
@@ -222,7 +225,6 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, select
           setOpenDrawer(true);
         }}
         onSelectionModelChange={(newSelectionModel: GridSelectionModel) => {
-          console.log('selectionmode', newSelectionModel);
           setSelectionModel(newSelectionModel);
         }}
         selectionModel={selectionModel}

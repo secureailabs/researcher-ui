@@ -211,6 +211,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
               />
             ) : null}
           </Box>
+          {/* Modal for email response */}
           <Dialog
             open={openReplyModal}
             onClose={() => {
