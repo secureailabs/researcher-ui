@@ -1,10 +1,11 @@
-import { Box, CircularProgress, Drawer, Typography } from '@mui/material';
+import { Box, CircularProgress, Drawer, Tooltip, Typography } from '@mui/material';
 import styles from './EmailDisplaySection.module.css';
 import { GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import { useEffect, useState } from 'react';
 import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
 import EmailDetailedView from '../EmailDetailedView';
+import ReplyIcon from '@mui/icons-material/Reply';
 
 export interface IEmailDisplaySection {
   mailBoxId: string;
@@ -59,6 +60,8 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
   useEffect(() => {
     getEmails();
   }, []);
+
+  console.log('rows', rows);
 
   useEffect(() => {
     let active = true;
@@ -119,10 +122,21 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
           sx={{
             width: '100%',
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center'
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center'
           }}
         >
+          {params.row.message_state === 'SUCCESS' ? (
+            <Tooltip title="You have already responded to this email">
+              <ReplyIcon
+                sx={{
+                  color: '#61a15f',
+                  marginRight: '10px'
+                }}
+              />
+            </Tooltip>
+          ) : null}
           <Typography
             variant="body1"
             sx={{
@@ -135,6 +149,25 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
           >
             {params.row.body.content.replace(/<[^>]*>?/gm, '')}
           </Typography>
+        </Box>
+      )
+    },
+    {
+      field: 'tag',
+      headerClassName: 'table--header',
+      headerName: 'Category',
+      flex: 0.5,
+      type: 'string',
+      sortable: false,
+      renderCell: (params) => (
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}
+        >
           <Box
             sx={{
               marginTop: '6px',

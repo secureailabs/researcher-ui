@@ -45,8 +45,6 @@ const Navigation = () => {
     }));
   }
 
-  console.log('menuItem', menuItem);
-
   const navGroups = menuItem.items.slice(0, lastItemIndex + 1).map((item) => {
     switch (item.type) {
       case 'group':

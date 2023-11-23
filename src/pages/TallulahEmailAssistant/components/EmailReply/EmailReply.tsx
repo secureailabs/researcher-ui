@@ -171,6 +171,7 @@ const EmailReply: React.FC<IEmailReply> = ({ setOpenReplyModal, mailBoxId, selec
         onClose={() => {
           setIsTemplateSelectionModalOpen(false);
         }}
+        fullWidth
       >
         <ResponseTemplateSelection
           setEmailBody={setEmailBody}
