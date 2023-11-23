@@ -13,9 +13,10 @@ export interface IResponseTemplateCard {
   editable?: boolean;
   selection?: boolean;
   onSelect?: (template: GetResponseTemplate_Out) => void;
+  handleRefresh: () => void;
 }
 
-const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, editable = true, selection = false, onSelect }) => {
+const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, editable = true, selection = false, onSelect, handleRefresh }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState<boolean>(false);
 
@@ -156,7 +157,7 @@ const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, editable 
           setIsTemplateDialogOpen(false);
         }}
       >
-        <EditResponseTemplate initialData={data} />
+        <EditResponseTemplate initialData={data} setIsModalOpen={setIsTemplateDialogOpen} handleRefresh={handleRefresh} />
       </Dialog>
     </Box>
   );

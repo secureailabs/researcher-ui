@@ -7,7 +7,7 @@ import EmailDisplaySection from './components/EmailDisplaySection';
 import Filter from './components/Filter';
 import Sort from './components/Sort';
 import { GoogleOutlined, WindowsOutlined } from '@ant-design/icons';
-import { MailboxService } from 'src/tallulah-ts-client';
+import { GetMailbox_Out, MailboxService } from 'src/tallulah-ts-client';
 import { OUTLOOK_REDIRECT_URI } from 'src/config';
 import { useNavigate } from 'react-router-dom';
 import { GridSelectionModel } from '@mui/x-data-grid';
@@ -65,6 +65,8 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const [openReplyModal, setOpenReplyModal] = useState<boolean>(false);
   const [mailBoxId, setMailBoxId] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [sortKey, setSortKey] = useState<string>('received_time');
+  const [sortDirection, setSortDirection] = useState<-1 | 1>(-1);
 
   const open = Boolean(anchorEl);
 
@@ -103,6 +105,10 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   useEffect(() => {
     getAllMailBoxes();
   }, []);
+
+  useEffect(() => {
+    getAllMailBoxes();
+  }, [sortDirection]);
 
   return (
     <>
@@ -146,7 +152,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                 <Filter />
               </Box>
               <Box sx={{ display: 'flex' }}>
-                <Sort />
+                <Sort sortDirection={sortDirection} setSortDirection={setSortDirection} />
               </Box>
               <Box sx={{ display: 'flex' }}>
                 <IconButton
@@ -196,7 +202,13 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
           </Box>
           <Box>
             {mailboxes.length > 0 ? (
-              <EmailDisplaySection mailboxes={mailboxes} selectionModel={selectedEmailsIds} setSelectionModel={setselectedEmailsIds} />
+              <EmailDisplaySection
+                mailboxes={mailboxes}
+                selectionModel={selectedEmailsIds}
+                setSelectionModel={setselectedEmailsIds}
+                sortKey={sortKey}
+                sortDirection={sortDirection}
+              />
             ) : null}
           </Box>
           <Dialog

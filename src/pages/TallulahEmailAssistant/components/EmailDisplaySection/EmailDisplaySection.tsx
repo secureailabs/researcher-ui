@@ -1,4 +1,4 @@
-import { Box, Drawer, Typography } from '@mui/material';
+import { Box, CircularProgress, Drawer, Typography } from '@mui/material';
 import styles from './EmailDisplaySection.module.css';
 import { GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
@@ -10,6 +10,8 @@ export interface IEmailDisplaySection {
   mailboxes: any[];
   setSelectionModel: (selectionModel: any) => void;
   selectionModel: string[];
+  sortKey: string;
+  sortDirection: -1 | 1;
 }
 
 const resetPaginationData = {
@@ -40,7 +42,7 @@ const formatReceivedTime = (receivedTime: string) => {
   }
 };
 
-const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, selectionModel, setSelectionModel }) => {
+const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, selectionModel, setSelectionModel, ...props }) => {
   const [rows, setRows] = useState<GetEmail_Out[]>([]);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -51,7 +53,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, select
 
   const getEmails = async (offset = 0) => {
     setLoading(true);
-    const response = await EmailsService.getAllEmails(MAIL_BOX_ID, offset, resetPaginationData.limit);
+    const response = await EmailsService.getAllEmails(MAIL_BOX_ID, offset, resetPaginationData.limit, props.sortKey, props.sortDirection);
     setLoading(false);
     setRows([...response.messages]);
   };
@@ -77,6 +79,13 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, select
       active = false;
     };
   }, [page]);
+
+  useEffect(() => {
+    const newOffset = 0 * resetPaginationData.limit;
+    setPage(0);
+    getEmails(newOffset);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.sortDirection]);
 
   const columns: GridColDef[] = [
     {

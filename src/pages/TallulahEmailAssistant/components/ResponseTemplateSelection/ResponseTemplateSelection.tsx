@@ -43,6 +43,10 @@ const ResponseTemplateSelection: React.FC<IResponseTemplateSelection> = ({
     fetchResponseTemplates();
   }, []);
 
+  const handleRefresh = () => {
+    fetchResponseTemplates();
+  };
+
   return (
     <Box className={styles.container}>
       <Box
@@ -79,7 +83,14 @@ const ResponseTemplateSelection: React.FC<IResponseTemplateSelection> = ({
         {templateList && templateList.length > 0 ? (
           <Box>
             {templateList.map((_template, _index) => (
-              <ResponseTemplateCard key={_template._id} data={_template} editable={false} selection={true} onSelect={handleOnSelect} />
+              <ResponseTemplateCard
+                key={_template._id}
+                data={_template}
+                editable={false}
+                selection={true}
+                onSelect={handleOnSelect}
+                handleRefresh={handleRefresh}
+              />
             ))}
           </Box>
         ) : (
