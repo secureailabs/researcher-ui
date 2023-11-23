@@ -219,6 +219,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
             onClose={() => {
               setOpenReplyModal(false);
             }}
+            fullWidth
           >
             <EmailReply
               setOpenReplyModal={setOpenReplyModal}

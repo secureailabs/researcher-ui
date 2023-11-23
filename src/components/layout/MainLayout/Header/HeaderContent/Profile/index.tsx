@@ -66,8 +66,6 @@ const Profile: React.FC<any> = ({ userProfile }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  console.log('uuuu', userProfile);
-
   // const { logout, user } = useAuth();
   const handleLogout = async () => {
     try {
