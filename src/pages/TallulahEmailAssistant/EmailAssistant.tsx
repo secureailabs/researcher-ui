@@ -63,7 +63,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const [selectedEmailsIds, setselectedEmailsIds] = useState<string[]>([]);
   const [selectedEmails, setSelectedEmails] = useState<any[]>([]);
   const [openReplyModal, setOpenReplyModal] = useState<boolean>(false);
-  const [mailBoxId, setMailBoxId] = useState<string>('');
+  const [selectedMailBoxId, setselectedMailBoxId] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [sortKey, setSortKey] = useState<string>('received_time');
   const [sortDirection, setSortDirection] = useState<-1 | 1>(-1);
@@ -85,7 +85,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
       if (response.mailboxes.length > 0) {
         setIsMailAdded(true);
         setMailboxes(response.mailboxes);
-        setMailBoxId(response.mailboxes[0]._id);
+        setselectedMailBoxId(response.mailboxes[0]._id);
       }
     } catch (e) {
       console.log(e);
@@ -93,10 +93,12 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   };
 
   const handleRemoveMailBoxClicked = async () => {
+    if (!selectedMailBoxId) return;
     try {
-      const response = await MailboxService.deleteMailbox(mailBoxId);
+      const response = await MailboxService.deleteMailbox(selectedMailBoxId);
       setIsMailAdded(false);
       setMailboxes([]);
+      setselectedMailBoxId(null);
     } catch (e) {
       console.log(e);
     }
@@ -201,9 +203,9 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
             ) : null}
           </Box>
           <Box>
-            {mailboxes.length > 0 ? (
+            {selectedMailBoxId ? (
               <EmailDisplaySection
-                mailboxes={mailboxes}
+                mailBoxId={selectedMailBoxId}
                 selectionModel={selectedEmailsIds}
                 setSelectionModel={setselectedEmailsIds}
                 sortKey={sortKey}
@@ -218,7 +220,11 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
               setOpenReplyModal(false);
             }}
           >
-            <EmailReply setOpenReplyModal={setOpenReplyModal} selectedEmailsIds={selectedEmailsIds} mailBoxId={mailBoxId} />
+            <EmailReply
+              setOpenReplyModal={setOpenReplyModal}
+              selectedEmailsIds={selectedEmailsIds}
+              mailBoxId={selectedMailBoxId as string}
+            />
           </Dialog>
         </Box>
       ) : (

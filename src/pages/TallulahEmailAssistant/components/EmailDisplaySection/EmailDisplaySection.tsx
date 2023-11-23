@@ -7,7 +7,7 @@ import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
 import EmailDetailedView from '../EmailDetailedView';
 
 export interface IEmailDisplaySection {
-  mailboxes: any[];
+  mailBoxId: string;
   setSelectionModel: (selectionModel: any) => void;
   selectionModel: string[];
   sortKey: string;
@@ -42,18 +42,16 @@ const formatReceivedTime = (receivedTime: string) => {
   }
 };
 
-const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailboxes, selectionModel, setSelectionModel, ...props }) => {
+const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, selectionModel, setSelectionModel, ...props }) => {
   const [rows, setRows] = useState<GetEmail_Out[]>([]);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const MAIL_BOX_ID = mailboxes[0]._id;
-
   const getEmails = async (offset = 0) => {
     setLoading(true);
-    const response = await EmailsService.getAllEmails(MAIL_BOX_ID, offset, resetPaginationData.limit, props.sortKey, props.sortDirection);
+    const response = await EmailsService.getAllEmails(mailBoxId, offset, resetPaginationData.limit, props.sortKey, props.sortDirection);
     setLoading(false);
     setRows([...response.messages]);
   };
