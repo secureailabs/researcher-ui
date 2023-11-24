@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, IconButton, InputBase, styled } from '@mui/material';
+import { Box, Breadcrumbs, Button, Dialog, IconButton, InputBase, Link, styled } from '@mui/material';
 import styles from './TallulahEmailResponseTemplate.module.css';
 import TemplateResponseListSection from './components/TemplateResponseListSection';
 import SearchIcon from '@mui/icons-material/Search';
@@ -6,6 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
 import EditResponseTemplate from './components/EditResponseTemplate';
 import { GetResponseTemplate_Out, ResponseTemplatesService } from 'src/tallulah-ts-client';
+import HomeIcon from '@mui/icons-material/Home';
 
 export interface ITallulahEmailResponseTemplate {}
 
@@ -63,18 +64,29 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
   }, []);
 
   const handleRefresh = () => {
-    console.log('handleRefresh cvalled');
     setTemplateList([]);
     fetchResponseTemplates();
   };
 
   return (
     <Box>
+      <Box>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Link underline="hover" color="inherit" href="/email-assistant" sx={{ display: 'flex', alignItems: 'center' }}>
+            <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+            Email Assistant
+          </Link>
+          <Link underline="hover" color="text.primary" href="#" aria-current="page">
+            Response Template
+          </Link>
+        </Breadcrumbs>
+      </Box>
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          marginTop: '20px'
         }}
       >
         <Box sx={{ flex: 1, marginRight: '20px' }}>
