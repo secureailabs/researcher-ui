@@ -19,13 +19,25 @@ const Sort = (props: any) => {
             label: 'Asc',
             callback: (event, item) => {
               props.setSortDirection(1);
-            }
+            },
+            sx:
+              props.sortDirection === 1
+                ? {
+                    backgroundColor: '#a1d0f7'
+                  }
+                : {}
           },
           {
             label: 'Desc',
             callback: (event, item) => {
               props.setSortDirection(-1);
-            }
+            },
+            sx:
+              props.sortDirection === -1
+                ? {
+                    backgroundColor: '#a1d0f7'
+                  }
+                : {}
           }
         ]
       }
