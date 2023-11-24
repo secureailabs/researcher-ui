@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Drawer, Tooltip, Typography } from '@mui/material';
+import { Box, Drawer, Tooltip, Typography } from '@mui/material';
 import styles from './EmailDisplaySection.module.css';
 import { GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
@@ -14,33 +14,47 @@ export interface IEmailDisplaySection {
   selectionModel: string[];
   sortKey: string;
   sortDirection: -1 | 1;
+  filterByTags: string[];
 }
 
 const resetPaginationData = {
   count: 0,
-  offset: 0,
+  next: 0,
   limit: 25
 };
 
-const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, selectionModel, setSelectionModel, ...props }) => {
+const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, selectionModel, setSelectionModel, filterByTags, ...props }) => {
   const [rows, setRows] = useState<GetEmail_Out[]>([]);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [paginationData, setPaginationData] = useState(resetPaginationData);
 
   const getEmails = async (offset = 0) => {
     setLoading(true);
-    const response = await EmailsService.getAllEmails(mailBoxId, offset, resetPaginationData.limit, props.sortKey, props.sortDirection);
+    const filterTags = filterByTags.length > 0 ? filterByTags : undefined;
+    const response = await EmailsService.getAllEmails(
+      mailBoxId,
+      offset,
+      resetPaginationData.limit,
+      props.sortKey,
+      props.sortDirection,
+      filterTags
+    );
     setLoading(false);
+    console.log('response', response);
+    setPaginationData({
+      count: response.count,
+      limit: response.limit,
+      next: response.next
+    });
     setRows([...response.messages]);
   };
 
   useEffect(() => {
     getEmails();
   }, []);
-
-  console.log('rows', rows);
 
   useEffect(() => {
     let active = true;
@@ -65,7 +79,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
     setPage(0);
     getEmails(newOffset);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.sortDirection]);
+  }, [props.sortDirection, props.sortKey, filterByTags]);
 
   const columns: GridColDef[] = [
     {
@@ -214,7 +228,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
         checkboxSelection
         pageSize={25}
         rowsPerPageOptions={[25]}
-        rowCount={2000}
+        rowCount={paginationData.count}
         paginationMode="server"
         onPageChange={(newPage: any) => {
           console.log('page changed', newPage);

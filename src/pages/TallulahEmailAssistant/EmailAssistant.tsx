@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { GridSelectionModel } from '@mui/x-data-grid';
 import EmailReply from './components/EmailReply';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import FilterChip from './components/FilterChip';
 
 const urlToEncodded = (url: string) => {
   const encodedURL = encodeURIComponent(url);
@@ -67,6 +68,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [sortKey, setSortKey] = useState<string>('received_time');
   const [sortDirection, setSortDirection] = useState<-1 | 1>(-1);
+  const [filterByTags, setFilterByTags] = useState<string[]>([]);
 
   const open = Boolean(anchorEl);
 
@@ -136,7 +138,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'flex-end',
+                justifyContent: 'space-between',
                 gap: '20px'
               }}
             >
@@ -148,59 +150,90 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                 </SearchIconWrapper>
                 <StyledInputBase placeholder="Search by Body, Tags" inputProps={{ 'aria-label': 'search' }} />
               </Search>
-            </Box> */}
+              </Box> */}
 
-              <Box sx={{ display: 'flex' }}>
-                <Filter />
-              </Box>
-              <Box sx={{ display: 'flex' }}>
-                <Sort sortDirection={sortDirection} setSortDirection={setSortDirection} />
-              </Box>
-              <Box sx={{ display: 'flex' }}>
-                <IconButton
-                  onClick={() => {
-                    navigate('/email-assistant/response-template');
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  gap: '20px'
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex'
                   }}
                 >
-                  <SettingsIcon />
-                </IconButton>
+                  <Filter filters={filterByTags} setFilters={setFilterByTags} />
+                </Box>
+                <Box sx={{ display: 'flex' }}>
+                  <Sort sortDirection={sortDirection} setSortDirection={setSortDirection} />
+                </Box>
               </Box>
-              {/* dropdown menu */}
-              <Box>
-                <IconButton
-                  id="menu-button"
-                  aria-controls={open ? 'basic-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? 'true' : undefined}
-                  onClick={handleClick}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button'
-                  }}
-                >
-                  <MenuItem onClick={handleRemoveMailBoxClicked}>Remove Mailbox</MenuItem>
-                </Menu>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  gap: '20px'
+                }}
+              >
+                {selectedEmailsIds.length > 0 ? (
+                  <Box>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setOpenReplyModal(true);
+                      }}
+                    >
+                      Reply Selected
+                    </Button>
+                  </Box>
+                ) : null}
+                <Box sx={{ display: 'flex' }}>
+                  <IconButton
+                    onClick={() => {
+                      navigate('/email-assistant/response-template');
+                    }}
+                  >
+                    <SettingsIcon />
+                  </IconButton>
+                </Box>
+                {/* dropdown menu */}
+                <Box>
+                  <IconButton
+                    id="menu-button"
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      'aria-labelledby': 'basic-button'
+                    }}
+                  >
+                    <MenuItem onClick={handleRemoveMailBoxClicked}>Remove Mailbox</MenuItem>
+                  </Menu>
+                </Box>
               </Box>
             </Box>
-            {selectedEmailsIds.length > 0 ? (
-              <Box>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setOpenReplyModal(true);
-                  }}
-                >
-                  Reply Selected
-                </Button>
-              </Box>
-            ) : null}
+            <Box
+              sx={{
+                marginTop: '20px'
+              }}
+            >
+              {filterByTags.map((tag) => (
+                <FilterChip filterTag={tag} setFilters={setFilterByTags} />
+              ))}
+            </Box>
           </Box>
           <Box>
             {selectedMailBoxId ? (
@@ -210,6 +243,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                 setSelectionModel={setselectedEmailsIds}
                 sortKey={sortKey}
                 sortDirection={sortDirection}
+                filterByTags={filterByTags}
               />
             ) : null}
           </Box>
