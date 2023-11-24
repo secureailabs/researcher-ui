@@ -15,7 +15,6 @@ const Filter: React.FC<IFilterProps> = ({ setFilters, filters }) => {
 
   const getMenuItems = (filters: any) => {
     const labels = getAllEmailLabels();
-    // add new object to each object in labels array {sx={{ color: 'red' }}} to change color of text
     const menuItems = labels.map((label: any) => {
       let bgColor = 'white';
       if (filters.includes(label.label)) {
