@@ -120,6 +120,7 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
         onClose={() => {
           setIsAddNewTemplateDialogOpen(false);
         }}
+        fullWidth
       >
         <EditResponseTemplate setIsModalOpen={setIsAddNewTemplateDialogOpen} handleRefresh={handleRefresh} />
       </Dialog>

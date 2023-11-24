@@ -156,6 +156,7 @@ const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, editable 
         onClose={() => {
           setIsTemplateDialogOpen(false);
         }}
+        fullWidth
       >
         <EditResponseTemplate initialData={data} setIsModalOpen={setIsTemplateDialogOpen} handleRefresh={handleRefresh} />
       </Dialog>
