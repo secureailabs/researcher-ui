@@ -1,5 +1,5 @@
-import { AppBar, Box, Container, Toolbar } from '@mui/material';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { AppBar, Box, Breadcrumbs, Container, Toolbar } from '@mui/material';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Header from './Header';
@@ -12,8 +12,22 @@ import { REACT_APP_SAIL_API_SERVICE_URL } from 'src/config';
 import { useQuery } from 'react-query';
 import { updateUserProfile } from 'src/store/reducers/userprofile';
 import { updateSCNDetails } from 'src/store/reducers/scn_details';
+import useBreadcrumbs from 'use-react-router-breadcrumbs';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
+
+const BreadcrumbsWrapper = (): JSX.Element => {
+  const breadcrumbs = useBreadcrumbs();
+  return (
+    <Breadcrumbs aria-label="breadcrumb">
+      {breadcrumbs.map(({ match, breadcrumb }) => (
+        <Link key={match.pathname} color="inherit" to={match.pathname}>
+          {breadcrumb}
+        </Link>
+      ))}
+    </Breadcrumbs>
+  );
+};
 
 const MinimalLayout = (): JSX.Element => {
   const [leftDrawerOpened, setLeftDrawerOpened] = useState(true);
@@ -104,6 +118,7 @@ const MinimalLayout = (): JSX.Element => {
             width: '100%'
           }}
         >
+          <BreadcrumbsWrapper />
           <Outlet />
         </Container>
       </Box>

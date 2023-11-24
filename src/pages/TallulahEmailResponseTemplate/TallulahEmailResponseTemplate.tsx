@@ -70,17 +70,6 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
 
   return (
     <Box>
-      <Box>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link underline="hover" color="inherit" href="/email-assistant" sx={{ display: 'flex', alignItems: 'center' }}>
-            <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-            Email Assistant
-          </Link>
-          <Link underline="hover" color="text.primary" href="#" aria-current="page">
-            Response Template
-          </Link>
-        </Breadcrumbs>
-      </Box>
       <Box
         sx={{
           display: 'flex',

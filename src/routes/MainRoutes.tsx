@@ -28,32 +28,39 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <TallulahEmailAssistant />
+      element: <TallulahEmailAssistant />,
+      breadcrumb: 'Email Assistant'
     },
     {
       path: 'home',
-      element: <TallulahEmailAssistant />
+      element: <TallulahEmailAssistant />,
+      breadcrumb: 'Email Assistant'
     },
     {
       path: 'tallulah-search',
-      element: <TallulahSearch />
+      element: <TallulahSearch />,
+      breadcrumb: 'Tallulah Search'
     },
     {
       path: 'tallulah-story-assistant',
-      element: <TallulahStoryAssistant />
+      element: <TallulahStoryAssistant />,
+      breadcrumb: 'Story Assistant'
     },
     {
       path: 'tallulah-dashboard',
-      element: <TallulahDashboard />
+      element: <TallulahDashboard />,
+      breadcrumb: 'Dashboard'
     },
     {
       path: 'email-assistant',
-      element: <TallulahEmailAssistant />
+      element: <TallulahEmailAssistant />,
+      breadcrumb: 'Email Assistant'
     },
 
     {
       path: 'email-assistant/response-template',
-      element: <TallulahEmailResponseTemplate />
+      element: <TallulahEmailResponseTemplate />,
+      breadcrumb: 'Response Template'
     },
 
     {

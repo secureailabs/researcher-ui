@@ -53,6 +53,7 @@
     "redux": "^4.2.1",
     "simplebar": "5.3.8",
     "simplebar-react": "2.4.1",
+    "use-react-router-breadcrumbs": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
