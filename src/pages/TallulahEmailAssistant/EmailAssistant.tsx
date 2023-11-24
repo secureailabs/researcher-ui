@@ -69,6 +69,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const [sortKey, setSortKey] = useState<string>('received_time');
   const [sortDirection, setSortDirection] = useState<-1 | 1>(-1);
   const [filterByTags, setFilterByTags] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const open = Boolean(anchorEl);
 
@@ -82,6 +83,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const navigate = useNavigate();
 
   const getAllMailBoxes = async () => {
+    setIsLoading(true);
     try {
       const response = await MailboxService.getAllMailboxes();
       if (response.mailboxes.length > 0) {
@@ -92,6 +94,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
     } catch (e) {
       console.log(e);
     }
+    setIsLoading(false);
   };
 
   const handleRemoveMailBoxClicked = async () => {
@@ -110,9 +113,21 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
     getAllMailBoxes();
   }, []);
 
-  useEffect(() => {
-    getAllMailBoxes();
-  }, [sortDirection]);
+  if (isLoading && !isMailAdded) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: '1 1 auto'
+        }}
+      >
+        <Box>Fetching mailbox details...</Box>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -262,7 +277,8 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
             />
           </Dialog>
         </Box>
-      ) : (
+      ) : null}
+      {!isMailAdded && !isLoading ? (
         <Box
           sx={{
             display: 'flex',
@@ -289,7 +305,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
             </Button>
           </Box>
         </Box>
-      )}
+      ) : null}
     </>
   );
 };
