@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
 import EmailDetailedView from '../EmailDetailedView';
 import ReplyIcon from '@mui/icons-material/Reply';
+import { formatReceivedTime, getEmailLabel } from 'src/utils/helper';
 
 export interface IEmailDisplaySection {
   mailBoxId: string;
@@ -19,28 +20,6 @@ const resetPaginationData = {
   count: 0,
   offset: 0,
   limit: 25
-};
-
-const formatReceivedTime = (receivedTime: string) => {
-  const currentDate = new Date();
-  const receivedDate = new Date(receivedTime);
-
-  const currentYear = currentDate.getFullYear();
-  const receivedYear = receivedDate.getFullYear();
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-  if (currentYear === receivedYear) {
-    // If the year is the current year, format as '10 Oct'
-    const day = receivedDate.getDate();
-    const month = monthNames[receivedDate.getMonth()];
-    return `${day} ${month}`;
-  } else {
-    // If it's a different year, format as '10 Oct 2022'
-    const day = receivedDate.getDate();
-    const month = monthNames[receivedDate.getMonth()];
-    const year = receivedYear;
-    return `${day} ${month} ${year}`;
-  }
 };
 
 const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, selectionModel, setSelectionModel, ...props }) => {
@@ -156,7 +135,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
       field: 'tag',
       headerClassName: 'table--header',
       headerName: 'Category',
-      flex: 0.5,
+      flex: 0.7,
       type: 'string',
       sortable: false,
       renderCell: (params) => (
@@ -177,13 +156,13 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
             <Typography
               sx={{
                 fontSize: '0.65rem',
-                backgroundColor: '#9fdef5',
+                backgroundColor: `${getEmailLabel(params.row.annotations[0].label)?.color}`,
                 padding: '2px 6px',
                 borderRadius: '4px'
               }}
               variant="body1"
             >
-              General Info
+              {params.row.annotations[0].label}
             </Typography>
           </Box>
         </Box>
