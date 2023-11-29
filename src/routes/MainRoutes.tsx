@@ -56,15 +56,13 @@ const MainRoutes = {
       element: <TallulahEmailAssistant />,
       breadcrumb: 'Email Assistant'
     },
-
     {
       path: 'email-assistant/response-template',
       element: <TallulahEmailResponseTemplate />,
       breadcrumb: 'Response Template'
     },
-
     {
-      path: 'outlook-oauth',
+      path: 'mailbox/authorize',
       element: <MSAuthorize />
     }
     // {
