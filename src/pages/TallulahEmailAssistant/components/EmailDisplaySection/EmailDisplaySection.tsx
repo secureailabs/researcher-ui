@@ -15,6 +15,7 @@ export interface IEmailDisplaySection {
   sortKey: string;
   sortDirection: -1 | 1;
   filterByTags: string[];
+  filterByState: string[];
 }
 
 const resetPaginationData = {
@@ -23,7 +24,14 @@ const resetPaginationData = {
   limit: 25
 };
 
-const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, selectionModel, setSelectionModel, filterByTags, ...props }) => {
+const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
+  mailBoxId,
+  selectionModel,
+  setSelectionModel,
+  filterByTags,
+  filterByState,
+  ...props
+}) => {
   const [rows, setRows] = useState<GetEmail_Out[]>([]);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -34,14 +42,36 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
   const getEmails = async (offset = 0) => {
     setLoading(true);
     const filterTags = filterByTags.length > 0 ? filterByTags : undefined;
+    const filterStateStrings = filterByState.length > 0 ? filterByState : undefined;
+    enum EmailState {
+      NEW = 'NEW',
+      TAGGED = 'TAGGED',
+      RESPONDED = 'RESPONDED',
+      FAILED = 'FAILED'
+    }
+
+    const filterState = filterStateStrings?.map((state) => {
+      if (state === 'NEW') {
+        return EmailState.NEW;
+      } else if (state === 'TAGGED') {
+        return EmailState.TAGGED;
+      } else if (state === 'RESPONDED') {
+        return EmailState.RESPONDED;
+      } else {
+        return EmailState.FAILED;
+      }
+    });
+
     const response = await EmailsService.getAllEmails(
       mailBoxId,
       offset,
       resetPaginationData.limit,
       props.sortKey,
       props.sortDirection,
-      filterTags
+      filterTags,
+      filterState
     );
+
     setLoading(false);
     console.log('response', response);
     setPaginationData({
@@ -79,7 +109,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
     setPage(0);
     getEmails(newOffset);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.sortDirection, props.sortKey, filterByTags]);
+  }, [props.sortDirection, props.sortKey, filterByTags, filterByState]);
 
   const columns: GridColDef[] = [
     {
@@ -120,7 +150,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
             alignItems: 'center'
           }}
         >
-          {params.row.message_state === 'SUCCESS' ? (
+          {params.row.message_state === 'RESPONDED' ? (
             <Tooltip title="You have already responded to this email">
               <ReplyIcon
                 sx={{
@@ -161,24 +191,47 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({ mailBoxId, select
             justifyContent: 'center'
           }}
         >
-          <Box
-            sx={{
-              marginTop: '6px',
-              display: 'flex'
-            }}
-          >
-            <Typography
+          {params.row.message_state === 'NEW' ? (
+            <Box
               sx={{
-                fontSize: '0.65rem',
-                backgroundColor: `${getEmailLabel(params.row.annotations[0].label)?.color}`,
-                padding: '2px 6px',
-                borderRadius: '4px'
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: 'center'
               }}
-              variant="body1"
             >
-              {params.row.annotations[0].label}
-            </Typography>
-          </Box>
+              <Typography
+                sx={{
+                  fontSize: '0.65rem',
+                  backgroundColor: '#f5f5f5',
+                  padding: '2px 6px',
+                  borderRadius: '4px'
+                }}
+                variant="body1"
+              >
+                New
+              </Typography>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                marginTop: '6px',
+                display: 'flex'
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '0.65rem',
+                  backgroundColor: `${getEmailLabel(params.row.annotations[0].label)?.color}`,
+                  padding: '2px 6px',
+                  borderRadius: '4px'
+                }}
+                variant="body1"
+              >
+                {params.row.annotations[0].label}
+              </Typography>
+            </Box>
+          )}
         </Box>
       )
     },

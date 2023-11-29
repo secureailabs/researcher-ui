@@ -64,6 +64,7 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
   }, []);
 
   const handleRefresh = () => {
+    console.log('handleRefresh');
     setTemplateList([]);
     fetchResponseTemplates();
   };

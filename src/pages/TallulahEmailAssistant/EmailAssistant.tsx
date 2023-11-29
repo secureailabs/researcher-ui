@@ -23,41 +23,6 @@ const urlToEncodded = (url: string) => {
 
 export interface IEmailAssistant {}
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: '#fff',
-  width: '100%',
-  border: '1px solid #d1d1d1',
-  height: '50px'
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: '#000',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '500px'
-    }
-  }
-}));
-
 const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const [isMailAdded, setIsMailAdded] = useState(false);
   const [mailboxes, setMailboxes] = useState<any[]>([]);
@@ -69,6 +34,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const [sortKey, setSortKey] = useState<string>('received_time');
   const [sortDirection, setSortDirection] = useState<-1 | 1>(-1);
   const [filterByTags, setFilterByTags] = useState<string[]>([]);
+  const [filterByState, setFilterByState] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const open = Boolean(anchorEl);
@@ -157,16 +123,6 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                 gap: '20px'
               }}
             >
-              {/* NOTE: Search boxes commented */}
-              {/* <Box sx={{ flex: 7, marginRight: '20px' }}>
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase placeholder="Search by Body, Tags" inputProps={{ 'aria-label': 'search' }} />
-              </Search>
-              </Box> */}
-
               <Box
                 sx={{
                   display: 'flex',
@@ -180,7 +136,12 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                     display: 'flex'
                   }}
                 >
-                  <Filter filters={filterByTags} setFilters={setFilterByTags} />
+                  <Filter
+                    filtersByTags={filterByTags}
+                    setFilterByTags={setFilterByTags}
+                    filtersByState={filterByState}
+                    setFilterByState={setFilterByState}
+                  />
                 </Box>
                 <Box sx={{ display: 'flex' }}>
                   <Sort sortDirection={sortDirection} setSortDirection={setSortDirection} />
@@ -248,6 +209,9 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
               {filterByTags.map((tag) => (
                 <FilterChip filterTag={tag} setFilters={setFilterByTags} />
               ))}
+              {filterByState.map((tag) => (
+                <FilterChip filterTag={tag} setFilters={setFilterByState} />
+              ))}
             </Box>
           </Box>
           <Box>
@@ -259,6 +223,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                 sortKey={sortKey}
                 sortDirection={sortDirection}
                 filterByTags={filterByTags}
+                filterByState={filterByState}
               />
             ) : null}
           </Box>

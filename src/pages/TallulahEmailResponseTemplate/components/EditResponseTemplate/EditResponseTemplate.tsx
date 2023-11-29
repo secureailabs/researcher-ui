@@ -35,7 +35,7 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData, se
     }
   };
 
-  const handleOnEditClicked = () => {
+  const handleOnEditClicked = async () => {
     const body = {
       subject: templateSubject,
       body: {
@@ -44,7 +44,7 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData, se
       }
     };
     try {
-      const response = ResponseTemplatesService.updateResponseTemplate(initialData!._id, body);
+      const response = await ResponseTemplatesService.updateResponseTemplate(initialData!._id, body);
       setIsModalOpen(false);
       handleRefresh();
     } catch (error) {

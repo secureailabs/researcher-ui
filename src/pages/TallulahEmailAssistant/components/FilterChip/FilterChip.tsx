@@ -11,7 +11,7 @@ export interface IFilterChip {
 
 const FilterChip: React.FC<IFilterChip> = ({ filterTag, setFilters }) => {
   const getEmailLabelColor = (label: string) => {
-    return getEmailLabel(label)?.color ? getEmailLabel(label)?.color : '#f5d98c';
+    return getEmailLabel(label)?.color ? getEmailLabel(label)?.color : '#71decc';
   };
   return (
     <Box

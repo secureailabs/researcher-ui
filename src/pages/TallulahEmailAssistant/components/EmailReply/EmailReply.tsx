@@ -5,8 +5,7 @@ import 'react-quill/dist/quill.snow.css';
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import ResponseTemplateSelection from '../ResponseTemplateSelection';
-import { GridSelectionModel } from '@mui/x-data-grid';
-import { EmailBody, EmailsService } from 'src/tallulah-ts-client';
+import { Body_reply_to_emails, EmailBody, EmailsService } from 'src/tallulah-ts-client';
 import useNotification from 'src/hooks/useNotification';
 
 export interface IEmailReply {
@@ -26,9 +25,12 @@ const EmailReply: React.FC<IEmailReply> = ({ setOpenReplyModal, mailBoxId, selec
 
   const handleSendEmail = async () => {
     const emailBodyWithSignature = `${emailBody} <br/> ${EmailSignatureLogo}`;
-    const body: EmailBody = {
-      contentType: 'html',
-      content: emailBodyWithSignature
+    const body: Body_reply_to_emails = {
+      subject: emailSubject.length > 0 ? emailSubject : undefined,
+      reply: {
+        contentType: 'html',
+        content: emailBodyWithSignature
+      }
     };
     const tags = undefined;
     try {

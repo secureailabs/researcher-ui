@@ -6,12 +6,15 @@ import { getAllEmailLabels } from 'src/utils/helper';
 import { useEffect, useState } from 'react';
 
 interface IFilterProps {
-  setFilters: (filters: any) => void;
-  filters: string[];
+  setFilterByTags: (filters: any) => void;
+  filtersByTags: string[];
+  filtersByState: string[];
+  setFilterByState: (filters: any) => void;
 }
 
-const Filter: React.FC<IFilterProps> = ({ setFilters, filters }) => {
+const Filter: React.FC<IFilterProps> = ({ setFilterByTags, filtersByTags, filtersByState, setFilterByState }) => {
   const [MENU_ITEMS_LABEL, setMENU_ITEMS_LABEL] = useState<any[]>([]);
+  const [MENU_EMAIL_STATUS_ITEMS, setMENU_EMAIL_STATUS_ITEMS] = useState<any[]>([]);
 
   const getMenuItems = (filters: any) => {
     const labels = getAllEmailLabels();
@@ -26,7 +29,7 @@ const Filter: React.FC<IFilterProps> = ({ setFilters, filters }) => {
           backgroundColor: bgColor
         },
         callback: () => {
-          setFilters((prevFilters: any) => {
+          setFilterByTags((prevFilters: any) => {
             if (prevFilters.includes(label.label)) {
               return prevFilters.filter((filter: any) => filter !== label.label);
             } else {
@@ -40,9 +43,40 @@ const Filter: React.FC<IFilterProps> = ({ setFilters, filters }) => {
     return menuItems;
   };
 
+  const getFilterByStateMenuItems = (filters: any) => {
+    const labels = ['NEW', 'TAGGED', 'RESPONDED', 'FAILED'];
+    const menuItems = labels.map((label: any) => {
+      let bgColor = 'white';
+      if (filters.includes(label)) {
+        bgColor = '#a1d0f7';
+      }
+      return {
+        label: label,
+        sx: {
+          backgroundColor: bgColor
+        },
+        callback: () => {
+          setFilterByState((prevFilters: any) => {
+            if (prevFilters.includes(label)) {
+              return prevFilters.filter((filter: any) => filter !== label);
+            } else {
+              return [...prevFilters, label];
+            }
+          });
+        }
+      };
+    });
+
+    return menuItems;
+  };
+
   useEffect(() => {
-    setMENU_ITEMS_LABEL(getMenuItems(filters));
-  }, [filters]);
+    setMENU_ITEMS_LABEL(getMenuItems(filtersByTags));
+  }, [filtersByTags]);
+
+  useEffect(() => {
+    setMENU_EMAIL_STATUS_ITEMS(getFilterByStateMenuItems(filtersByState));
+  }, [filtersByState]);
 
   const MenuItems: MenuItemData = {
     label: 'Filter',
@@ -51,6 +85,11 @@ const Filter: React.FC<IFilterProps> = ({ setFilters, filters }) => {
         label: 'Tags',
         rightIcon: <ChevronRightIcon />,
         items: MENU_ITEMS_LABEL
+      },
+      {
+        label: 'Email Status',
+        rightIcon: <ChevronRightIcon />,
+        items: MENU_EMAIL_STATUS_ITEMS
       }
     ]
   };
