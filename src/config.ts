@@ -21,11 +21,11 @@ export const DRAWER_WIDTH = 260;
 // export const REACT_APP_GOOGLE_API_KEY = 'AIzaSyCQBK2nekthzHxf-3ccXwtb6WZ769Cygnw';
 // export const BASE_URL = 'https://api.tbbc.tallulah.ai';
 
-export const REACT_APP_SAIL_API_SERVICE_URL = 'https://touch.prawalgangwar.in/';
-export const REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL = 'https://touch.prawalgangwar.in/';
-export const REACT_APP_GOOGLE_API_KEY = 'https://touch.prawalgangwar.in/';
-export const BASE_URL = 'https://touch.prawalgangwar.in/';
-export const OUTLOOK_REDIRECT_URI = 'https://touch.prawalgangwar.in/mailbox/authorize';
+export const REACT_APP_SAIL_API_SERVICE_URL = 'https://touch.tallulah.ai/';
+export const REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL = 'https://touch.tallulah.ai/';
+export const REACT_APP_GOOGLE_API_KEY = 'https://touch.tallulah.ai/';
+export const BASE_URL = 'https://touch.tallulah.ai/';
+export const OUTLOOK_REDIRECT_URI = 'https://touch.tallulah.ai/mailbox/authorize';
 
 // export const REACT_APP_SAIL_API_SERVICE_URL = 'https://api.demo.arrayinsights.net';
 // export const REACT_APP_SAIL_DATA_UPLOAD_SERVICE_URL = 'https://api.demo.arrayinsights.net';
