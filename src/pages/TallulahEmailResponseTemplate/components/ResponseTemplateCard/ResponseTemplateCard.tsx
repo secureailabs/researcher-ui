@@ -5,8 +5,10 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { GetResponseTemplate_Out } from 'src/tallulah-ts-client';
+import { GetResponseTemplate_Out, ResponseTemplatesService } from 'src/tallulah-ts-client';
 import EditResponseTemplate from '../EditResponseTemplate';
+import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
+import useNotification from 'src/hooks/useNotification';
 
 export interface IResponseTemplateCard {
   data: GetResponseTemplate_Out;
@@ -19,6 +21,21 @@ export interface IResponseTemplateCard {
 const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, editable = true, selection = false, onSelect, handleRefresh }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState<boolean>(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [sendNotification] = useNotification();
+
+  const handleDelete = async () => {
+    try {
+      await ResponseTemplatesService.deleteResponseTemplate(data._id);
+      handleRefresh();
+      sendNotification({
+        msg: 'Template removed successfully',
+        variant: 'success'
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box className={styles.container}>
@@ -160,6 +177,13 @@ const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, editable 
       >
         <EditResponseTemplate initialData={data} setIsModalOpen={setIsTemplateDialogOpen} handleRefresh={handleRefresh} />
       </Dialog>
+      <DeleteConfirmationModal
+        openDeleteModal={openDeleteModal}
+        handleCloseDeleteModal={() => {
+          setOpenDeleteModal(false);
+        }}
+        handleDelete={handleDelete}
+      />
     </Box>
   );
 };

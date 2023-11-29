@@ -105,6 +105,7 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
       <Box>
         <TemplateResponseListSection templateList={templateList} handleRefresh={handleRefresh} />
       </Box>
+      {/* Modal to add new template */}
       <Dialog
         open={isAddNewTemplateDialogOpen}
         onClose={() => {

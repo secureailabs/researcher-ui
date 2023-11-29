@@ -4,6 +4,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useState } from 'react';
 import { GetResponseTemplate_Out, RegisterResponseTemplate_In, ResponseTemplatesService } from 'src/tallulah-ts-client';
+import useNotification from 'src/hooks/useNotification';
 
 export interface IEditResponseTemplate {
   initialData?: GetResponseTemplate_Out;
@@ -16,6 +17,7 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData, se
   const [templateSubject, setTemplateSubject] = useState<string>(initialData && initialData.subject ? initialData.subject : '');
   const [templateBody, setTemplateBody] = useState<string>(initialData && initialData.body?.content ? initialData.body.content : '');
   const [isEditMode, setIsEditMode] = useState<boolean>(initialData ? true : false);
+  const [sendNotification] = useNotification();
 
   const handleOnSaveClicked = async () => {
     const body: RegisterResponseTemplate_In = {
@@ -28,8 +30,12 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData, se
     };
     try {
       const response = await ResponseTemplatesService.addNewResponseTemplate(body);
-      setIsModalOpen(false);
       handleRefresh();
+      sendNotification({
+        msg: 'Template added successfully',
+        variant: 'success'
+      });
+      setIsModalOpen(false);
     } catch (error) {
       console.log(error);
     }
@@ -45,8 +51,12 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData, se
     };
     try {
       const response = await ResponseTemplatesService.updateResponseTemplate(initialData!._id, body);
-      setIsModalOpen(false);
       handleRefresh();
+      sendNotification({
+        msg: 'Template modified successfully',
+        variant: 'success'
+      });
+      setIsModalOpen(false);
     } catch (error) {
       console.log(error);
     }
