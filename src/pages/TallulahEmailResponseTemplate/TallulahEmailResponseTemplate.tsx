@@ -48,6 +48,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = ({}) => {
   const [searchText, setSearchText] = useState<string>('');
   const [isAddNewTemplateDialogOpen, setIsAddNewTemplateDialogOpen] = useState<boolean>(false);
+  const [initialTemplateList, setInitialTemplateList] = useState<GetResponseTemplate_Out[]>([]);
   const [templateList, setTemplateList] = useState<GetResponseTemplate_Out[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
@@ -56,6 +57,7 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
     try {
       const response = await ResponseTemplatesService.getAllResponseTemplates();
       setTemplateList(response.templates);
+      setInitialTemplateList(response.templates);
     } catch (error) {
       console.log(error);
     }
@@ -65,6 +67,17 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
   useEffect(() => {
     fetchResponseTemplates();
   }, []);
+
+  useEffect(() => {
+    if (searchText === '') {
+      setTemplateList(initialTemplateList);
+    } else {
+      const filteredTemplateList = initialTemplateList.filter((template) => {
+        return template.name.toLowerCase().includes(searchText.toLowerCase());
+      });
+      setTemplateList(filteredTemplateList);
+    }
+  }, [searchText]);
 
   const handleRefresh = () => {
     setTemplateList([]);
@@ -86,7 +99,12 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase placeholder="Search by Name ..." inputProps={{ 'aria-label': 'search' }} value={searchText} />
+            <StyledInputBase
+              placeholder="Search by Name ..."
+              inputProps={{ 'aria-label': 'search' }}
+              value={searchText}
+              onChange={(e: any) => setSearchText(e.target.value)}
+            />
             {searchText !== '' ? (
               <IconButton aria-label="delete">
                 <CloseIcon />
