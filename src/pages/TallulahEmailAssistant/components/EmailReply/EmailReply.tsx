@@ -21,7 +21,7 @@ const EmailReply: React.FC<IEmailReply> = ({ setOpenReplyModal, mailBoxId, selec
   const [isTemplateSelectionModalOpen, setIsTemplateSelectionModalOpen] = useState<boolean>(false);
   const [sendNotification] = useNotification();
 
-  const EmailSignatureLogo = `<img src="https://www.pngitem.com/pimgs/m/485-4852378_sample-logo-png-transparent-png.png" alt="Sailthru Logo" width="100" height="100" border="0" style="display: block; padding-bottom: 10px;" />`;
+  const EmailSignatureLogo = `<img src="https://tallulahstoragegkntw.blob.core.windows.net/logos/TOUCH-logo-1-300x300.png" alt="Sail Logo" width="100" height="100" border="0" style="display: block; padding-bottom: 10px;" />`;
 
   const handleSendEmail = async () => {
     const emailBodyWithSignature = `${emailBody} <br/> ${EmailSignatureLogo}`;
