@@ -1,17 +1,26 @@
-import { Box, Button, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Dialog, Tooltip, Typography } from '@mui/material';
 import styles from './EmailDetailedView.module.css';
 import { GetEmail_Out } from 'src/tallulah-ts-client';
 import SendIcon from '@mui/icons-material/Send';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { formatReceivedTime, getEmailLabel } from 'src/utils/helper';
+import { useState } from 'react';
+import EmailReply from '../EmailReply';
 
 export interface IEmailDetailedView {
   data: GetEmail_Out;
   handleViewNextEmailClicked: (rowId: string) => void;
   handleViewPreviousEmailClicked: (rowId: string) => void;
+  mailBoxId: string;
 }
 
-const EmailDetailedView: React.FC<IEmailDetailedView> = ({ data, handleViewNextEmailClicked, handleViewPreviousEmailClicked }) => {
+const EmailDetailedView: React.FC<IEmailDetailedView> = ({
+  data,
+  handleViewNextEmailClicked,
+  handleViewPreviousEmailClicked,
+  mailBoxId
+}) => {
+  const [openReplyModal, setOpenReplyModal] = useState<boolean>(false);
   return (
     <Box>
       <Box
@@ -147,11 +156,23 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({ data, handleViewNextE
             sx={{
               padding: '0.5rem 2rem'
             }}
+            onClick={() => {
+              setOpenReplyModal(true);
+            }}
           >
             Reply
           </Button>
         </Box>
       </Box>
+      <Dialog
+        open={openReplyModal}
+        onClose={() => {
+          setOpenReplyModal(false);
+        }}
+        fullWidth
+      >
+        <EmailReply setOpenReplyModal={setOpenReplyModal} selectedEmailsIds={[data._id]} mailBoxId={mailBoxId as string} />
+      </Dialog>
     </Box>
   );
 };

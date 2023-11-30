@@ -303,7 +303,6 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
         rowCount={paginationData.count}
         paginationMode="server"
         onPageChange={(newPage: any) => {
-          console.log('page changed', newPage);
           setPage(newPage);
         }}
         disableSelectionOnClick
@@ -339,6 +338,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
           data={selectedRow}
           handleViewNextEmailClicked={handleViewNextEmailClicked}
           handleViewPreviousEmailClicked={handleViewPreviousEmailClicked}
+          mailBoxId={mailBoxId}
         />
       </Drawer>
     </Box>
