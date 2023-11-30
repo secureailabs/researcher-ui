@@ -2,10 +2,45 @@ import TemplateResponseListSection from 'src/pages/TallulahEmailResponseTemplate
 import styles from './ResponseTemplateSelection.module.css';
 import { useEffect, useState } from 'react';
 import { GetResponseTemplate_Out, ResponseTemplatesService } from 'src/tallulah-ts-client';
-import { Box, Icon, IconButton, Typography } from '@mui/material';
+import { Box, Icon, IconButton, InputBase, Typography, styled } from '@mui/material';
 import ResponseTemplateCard from 'src/pages/TallulahEmailResponseTemplate/components/ResponseTemplateCard';
 import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: '#fff',
+  width: '100%',
+  border: '1px solid #d1d1d1',
+  height: '50px'
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: '#000',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '500px'
+    }
+  }
+}));
 export interface IResponseTemplateSelection {
   setEmailSubject: (subject: string) => void;
   setEmailBody: (body: string) => void;
@@ -17,12 +52,15 @@ const ResponseTemplateSelection: React.FC<IResponseTemplateSelection> = ({
   setEmailBody,
   setIsTemplateSelectionModalOpen
 }) => {
+  const [initialTemplateList, setInitialTemplateList] = useState<GetResponseTemplate_Out[]>([]);
   const [templateList, setTemplateList] = useState<GetResponseTemplate_Out[]>([]);
+  const [searchText, setSearchText] = useState<string>('');
 
   const fetchResponseTemplates = async () => {
     try {
       const response = await ResponseTemplatesService.getAllResponseTemplates();
       setTemplateList(response.templates);
+      setInitialTemplateList(response.templates);
     } catch (error) {
       console.log(error);
     }
@@ -46,6 +84,17 @@ const ResponseTemplateSelection: React.FC<IResponseTemplateSelection> = ({
   const handleRefresh = () => {
     fetchResponseTemplates();
   };
+
+  useEffect(() => {
+    if (searchText === '') {
+      setTemplateList(initialTemplateList);
+    } else {
+      const filteredTemplateList = initialTemplateList.filter((template) => {
+        return template.name.toLowerCase().includes(searchText.toLowerCase());
+      });
+      setTemplateList(filteredTemplateList);
+    }
+  }, [searchText]);
 
   return (
     <Box className={styles.container}>
@@ -80,6 +129,24 @@ const ResponseTemplateSelection: React.FC<IResponseTemplateSelection> = ({
           padding: '1rem'
         }}
       >
+        <Box sx={{ flex: 1 }}>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search by Name ..."
+              inputProps={{ 'aria-label': 'search' }}
+              value={searchText}
+              onChange={(e: any) => setSearchText(e.target.value)}
+            />
+            {searchText !== '' ? (
+              <IconButton aria-label="delete">
+                <CloseIcon />
+              </IconButton>
+            ) : null}
+          </Search>
+        </Box>
         {templateList && templateList.length > 0 ? (
           <Box>
             {templateList.map((_template, _index) => (

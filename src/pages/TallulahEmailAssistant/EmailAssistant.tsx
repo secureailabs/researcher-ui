@@ -265,9 +265,6 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
             <Button variant="contained" color="primary" href={urlToEncodded(OUTLOOK_REDIRECT_URI)} startIcon={<WindowsOutlined />}>
               Login With Microsoft
             </Button>
-            <Button variant="contained" color="primary" href="#" startIcon={<GoogleOutlined />}>
-              Login With Google
-            </Button>
           </Box>
         </Box>
       ) : null}

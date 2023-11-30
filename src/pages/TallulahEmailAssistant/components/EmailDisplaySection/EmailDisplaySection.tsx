@@ -1,4 +1,4 @@
-import { Box, Drawer, Tooltip, Typography } from '@mui/material';
+import { Box, Drawer, LinearProgress, Tooltip, Typography } from '@mui/material';
 import styles from './EmailDisplaySection.module.css';
 import { GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
@@ -7,6 +7,7 @@ import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
 import EmailDetailedView from '../EmailDetailedView';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { formatReceivedTime, getEmailLabel } from 'src/utils/helper';
+import { current } from '@reduxjs/toolkit';
 
 export interface IEmailDisplaySection {
   mailBoxId: string;
@@ -38,6 +39,8 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [paginationData, setPaginationData] = useState(resetPaginationData);
+
+  console.log('selectedRow', selectedRow);
 
   const getEmails = async (offset = 0) => {
     setLoading(true);
@@ -110,6 +113,22 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
     getEmails(newOffset);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.sortDirection, props.sortKey, filterByTags, filterByState]);
+
+  const handleViewNextEmailClicked = (currentEmailId: string) => {
+    const currentEmailIndex = rows.findIndex((email) => email._id === currentEmailId);
+    if (currentEmailIndex === -1) return;
+    const nextEmailIndex = currentEmailIndex + 1;
+    if (nextEmailIndex >= rows.length) return;
+    setSelectedRow(rows[nextEmailIndex]);
+  };
+
+  const handleViewPreviousEmailClicked = (currentEmailId: string) => {
+    const currentEmailIndex = rows.findIndex((email) => email._id === currentEmailId);
+    if (currentEmailIndex === -1) return;
+    const previousEmailIndex = currentEmailIndex - 1;
+    if (previousEmailIndex < 0) return;
+    setSelectedRow(rows[previousEmailIndex]);
+  };
 
   const columns: GridColDef[] = [
     {
@@ -284,7 +303,6 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
         rowCount={paginationData.count}
         paginationMode="server"
         onPageChange={(newPage: any) => {
-          console.log('page changed', newPage);
           setPage(newPage);
         }}
         disableSelectionOnClick
@@ -316,7 +334,12 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
           sx: { width: '60%', padding: '20px 0 0 20px' }
         }}
       >
-        <EmailDetailedView data={selectedRow} />
+        <EmailDetailedView
+          data={selectedRow}
+          handleViewNextEmailClicked={handleViewNextEmailClicked}
+          handleViewPreviousEmailClicked={handleViewPreviousEmailClicked}
+          mailBoxId={mailBoxId}
+        />
       </Drawer>
     </Box>
   );

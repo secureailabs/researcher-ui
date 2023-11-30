@@ -1,10 +1,11 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, IconButton, TextField, Typography } from '@mui/material';
 import styles from './EditResponseTemplate.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useState } from 'react';
 import { GetResponseTemplate_Out, RegisterResponseTemplate_In, ResponseTemplatesService } from 'src/tallulah-ts-client';
 import useNotification from 'src/hooks/useNotification';
+import CloseIcon from '@mui/icons-material/Close';
 
 export interface IEditResponseTemplate {
   initialData?: GetResponseTemplate_Out;
@@ -66,15 +67,31 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData, se
     <Box className={styles.container}>
       <Box
         sx={{
+          backgroundColor: '#f5f5f5',
+          padding: '10px',
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '20px'
+          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.10)'
         }}
       >
-        <Typography variant="h5">Enter template details</Typography>
+        <Typography variant="h6">Enter Template Details</Typography>
+        <Box>
+          <IconButton
+            onClick={() => {
+              setIsModalOpen(false);
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
       </Box>
-      <Box>
+      <Box
+        sx={{
+          padding: '20px'
+        }}
+      >
         <TextField
           className={styles.textField}
           label="Template Name"
@@ -103,9 +120,20 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData, se
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
-          marginTop: '20px'
+          marginTop: '20px',
+          padding: '20px',
+          gap: '20px'
         }}
       >
+        <Button
+          variant="outlined"
+          fullWidth
+          onClick={() => {
+            setIsModalOpen(false);
+          }}
+        >
+          Cancel
+        </Button>
         <Button fullWidth variant="contained" className={styles.button} onClick={isEditMode ? handleOnEditClicked : handleOnSaveClicked}>
           Save
         </Button>
