@@ -7,9 +7,10 @@ import { GetResponseTemplate_Out, ResponseTemplatesService } from 'src/tallulah-
 export interface ITemplateResponseListSection {
   templateList: GetResponseTemplate_Out[];
   handleRefresh: () => void;
+  isFetching: boolean;
 }
 
-const TemplateResponseListSection: React.FC<ITemplateResponseListSection> = ({ templateList, handleRefresh }) => {
+const TemplateResponseListSection: React.FC<ITemplateResponseListSection> = ({ templateList, handleRefresh, isFetching }) => {
   return (
     <Box>
       {templateList && templateList.length > 0 ? (
@@ -18,9 +19,19 @@ const TemplateResponseListSection: React.FC<ITemplateResponseListSection> = ({ t
             <ResponseTemplateCard key={_template._id} data={_template} handleRefresh={handleRefresh} />
           ))}
         </Box>
-      ) : (
-        <Box>No Template Responses Found</Box>
-      )}
+      ) : null}
+      {!isFetching && templateList.length === 0 ? (
+        <Box
+          sx={{
+            marginTop: '2rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          No Template Responses Found. Add a new one to get started.
+        </Box>
+      ) : null}
     </Box>
   );
 };

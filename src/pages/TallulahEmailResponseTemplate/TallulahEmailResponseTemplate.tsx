@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Button, Dialog, IconButton, InputBase, Link, styled } from '@mui/material';
+import { Box, Breadcrumbs, Button, Dialog, IconButton, InputBase, LinearProgress, Link, styled } from '@mui/material';
 import styles from './TallulahEmailResponseTemplate.module.css';
 import TemplateResponseListSection from './components/TemplateResponseListSection';
 import SearchIcon from '@mui/icons-material/Search';
@@ -49,14 +49,17 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
   const [searchText, setSearchText] = useState<string>('');
   const [isAddNewTemplateDialogOpen, setIsAddNewTemplateDialogOpen] = useState<boolean>(false);
   const [templateList, setTemplateList] = useState<GetResponseTemplate_Out[]>([]);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const fetchResponseTemplates = async () => {
+    setIsFetching(true);
     try {
       const response = await ResponseTemplatesService.getAllResponseTemplates();
       setTemplateList(response.templates);
     } catch (error) {
       console.log(error);
     }
+    setIsFetching(false);
   };
 
   useEffect(() => {
@@ -64,7 +67,6 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
   }, []);
 
   const handleRefresh = () => {
-    console.log('handleRefresh');
     setTemplateList([]);
     fetchResponseTemplates();
   };
@@ -103,16 +105,11 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
         </Button>
       </Box>
       <Box>
-        <TemplateResponseListSection templateList={templateList} handleRefresh={handleRefresh} />
+        {isFetching ? <LinearProgress /> : null}
+        <TemplateResponseListSection templateList={templateList} handleRefresh={handleRefresh} isFetching={isFetching} />
       </Box>
       {/* Modal to add new template */}
-      <Dialog
-        open={isAddNewTemplateDialogOpen}
-        onClose={() => {
-          setIsAddNewTemplateDialogOpen(false);
-        }}
-        fullWidth
-      >
+      <Dialog open={isAddNewTemplateDialogOpen} fullWidth>
         <EditResponseTemplate setIsModalOpen={setIsAddNewTemplateDialogOpen} handleRefresh={handleRefresh} />
       </Dialog>
     </Box>

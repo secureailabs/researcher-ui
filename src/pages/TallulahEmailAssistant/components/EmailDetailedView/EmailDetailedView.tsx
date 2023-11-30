@@ -3,7 +3,7 @@ import styles from './EmailDetailedView.module.css';
 import { GetEmail_Out } from 'src/tallulah-ts-client';
 import SendIcon from '@mui/icons-material/Send';
 import ReplyIcon from '@mui/icons-material/Reply';
-import { getEmailLabel } from 'src/utils/helper';
+import { formatReceivedTime, getEmailLabel } from 'src/utils/helper';
 
 export interface IEmailDetailedView {
   data: GetEmail_Out;
@@ -42,7 +42,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({ data, handleViewNextE
             </Box>
             <Box className={styles.labelContainer}>
               <Box className={styles.label}>Date:</Box>
-              <Box className={styles.emailContentHeaderDateValue}>{data.received_time}</Box>
+              <Box className={styles.emailContentHeaderDateValue}>{formatReceivedTime(data.received_time)}</Box>
             </Box>
             <Box className={styles.labelContainer}>
               <Box className={styles.label}>Subject:</Box>

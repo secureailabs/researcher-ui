@@ -1,4 +1,4 @@
-import { Box, Drawer, Tooltip, Typography } from '@mui/material';
+import { Box, Drawer, LinearProgress, Tooltip, Typography } from '@mui/material';
 import styles from './EmailDisplaySection.module.css';
 import { GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';

@@ -9,6 +9,7 @@ import { GetResponseTemplate_Out, ResponseTemplatesService } from 'src/tallulah-
 import EditResponseTemplate from '../EditResponseTemplate';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 import useNotification from 'src/hooks/useNotification';
+import { formatReceivedTime } from 'src/utils/helper';
 
 export interface IResponseTemplateCard {
   data: GetResponseTemplate_Out;
@@ -74,7 +75,12 @@ const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, editable 
               >
                 <EditIcon />
               </IconButton>
-              <IconButton className={styles.deleteButton}>
+              <IconButton
+                className={styles.deleteButton}
+                onClick={() => {
+                  setOpenDeleteModal(true);
+                }}
+              >
                 <DeleteIcon />
               </IconButton>
             </Box>
@@ -151,7 +157,7 @@ const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, editable 
           >
             Last Updated: &nbsp;
             <Typography variant="body1" component={'span'}>
-              {data.last_edit_time}
+              {formatReceivedTime(data.last_edit_time as string)}
             </Typography>
           </Typography>
         </Box>
