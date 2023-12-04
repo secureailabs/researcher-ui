@@ -45,6 +45,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
   const getEmails = async (offset = 0) => {
     setLoading(true);
     const filterTags = filterByTags.length > 0 ? filterByTags : undefined;
+
     const filterStateStrings = filterByState.length > 0 ? filterByState : undefined;
     enum EmailState {
       NEW = 'NEW',
@@ -53,17 +54,21 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
       FAILED = 'FAILED'
     }
 
-    const filterState = filterStateStrings?.map((state) => {
-      if (state === 'NEW') {
-        return EmailState.NEW;
-      } else if (state === 'TAGGED') {
-        return EmailState.TAGGED;
-      } else if (state === 'RESPONDED') {
-        return EmailState.RESPONDED;
-      } else {
-        return EmailState.FAILED;
-      }
-    });
+    const filterState = filterStateStrings
+      ?.map((state) => {
+        if (state === 'NEW') {
+          return EmailState.NEW;
+        } else if (state === 'TAGGED') {
+          return EmailState.TAGGED;
+        } else if (state === 'RESPONDED') {
+          return EmailState.RESPONDED;
+        } else if (state === 'NOT RESPONDED') {
+          return [EmailState.NEW, EmailState.TAGGED];
+        } else {
+          return EmailState.FAILED;
+        }
+      })
+      .flat();
 
     const response = await EmailsService.getAllEmails(
       mailBoxId,

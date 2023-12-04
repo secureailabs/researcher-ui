@@ -44,7 +44,7 @@ const Filter: React.FC<IFilterProps> = ({ setFilterByTags, filtersByTags, filter
   };
 
   const getFilterByStateMenuItems = (filters: any) => {
-    const labels = ['NEW', 'TAGGED', 'RESPONDED', 'FAILED'];
+    const labels = ['NEW', 'TAGGED', 'RESPONDED', 'NOT RESPONDED', 'FAILED'];
     const menuItems = labels.map((label: any) => {
       let bgColor = 'white';
       if (filters.includes(label)) {
