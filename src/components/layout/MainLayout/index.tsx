@@ -44,6 +44,8 @@ const MinimalLayout = (): JSX.Element => {
   };
 
   const checkUserSession = async (): Promise<UserInfo_Out> => {
+    if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
+    OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
     const token = localStorage.getItem('accessToken');
     if (token) {
       OpenAPI.TOKEN = token;
@@ -96,7 +98,28 @@ const MinimalLayout = (): JSX.Element => {
   });
 
   return (
-    <Box sx={{ display: 'flex', backgroundColor: '#f5f5f5' }}>
+    <Box sx={{ display: 'flex', backgroundColor: '#f5f5f5', position: 'relative' }}>
+      {process.env.REACT_APP_ENV === 'development' && (
+        <Box
+          sx={{
+            position: 'sticky',
+            top: 0,
+            left: 0,
+            height: '20px',
+            zIndex: 9999,
+            backgroundColor: '#ff9800',
+            color: '#fff',
+            fontSize: '11px',
+            padding: '2px 5px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+            fontWeight: '600'
+          }}
+        >
+          Development
+        </Box>
+      )}
+
       <Header open={open} handleDrawerToggle={handleDrawerToggle} />
       <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
       <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
