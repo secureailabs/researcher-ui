@@ -14,6 +14,7 @@ import { GridSelectionModel } from '@mui/x-data-grid';
 import EmailReply from './components/EmailReply';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FilterChip from './components/FilterChip';
+import { sendAmplitudeData } from 'src/utils/Amplitude/amplitude';
 
 const urlToEncodded = (url: string) => {
   const encodedURL = encodeURIComponent(url);
@@ -160,6 +161,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                     <Button
                       variant="contained"
                       onClick={() => {
+                        sendAmplitudeData('Email Assistant Screen - Reply Selected Button Clicked');
                         setOpenReplyModal(true);
                       }}
                     >
@@ -170,6 +172,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                 <Box sx={{ display: 'flex' }}>
                   <IconButton
                     onClick={() => {
+                      sendAmplitudeData('Email Assistant Screen - Response Template Button Clicked');
                       navigate('/email-assistant/response-template');
                     }}
                   >

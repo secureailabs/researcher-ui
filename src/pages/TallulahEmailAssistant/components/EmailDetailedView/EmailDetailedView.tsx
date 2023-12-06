@@ -6,6 +6,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import { formatReceivedTime, getEmailLabel } from 'src/utils/helper';
 import { useState } from 'react';
 import EmailReply from '../EmailReply';
+import { sendAmplitudeData } from 'src/utils/Amplitude/amplitude';
 
 export interface IEmailDetailedView {
   data: GetEmail_Out;
@@ -157,6 +158,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
               padding: '0.5rem 2rem'
             }}
             onClick={() => {
+              sendAmplitudeData('Email Detailed View - Reply Button Clicked');
               setOpenReplyModal(true);
             }}
           >

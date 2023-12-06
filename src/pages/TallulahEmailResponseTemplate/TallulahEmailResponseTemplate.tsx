@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import EditResponseTemplate from './components/EditResponseTemplate';
 import { GetResponseTemplate_Out, ResponseTemplatesService } from 'src/tallulah-ts-client';
 import HomeIcon from '@mui/icons-material/Home';
+import { sendAmplitudeData } from 'src/utils/Amplitude/amplitude';
 
 export interface ITallulahEmailResponseTemplate {}
 
@@ -116,6 +117,7 @@ const TallulahEmailResponseTemplate: React.FC<ITallulahEmailResponseTemplate> = 
           variant="contained"
           className={styles.button}
           onClick={() => {
+            sendAmplitudeData('Email Response Template - Add New Template Button Clicked');
             setIsAddNewTemplateDialogOpen(true);
           }}
         >
