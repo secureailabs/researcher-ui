@@ -126,11 +126,22 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
                     labelId="email-label"
                     id="email-label-select"
                     value={data.label}
-                    label="Label"
                     onChange={(e) => updateEmailLabel(e)}
+                    sx={{
+                      border: `1px solid ${getEmailLabel(data.label as string)?.color}`
+                    }}
                   >
                     {getAllEmailLabels().map((label) => {
-                      return <MenuItem value={label.label}>{label.label}</MenuItem>;
+                      return (
+                        <MenuItem
+                          value={label.label}
+                          sx={{
+                            backgroundColor: `${getEmailLabel(data.label as string)?.color}`
+                          }}
+                        >
+                          {label.label}
+                        </MenuItem>
+                      );
                     })}
                   </Select>
                   <CircularProgress
