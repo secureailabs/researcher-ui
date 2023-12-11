@@ -1,6 +1,6 @@
 import { Box, Button, Dialog, Drawer, Icon, IconButton, InputBase, Menu, MenuItem, styled } from '@mui/material';
 import styles from './EmailAssistant.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import SettingsIcon from '@mui/icons-material/Settings';
 import EmailDisplaySection from './components/EmailDisplaySection';
@@ -8,13 +8,15 @@ import Filter from './components/Filter';
 import Sort from './components/Sort';
 import { GoogleOutlined, WindowsOutlined } from '@ant-design/icons';
 import { GetMailbox_Out, MailboxService } from 'src/tallulah-ts-client';
-import { OUTLOOK_REDIRECT_URI } from 'src/config';
+// import { OUTLOOK_REDIRECT_URI } from 'src/config';
 import { useNavigate } from 'react-router-dom';
 import { GridSelectionModel } from '@mui/x-data-grid';
 import EmailReply from './components/EmailReply';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FilterChip from './components/FilterChip';
 import { sendAmplitudeData } from 'src/utils/Amplitude/amplitude';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { EmailDisplaySectionRef } from './components/EmailDisplaySection/EmailDisplaySection';
 
 const urlToEncodded = (url: string) => {
   const encodedURL = encodeURIComponent(url);
@@ -37,6 +39,10 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
   const [filterByTags, setFilterByTags] = useState<string[]>([]);
   const [filterByState, setFilterByState] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const emailDisplayRef = useRef<EmailDisplaySectionRef | null>(null);
+
+  const OUTLOOK_REDIRECT_URI = process.env.REACT_APP_OUTLOOK_REDIRECT_URI || '';
 
   const open = Boolean(anchorEl);
 
@@ -169,16 +175,28 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                     </Button>
                   </Box>
                 ) : null}
-                <Box sx={{ display: 'flex' }}>
-                  <IconButton
-                    onClick={() => {
-                      sendAmplitudeData('Email Assistant Screen - Response Template Button Clicked');
-                      navigate('/email-assistant/response-template');
-                    }}
-                  >
-                    <SettingsIcon />
-                  </IconButton>
-                </Box>
+
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    sendAmplitudeData('Email Assistant Screen - Response Template Button Clicked');
+                    navigate('/email-assistant/response-template');
+                  }}
+                  endIcon={<SettingsIcon />}
+                >
+                  Response Template
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    if (emailDisplayRef.current) {
+                      emailDisplayRef.current.handleEmailRefresh();
+                    }
+                  }}
+                  endIcon={<RefreshIcon />}
+                >
+                  Refresh
+                </Button>
                 {/* dropdown menu */}
                 <Box>
                   <IconButton
@@ -227,6 +245,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                 sortDirection={sortDirection}
                 filterByTags={filterByTags}
                 filterByState={filterByState}
+                ref={emailDisplayRef}
               />
             ) : null}
           </Box>

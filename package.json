@@ -60,6 +60,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:prod": "env-cmd -f .env yarn start",
     "start:dev": "env-cmd -f .env.development yarn start",
     "build": "react-scripts build",
     "build:beta": "env-cmd -f .env.staging yarn build",

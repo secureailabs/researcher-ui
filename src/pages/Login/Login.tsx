@@ -55,7 +55,6 @@ const Login: React.FC = () => {
   };
 
   async function postLogin(data: IEmailAndPassword): Promise<LoginSuccess_Out | undefined> {
-    console.log('REACT_APP_SAIL_API_SERVICE_URL', process.env.REACT_APP_SAIL_API_SERVICE_URL);
     if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
 
     OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;

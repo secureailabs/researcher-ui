@@ -62,7 +62,7 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
   }
 }));
 
-function CustomNoRowsOverlay() {
+function CustomNoRowsOverlay(emptyRowsMessage: string) {
   return (
     <StyledGridOverlay>
       <svg width="120" height="100" viewBox="0 0 184 152" aria-hidden focusable="false">
@@ -89,20 +89,21 @@ function CustomNoRowsOverlay() {
           </g>
         </g>
       </svg>
-      <Box sx={{ mt: 1 }}>No Rows</Box>
+      <Box sx={{ mt: 1 }}>{emptyRowsMessage}</Box>
     </StyledGridOverlay>
   );
 }
 
 export default function AppStripedDataGrid(props: any) {
+  const emptyRowsMessage = props.emptyRowsMessage || 'No Rows';
   return (
     <StripedDataGrid
       getRowClassName={(params: any) => {
         return params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd';
       }}
       components={{
-        NoRowsOverlay: () => CustomNoRowsOverlay,
-        NoResultsOverlay: CustomNoRowsOverlay
+        NoRowsOverlay: () => CustomNoRowsOverlay(emptyRowsMessage),
+        NoResultsOverlay: CustomNoRowsOverlay(emptyRowsMessage)
       }}
       getRowHeight={() => 'auto'}
       {...props}

@@ -1,13 +1,12 @@
-import { Box, Drawer, LinearProgress, Tooltip, Typography } from '@mui/material';
+import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { Box, Button, Drawer, LinearProgress, Tooltip, Typography, styled } from '@mui/material';
 import styles from './EmailDisplaySection.module.css';
 import { GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
-import { useEffect, useState } from 'react';
 import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
 import EmailDetailedView from '../EmailDetailedView';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { formatReceivedTime, getEmailLabel } from 'src/utils/helper';
-import { current } from '@reduxjs/toolkit';
 
 export interface IEmailDisplaySection {
   mailBoxId: string;
@@ -19,20 +18,22 @@ export interface IEmailDisplaySection {
   filterByState: string[];
 }
 
+export interface EmailDisplaySectionRef {
+  // Define functions or values you want to expose here
+  handleEmailRefresh: () => void;
+  // Add more as needed...
+}
+
 const resetPaginationData = {
   count: 0,
   next: 0,
   limit: 25
 };
 
-const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
-  mailBoxId,
-  selectionModel,
-  setSelectionModel,
-  filterByTags,
-  filterByState,
-  ...props
-}) => {
+const EmailDisplaySection: React.ForwardRefRenderFunction<EmailDisplaySectionRef, IEmailDisplaySection> = (
+  { mailBoxId, selectionModel, setSelectionModel, filterByTags, filterByState, ...props },
+  ref
+) => {
   const [rows, setRows] = useState<GetEmail_Out[]>([]);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -40,9 +41,8 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [paginationData, setPaginationData] = useState(resetPaginationData);
 
-  console.log('selectedRow', selectedRow);
-
   const getEmails = async (offset = 0) => {
+    console.log('getEmails called');
     setLoading(true);
     const filterTags = filterByTags.length > 0 ? filterByTags : undefined;
 
@@ -81,7 +81,6 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
     );
 
     setLoading(false);
-    console.log('response', response);
     setPaginationData({
       count: response.count,
       limit: response.limit,
@@ -89,6 +88,16 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
     });
     setRows([...response.messages]);
   };
+
+  const handleEmailRefresh = () => {
+    const newOffset = 0 * resetPaginationData.limit;
+    setPage(0);
+    getEmails(newOffset);
+  };
+
+  useImperativeHandle(ref, () => ({
+    handleEmailRefresh
+  }));
 
   useEffect(() => {
     getEmails();
@@ -330,6 +339,7 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
         selectionModel={selectionModel}
         loading={loading}
         keepNonExistentRowsSelected
+        emptyRowsMessage="No emails found. Kindly refresh."
       />
       <Drawer
         anchor="right"
@@ -350,4 +360,6 @@ const EmailDisplaySection: React.FC<IEmailDisplaySection> = ({
   );
 };
 
-export default EmailDisplaySection;
+const ForwadedEmailDisplaySection = forwardRef<EmailDisplaySectionRef, IEmailDisplaySection>(EmailDisplaySection);
+
+export default ForwadedEmailDisplaySection;
