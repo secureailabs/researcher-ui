@@ -1,7 +1,7 @@
 import * as amplitude from '@amplitude/analytics-browser';
 
 const AMPLITUDE_API_KEY = process.env.REACT_APP_AMPLITUDE_API_KEY;
-const isProdEnvironment = () => true;
+const isProdEnvironment = () => process.env.REACT_APP_ENV === 'production';
 
 export const initAmplitude = () => {
   amplitude.init(AMPLITUDE_API_KEY as string);
