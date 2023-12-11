@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 export type Annotation = {
-    id?: string;
+    annotation_id?: string;
     source: string;
     label: string;
     label_scores: Record<string, number>;

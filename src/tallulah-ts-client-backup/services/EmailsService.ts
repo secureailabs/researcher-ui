@@ -19,7 +19,7 @@ export class EmailsService {
      * @param limit Number of emails to return
      * @param sortKey Sort key
      * @param sortDirection Sort direction
-     * @param filterLabels Filter tags
+     * @param filterTags Filter tags
      * @param filterState Filter state
      * @returns GetMultipleEmail_Out Successful Response
      * @throws ApiError
@@ -30,7 +30,7 @@ export class EmailsService {
         limit: number = 20,
         sortKey: string = 'received_time',
         sortDirection: number = -1,
-        filterLabels?: Array<string>,
+        filterTags?: Array<string>,
         filterState?: Array<EmailState>,
     ): CancelablePromise<GetMultipleEmail_Out> {
         return __request(OpenAPI, {
@@ -42,7 +42,7 @@ export class EmailsService {
                 'limit': limit,
                 'sort_key': sortKey,
                 'sort_direction': sortDirection,
-                'filter_labels': filterLabels,
+                'filter_tags': filterTags,
                 'filter_state': filterState,
             },
             errors: {
@@ -56,7 +56,7 @@ export class EmailsService {
      * Reply to one email or a tag, or a list of emails or tags
      * @param mailboxId Mailbox id
      * @param emailIds List of email ids
-     * @param labels List of tag ids
+     * @param tags List of tag ids
      * @param requestBody
      * @returns any Successful Response
      * @throws ApiError
@@ -64,7 +64,7 @@ export class EmailsService {
     public static replyToEmails(
         mailboxId: string,
         emailIds?: Array<string>,
-        labels?: Array<string>,
+        tags?: Array<string>,
         requestBody?: Body_reply_to_emails,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
@@ -73,38 +73,12 @@ export class EmailsService {
             query: {
                 'mailbox_id': mailboxId,
                 'email_ids': emailIds,
-                'labels': labels,
+                'tags': tags,
             },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
                 400: `No emails or tags provided`,
-                422: `Validation Error`,
-            },
-        });
-    }
-
-    /**
-     * Update Email Label
-     * Update the label of an email
-     * @param emailId Email id
-     * @param requestBody
-     * @returns any Successful Response
-     * @throws ApiError
-     */
-    public static updateEmailLabel(
-        emailId: string,
-        requestBody?: string,
-    ): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'PATCH',
-            url: '/api/emails/{email_id}',
-            path: {
-                'email_id': emailId,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-            errors: {
                 422: `Validation Error`,
             },
         });

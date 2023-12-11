@@ -42,7 +42,6 @@ const EmailDisplaySection: React.ForwardRefRenderFunction<EmailDisplaySectionRef
   const [paginationData, setPaginationData] = useState(resetPaginationData);
 
   const getEmails = async (offset = 0) => {
-    console.log('getEmails called');
     setLoading(true);
     const filterTags = filterByTags.length > 0 ? filterByTags : undefined;
 
@@ -90,8 +89,7 @@ const EmailDisplaySection: React.ForwardRefRenderFunction<EmailDisplaySectionRef
   };
 
   const handleEmailRefresh = () => {
-    const newOffset = 0 * resetPaginationData.limit;
-    setPage(0);
+    const newOffset = page * resetPaginationData.limit;
     getEmails(newOffset);
   };
 
@@ -255,13 +253,13 @@ const EmailDisplaySection: React.ForwardRefRenderFunction<EmailDisplaySectionRef
               <Typography
                 sx={{
                   fontSize: '0.65rem',
-                  backgroundColor: `${getEmailLabel(params.row.annotations[0].label)?.color}`,
+                  backgroundColor: `${getEmailLabel(params.row.label)?.color}`,
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}
                 variant="body1"
               >
-                {params.row.annotations[0].label}
+                {params.row.label}
               </Typography>
             </Box>
           )}
@@ -354,6 +352,7 @@ const EmailDisplaySection: React.ForwardRefRenderFunction<EmailDisplaySectionRef
           handleViewNextEmailClicked={handleViewNextEmailClicked}
           handleViewPreviousEmailClicked={handleViewPreviousEmailClicked}
           mailBoxId={mailBoxId}
+          handleEmailRefresh={handleEmailRefresh}
         />
       </Drawer>
     </Box>
