@@ -135,13 +135,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
                   >
                     {getAllEmailLabels().map((label) => {
                       return (
-                        <MenuItem
-                          key={label.label}
-                          value={label.label}
-                          sx={{
-                            backgroundColor: `${getEmailLabel(data.label as string)?.color}`
-                          }}
-                        >
+                        <MenuItem key={label.label} value={label.label}>
                           {label.label}
                         </MenuItem>
                       );
