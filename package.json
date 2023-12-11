@@ -5,6 +5,7 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.3.6",
     "@ant-design/icons": "^5.0.1",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -59,6 +60,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:prod": "env-cmd -f .env yarn start",
     "start:dev": "env-cmd -f .env.development yarn start",
     "build": "react-scripts build",
     "build:beta": "env-cmd -f .env.staging yarn build",

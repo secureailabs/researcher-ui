@@ -7,6 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ResponseTemplateSelection from '../ResponseTemplateSelection';
 import { Body_reply_to_emails, EmailBody, EmailsService } from 'src/tallulah-ts-client';
 import useNotification from 'src/hooks/useNotification';
+import { sendAmplitudeData } from 'src/utils/Amplitude/amplitude';
 
 export interface IEmailReply {
   setOpenReplyModal: (isOpen: boolean) => void;
@@ -24,6 +25,7 @@ const EmailReply: React.FC<IEmailReply> = ({ setOpenReplyModal, mailBoxId, selec
   const EmailSignatureLogo = `<img src="https://tallulahstorageiuvew.blob.core.windows.net/logos/TOUCH-logo-1-300x300.png" alt="Sail Logo" width="100" height="100" border="0" style="display: block; padding-bottom: 10px;" />`;
 
   const handleSendEmail = async () => {
+    sendAmplitudeData('Email Reply Modal - Send Button Clicked');
     const emailBodyWithSignature = `${emailBody} <br/> ${EmailSignatureLogo}`;
     const body: Body_reply_to_emails = {
       subject: emailSubject.length > 0 ? emailSubject : undefined,
@@ -35,7 +37,6 @@ const EmailReply: React.FC<IEmailReply> = ({ setOpenReplyModal, mailBoxId, selec
     const tags = undefined;
     try {
       const response = await EmailsService.replyToEmails(mailBoxId, selectedEmailsIds, tags, body);
-
       sendNotification({
         msg: 'Response sent successfully',
         variant: 'success'
@@ -111,6 +112,7 @@ const EmailReply: React.FC<IEmailReply> = ({ setOpenReplyModal, mailBoxId, selec
           <Button
             variant="outlined"
             onClick={() => {
+              sendAmplitudeData('Email Reply Modal - Choose from response templates button clicked');
               setIsTemplateSelectionModalOpen(true);
             }}
           >

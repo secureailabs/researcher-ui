@@ -4,6 +4,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { MenuItemData, NestedDropdown } from 'mui-nested-menu';
 import { getAllEmailLabels } from 'src/utils/helper';
 import { useEffect, useState } from 'react';
+import { sendAmplitudeData } from 'src/utils/Amplitude/amplitude';
 
 interface IFilterProps {
   setFilterByTags: (filters: any) => void;
@@ -33,6 +34,7 @@ const Filter: React.FC<IFilterProps> = ({ setFilterByTags, filtersByTags, filter
             if (prevFilters.includes(label.label)) {
               return prevFilters.filter((filter: any) => filter !== label.label);
             } else {
+              sendAmplitudeData('Email Assistant - Filter by Email Tags Clicked');
               return [...prevFilters, label.label];
             }
           });
@@ -44,7 +46,7 @@ const Filter: React.FC<IFilterProps> = ({ setFilterByTags, filtersByTags, filter
   };
 
   const getFilterByStateMenuItems = (filters: any) => {
-    const labels = ['NEW', 'TAGGED', 'RESPONDED', 'FAILED'];
+    const labels = ['NEW', 'TAGGED', 'RESPONDED', 'NOT RESPONDED', 'FAILED'];
     const menuItems = labels.map((label: any) => {
       let bgColor = 'white';
       if (filters.includes(label)) {
@@ -60,6 +62,7 @@ const Filter: React.FC<IFilterProps> = ({ setFilterByTags, filtersByTags, filter
             if (prevFilters.includes(label)) {
               return prevFilters.filter((filter: any) => filter !== label);
             } else {
+              sendAmplitudeData('Email Assistant - Filter by Email Status Clicked');
               return [...prevFilters, label];
             }
           });

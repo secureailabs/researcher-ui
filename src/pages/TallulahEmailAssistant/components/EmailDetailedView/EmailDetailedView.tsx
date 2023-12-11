@@ -1,26 +1,54 @@
-import { Box, Button, Dialog, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Dialog, MenuItem, Select, SelectChangeEvent, Tooltip, Typography } from '@mui/material';
 import styles from './EmailDetailedView.module.css';
-import { GetEmail_Out } from 'src/tallulah-ts-client';
+import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
 import SendIcon from '@mui/icons-material/Send';
 import ReplyIcon from '@mui/icons-material/Reply';
-import { formatReceivedTime, getEmailLabel } from 'src/utils/helper';
+import { formatReceivedTime, getAllEmailLabels, getEmailLabel } from 'src/utils/helper';
 import { useState } from 'react';
 import EmailReply from '../EmailReply';
+import { sendAmplitudeData } from 'src/utils/Amplitude/amplitude';
+import useNotification from 'src/hooks/useNotification';
 
 export interface IEmailDetailedView {
   data: GetEmail_Out;
   handleViewNextEmailClicked: (rowId: string) => void;
   handleViewPreviousEmailClicked: (rowId: string) => void;
   mailBoxId: string;
+  handleEmailRefresh: () => void;
 }
 
 const EmailDetailedView: React.FC<IEmailDetailedView> = ({
   data,
   handleViewNextEmailClicked,
   handleViewPreviousEmailClicked,
-  mailBoxId
+  mailBoxId,
+  handleEmailRefresh
 }) => {
   const [openReplyModal, setOpenReplyModal] = useState<boolean>(false);
+  const [sendNotification] = useNotification();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const updateEmailLabel = async (event: SelectChangeEvent) => {
+    const label = event.target.value as string;
+
+    setIsLoading(true);
+
+    try {
+      const response = await EmailsService.updateEmailLabel(data._id, label);
+      sendNotification({
+        msg: 'Email label updated successfully',
+        variant: 'success'
+      });
+      handleEmailRefresh();
+    } catch (e) {
+      sendNotification({
+        msg: 'Email label failed to update',
+        variant: 'error'
+      });
+    }
+    setIsLoading(false);
+  };
+
   return (
     <Box>
       <Box
@@ -94,17 +122,35 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
                     display: 'flex'
                   }}
                 >
-                  <Typography
+                  <Select
+                    labelId="email-label"
+                    id="email-label-select"
+                    value={data.label}
+                    onChange={(e) => updateEmailLabel(e)}
                     sx={{
-                      fontSize: '0.65rem',
-                      backgroundColor: `${getEmailLabel(data.annotations[0].label)?.color}`,
-                      padding: '2px 6px',
-                      borderRadius: '4px'
+                      border: `1px solid ${getEmailLabel(data.label as string)?.color}`
                     }}
-                    variant="body1"
                   >
-                    {data.annotations[0]?.label}
-                  </Typography>
+                    {getAllEmailLabels().map((label) => {
+                      return (
+                        <MenuItem
+                          value={label.label}
+                          sx={{
+                            backgroundColor: `${getEmailLabel(data.label as string)?.color}`
+                          }}
+                        >
+                          {label.label}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                  <CircularProgress
+                    size={20}
+                    sx={{
+                      marginLeft: '10px',
+                      display: isLoading ? 'block' : 'none'
+                    }}
+                  />
                 </Box>
               )}
             </Box>
@@ -157,6 +203,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
               padding: '0.5rem 2rem'
             }}
             onClick={() => {
+              sendAmplitudeData('Email Detailed View - Reply Button Clicked');
               setOpenReplyModal(true);
             }}
           >

@@ -26,23 +26,23 @@ const LABEL_CONFIG = [
     label: 'General Breasties'
   },
   {
-    color: '#9fdef5',
+    color: '#AEDFF7',
     label: 'General Info'
   },
   {
-    color: '#f5d98c',
+    color: '#C9EAC8',
     label: 'In a trial'
   },
   {
-    color: '#f5d98c',
+    color: '#F8D7E9',
     label: 'Interested in a trial'
   },
   {
-    color: '#f5d98c',
+    color: '#FADAB8',
     label: 'Newly Diagnosed'
   },
   {
-    color: '#f5d98c',
+    color: '#E9E1F0',
     label: 'Partners'
   }
 ];

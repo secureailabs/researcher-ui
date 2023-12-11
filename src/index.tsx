@@ -9,20 +9,22 @@ import './App.css';
 import './index.css';
 import { ConfigProvider } from 'src/contexts/ConfigContext';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { initAmplitude } from './utils/Amplitude/amplitude';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } }
 });
 
+initAmplitude();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <Provider store={store}>
     <ConfigProvider>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </QueryClientProvider>
     </ConfigProvider>
   </Provider>
