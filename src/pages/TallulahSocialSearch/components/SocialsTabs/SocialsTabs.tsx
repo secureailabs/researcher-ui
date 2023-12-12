@@ -21,13 +21,14 @@ interface TabPanelProps {
 const youtubeResults = [
   { result: YOUTUBE_RESULTS[0].kidneycancer.items[0] },
   { result: YOUTUBE_RESULTS[0].kidneycancer.items[1] },
-  { result: YOUTUBE_RESULTS[0].kidneycancer_stage.items[1] }
+  { result: YOUTUBE_RESULTS[0].kidneycancer_stage.items[1] },
+  { result: YOUTUBE_RESULTS[0].kidneycancer_stage.items[2] },
 ];
 
 const tiktokResults = [
   { result: TIKTOK_RESULTS[0].kidneycancer[0] },
   { result: TIKTOK_RESULTS[0].kidneycancer[1] },
-  { result: TIKTOK_RESULTS[0].kidneycancer[2] }
+  { result: TIKTOK_RESULTS[0].kidneycancer[2] },
 ];
 
 const redditResults = [

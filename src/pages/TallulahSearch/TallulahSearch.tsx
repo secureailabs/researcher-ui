@@ -2,6 +2,7 @@ import {
   Box,
   Checkbox,
   Chip,
+  DialogProps,
   FormControl,
   Grid,
   IconButton,
@@ -93,7 +94,6 @@ const TallulahSearch: React.FC<ITallulahSearch> = ({ sampleTextProp }) => {
   const [searchText, setSearchText] = useState<string>('');
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [selectedPatientData, setSelectedPatientData] = useState<any>(null);
-
   const [storyUsedFilter, setStoryUsedFilter] = useState<any[]>([]);
 
   const handleFilterChange = (event: SelectChangeEvent<typeof storyUsedFilter>) => {
@@ -138,7 +138,8 @@ const TallulahSearch: React.FC<ITallulahSearch> = ({ sampleTextProp }) => {
       return (
         data._source.Name.toLowerCase().includes(searchText.toLowerCase()) ||
         data._source['Life Story'].toLowerCase().includes(searchText.toLowerCase()) ||
-        data._source.Tags.join(' ').toLowerCase().includes(searchText.toLowerCase())
+        data._source.Tags.join(' ').toLowerCase().includes(searchText.toLowerCase()) ||
+        data._source.Comments.toLowerCase().includes(searchText.toLowerCase())
       );
     });
 
@@ -186,7 +187,8 @@ const TallulahSearch: React.FC<ITallulahSearch> = ({ sampleTextProp }) => {
       return (
         data._source.Name.toLowerCase().includes(searchText.toLowerCase()) ||
         data._source['Life Story'].toLowerCase().includes(searchText.toLowerCase()) ||
-        data._source.Tags.join(' ').toLowerCase().includes(searchText.toLowerCase())
+        data._source.Tags.join(' ').toLowerCase().includes(searchText.toLowerCase()) ||
+        data._source.Comments.toLowerCase().includes(searchText.toLowerCase())
       );
     });
     setFilteredData(filteredDataTemp2);

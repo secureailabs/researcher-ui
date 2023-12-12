@@ -9,7 +9,12 @@ export interface IFile {
   name: string,
 }
 
-const DocumentsUpload: React.FC = () => {
+export interface IUploadMedia {
+  spacing?: number;
+  editPatient?: boolean;
+}
+
+const DocumentsUpload: React.FC<IUploadMedia> = ({spacing, editPatient}) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
       const files = acceptedFiles.map(file => (
         <li key={file.name}>
@@ -23,13 +28,14 @@ const DocumentsUpload: React.FC = () => {
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
           <Stack sx={{ p: 4, borderStyle: 'dashed', borderColor: 'lightgray', borderWidth: 2 }}
-            direction={'column'} spacing={3} justifyContent={"center"} alignItems={"center"}>
+            direction={'column'} spacing={spacing} justifyContent={"center"} alignItems={"center"}>
             <Typography>Drag & drop files here, or click below</Typography>
             <Button variant="outlined" startIcon={<CloudUploadIcon />} >Upload Files</Button>
           </Stack>
         </div>
         <aside>
-        {files.length > 0 ? <Typography sx={{mt:1}}>Selected Files:</Typography> : null}
+        {files.length > 0 && !editPatient ? <Typography sx={{mt:1}}>Selected Files:</Typography> : null}
+        {files.length > 0 && editPatient ? <Typography sx={{mt:1, fontWeight:600}}>Files to Add:</Typography> : null}
         <ul>{files}</ul>
       </aside> 
       </section>

@@ -44,7 +44,11 @@ interface CustomFile extends File {
   preview: string;
 }
 
-const ProfilePictureUpload: React.FC = () => {
+export interface ProfilePictureUploadProps {
+  spacing?: number;
+}
+
+const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({spacing}) => {
   const [files, setFiles] = useState<CustomFile[]>([]);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -81,7 +85,7 @@ const ProfilePictureUpload: React.FC = () => {
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
           <Stack sx={{ p: 4, borderStyle: 'dashed', borderColor: 'lightgray', borderWidth: 2}}
-            direction={'column'} spacing={3} justifyContent={"center"} alignItems={"center"}>
+            direction={'column'} spacing={spacing} justifyContent={"center"} alignItems={"center"}>
             <Typography>Drag & drop photos here, or click below</Typography>
             <Button variant="outlined" startIcon={<AddPhotoAlternateIcon />} >Upload Photos</Button>
           </Stack>

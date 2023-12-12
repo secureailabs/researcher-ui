@@ -65,7 +65,7 @@ const TranscribeVideoModal: React.FC<ITranscribeModal> = ({ refetch, title, tran
 
   return (
     <Box>
-      <Button onClick={handleOpen} type="submit" variant="outlined">
+      <Button onClick={handleOpen} type="submit" variant="contained">
         Extract Insights
       </Button>
       <Modal

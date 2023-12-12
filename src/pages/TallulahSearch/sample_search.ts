@@ -29,6 +29,7 @@ const SAMPLE_DATA = [
       barriersToCare: 'Time off work',
       storyUsage: 'Summer Campaign 2023',
       outboundCommunication: 'Monthly Newsletter, West Coast Events, National Events',
+      Comments:'',
       insuranceAccess: 'Medicare',
       documentName: 'John Interview July 2022.docx',
       documentName2: 'Web Story Intake Form_6.10.2022.docx',
@@ -176,6 +177,7 @@ const SAMPLE_DATA = [
       barriersToCare: 'Financial, Travel',
       storyUsage: 'Spring 2023 Direct Mailing, December 2022 Blog Post',
       outboundCommunication: 'Monthly Newsletter, West Coast Events, National Events',
+      Comments:'',
       insuranceAccess: 'Financial Assistance',
       documentName: 'Sarah Interview 1.docx',
       documentName2: 'Web Story Intake Form_6.10.2022.docx',
@@ -314,6 +316,7 @@ const SAMPLE_DATA = [
       barriersToCare: 'N/A',
       storyUsage: 'Annual Giving Campaign 2022, Peer-to-peer Website Page, Monthly Newsletter (Aug. 21)',
       outboundCommunication: 'Peer-to-peer, Monthly Newsletter, National Events ',
+      Comments:'',
       Picture_gender: {
         Value: 'Female',
         Confidence: 99.99440002441406
@@ -451,6 +454,7 @@ const SAMPLE_DATA = [
       barriersToCare: 'N/A',
       storyUsage: '',
       outboundCommunication: 'Monthly Newsletter',
+      Comments:'',
       Picture_gender: {
         Value: 'Female',
         Confidence: 99.99440002441406

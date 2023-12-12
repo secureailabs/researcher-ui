@@ -40,7 +40,7 @@ const SocialSearch: React.FC<ISocialSearch> = ({ sampleTextProp }) => {
             />
           )}
         />
-        <Button onClick={() => setTimeout(handleChange, 1000)} type="submit" variant="contained" sx={{ my: 2 }}>
+        <Button onClick={() => setTimeout(handleChange, 1000)} type="submit" variant="contained" sx={{ mt: 2, mb: 4 }}>
           Social Search</Button>
 
         {showResults ?

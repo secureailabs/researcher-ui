@@ -388,11 +388,11 @@ const PatientIntake: React.FC = () => {
           <Typography variant="h5" sx={{ mb: 3, mt: 4 }}>Media</Typography>
           <Box sx={{ mt: 1, mb: 2 }}>
           <Typography variant="h6" sx={{ mb: 1 }}>Upload profile picture:</Typography>
-            <ProfilePictureUpload  />
+            <ProfilePictureUpload spacing={3}  />
           </Box>
           <Box sx={{ mt: 1, mb: 2 }}>
           <Typography variant="h6" sx={{ mb: 1 }}>Upload additional documents:</Typography>
-            <DocumentsUpload />
+            <DocumentsUpload spacing={3} editPatient={false}/>
           </Box>
           <Typography variant="h5" sx={{mb:3, mt:4 }}>Social Media</Typography>
           <Typography variant="subtitle2">Please provide links to any social media accounts</Typography>
