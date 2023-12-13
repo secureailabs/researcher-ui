@@ -44,7 +44,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
       msg: 'Patient story has been saved',
       variant: 'success'
     });
-    setTimeout(handleCloseModal, 3000)
+    setTimeout(handleCloseModal, 1000)
     setEditing((v) => !v);
     return;
   };
