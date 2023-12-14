@@ -4,7 +4,7 @@ import { EmailsService, GetEmail_Out } from 'src/tallulah-ts-client';
 import SendIcon from '@mui/icons-material/Send';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { formatReceivedTime, getAllEmailLabels, getEmailLabel } from 'src/utils/helper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EmailReply from '../EmailReply';
 import { sendAmplitudeData } from 'src/utils/Amplitude/amplitude';
 import useNotification from 'src/hooks/useNotification';
@@ -50,6 +50,10 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    setEmailLabel(data.label as string);
+  }, [data]);
 
   return (
     <Box>
