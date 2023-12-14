@@ -198,7 +198,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                   Refresh
                 </Button>
                 {/* dropdown menu */}
-                <Box>
+                {/* <Box>
                   <IconButton
                     id="menu-button"
                     aria-controls={open ? 'basic-menu' : undefined}
@@ -219,7 +219,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
                   >
                     <MenuItem onClick={handleRemoveMailBoxClicked}>Remove Mailbox</MenuItem>
                   </Menu>
-                </Box>
+                </Box> */}
               </Box>
             </Box>
             <Box

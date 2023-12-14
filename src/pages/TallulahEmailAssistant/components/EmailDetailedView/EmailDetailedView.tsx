@@ -27,6 +27,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
   const [openReplyModal, setOpenReplyModal] = useState<boolean>(false);
   const [sendNotification] = useNotification();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [emailLabel, setEmailLabel] = useState<string>(data.label as string);
 
   const updateEmailLabel = async (event: SelectChangeEvent) => {
     const label = event.target.value as string;
@@ -39,6 +40,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
         msg: 'Email label updated successfully',
         variant: 'success'
       });
+      setEmailLabel(label);
       handleEmailRefresh();
     } catch (e) {
       sendNotification({
@@ -125,7 +127,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
                   <Select
                     labelId="email-label"
                     id="email-label-select"
-                    value={data.label}
+                    value={emailLabel}
                     onChange={(e) => updateEmailLabel(e)}
                     sx={{
                       border: `1px solid ${getEmailLabel(data.label as string)?.color}`
@@ -133,12 +135,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
                   >
                     {getAllEmailLabels().map((label) => {
                       return (
-                        <MenuItem
-                          value={label.label}
-                          sx={{
-                            backgroundColor: `${getEmailLabel(data.label as string)?.color}`
-                          }}
-                        >
+                        <MenuItem key={label.label} value={label.label}>
                           {label.label}
                         </MenuItem>
                       );
