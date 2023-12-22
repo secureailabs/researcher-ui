@@ -6,6 +6,8 @@ import DatasetVersion from 'src/pages/Datasets/components/DatasetPage/components
 import Login from 'src/pages/Login';
 import Invalid404 from 'src/pages/invalid404';
 import Compare from 'src/pages/Compare';
+import StoryStatus from 'src/pages/TallulahStorySolicit/components/StoryStatus/StoryStatus';
+import SocialSearchResults from 'src/pages/TallulahStorySolicit/components/RunSearch/RunSearch';
 
 const Home = Loadable(lazy(async () => await import('src/pages/home')));
 const DemoLongitudinal = Loadable(lazy(async () => await import('src/pages/DemoLongitudinal')));
@@ -18,6 +20,7 @@ const TallulahStoryAssistant = Loadable(lazy(async () => await import('src/pages
 const TallulahDashboard = Loadable(lazy(async () => await import('src/pages/TallulahDashboard')));
 const SocialSearch = Loadable(lazy(async () => await import('src/pages/TallulahSocialSearch')));
 const PatientIntake = Loadable(lazy(async () => await import('src/pages/TallulahPatientIntake')));
+const TallulahStorySolicit = Loadable(lazy(async () => await import('src/pages/TallulahStorySolicit')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -53,6 +56,18 @@ const MainRoutes = {
       path: 'tallulah-patient-intake',
       element: <PatientIntake />
     },
+    {
+      path: 'tallulah-find-stories',
+      element: <TallulahStorySolicit />
+    },
+    {
+      path: 'tallulah-find-stories/story-status',
+      element: <StoryStatus />
+    },
+    {
+      path: 'tallulah-find-stories/:name',
+      element: <SocialSearchResults />
+    }
     // {
     //   path: 'home',
     //   element: <Home />

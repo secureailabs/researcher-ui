@@ -3,13 +3,10 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import exp from 'constants';
 import YoutubeResultCard from '../SocialsDropdown/components/YoutubeResultCards/YoutubeResultCard';
-import YOUTUBE_RESULTS from '../../default_youtube_results';
+import YOUTUBE_RESULTS from '../../demoSearchResults/default_youtube_results';
 import { Grid } from '@mui/material';
-import TIKTOK_RESULTS from '../../default_tiktok_results';
-import TiktokResultCard from '../SocialsDropdown/components/TiktokResultCards/TiktokResultCard';
-import REDDIT_RESULTS from '../../default_reddit_results';
+import REDDIT_RESULTS from '../../demoSearchResults/default_reddit_results';
 import RedditResultCard from '../SocialsDropdown/components/RedditResultCards/RedditResultCard';
 
 interface TabPanelProps {
@@ -23,12 +20,6 @@ const youtubeResults = [
   { result: YOUTUBE_RESULTS[0].kidneycancer.items[1] },
   { result: YOUTUBE_RESULTS[0].kidneycancer_stage.items[1] },
   { result: YOUTUBE_RESULTS[0].kidneycancer_stage.items[2] },
-];
-
-const tiktokResults = [
-  { result: TIKTOK_RESULTS[0].kidneycancer[0] },
-  { result: TIKTOK_RESULTS[0].kidneycancer[1] },
-  { result: TIKTOK_RESULTS[0].kidneycancer[2] },
 ];
 
 const redditResults = [
@@ -84,7 +75,6 @@ const SocialsTabs: React.FC = () => {
         sx={{ borderRight: 1, borderColor: 'divider', minWidth: 100 }}
       >
         <Tab label="Youtube" {...a11yProps(0)} />
-        <Tab label="Tik tok" {...a11yProps(1)} />
         <Tab label="Reddit" {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={value} index={0}>
@@ -99,23 +89,6 @@ const SocialsTabs: React.FC = () => {
                 lg={6}
               >
                 <YoutubeResultCard data={result.result} />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-      <Box>
-          <Grid container spacing={3}>
-            {tiktokResults.map((result: any) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={6}
-                lg={6}
-              >
-                <TiktokResultCard data={result.result} />
               </Grid>
             ))}
           </Grid>

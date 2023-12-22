@@ -49,6 +49,10 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     return;
   };
 
+  const changeEditMode = () => {
+    setEditing((v) => !v);
+  };
+
   const StyledEdiText = styled(Editext)`
   button {
     border-radius: 5px;

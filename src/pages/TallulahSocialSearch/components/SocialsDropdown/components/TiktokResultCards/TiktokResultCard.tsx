@@ -1,7 +1,7 @@
 import { Box, Divider, Link, Stack, Typography } from '@mui/material';
 import styles from '../SocialResultCard.module.css';
 import TranscribeVideoModal from '../TranscribeVideoModal/TranscribeVideoModal';
-import TRANSCRIPTION_RESULTS from 'src/pages/TallulahSocialSearch/default_transcription_mapping';
+import TRANSCRIPTION_RESULTS from 'src/pages/TallulahSocialSearch/demoSearchResults/default_transcription_mapping';
 
 export interface ISocialResultCard {
   data: any;

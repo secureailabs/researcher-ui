@@ -245,7 +245,7 @@ const TallulahSearch: React.FC<ITallulahSearch> = ({ sampleTextProp }) => {
               md={6}
               lg={6}
               onClick={() => {
-                setOpenModal(true);
+                setOpenModal(true); 
                 setSelectedPatientData(patientData);
               }}
               className={styles.patientCardGridItem}

@@ -69,7 +69,24 @@ const other: any = {
           type: 'item',
           url: '/tallulah-patient-intake',
           target: false
-        }
+        },
+        {
+          id: 'story-solicit',
+          title: 'Find New Stories',
+          type: 'collapse',
+          url: '/tallulah-find-stories',
+          target: false,
+          children: [
+            {
+              id: 'story-status',
+              title: 'Story Status',
+              type: 'item',
+              url: '/tallulah-find-stories/story-status',
+              target: false
+            },
+           
+          ]
+        },
       ]
     }
   ].filter(Boolean)
