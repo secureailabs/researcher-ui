@@ -1,10 +1,13 @@
 import { Autocomplete, Box, Button, Chip, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import SocialsTabs from '../TallulahSocialSearch/components/SocialsTabs/SocialsTabs';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import SavedSearchCard from './components/SavedSearchCard';
 import SAVED_SEARCH_DATA from './saved_searches';
 import SavedSearchDetailModal from './components/SavedSearchDetailModal';
+import { useNavigate } from 'react-router-dom';
+import useNotification from 'src/hooks/useNotification';
+import { time } from 'console';
 
 
 export interface ITallulahStorySolicit {
@@ -32,13 +35,14 @@ const TallulahStorySolicit: React.FC<ITallulahStorySolicit> = ({ sampleTextProp 
   const [showResults, setShowResults] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [alertFrequency, setAlertFrequency] = useState('');
+  const [sendNotification] = useNotification();
   const [selectedSearchData, setSelectedSearchData] = useState<any>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-
-  const handleChange = () => {
-    setShowResults(true);
-  }
+  const { handleSubmit } = useForm({
+    mode: 'onSubmit'
+  });
 
   const onTagChange = (_: any, value: React.SetStateAction<string[]>) => {
     setTags(value);
@@ -46,6 +50,20 @@ const TallulahStorySolicit: React.FC<ITallulahStorySolicit> = ({ sampleTextProp 
 
   const handleAlertSelect = (event: SelectChangeEvent) => {
     setAlertFrequency(event.target.value as string);
+  };
+
+  const onSubmit = () => {
+    sendNotification({
+      msg: 'Search saved successfully',
+      variant: 'success'
+    });
+    setTimeout(() => {
+      setTags([]);
+      setAlertFrequency('');
+    }, 1000);
+
+
+    return;
   };
 
   const handleCloseModal = () => {
@@ -72,6 +90,7 @@ const TallulahStorySolicit: React.FC<ITallulahStorySolicit> = ({ sampleTextProp 
         backgroundColor: '#fff',
         boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)'
       }}
+        component="form" noValidate onSubmit={handleSubmit(onSubmit)}
       >
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" fontStyle={'italic'}>What would you like to search or monitor for?</Typography>
         <Autocomplete
@@ -117,38 +136,38 @@ const TallulahStorySolicit: React.FC<ITallulahStorySolicit> = ({ sampleTextProp 
           </FormControl>
         </Stack>
         <Stack flexDirection={'row'} sx={{ mt: 6, mb: 4 }}>
-          <Button onClick={() => setTimeout(handleChange, 1000)} color='success' type="submit" variant="outlined" sx={{ marginRight: 2, color: 'green', borderColor: 'green' }}>
-            Save Search</Button>
-          <Button onClick={() => setTimeout(handleChange, 1000)} type="submit" variant="outlined" sx={{
-            borderColor:'#4c78af'
+          <Button onClick={handleSubmit(onSubmit)} type='submit' color='success' variant="outlined" sx={{ marginRight: 2, color: 'green', borderColor: 'green' }}>
+            Save</Button>
+          <Button onClick={() => navigate(`/tallulah-find-stories/NewSearch`)} variant="outlined" sx={{
+            borderColor: '#4c78af'
           }}>
-            Run Search</Button>
+            Search</Button>
         </Stack>
       </Box>
       <Typography variant="h1" fontWeight={5} color="#1070a1">Saved Searches</Typography>
       <Box>
-      <Box sx={{mt: 4}}>
-        <Grid container spacing={3}>
-          {SAVED_SEARCH_DATA.map((searchData: any) => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={6}
-              lg={6}
-              onClick={() => {
-                setOpenModal(true); 
-                setSelectedSearchData(searchData);
-              }}
-            >
-              <SavedSearchCard data={searchData} />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-      {selectedSearchData ? (
-        <SavedSearchDetailModal openModal={openModal} handleCloseModal={handleCloseModal} data={selectedSearchData} />
-      ) : null}
+        <Box sx={{ mt: 4 }}>
+          <Grid container spacing={3}>
+            {SAVED_SEARCH_DATA.map((searchData: any) => (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={6}
+                lg={6}
+                onClick={() => {
+                  setOpenModal(true);
+                  setSelectedSearchData(searchData);
+                }}
+              >
+                <SavedSearchCard data={searchData} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+        {selectedSearchData ? (
+          <SavedSearchDetailModal openModal={openModal} handleCloseModal={handleCloseModal} data={selectedSearchData} options={options} />
+        ) : null}
       </Box>
 
     </Box>

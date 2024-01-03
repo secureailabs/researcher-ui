@@ -3,7 +3,7 @@ import styles from '../../TallulahSearch/components/PatientCard/PatientCard.modu
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import AddIcon from '@mui/icons-material/Add';
 import LaunchIcon from '@mui/icons-material/Launch';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,6 +14,7 @@ export interface IStoryStatus {
 export interface SocialStoryStatus {
   id: number;
   creator: string;
+  accountType: string;
   status: string;
   statusColor?: string;
   dateOfStatus: string;
@@ -22,14 +23,16 @@ export interface SocialStoryStatus {
 const StoryStatus: React.FC = () => {
   //const [rows, setRows] = useState<SocialStoryStatus[]>();
   const navigate = useNavigate();
+  const [searchText, setSearchText] = useState<string>('');
+
 
 
   const rows: SocialStoryStatus[] = [
-    { id: 1, creator: 'Katie Kicks Cancer', status: 'Received Story', statusColor: 'success', dateOfStatus: '2023-12-20' },
-    { id: 2, creator: 'Mayo Clinic', status: 'Declined', statusColor: 'secondary', dateOfStatus: '2023-12-16' },
-    { id: 3, creator: 'StarPirate_355', status: 'In Queue', statusColor: 'warning', dateOfStatus: '2023-12-01' },
-    { id: 4, creator: 'Snow', status: 'In Queue', statusColor: 'warning', dateOfStatus: '2023-12-01' },
-    { id: 5, creator: 'Michael Bluth', status: 'Reached Out', statusColor: 'info', dateOfStatus: '2023-11-05' },
+    { id: 1, creator: 'Katie Kicks Cancer', accountType:'patient', status: 'Received Story', statusColor: 'success', dateOfStatus: '2023-12-20' },
+    { id: 2, creator: 'Mayo Clinic', accountType:'organization', status: 'Declined', statusColor: 'secondary', dateOfStatus: '2023-12-16' },
+    { id: 3, creator: 'StarPirate_355', accountType:'patient', status: 'In Queue', statusColor: 'warning', dateOfStatus: '2023-12-01' },
+    { id: 4, creator: 'Snow', accountType:'caregiver', status: 'In Queue', statusColor: 'warning', dateOfStatus: '2023-12-01' },
+    { id: 5, creator: 'Michael Bluth', accountType:'patient', status: 'Reached Out', statusColor: 'info', dateOfStatus: '2023-11-05' },
   ];
 
   const columns = [
@@ -49,6 +52,12 @@ const StoryStatus: React.FC = () => {
           </>
         );
       }
+    },
+    {
+      field: 'accountType',
+      headerName: 'Account Type',
+      flex: 1,
+      headerClassName: 'table--header',
     },
     {
       field: 'status',
@@ -80,15 +89,15 @@ const StoryStatus: React.FC = () => {
             {rows && rows.length > 0 ? (
               <Button
                 variant="text"
-                color='secondary'
+                color='primary'
                 size='extraSmall'
-                endIcon={<DeleteOutlineIcon fontSize='small' color='secondary'/>}
+                endIcon={<Inventory2OutlinedIcon fontSize='small' color='primary'/>}
                 sx={{ my: 2, maxHeight: 20 }}
                 onClick={() => {
 
                 }}
               >
-                Delete 
+                Archive 
               </Button>
             ) : null}
           </>

@@ -9,7 +9,6 @@ export interface IPatientCard {
 const SavedSearchCard: React.FC<IPatientCard> = ({ data }) => {
   return (
     <Box className={styles.container}>
-      {/* Patient Details */}
       <Box className={styles.cardHeaderLayout}>
         <Box>
           <Typography variant="h6" className={styles.name}>

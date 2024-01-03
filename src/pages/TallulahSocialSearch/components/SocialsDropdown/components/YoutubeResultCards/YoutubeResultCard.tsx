@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, Link, Stack, Typography } from '@mui/material';
 import styles from '../SocialResultCard.module.css';
 import { Transcribe } from '@mui/icons-material';
 import TranscribeVideoModal from '../TranscribeVideoModal/TranscribeVideoModal';
@@ -38,14 +38,14 @@ const YoutubeResultCard: React.FC<ISocialResultCard> = ({ data }) => {
           <Box sx={{ mb: 2 }}>
             <Typography className={styles.description}>{kidneyCancerResult.snippet.description}</Typography>
           </Box>
-          <Box sx={{ mb: 4 }}>
+          <Box sx={{ mb: 2 }}>
             <Typography variant="body1" display="inline" className={styles.title}>
               Channel : </Typography>
-            <Typography display="inline">{kidneyCancerResult.snippet.channelTitle}</Typography>
+            <Link display="inline" href={demoUserAccount}>{kidneyCancerResult.snippet.channelTitle}</Link>
           </Box>
         </Box>
       </Box>
-      <Button sx={{width: 150, mt:2}} type='submit' variant='contained' onClick={() => navigate(demoUserAccount)}>View user account</Button>
+      <Button sx={{width: 125, maxHeight: 30}} type='submit' variant='contained' onClick={() => window.open(demoUserAccount)}>Add to Queue</Button>
       <Stack sx={{ mt: 1, marginRight: 1 }} direction={'row-reverse'}>
         <Typography justifyContent={'flex-end'} alignItems={'flex-end'}>{kidneyCancerResult.snippet.publishedAt}</Typography>
       </Stack>
