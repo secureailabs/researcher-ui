@@ -57,6 +57,13 @@ const other: any = {
           type: 'item',
           url: '/patient-story-form',
           target: false
+        },
+        {
+          id: 'patient-story',
+          title: 'Patient Story',
+          type: 'item',
+          url: '/patient-story',
+          target: false
         }
       ]
     }
