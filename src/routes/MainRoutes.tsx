@@ -19,6 +19,7 @@ const TallulahDashboard = Loadable(lazy(async () => await import('src/pages/Tall
 const TallulahEmailAssistant = Loadable(lazy(async () => await import('src/pages/TallulahEmailAssistant')));
 const MSAuthorize = Loadable(lazy(async () => await import('src/pages/MSAuthorize')));
 const TallulahEmailResponseTemplate = Loadable(lazy(async () => await import('src/pages/TallulahEmailResponseTemplate')));
+const PatientStoryForm = Loadable(lazy(async () => await import('src/pages/TallulahPatientStory/PatientStoryForm')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -64,6 +65,10 @@ const MainRoutes = {
     {
       path: 'mailbox/authorize',
       element: <MSAuthorize />
+    },
+    {
+      path: 'patient-story-form',
+      element: <PatientStoryForm />
     }
     // {
     //   path: 'home',

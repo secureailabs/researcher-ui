@@ -1,5 +1,5 @@
 // assets
-import { IconChartHistogram, IconDatabaseCog, IconUpload, IconDeviceDesktopAnalytics } from '@tabler/icons-react';
+import { IconChartHistogram, IconDatabaseCog, IconUpload, IconDeviceDesktopAnalytics, IconId } from '@tabler/icons-react';
 
 // type
 import { NavItemType } from 'src/types/menu';
@@ -11,7 +11,8 @@ const icons = {
   IconChartHistogram,
   IconDatabaseCog,
   IconUpload,
-  IconDeviceDesktopAnalytics
+  IconDeviceDesktopAnalytics,
+  IconId
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -31,7 +32,7 @@ const other: any = {
   children: [
     {
       id: 'tallulah',
-      title: 'Tallulah',
+      title: 'Email Assistant',
       type: 'collapse',
       icon: icons.IconChartHistogram,
       children: [
@@ -40,6 +41,21 @@ const other: any = {
           title: 'Email Assistant',
           type: 'item',
           url: '/email-assistant',
+          target: false
+        }
+      ]
+    },
+    {
+      id: 'patient-story',
+      title: 'Patient Story',
+      type: 'collapse',
+      icon: icons.IconId,
+      children: [
+        {
+          id: 'patient-story-form',
+          title: 'Patient Story Form',
+          type: 'item',
+          url: '/patient-story-form',
           target: false
         }
       ]
