@@ -10,7 +10,7 @@
 .gridContainer {
   display: grid;
   grid-template-columns: minmax(200px, 1fr) minmax(200px, 1fr);
-  gap: 10px; /* Adjust the gap between grid items */
+  gap: 15px; /* Adjust the gap between grid items */
 }
 .gridItem {
 }

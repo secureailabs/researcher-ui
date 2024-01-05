@@ -14,7 +14,7 @@ import {
   Box,
   Typography
 } from '@mui/material';
-import { FormDataService, FormTemplatesService } from 'src/tallulah-ts-client';
+import { FormDataService, FormTemplatesService, GetMultipleFormTemplate_Out } from 'src/tallulah-ts-client';
 import ImageUpload from './components/ImageUpload';
 import DocumentUpload from './components/DocumentUpload';
 
@@ -170,10 +170,10 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   };
 
   const fetchFormTemplate = async () => {
-    const res = await FormTemplatesService.getAllFormTemplates();
-    const formTemplateId = res.templates[res.templates.length - 1]._id;
-    const formLayout = await FormTemplatesService.getFormTemplate(formTemplateId);
-    setFormLayout(formLayout);
+    const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
+    // get the last form template
+    const formTemplate = res.templates[res.templates.length - 1];
+    setFormLayout(formTemplate);
   };
 
   useEffect(() => {
@@ -182,14 +182,10 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    // Handle form submission
-    console.log(formData);
-    // create form object with key as field name and value as field value
     const form: any = {};
     formLayout.fields.forEach((field: any) => {
       form[field?.name] = formData[field.name];
     });
-    console.log('form', form);
     try {
       await FormDataService.addFormData({
         form_template_id: formLayout._id,
@@ -212,16 +208,34 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   return (
     <Box className={styles.container}>
       <form onSubmit={handleSubmit}>
-        <div className={styles.gridContainer}>
-          {formLayout?.fields.map((field: any) => (
+        <div>
+          {formLayout?.field_groups.map((field: any) => (
             <Box
               key={field.name}
-              className={`${styles.gridItem} ${spanFullWidth(field) ? styles.fullWidth : ''}`}
               sx={{
-                width: '100%'
+                marginY: '30px'
               }}
             >
-              {renderField(field)}
+              <Box
+                sx={{
+                  marginBottom: '20px'
+                }}
+              >
+                <Typography variant="h5">{field.description}</Typography>
+              </Box>
+              <Box className={styles.gridContainer}>
+                {field.fields.map((field: any) => (
+                  <Box
+                    key={field.name}
+                    className={`${styles.gridItem} ${spanFullWidth(field) ? styles.fullWidth : ''}`}
+                    sx={{
+                      width: '100%'
+                    }}
+                  >
+                    {renderField(field)}
+                  </Box>
+                ))}
+              </Box>
             </Box>
           ))}
         </div>
