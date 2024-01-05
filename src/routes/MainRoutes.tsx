@@ -6,7 +6,7 @@ import DatasetVersion from 'src/pages/Datasets/components/DatasetPage/components
 import Login from 'src/pages/Login';
 import Invalid404 from 'src/pages/invalid404';
 import Compare from 'src/pages/Compare';
-import StoryStatus from 'src/pages/TallulahStorySolicit/components/StoryStatus/StoryStatus';
+import StoryStatus from 'src/pages/TallulahStorySolicit/components/StoryStatus/StoryStatusTable';
 import SocialSearchResults from 'src/pages/TallulahStorySolicit/components/RunSearch/RunSearch';
 
 const Home = Loadable(lazy(async () => await import('src/pages/home')));
@@ -65,7 +65,7 @@ const MainRoutes = {
       element: <StoryStatus />
     },
     {
-      path: 'tallulah-find-stories/:name',
+      path: 'tallulah-find-stories/search',
       element: <SocialSearchResults />
     }
     // {

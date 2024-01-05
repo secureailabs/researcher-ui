@@ -6,6 +6,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AddStatusModal from '../AddStatusModal';
 
 export interface IStoryStatus {
   data: any;
@@ -28,11 +29,11 @@ const StoryStatus: React.FC = () => {
 
 
   const rows: SocialStoryStatus[] = [
-    { id: 1, creator: 'Katie Kicks Cancer', accountType:'patient', status: 'Received Story', statusColor: 'success', dateOfStatus: '2023-12-20' },
-    { id: 2, creator: 'Mayo Clinic', accountType:'organization', status: 'Declined', statusColor: 'secondary', dateOfStatus: '2023-12-16' },
-    { id: 3, creator: 'StarPirate_355', accountType:'patient', status: 'In Queue', statusColor: 'warning', dateOfStatus: '2023-12-01' },
-    { id: 4, creator: 'Snow', accountType:'caregiver', status: 'In Queue', statusColor: 'warning', dateOfStatus: '2023-12-01' },
-    { id: 5, creator: 'Michael Bluth', accountType:'patient', status: 'Reached Out', statusColor: 'info', dateOfStatus: '2023-11-05' },
+    { id: 1, creator: 'Katie Kicks Cancer', accountType:'Patient', status: 'Received Story', statusColor: 'success', dateOfStatus: '2023-12-20' },
+    { id: 2, creator: 'Mayo Clinic', accountType:'Organization', status: 'Declined', statusColor: 'secondary', dateOfStatus: '2023-12-16' },
+    { id: 3, creator: 'StarPirate_355', accountType:'Patient', status: 'In Queue', statusColor: 'warning', dateOfStatus: '2023-12-01' },
+    { id: 4, creator: 'Snow', accountType:'Caregiver', status: 'In Queue', statusColor: 'warning', dateOfStatus: '2023-12-01' },
+    { id: 5, creator: 'Michael Bluth', accountType:'Patient', status: 'Reached Out', statusColor: 'info', dateOfStatus: '2023-11-05' },
   ];
 
   const columns = [
@@ -120,8 +121,8 @@ const StoryStatus: React.FC = () => {
       }}
       >
         <Box sx={{ my: 4 }}>
-          <Stack flexDirection={'row-reverse'} alignItems={'center'}>
-            <Button variant='contained' startIcon={<AddIcon />} sx={{ mb: 2, alignItems: 'self-end' }}>Add Item</Button>
+          <Stack flexDirection={'row-reverse'} alignItems={'center'} sx={{mb:2}}>
+           <AddStatusModal />
           </Stack>
           <AppStripedDataGrid
             autoHeight

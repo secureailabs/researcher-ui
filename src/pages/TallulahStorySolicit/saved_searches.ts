@@ -1,22 +1,22 @@
 const SAVED_SEARCH_DATA = [
   {
-    name: 'My Saved Search 1',
-    tags: ['Acute Myeloid Leukemia', 'AML', 'Chronic lymphocytic leukemia', 'CLL', 'Chronic myeloid leukemia', 'CML'],
+    name: 'Monthly AML/CML Search',
+    tags: ['Acute Myeloid Leukemia', 'AML', 'Chronic myeloid leukemia', 'CML', 'Leukemia'],
     alert_frequency: 'Daily',
   },
   {
-    name: 'My Saved Search 2',
-    tags: ['Aplastic anemia', 'leukemia'],
+    name: 'Weekly Aplastic Anemia Search',
+    tags: ['Aplastic anemia', 'Leukemia'],
     alert_frequency: 'Weekly',
   },
   {
-    name: 'My Saved Search 3',
-    tags: ['Bone marrow transplant', 'leukemia'],
+    name: 'Weekly Bone Marrow Search',
+    tags: ['Bone marrow transplant', 'Leukemia'],
     alert_frequency: 'Weekly',
   },
   {
-    name: 'My Saved Search 4',
-    tags: ['Blastic plasmacytoid dendritic cell neoplasm', '(BPDCN)', 'Chronic Myelomonocytic Leukemia', 'CMML'],
+    name: 'BPDCN/CMML Monthly',
+    tags: ['Blastic plasmacytoid dendritic cell neoplasm', '(BPDCN)', 'Chronic Myelomonocytic Leukemia', 'CMML', 'Leukemia'],
     alert_frequency: 'Monthly',
   }
 ];

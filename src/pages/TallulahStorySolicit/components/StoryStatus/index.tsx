@@ -1,3 +1,3 @@
-import StoryStatus from "./StoryStatus";
+import StoryStatus from "./StoryStatusTable";
 
 export default StoryStatus;

@@ -138,7 +138,7 @@ const TallulahStorySolicit: React.FC<ITallulahStorySolicit> = ({ sampleTextProp 
         <Stack flexDirection={'row'} sx={{ mt: 6, mb: 4 }}>
           <Button onClick={handleSubmit(onSubmit)} type='submit' color='success' variant="outlined" sx={{ marginRight: 2, color: 'green', borderColor: 'green' }}>
             Save</Button>
-          <Button onClick={() => navigate(`/tallulah-find-stories/NewSearch`)} variant="outlined" sx={{
+          <Button onClick={() => navigate(`/tallulah-find-stories/search`)} variant="outlined" sx={{
             borderColor: '#4c78af'
           }}>
             Search</Button>

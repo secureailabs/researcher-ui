@@ -1,11 +1,10 @@
 import { Autocomplete, Box, Button, Chip, FormControl, IconButton, MenuItem, Modal, Select, SelectChangeEvent, Stack, TextField, Typography } from '@mui/material';
 import styles from '../../TallulahSearch/components/PatientDetailViewModal/PatientDetailViewModal.module.css'
-import PatientImage from 'src/assets/images/users/sample-face-image-1.png';
 import useNotification from 'src/hooks/useNotification';
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
-import { Controller, set, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 
 export interface ISearchDetailViewModal {
@@ -121,7 +120,7 @@ const SavedSearchDetailModal: React.FC<ISearchDetailViewModal> = ({ openModal, h
                 <Box sx={{mt: 4}} >
                   <Stack flexDirection={'row'}>
                     <Button sx={{ mb: 1, marginRight: 1, maxHeight: 30, borderColor: '#4c78af' }} variant='outlined' size='extraSmall' onClick={changeEditMode}>Edit</Button>
-                    <Button sx={{ mb: 1, marginRight: 1, maxHeight: 30, borderColor: '#4c78af' }} variant='outlined' size='extraSmall' onClick={() => navigate(`/tallulah-find-stories/${data.name}`)}>Run Search</Button></Stack>
+                    <Button sx={{ mb: 1, marginRight: 1, maxHeight: 30, borderColor: '#4c78af' }} variant='outlined' size='extraSmall' onClick={() => navigate(`/tallulah-find-stories/search`)}>Search</Button></Stack>
                 </Box>
               </Box>
             </Box>

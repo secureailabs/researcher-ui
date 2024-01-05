@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import YoutubeResultCard from '../SocialsDropdown/components/YoutubeResultCards/YoutubeResultCard';
-import YOUTUBE_RESULTS from '../../demoSearchResults/default_youtube_results';
+import LEUKEMIA_YOUTUBE_RESULTS from '../../demoSearchResults/leukemia_youtube_results';
 import { Grid } from '@mui/material';
 import REDDIT_RESULTS from '../../demoSearchResults/default_reddit_results';
 import RedditResultCard from '../SocialsDropdown/components/RedditResultCards/RedditResultCard';
@@ -15,11 +15,20 @@ interface TabPanelProps {
   value: number;
 }
 
-const youtubeResults = [
+/*const youtubeResults = [
   { result: YOUTUBE_RESULTS[0].kidneycancer.items[0] },
   { result: YOUTUBE_RESULTS[0].kidneycancer.items[1] },
   { result: YOUTUBE_RESULTS[0].kidneycancer_stage.items[1] },
   { result: YOUTUBE_RESULTS[0].kidneycancer_stage.items[2] },
+]; */
+
+const youTubeLeukemiaResults = [
+  { result: LEUKEMIA_YOUTUBE_RESULTS[0].leukemia.items[0] },
+  { result: LEUKEMIA_YOUTUBE_RESULTS[0].leukemia.items[1] },
+  { result: LEUKEMIA_YOUTUBE_RESULTS[0].leukemia.items[2] },
+  { result: LEUKEMIA_YOUTUBE_RESULTS[0].leukemia.items[3] },
+  { result: LEUKEMIA_YOUTUBE_RESULTS[0].leukemia.items[4] },
+  { result: LEUKEMIA_YOUTUBE_RESULTS[0].leukemia.items[5] },
 ];
 
 const redditResults = [
@@ -80,7 +89,7 @@ const SocialsTabs: React.FC = () => {
       <TabPanel value={value} index={0}>
         <Box>
           <Grid container spacing={3}>
-            {youtubeResults.map((result: any) => (
+            {youTubeLeukemiaResults.map((result: any) => (
               <Grid
                 item
                 xs={12}
