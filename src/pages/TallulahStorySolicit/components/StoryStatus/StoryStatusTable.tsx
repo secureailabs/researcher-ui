@@ -29,6 +29,7 @@ const StoryStatus: React.FC = () => {
 
 
   const rows: SocialStoryStatus[] = [
+    { id: 0, creator: 'Life With The Bridges', accountType:'Parent', status: 'In Queue', statusColor: 'warning', dateOfStatus: '2024-01-05'},
     { id: 1, creator: 'Katie Kicks Cancer', accountType:'Patient', status: 'Received Story', statusColor: 'success', dateOfStatus: '2023-12-20' },
     { id: 2, creator: 'Mayo Clinic', accountType:'Organization', status: 'Declined', statusColor: 'secondary', dateOfStatus: '2023-12-16' },
     { id: 3, creator: 'StarPirate_355', accountType:'Patient', status: 'In Queue', statusColor: 'warning', dateOfStatus: '2023-12-01' },
@@ -47,7 +48,7 @@ const StoryStatus: React.FC = () => {
           <>
               {params.row.creator}
               <IconButton aria-label="launch" size="small" sx={{ ml: 1 }} 
-              onClick={() => navigate('https://www.youtube.com/channel/UCcf5yVgHvI8-__g0RHjfrTw')}>
+              onClick={() => window.open('https://www.youtube.com/@life-with-the-bridges')}>
                 <LaunchIcon fontSize="inherit" color='primary' />
               </IconButton>
           </>

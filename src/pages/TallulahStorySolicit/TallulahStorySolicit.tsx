@@ -3,7 +3,7 @@ import { useState } from 'react';
 import SocialsTabs from '../TallulahSocialSearch/components/SocialsTabs/SocialsTabs';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import SavedSearchCard from './components/SavedSearchCard';
-import SAVED_SEARCH_DATA from './saved_searches';
+import SAVED_SEARCH_DATA from './demoSearchResults/saved_searches';
 import SavedSearchDetailModal from './components/SavedSearchDetailModal';
 import { useNavigate } from 'react-router-dom';
 import useNotification from 'src/hooks/useNotification';

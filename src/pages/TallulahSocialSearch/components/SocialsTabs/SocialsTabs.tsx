@@ -4,9 +4,9 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import YoutubeResultCard from '../SocialsDropdown/components/YoutubeResultCards/YoutubeResultCard';
-import LEUKEMIA_YOUTUBE_RESULTS from '../../demoSearchResults/leukemia_youtube_results';
+import LEUKEMIA_YOUTUBE_RESULTS from '../../../TallulahStorySolicit/demoSearchResults/leukemia_youtube_results';
 import { Grid } from '@mui/material';
-import REDDIT_RESULTS from '../../demoSearchResults/default_reddit_results';
+import REDDIT_RESULTS from '../../../TallulahStorySolicit/demoSearchResults/default_reddit_results';
 import RedditResultCard from '../SocialsDropdown/components/RedditResultCards/RedditResultCard';
 
 interface TabPanelProps {

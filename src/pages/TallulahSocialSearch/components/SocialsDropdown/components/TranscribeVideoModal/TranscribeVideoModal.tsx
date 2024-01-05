@@ -4,7 +4,7 @@ import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import CloseIcon from '@mui/icons-material/Close';
 import useNotification from 'src/hooks/useNotification';
-import STRUCTURED_DATA_RESULTS from 'src/pages/TallulahSocialSearch/demoSearchResults/structured_insights';
+import STRUCTURED_DATA_RESULTS from 'src/pages/TallulahStorySolicit/demoSearchResults/structured_insights';
 
 export interface ITranscribeModal {
   refetch: () => void;
