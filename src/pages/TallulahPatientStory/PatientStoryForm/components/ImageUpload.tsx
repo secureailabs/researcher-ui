@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useDropzone, FileRejection } from 'react-dropzone';
 import { Typography } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { access } from 'fs';
+import { TImageFileUpload } from '../PatientStoryForm';
 
 const thumbsContainer: React.CSSProperties = {
   display: 'flex',
@@ -46,11 +48,13 @@ interface CustomFile extends File {
 
 export interface ProfilePictureUploadProps {
   spacing?: number;
+  fieldName: string;
+  setImageFiles?: any;
 }
 
-const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing }) => {
+const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing, setImageFiles, fieldName }) => {
   const [files, setFiles] = useState<CustomFile[]>([]);
-  const { getRootProps, getInputProps } = useDropzone({
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       const filesWithPreview = acceptedFiles.map((file) => {
         const customFile: CustomFile = file as CustomFile;
@@ -78,6 +82,27 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing }) 
   useEffect(() => {
     return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
   }, [files]);
+
+  useEffect(() => {
+    if (setImageFiles) {
+      setImageFiles((prev: TImageFileUpload[]) => {
+        const newImageFiles: TImageFileUpload[] = [...prev];
+        const fileIndex = newImageFiles.findIndex((file) => file.fieldName === fieldName);
+        if (fileIndex === -1) {
+          newImageFiles.push({
+            fieldName: fieldName,
+            files: acceptedFiles
+          });
+        } else {
+          newImageFiles[fileIndex] = {
+            fieldName: fieldName,
+            files: acceptedFiles
+          };
+        }
+        return newImageFiles;
+      });
+    }
+  }, [acceptedFiles]);
 
   return (
     <Box>
