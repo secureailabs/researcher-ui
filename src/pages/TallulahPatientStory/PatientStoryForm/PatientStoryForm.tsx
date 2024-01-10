@@ -38,6 +38,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const [imageFiles, setImageFiles] = useState<TImageFileUpload[]>([]);
   const [documentFiles, setDocumentFiles] = useState<TDocumentFileUpload[]>([]);
   const [videoFiles, setVideoFiles] = useState<TDocumentFileUpload[]>([]);
+  const [uploading, setUploading] = useState<boolean>(false);
 
   const handleFormDataChange = (event: any) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -186,7 +187,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
 
   const fetchFormTemplate = async () => {
     const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
-    // get the last form template
     const formTemplate = res.templates[res.templates.length - 1];
     setFormLayout(formTemplate);
   };
@@ -198,13 +198,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
-    console.log('form layout', formLayout);
-    console.log('form data', formData);
-    console.log('image files', imageFiles);
-    console.log('document files', documentFiles);
-    console.log('video files', videoFiles);
-
-    // Prepare form data excluding media files
     const form: any = {};
 
     const mediaUploadPromises: any[] = [];
@@ -213,9 +206,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       form[key] = formData[key];
     });
 
-    console.log('checkoint 1');
-
-    // media upload promises for all images in imageFile state which is of type TImageFileUpload[] and later populate the returned id to form[fieldName]
     imageFiles?.forEach((imageFile: TImageFileUpload) => {
       form[imageFile.fieldName] = [];
       imageFile.files.forEach((file: File) => {
@@ -237,12 +227,9 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       });
     });
 
-    console.log('checkoint 2');
-
     try {
+      setUploading(true);
       const mediaUploadResults = await Promise.all(mediaUploadPromises);
-
-      console.log('mediaUploadResults', mediaUploadResults);
 
       mediaUploadResults.forEach((mediaUploadResult: any) => {
         form[mediaUploadResult.fieldName].push(mediaUploadResult.id);
@@ -252,23 +239,18 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         form_template_id: formLayout._id,
         values: form
       });
-      // Handle successful submission (e.g., show message, redirect)
     } catch (error) {
       console.error('Error submitting form:', error);
-      // Handle form submission error
     }
+    setUploading(false);
   };
 
   const handleMediaUpload = async (file: any, type: string, fieldName: string) => {
-    // Step 1: Get the upload URL and ID
-    // get enum from FormMediaTypes => enum FormMediaTypes {FILE = 'FILE',IMAGE = 'IMAGE',VIDEO = 'VIDEO'}
-
     const typeEnum = type === 'FILE' ? FormMediaTypes.FILE : type === 'IMAGE' ? FormMediaTypes.IMAGE : FormMediaTypes.VIDEO;
 
     const response = await FormDataService.getUploadUrl(typeEnum);
     const { id, url } = response;
 
-    // Step 2: Upload the file
     const uploadResponse = await axios({
       method: 'PUT',
       url: url,
@@ -297,6 +279,30 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
 
   return (
     <Box className={styles.container}>
+      {!uploading && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: '100%',
+            width: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            zIndex: 1000,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Typography variant="h4" color="white">
+            Uploading. Please wait ...
+          </Typography>
+          <Typography variant="h5" color="white">
+            It may take a while, kindly do not refresh the page.
+          </Typography>
+        </Box>
+      )}
       <form onSubmit={handleSubmit}>
         <div>
           {formLayout?.field_groups.map((field: any) => (

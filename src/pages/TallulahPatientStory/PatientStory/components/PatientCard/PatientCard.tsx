@@ -1,12 +1,30 @@
 import { Box, Typography } from '@mui/material';
 import styles from './PatientCard.module.css';
 import PatientImage from 'src/assets/images/users/sample-face-image-1.png';
+import { useEffect, useState } from 'react';
+import { FormDataService, FormMediaTypes } from 'src/tallulah-ts-client';
 
 export interface IPatientCard {
   data: any;
 }
 
 const PatientCard: React.FC<IPatientCard> = ({ data }) => {
+  const [profileImageUrl, setProfileImageUrl] = useState<string>('');
+  const profileImageId = data?.values.profilePicture ? data?.values.profilePicture[0] : null;
+
+  const fetchProfileImage = async () => {
+    try {
+      const res = await FormDataService.getDownloadUrl(profileImageId, FormMediaTypes.IMAGE);
+      setProfileImageUrl(res.url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfileImage();
+  }, []);
+
   return (
     <Box className={styles.container}>
       {/* Patient Details */}
@@ -23,7 +41,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
         </Box>
         <Box>
           {/* display image  */}
-          {/* <img src={require(`src/assets/images/users/${data.values.imageName}`)} alt="Patient Image" className={styles.image} /> */}
+          <img src={profileImageUrl} alt="Patient Image" className={styles.image} />
         </Box>
       </Box>
       <Box
