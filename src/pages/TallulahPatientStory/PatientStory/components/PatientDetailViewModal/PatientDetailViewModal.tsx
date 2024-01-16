@@ -30,8 +30,6 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     }
   };
 
-  console.log('mediaDetails', mediaDetails);
-
   useEffect(() => {
     async function fetchMediaUrls() {
       const newMediaDetails: any = {};

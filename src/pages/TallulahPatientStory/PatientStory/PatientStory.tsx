@@ -47,7 +47,6 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   };
 
   const handleSearchChange = (text: string) => {
-    console.log(text);
     setSearchText(text);
   };
 

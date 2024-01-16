@@ -27,6 +27,7 @@ import { Form } from 'react-router-dom';
 import axios from 'axios';
 import { get } from 'http';
 import VideoUpload from './components/VideoUpload';
+import useNotification from 'src/hooks/useNotification';
 
 export interface IPatientStoryForm {}
 
@@ -57,6 +58,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const [documentFiles, setDocumentFiles] = useState<TDocumentFileUpload[]>([]);
   const [videoFiles, setVideoFiles] = useState<TDocumentFileUpload[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
+
+  const [sendNotification] = useNotification();
 
   const getCorrespondingLabel = (fieldName: string) => {
     const field = formLayout?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields).find((field) => field?.name === fieldName);
@@ -293,6 +296,10 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       await FormDataService.addFormData({
         form_template_id: formLayout?._id as string,
         values: form
+      });
+      sendNotification({
+        msg: "Patient's story submitted successfully.",
+        variant: 'success'
       });
     } catch (error) {
       console.error('Error submitting form:', error);
