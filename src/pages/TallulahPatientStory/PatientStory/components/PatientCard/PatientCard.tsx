@@ -10,7 +10,7 @@ export interface IPatientCard {
 
 const PatientCard: React.FC<IPatientCard> = ({ data }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
-  const profileImageId = data?.values.profilePicture ? data?.values.profilePicture[0] : null;
+  const profileImageId = data?.values.profilePicture?.value ? data?.values.profilePicture.value[0] : null;
 
   const fetchProfileImage = async () => {
     try {
@@ -37,12 +37,12 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
       <Box className={styles.cardHeaderLayout}>
         <Box>
           <Typography variant="h6" className={styles.name}>
-            {data.values.fullName}
+            {data.values.fullName.value}
           </Typography>
           <Typography variant="body1" className={styles.age}>
-            Age : {data?.values.age} years
-            <Typography>Location : {data?.values.cityState}</Typography>
-            <Typography>Disease Type : {data?.values.diseaseType}</Typography>
+            Age : {data?.values.age.value} years
+            <Typography>Location : {data?.values.location.value}</Typography>
+            <Typography>Disease Type : {data?.values.diseaseType.value}</Typography>
           </Typography>
         </Box>
         <Box>
@@ -59,7 +59,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
           marginTop: '1rem'
         }}
       >
-        {convertTagsStringToArray(data?.values?.storyTags).map((tag: string) => (
+        {convertTagsStringToArray(data?.values?.storyTags.value).map((tag: string) => (
           <Box className={styles.tag}>{tag}</Box>
         ))}
       </Box>
@@ -78,7 +78,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
               WebkitLineClamp: 3
             }}
           >
-            {data.values.patientStory}
+            {data.values.patientStory.value}
           </Typography>
         </Box>
       </Box>

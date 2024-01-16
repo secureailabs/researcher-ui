@@ -14,11 +14,19 @@ import {
   Box,
   Typography
 } from '@mui/material';
-import { FormDataService, FormMediaTypes, FormTemplatesService, GetMultipleFormTemplate_Out } from 'src/tallulah-ts-client';
+import {
+  FormDataService,
+  FormMediaTypes,
+  FormTemplatesService,
+  GetFormTemplate_Out,
+  GetMultipleFormTemplate_Out
+} from 'src/tallulah-ts-client';
 import ImageUpload from './components/ImageUpload';
 import DocumentUpload from './components/DocumentUpload';
 import { Form } from 'react-router-dom';
 import axios from 'axios';
+import { get } from 'http';
+import VideoUpload from './components/VideoUpload';
 
 export interface IPatientStoryForm {}
 
@@ -32,16 +40,43 @@ export type TDocumentFileUpload = {
   files: File[];
 };
 
+export type TVideoUpload = {
+  fieldName: string;
+  files: File[];
+};
+
+const spanFullWidth = (field: any) => {
+  const fullWidthTypes = ['TEXTAREA', 'FILE', 'IMAGE', 'VIDEO', 'CHECKBOX', 'RADIO'];
+  return fullWidthTypes.includes(field.type);
+};
+
 const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
-  const [formLayout, setFormLayout] = useState<any>(null);
+  const [formLayout, setFormLayout] = useState<GetFormTemplate_Out>();
   const [formData, setFormData] = useState<any>({});
   const [imageFiles, setImageFiles] = useState<TImageFileUpload[]>([]);
   const [documentFiles, setDocumentFiles] = useState<TDocumentFileUpload[]>([]);
   const [videoFiles, setVideoFiles] = useState<TDocumentFileUpload[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
 
+  const getCorrespondingLabel = (fieldName: string) => {
+    const field = formLayout?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields).find((field) => field?.name === fieldName);
+    return field?.description;
+  };
+
+  const getCorrespondingType = (fieldName: string) => {
+    const field = formLayout?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields).find((field) => field?.name === fieldName);
+    return field?.type;
+  };
+
   const handleFormDataChange = (event: any) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+    setFormData({
+      ...formData,
+      [event.target.name]: {
+        value: event.target.value,
+        label: getCorrespondingLabel(event.target.name),
+        type: getCorrespondingType(event.target.name)
+      }
+    });
   };
 
   const renderField = (field: any) => {
@@ -179,16 +214,20 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       case 'IMAGE':
         return <ImageUpload fieldName={field.name} setImageFiles={setImageFiles} />;
       case 'VIDEO':
-        return <DocumentUpload fieldName={field.name} setDocumentFiles={setVideoFiles} />;
+        return <VideoUpload fieldName={field.name} setVideoFiles={setVideoFiles} />;
       default:
         return null;
     }
   };
 
   const fetchFormTemplate = async () => {
-    const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
-    const formTemplate = res.templates[res.templates.length - 1];
-    setFormLayout(formTemplate);
+    try {
+      const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
+      const formTemplate = res.templates[res.templates.length - 1];
+      setFormLayout(formTemplate);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -207,21 +246,33 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     });
 
     imageFiles?.forEach((imageFile: TImageFileUpload) => {
-      form[imageFile.fieldName] = [];
+      form[imageFile.fieldName] = {
+        value: [],
+        label: imageFile.fieldName,
+        type: 'IMAGE'
+      };
       imageFile.files.forEach((file: File) => {
         mediaUploadPromises.push(handleMediaUpload(file, 'IMAGE', imageFile.fieldName));
       });
     });
 
     videoFiles?.forEach((videoFile: TDocumentFileUpload) => {
-      form[videoFile.fieldName] = [];
+      form[videoFile.fieldName] = {
+        value: [],
+        label: videoFile.fieldName,
+        type: 'VIDEO'
+      };
       videoFile.files.forEach((file: File) => {
         mediaUploadPromises.push(handleMediaUpload(file, 'VIDEO', videoFile.fieldName));
       });
     });
 
     documentFiles?.forEach((documentFile: TDocumentFileUpload) => {
-      form[documentFile.fieldName] = [];
+      form[documentFile.fieldName] = {
+        value: [],
+        label: documentFile.fieldName,
+        type: 'FILE'
+      };
       documentFile.files.forEach((file: File) => {
         mediaUploadPromises.push(handleMediaUpload(file, 'FILE', documentFile.fieldName));
       });
@@ -232,11 +283,15 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       const mediaUploadResults = await Promise.all(mediaUploadPromises);
 
       mediaUploadResults.forEach((mediaUploadResult: any) => {
-        form[mediaUploadResult.fieldName].push(mediaUploadResult.id);
+        form[mediaUploadResult.fieldName].value.push({
+          id: mediaUploadResult.id,
+          type: mediaUploadResult.fileType,
+          name: mediaUploadResult.fileName
+        });
       });
 
       await FormDataService.addFormData({
-        form_template_id: formLayout._id,
+        form_template_id: formLayout?._id as string,
         values: form
       });
     } catch (error) {
@@ -257,7 +312,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       data: file,
       headers: {
         'x-ms-blob-type': 'BlockBlob',
-        'Content-Type': 'image/png'
+        'Content-Type': file.type
       }
     });
 
@@ -265,12 +320,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       throw new Error('Failed to upload media');
     }
 
-    return { id, fieldName }; // or any other relevant data from the response
-  };
-
-  const spanFullWidth = (field: any) => {
-    const fullWidthTypes = ['TEXTAREA', 'FILE', 'IMAGE', 'VIDEO', 'CHECKBOX', 'RADIO'];
-    return fullWidthTypes.includes(field.type);
+    return { id, fieldName, fileType: file.type, fileName: file.name }; // or any other relevant data from the response
   };
 
   if (!formLayout) {
@@ -305,20 +355,22 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       )}
       <form onSubmit={handleSubmit}>
         <div>
-          {formLayout?.field_groups.map((field: any) => (
+          {formLayout?.field_groups?.map((field: any) => (
             <Box
               key={field.name}
               sx={{
                 marginY: '30px'
               }}
             >
-              <Box
+              <Typography
+                variant="h5"
                 sx={{
                   marginBottom: '20px'
                 }}
               >
-                <Typography variant="h5">{field.description}</Typography>
-              </Box>
+                {field.description}
+              </Typography>
+
               <Box className={styles.gridContainer}>
                 {field.fields.map((field: any) => (
                   <Box
