@@ -11,15 +11,18 @@ import {
 import PatientCard from './components/PatientCard';
 import { set } from 'react-hook-form';
 import SearchBar from 'src/components/SearchBar';
+import PatientDetailViewModal from './components/PatientDetailViewModal';
 
 export interface IPatientStory {}
 
 const PatientStory: React.FC<IPatientStory> = ({}) => {
   let formData: GetFormData_Out[] = [];
 
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const [filteredData, setFilteredData] = useState<GetFormData_Out[]>([]); // filteredData is a subset of formData
   const [publishedFormId, setPublishedFormId] = useState<string>('');
+  const [selectedPatientData, setSelectedPatientData] = useState<any>(null);
 
   const fetchFormData = async (formId: string) => {
     try {
@@ -48,6 +51,10 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     setSearchText(text);
   };
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   useEffect(() => {
     fetchPublishedFormTemplate();
   }, []);
@@ -63,11 +70,25 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       </Box>
       <Grid container spacing={3}>
         {filteredData.map((patientData: any) => (
-          <Grid item xs={12} sm={6} md={6} lg={6} onClick={() => {}} className={styles.patientCardGridItem}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={6}
+            lg={6}
+            onClick={() => {
+              setOpenModal(true);
+              setSelectedPatientData(patientData);
+            }}
+            className={styles.patientCardGridItem}
+          >
             <PatientCard data={patientData} />
           </Grid>
         ))}
       </Grid>
+      {selectedPatientData ? (
+        <PatientDetailViewModal openModal={openModal} handleCloseModal={handleCloseModal} data={selectedPatientData} />
+      ) : null}
     </Box>
   );
 };

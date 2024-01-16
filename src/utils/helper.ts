@@ -55,4 +55,10 @@ const getAllEmailLabels = () => {
   return LABEL_CONFIG;
 };
 
-export { formatReceivedTime, getEmailLabel, getAllEmailLabels };
+const convertTagsStringToArray = (tags: string | undefined) => {
+  if (!tags) return [];
+
+  return tags.split(',');
+};
+
+export { formatReceivedTime, getEmailLabel, getAllEmailLabels, convertTagsStringToArray };

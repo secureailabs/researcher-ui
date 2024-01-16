@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import styles from './PatientCard.module.css';
-import PatientImage from 'src/assets/images/users/sample-face-image-1.png';
+import PatientImage from 'src/assets/images/users/avatar-3.png';
 import { useEffect, useState } from 'react';
 import { FormDataService, FormMediaTypes } from 'src/tallulah-ts-client';
 
@@ -19,6 +19,12 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const convertTagsStringToArray = (tags: string | undefined) => {
+    if (!tags) return [];
+
+    return tags.split(',');
   };
 
   useEffect(() => {
@@ -41,7 +47,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
         </Box>
         <Box>
           {/* display image  */}
-          <img src={profileImageUrl} alt="Patient Image" className={styles.image} />
+          <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient Image" className={styles.image} />
         </Box>
       </Box>
       <Box
@@ -53,9 +59,9 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
           marginTop: '1rem'
         }}
       >
-        {/* {data.values.tags.map((tag: string) => (
+        {convertTagsStringToArray(data?.values?.storyTags).map((tag: string) => (
           <Box className={styles.tag}>{tag}</Box>
-        ))} */}
+        ))}
       </Box>
       <Box className={styles.section1}>
         <Box>

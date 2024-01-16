@@ -279,7 +279,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
 
   return (
     <Box className={styles.container}>
-      {!uploading && (
+      {uploading && (
         <Box
           sx={{
             position: 'absolute',
