@@ -98,7 +98,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             </Box>
             <Box>
               {/* display image  */}
-              <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient Image" className={styles.image} />
+              <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient Image" className={styles.profileImage} />
             </Box>
           </Box>
           <Box
@@ -119,16 +119,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
               <Typography variant="body1" className={styles.label}>
                 Journey
               </Typography>
-              <Typography
-                variant="body1"
-                className={styles.value}
-                sx={{
-                  display: '-webkit-box',
-                  overflow: 'hidden',
-                  WebkitBoxOrient: 'vertical',
-                  WebkitLineClamp: 3
-                }}
-              >
+              <Typography variant="body1" className={styles.value}>
                 {data.values.patientStory.value}
               </Typography>
             </Box>

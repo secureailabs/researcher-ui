@@ -10,7 +10,7 @@ export interface IPatientCard {
 
 const PatientCard: React.FC<IPatientCard> = ({ data }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
-  const profileImageId = data?.values.profilePicture?.value ? data?.values.profilePicture.value[0] : null;
+  const profileImageId = data?.values.profilePicture?.value ? data?.values.profilePicture.value[0].id : null;
 
   const fetchProfileImage = async () => {
     try {

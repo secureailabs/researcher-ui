@@ -18,12 +18,26 @@
   font-style: italic;
 }
 
-.image {
+.profileImage {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.video {
+  width: 200px;
+  height: 100px;
+  object-fit: cover;
 }
 
 .section1 {
