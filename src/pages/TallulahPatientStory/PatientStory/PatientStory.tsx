@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import styles from './PatientStory.module.css';
 import { useEffect, useState } from 'react';
 import {
@@ -23,8 +23,11 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [filteredData, setFilteredData] = useState<GetFormData_Out[]>([]); // filteredData is a subset of formData
   const [publishedFormId, setPublishedFormId] = useState<string>('');
   const [selectedPatientData, setSelectedPatientData] = useState<any>(null);
+  const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
+  const [isFormDataFetching, setIsFormDataFetching] = useState<boolean>(false);
 
   const fetchFormData = async (formId: string) => {
+    setIsFormDataFetching(true);
     try {
       const res: GetMultipleFormData_Out = await FormDataService.getAllFormData(formId);
       formData = res.form_data;
@@ -32,9 +35,11 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     } catch (err) {
       console.log(err);
     }
+    setIsFormDataFetching(false);
   };
 
   const fetchPublishedFormTemplate = async () => {
+    setIsFormTemplateFetching(true);
     try {
       const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
       // filter the published state
@@ -44,6 +49,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     } catch (err) {
       console.log(err);
     }
+    setIsFormTemplateFetching(false);
   };
 
   const handleSearchChange = (text: string) => {
@@ -57,6 +63,30 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   useEffect(() => {
     fetchPublishedFormTemplate();
   }, []);
+
+  if (isFormTemplateFetching || isFormDataFetching) {
+    return (
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <CircularProgress />
+        <Typography
+          variant="h6"
+          sx={{
+            marginLeft: '1rem'
+          }}
+        >
+          Loading...
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box className={styles.container}>

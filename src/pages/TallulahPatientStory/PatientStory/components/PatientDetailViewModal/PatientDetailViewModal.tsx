@@ -62,7 +62,6 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     }
 
     fetchMediaUrls();
-
     fetchProfileImage(profileImageId, 'IMAGE');
   }, [data]);
 
