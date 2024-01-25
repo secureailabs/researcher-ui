@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDropzone, FileRejection } from 'react-dropzone';
 import { Typography } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { access } from 'fs';
+import PersonIcon from '@mui/icons-material/Person';
 import { TImageFileUpload } from '../PatientStoryForm';
 
 const thumbsContainer: React.CSSProperties = {
@@ -54,7 +54,7 @@ export interface ProfilePictureUploadProps {
 
 const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing, setImageFiles, fieldName }) => {
   const [files, setFiles] = useState<CustomFile[]>([]);
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+  const { acceptedFiles, getRootProps, getInputProps, fileRejections, open } = useDropzone({
     onDrop: (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       const filesWithPreview = acceptedFiles.map((file) => {
         const customFile: CustomFile = file as CustomFile;
@@ -62,8 +62,17 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing, se
         return customFile;
       });
       setFiles(filesWithPreview);
-    }
+    },
+    accept: {
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpeg', '.jpg']
+    },
+    maxFiles: fieldName === 'profilePicture' ? 1 : 5,
+    multiple: fieldName === 'profilePicture' ? false : true,
+    noClick: true
   });
+
+  console.log('fileRejections', fileRejections);
 
   const thumbs = files.map((file, index) => (
     <div style={thumb} key={file.name}>
@@ -109,18 +118,48 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing, se
       <section className="container">
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
-          <Stack
-            sx={{ p: 4, borderStyle: 'dashed', borderColor: 'lightgray', borderWidth: 2 }}
-            direction={'column'}
-            spacing={spacing}
-            justifyContent={'center'}
-            alignItems={'center'}
-          >
-            <Typography>Drag & drop photos here, or click below</Typography>
-            <Button variant="outlined" startIcon={<AddPhotoAlternateIcon />}>
-              Upload Photos
-            </Button>
-          </Stack>
+          {fieldName === 'profilePicture' ? (
+            <Stack
+              sx={{
+                p: 4,
+                borderStyle: 'dashed',
+                borderColor: 'lightgray',
+                borderWidth: 2,
+                width: 200,
+                height: 200,
+                borderRadius: '50%',
+                margin: 'auto'
+              }}
+              direction={'column'}
+              spacing={spacing}
+              justifyContent={'center'}
+              alignItems={'center'}
+            >
+              <PersonIcon sx={{ fontSize: '5rem', color: '#a19e9d' }} />
+              <Button variant="outlined" onClick={open}>
+                <Typography
+                  sx={{
+                    fontSize: '1rem'
+                  }}
+                >
+                  Upload Photo
+                </Typography>
+              </Button>
+            </Stack>
+          ) : (
+            <Stack
+              sx={{ p: 4, borderStyle: 'dashed', borderColor: 'lightgray', borderWidth: 2 }}
+              direction={'column'}
+              spacing={spacing}
+              justifyContent={'center'}
+              alignItems={'center'}
+            >
+              <Typography>Drag & drop photos here, or click below</Typography>
+              <Button variant="outlined" startIcon={<AddPhotoAlternateIcon />}>
+                Upload Photos
+              </Button>
+            </Stack>
+          )}
         </div>
         {files.length > 0 ? <Typography sx={{ mt: 1 }}>Selected Photos:</Typography> : null}
         <aside style={thumbsContainer}>{thumbs}</aside>

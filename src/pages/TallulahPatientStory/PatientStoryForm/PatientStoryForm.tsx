@@ -12,7 +12,8 @@ import {
   MenuItem,
   InputLabel,
   Box,
-  Typography
+  Typography,
+  CircularProgress
 } from '@mui/material';
 import {
   FormDataService,
@@ -58,6 +59,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const [documentFiles, setDocumentFiles] = useState<TDocumentFileUpload[]>([]);
   const [videoFiles, setVideoFiles] = useState<TDocumentFileUpload[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
 
   const [sendNotification] = useNotification();
 
@@ -213,17 +215,33 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           </>
         );
       case 'FILE':
-        return <DocumentUpload fieldName={field.name} setDocumentFiles={setDocumentFiles} />;
+        return (
+          <>
+            <Typography>{field.description}</Typography>
+            <DocumentUpload fieldName={field.name} setDocumentFiles={setDocumentFiles} />
+          </>
+        );
       case 'IMAGE':
-        return <ImageUpload fieldName={field.name} setImageFiles={setImageFiles} />;
+        return (
+          <>
+            <Typography>{field.description}</Typography>
+            <ImageUpload fieldName={field.name} setImageFiles={setImageFiles} />
+          </>
+        );
       case 'VIDEO':
-        return <VideoUpload fieldName={field.name} setVideoFiles={setVideoFiles} />;
+        return (
+          <>
+            <Typography>{field.description}</Typography>
+            <VideoUpload fieldName={field.name} setVideoFiles={setVideoFiles} />
+          </>
+        );
       default:
         return null;
     }
   };
 
   const fetchFormTemplate = async () => {
+    setIsFormTemplateFetching(true);
     try {
       const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
       const formTemplate = res.templates[res.templates.length - 1];
@@ -231,6 +249,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     } catch (err) {
       console.log(err);
     }
+    setIsFormTemplateFetching(false);
   };
 
   useEffect(() => {
@@ -330,8 +349,21 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     return { id, fieldName, fileType: file.type, fileName: file.name }; // or any other relevant data from the response
   };
 
-  if (!formLayout) {
-    return <div>Loading...</div>;
+  if (isFormTemplateFetching) {
+    return (
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <CircularProgress />
+        <Typography variant="h6">Loading...</Typography>
+      </Box>
+    );
   }
 
   return (
