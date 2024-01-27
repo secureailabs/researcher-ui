@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import styles from './PatientStory.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   FormDataService,
   FormTemplatesService,
@@ -25,6 +25,8 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
   const [isFormDataFetching, setIsFormDataFetching] = useState<boolean>(false);
 
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const fetchFormData = async (formId: string) => {
     setIsFormDataFetching(true);
     try {
@@ -36,8 +38,6 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     }
     setIsFormDataFetching(false);
   };
-
-  console.log('formData', formData);
 
   const fetchPublishedFormTemplate = async () => {
     setIsFormTemplateFetching(true);
@@ -54,22 +54,31 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   };
 
   const fetchSearchResults = async (text: string) => {
+    setIsFormDataFetching(true);
     const res = await FormDataService.searchFormData(publishedFormId, text);
     const data = res.hits.hits.map((hit: any) => hit._id);
     const newfilteredData = formData.filter((item: any) => data.includes(item._id));
     setFilteredData(newfilteredData);
+    setIsFormDataFetching(false);
   };
 
   const handleSearchChange = (text: string) => {
-    console.log('ttt', text);
-    console.log('formData', formData);
     setSearchText(text);
-    if (text === '') {
-      setFilteredData(formData);
-      return;
-    }
-    fetchSearchResults(text);
   };
+
+  useEffect(() => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      if (searchText === '') {
+        setFilteredData(formData);
+      } else {
+        fetchSearchResults(searchText);
+      }
+    }, 500); // 500ms delay
+  }, [searchText]); // Effect runs on searchText change
 
   const handleCloseModal = () => {
     setOpenModal(false);
