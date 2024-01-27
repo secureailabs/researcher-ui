@@ -16,10 +16,9 @@ import PatientDetailViewModal from './components/PatientDetailViewModal';
 export interface IPatientStory {}
 
 const PatientStory: React.FC<IPatientStory> = ({}) => {
-  let formData: GetFormData_Out[] = [];
-
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
+  const [formData, setFormData] = useState<GetFormData_Out[]>([]);
   const [filteredData, setFilteredData] = useState<GetFormData_Out[]>([]); // filteredData is a subset of formData
   const [publishedFormId, setPublishedFormId] = useState<string>('');
   const [selectedPatientData, setSelectedPatientData] = useState<any>(null);
@@ -30,13 +29,15 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     setIsFormDataFetching(true);
     try {
       const res: GetMultipleFormData_Out = await FormDataService.getAllFormData(formId);
-      formData = res.form_data;
+      setFormData(res.form_data);
       setFilteredData(res.form_data);
     } catch (err) {
       console.log(err);
     }
     setIsFormDataFetching(false);
   };
+
+  console.log('formData', formData);
 
   const fetchPublishedFormTemplate = async () => {
     setIsFormTemplateFetching(true);
@@ -52,8 +53,22 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     setIsFormTemplateFetching(false);
   };
 
+  const fetchSearchResults = async (text: string) => {
+    const res = await FormDataService.searchFormData(publishedFormId, text);
+    const data = res.hits.hits.map((hit: any) => hit._id);
+    const newfilteredData = formData.filter((item: any) => data.includes(item._id));
+    setFilteredData(newfilteredData);
+  };
+
   const handleSearchChange = (text: string) => {
+    console.log('ttt', text);
+    console.log('formData', formData);
     setSearchText(text);
+    if (text === '') {
+      setFilteredData(formData);
+      return;
+    }
+    fetchSearchResults(text);
   };
 
   const handleCloseModal = () => {
