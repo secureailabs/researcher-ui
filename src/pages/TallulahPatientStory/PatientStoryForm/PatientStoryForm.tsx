@@ -15,6 +15,7 @@ import {
   Typography,
   CircularProgress
 } from '@mui/material';
+
 import {
   FormDataService,
   FormMediaTypes,
@@ -22,11 +23,11 @@ import {
   GetFormTemplate_Out,
   GetMultipleFormTemplate_Out
 } from 'src/tallulah-ts-client';
+
 import ImageUpload from './components/ImageUpload';
 import DocumentUpload from './components/DocumentUpload';
-import { Form } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { get } from 'http';
 import VideoUpload from './components/VideoUpload';
 import useNotification from 'src/hooks/useNotification';
 
@@ -62,14 +63,15 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
 
   const [sendNotification] = useNotification();
+  let { id } = useParams();
 
   const getCorrespondingLabel = (fieldName: string) => {
-    const field = formLayout?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields).find((field) => field?.name === fieldName);
-    return field?.description;
+    const field = formLayout?.field_groups?.flatMap((fieldGroup: any) => fieldGroup.fields).find((field: any) => field?.name === fieldName);
+    return field?.label;
   };
 
   const getCorrespondingType = (fieldName: string) => {
-    const field = formLayout?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields).find((field) => field?.name === fieldName);
+    const field = formLayout?.field_groups?.flatMap((fieldGroup: any) => fieldGroup.fields).find((field: any) => field?.name === fieldName);
     return field?.type;
   };
 
@@ -240,11 +242,23 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     }
   };
 
+  const fetchFormTemplateById = async (id: string) => {
+    setIsFormTemplateFetching(true);
+    try {
+      const res: GetFormTemplate_Out = await FormTemplatesService.getPublishedFormTemplate(id);
+      setFormLayout(res);
+    } catch (err) {
+      console.log(err);
+    }
+    setIsFormTemplateFetching(false);
+  };
+
   const fetchFormTemplate = async () => {
     setIsFormTemplateFetching(true);
     try {
       const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
-      const formTemplate = res.templates[res.templates.length - 1];
+      const filteredData = res.templates.filter((formTemplate: any) => formTemplate.state === 'PUBLISHED');
+      const formTemplate = filteredData[0];
       setFormLayout(formTemplate);
     } catch (err) {
       console.log(err);
@@ -253,7 +267,11 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   };
 
   useEffect(() => {
-    fetchFormTemplate();
+    if (id === undefined) {
+      fetchFormTemplate();
+    } else {
+      fetchFormTemplateById(id);
+    }
   }, []);
 
   const handleSubmit = async (event: any) => {
@@ -426,9 +444,11 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
             </Box>
           ))}
         </div>
-        <Button type="submit" variant="contained" fullWidth>
-          Submit
-        </Button>
+        {formLayout ? (
+          <Button type="submit" variant="contained" fullWidth>
+            Submit
+          </Button>
+        ) : null}
       </form>
     </Box>
   );

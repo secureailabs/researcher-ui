@@ -4,7 +4,7 @@ import MinimalLayout from 'src/components/layout/MinimalLayout';
 import Invalid404 from 'src/pages/invalid404';
 
 const Home = Loadable(lazy(async () => await import('src/pages/home')));
-const DemoLongitudinal = Loadable(lazy(async () => await import('src/pages/DemoLongitudinal')));
+const PatientStoryForm = Loadable(lazy(async () => await import('src/pages/TallulahPatientStory/PatientStoryForm')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -15,6 +15,10 @@ const OtherRoutes = {
     {
       path: '*',
       element: <Invalid404 />
+    },
+    {
+      path: 'form/:id',
+      element: <PatientStoryForm />
     }
   ]
 };

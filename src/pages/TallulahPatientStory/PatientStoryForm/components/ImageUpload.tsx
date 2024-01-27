@@ -69,10 +69,8 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing, se
     },
     maxFiles: fieldName === 'profilePicture' ? 1 : 5,
     multiple: fieldName === 'profilePicture' ? false : true,
-    noClick: true
+    noClick: fieldName === 'profilePicture' ? true : false
   });
-
-  console.log('fileRejections', fileRejections);
 
   const thumbs = files.map((file, index) => (
     <div style={thumb} key={file.name}>
@@ -155,7 +153,7 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing, se
               alignItems={'center'}
             >
               <Typography>Drag & drop photos here, or click below</Typography>
-              <Button variant="outlined" startIcon={<AddPhotoAlternateIcon />}>
+              <Button variant="outlined" startIcon={<AddPhotoAlternateIcon />} onClick={open}>
                 Upload Photos
               </Button>
             </Stack>
