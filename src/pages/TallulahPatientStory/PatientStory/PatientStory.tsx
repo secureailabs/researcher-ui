@@ -88,30 +88,6 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     fetchPublishedFormTemplate();
   }, []);
 
-  if (isFormTemplateFetching || isFormDataFetching) {
-    return (
-      <Box
-        sx={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <CircularProgress />
-        <Typography
-          variant="h6"
-          sx={{
-            marginLeft: '1rem'
-          }}
-        >
-          Loading...
-        </Typography>
-      </Box>
-    );
-  }
-
   return (
     <Box className={styles.container}>
       <Box
@@ -121,10 +97,34 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       >
         <SearchBar placeholder="Search Patient By Name, Tags or Journey " searchText={searchText} handleSearchChange={handleSearchChange} />
       </Box>
+      {isFormTemplateFetching || isFormDataFetching ? (
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginY: '2rem'
+          }}
+        >
+          <CircularProgress />
+          <Typography
+            variant="h6"
+            sx={{
+              marginLeft: '1rem'
+            }}
+          >
+            Loading...
+          </Typography>
+        </Box>
+      ) : null}
+
       <Grid container spacing={3}>
         {filteredData.map((patientData: any) => (
           <Grid
             item
+            key={patientData._id}
             xs={12}
             sm={6}
             md={6}

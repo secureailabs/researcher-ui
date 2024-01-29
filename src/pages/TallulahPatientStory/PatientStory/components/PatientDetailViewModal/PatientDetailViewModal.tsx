@@ -108,7 +108,9 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             }}
           >
             {convertTagsStringToArray(data?.values?.storyTags?.value).map((tag: string) => (
-              <Box className={styles.tag}>{tag}</Box>
+              <Box className={styles.tag} key={tag}>
+                {tag}
+              </Box>
             ))}
           </Box>
           <Box className={styles.section1}>
@@ -125,7 +127,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             // rest of the data
             Object.keys(rest).map((key: any) =>
               mediaTypes.includes(data.values[key].type) ? (
-                <Box className={styles.section1}>
+                <Box className={styles.section1} key={key}>
                   <Box>
                     <Typography variant="body1" className={styles.label}>
                       {rest[key].label}
@@ -163,7 +165,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
                   </Box>
                 </Box>
               ) : (
-                <Box className={styles.section1}>
+                <Box className={styles.section1} key={key}>
                   <Box>
                     <Typography variant="body1" className={styles.label}>
                       {rest[key].label}

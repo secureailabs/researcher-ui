@@ -13,6 +13,7 @@ import { useQuery } from 'react-query';
 import { updateUserProfile } from 'src/store/reducers/userprofile';
 import { updateSCNDetails } from 'src/store/reducers/scn_details';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
+import { initAmplitude } from 'src/utils/Amplitude/amplitude';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 
@@ -52,6 +53,7 @@ const MinimalLayout = (): JSX.Element => {
       try {
         const res = await DefaultService.getCurrentUserInfo();
         dispatch(updateUserProfile(res));
+        initAmplitude(res.organization);
         return res;
       } catch (err) {
         console.log(err);
@@ -74,23 +76,6 @@ const MinimalLayout = (): JSX.Element => {
     } else {
       navigate('/login');
     }
-
-    // try {
-    //   (async () => {
-    //     const res = await DefaultService.getAllSecureComputationNodes();
-    //     const node = res.secure_computation_nodes[0];
-    //     if (node.url) {
-    //       localStorage.setItem('scnUrl', node.url);
-    //     }
-    //     dispatch(
-    //       updateSCNDetails({
-    //         baseUrl: node.url
-    //       })
-    //     );
-    //   })();
-    // } catch (err) {
-    //   console.log(err);
-    // }
   }, []);
 
   useQuery<UserInfo_Out, ApiError>('userData', checkUserSession, {

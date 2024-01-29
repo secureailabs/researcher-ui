@@ -338,6 +338,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         msg: "Patient's story submitted successfully.",
         variant: 'success'
       });
+      window.location.reload();
     } catch (error) {
       console.error('Error submitting form:', error);
     }

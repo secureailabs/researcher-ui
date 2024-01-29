@@ -16,8 +16,6 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } }
 });
 
-initAmplitude();
-
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL as string;
