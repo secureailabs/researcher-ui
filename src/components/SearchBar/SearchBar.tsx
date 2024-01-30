@@ -6,7 +6,7 @@ import styles from './SearchBar.module.css';
 
 export interface ISearchBar {
   placeholder?: string;
-  searchText: string;
+  searchText: string | null;
   handleSearchChange: (text: string) => void;
 }
 
@@ -60,7 +60,7 @@ const SearchBar: React.FC<ISearchBar> = ({ placeholder, searchText, handleSearch
             handleSearchChange(e.target.value);
           }}
         />
-        {searchText !== '' ? (
+        {searchText !== '' && searchText === null ? (
           <IconButton
             aria-label="delete"
             onClick={() => {

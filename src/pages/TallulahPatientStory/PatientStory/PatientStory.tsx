@@ -9,7 +9,6 @@ import {
   GetMultipleFormTemplate_Out
 } from 'src/tallulah-ts-client';
 import PatientCard from './components/PatientCard';
-import { set } from 'react-hook-form';
 import SearchBar from 'src/components/SearchBar';
 import PatientDetailViewModal from './components/PatientDetailViewModal';
 
@@ -17,7 +16,7 @@ export interface IPatientStory {}
 
 const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [searchText, setSearchText] = useState<string>('');
+  const [searchText, setSearchText] = useState<string | null>(null);
   const [formData, setFormData] = useState<GetFormData_Out[]>([]);
   const [filteredData, setFilteredData] = useState<GetFormData_Out[]>([]); // filteredData is a subset of formData
   const [publishedFormId, setPublishedFormId] = useState<string>('');
@@ -67,6 +66,10 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   };
 
   useEffect(() => {
+    if (searchText === null) {
+      return;
+    }
+
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
