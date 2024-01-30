@@ -15,7 +15,8 @@ const mediaTypes = ['FILE', 'IMAGE', 'VIDEO'];
 
 const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, handleCloseModal, data }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
-  const profileImageId = data?.values.profilePicture?.value ? data?.values.profilePicture.value[0].id : null;
+  const profileImageId =
+    data?.values.profilePicture?.value && data?.values.profilePicture?.value.length > 0 ? data?.values.profilePicture.value[0].id : null;
   const [mediaDetails, setMediaDetails] = useState<any>({});
 
   const { firstName, lastName, age, location, diseaseType, storyTags, patientStory, profilePicture, ...rest } = data?.values;

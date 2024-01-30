@@ -13,8 +13,10 @@ import {
   InputLabel,
   Box,
   Typography,
-  CircularProgress
+  CircularProgress,
+  Divider
 } from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import {
   FormDataService,
@@ -396,6 +398,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     );
   }
 
+  const formPublicLink = 'https://test.tallulah.ai/form/';
+
   return (
     <Box className={styles.container}>
       {uploading && (
@@ -422,6 +426,42 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           </Typography>
         </Box>
       )}
+      {id === undefined ? (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%'
+          }}
+        >
+          <Typography>
+            Form Public Link -{' '}
+            <a href={formPublicLink + formLayout?._id} target="_blank" rel="noreferrer">
+              {formPublicLink + formLayout?._id}
+            </a>
+          </Typography>
+
+          <ContentCopyIcon
+            sx={{
+              cursor: 'pointer'
+            }}
+            onClick={() => {
+              navigator.clipboard.writeText(formPublicLink + formLayout?._id);
+              sendNotification({
+                msg: 'Copied to clipboard',
+                variant: 'success'
+              });
+            }}
+          />
+        </Box>
+      ) : null}
+      <Divider
+        sx={{
+          marginY: '30px',
+          width: '100%'
+        }}
+      />
       <form onSubmit={handleSubmit}>
         <div>
           {formLayout?.field_groups?.map((field: any) => (
