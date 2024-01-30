@@ -38,11 +38,11 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
       <Box className={styles.cardHeaderLayout}>
         <Box>
           <Typography variant="h6" className={styles.name}>
-            {data.values?.name?.value}
+            {data.values?.firstName?.value} {data.values?.lastName?.value}
           </Typography>
           <Typography variant="body1" className={styles.age}>
             Age : {data?.values.age.value} years
-            <Typography>Location : {data?.values?.location?.value}</Typography>
+            <Typography>Location : {data?.values?.zipCode?.value}</Typography>
             <Typography>Disease Type : {data?.values?.diseaseType?.value}</Typography>
           </Typography>
         </Box>

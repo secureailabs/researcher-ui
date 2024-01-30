@@ -158,20 +158,21 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         );
       case 'TEXTAREA':
         return (
-          <TextField
-            name={field.name}
-            fullWidth
-            multiline
-            rows={6}
-            placeholder={field.place_holder}
-            required={field.required}
-            onChange={handleFormDataChange}
-            sx={{
-              width: '100%'
-            }}
-            label={field.description}
-            InputLabelProps={{ shrink: true }}
-          />
+          <>
+            <Typography>{field.description}</Typography>
+            <TextField
+              name={field.name}
+              fullWidth
+              multiline
+              rows={6}
+              placeholder={field.place_holder}
+              required={field.required}
+              onChange={handleFormDataChange}
+              sx={{
+                width: '100%'
+              }}
+            />
+          </>
         );
       case 'SELECT':
         return (
@@ -211,6 +212,16 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         return (
           <>
             <Typography>{field.description}</Typography>
+            {field.options.map((option: any) => (
+              <FormControlLabel key={option} control={<Checkbox />} label={option} name={field.name} />
+            ))}
+          </>
+        );
+      case 'CONSENT_CHECKBOX':
+        return (
+          <>
+            {/* in this description it also has <a></a> tag which needs to be displayed as link so use dangerouslySetInnerHTML */}
+            <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
             {field.options.map((option: any) => (
               <FormControlLabel key={option} control={<Checkbox />} label={option} name={field.name} />
             ))}

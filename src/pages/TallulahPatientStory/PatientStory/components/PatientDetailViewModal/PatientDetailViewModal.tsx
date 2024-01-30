@@ -18,7 +18,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
   const profileImageId = data?.values.profilePicture?.value ? data?.values.profilePicture.value[0].id : null;
   const [mediaDetails, setMediaDetails] = useState<any>({});
 
-  const { name, age, location, diseaseType, storyTags, patientStory, profilePicture, ...rest } = data?.values;
+  const { firstName, lastName, age, location, diseaseType, storyTags, patientStory, profilePicture, ...rest } = data?.values;
 
   const fetchProfileImage = async (id: any, type: string) => {
     const mediaType = type === 'FILE' ? FormMediaTypes.FILE : type === 'IMAGE' ? FormMediaTypes.IMAGE : FormMediaTypes.VIDEO;
@@ -85,11 +85,11 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           <Box className={styles.cardHeaderLayout}>
             <Box>
               <Typography variant="h6" className={styles.name}>
-                {data.values.name?.value}
+                {data.values.firstName?.value} {data.values.lastName?.value}
               </Typography>
               <Typography variant="body1" className={styles.age}>
                 Age : {data?.values.age?.value} years
-                <Typography>Location : {data?.values.location?.value}</Typography>
+                <Typography>Location : {data?.values.zipCode?.value}</Typography>
                 <Typography>Disease Type : {data?.values.diseaseType?.value}</Typography>
               </Typography>
             </Box>

@@ -120,6 +120,28 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
         </Box>
       ) : null}
 
+      {filteredData.length === 0 && !isFormTemplateFetching && !isFormDataFetching ? (
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginY: '2rem'
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              marginLeft: '1rem'
+            }}
+          >
+            No Patient Story Found
+          </Typography>
+        </Box>
+      ) : null}
+
       <Grid container spacing={3}>
         {filteredData.map((patientData: any) => (
           <Grid
