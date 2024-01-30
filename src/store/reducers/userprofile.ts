@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { BasicObjectInfo, UserInfo_Out, UserRole } from 'src/client';
+import { UserRole } from 'src/tallulah-ts-client';
 
 // types
 export type UserProfileProps = {
@@ -9,7 +9,7 @@ export type UserProfileProps = {
   roles: Array<UserRole> | null;
   avatar?: string | null;
   id: string | null;
-  organization: BasicObjectInfo | null;
+  organization: string | null;
   freemium?: boolean | null;
 };
 

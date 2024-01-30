@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -6,7 +6,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 
 // project import
 import NavGroup from './NavGroup';
-import menuItem from 'src/menu-items';
+import { getMenuItemsList } from 'src/menu-items';
 
 import { useSelector } from 'src/store';
 import useConfig from 'src/hooks/useConfig';
@@ -19,6 +19,11 @@ import { LAYOUT_CONST } from 'src/types/config';
 // ==============================|| DRAWER CONTENT - NAVIGATION ||============================== //
 
 const Navigation = () => {
+  const userProfile = useSelector((state) => state.userprofile);
+  const userRole = userProfile.roles;
+
+  let menuItems = getMenuItemsList();
+
   const theme = useTheme();
 
   const downLG = useMediaQuery(theme.breakpoints.down('lg'));
@@ -31,21 +36,25 @@ const Navigation = () => {
   const isHorizontal = menuOrientation === LAYOUT_CONST.HORIZONTAL_LAYOUT && !downLG;
 
   const lastItem = isHorizontal ? HORIZONTAL_MAX_ITEM : null;
-  let lastItemIndex = menuItem.items.length - 1;
+  let lastItemIndex = menuItems.items.length - 1;
   let remItems: NavItemType[] = [];
   let lastItemId: string;
 
-  if (lastItem && lastItem < menuItem.items.length) {
-    lastItemId = menuItem.items[lastItem - 1].id!;
+  if (lastItem && lastItem < menuItems.items.length) {
+    lastItemId = menuItems.items[lastItem - 1].id!;
     lastItemIndex = lastItem - 1;
-    remItems = menuItem.items.slice(lastItem - 1, menuItem.items.length).map((item) => ({
+    remItems = menuItems.items.slice(lastItem - 1, menuItems.items.length).map((item) => ({
       title: item.title,
       elements: item.children,
       icon: item.icon
     }));
   }
 
-  const navGroups = menuItem.items.slice(0, lastItemIndex + 1).map((item) => {
+  useEffect(() => {
+    menuItems = getMenuItemsList();
+  }, [userProfile.roles]);
+
+  const navGroups = menuItems.items.slice(0, lastItemIndex + 1).map((item) => {
     switch (item.type) {
       case 'group':
         return (
@@ -69,6 +78,7 @@ const Navigation = () => {
         );
     }
   });
+
   return (
     <Box
       sx={{
