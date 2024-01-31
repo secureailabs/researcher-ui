@@ -60,7 +60,7 @@ const SearchBar: React.FC<ISearchBar> = ({ placeholder, searchText, handleSearch
             handleSearchChange(e.target.value);
           }}
         />
-        {searchText !== '' ? (
+        {searchText !== '' && searchText !== null ? (
           <IconButton
             aria-label="delete"
             onClick={() => {
