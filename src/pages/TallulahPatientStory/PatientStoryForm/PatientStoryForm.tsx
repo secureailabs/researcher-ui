@@ -378,7 +378,9 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     });
 
     // check if all the required fields are present in the form and the values are not empty or if array then length is not 0
-    const requiredFields = formLayout?.field_groups?.flatMap((fieldGroup: any) => fieldGroup.fields).filter((field: any) => field.required);
+    const requiredFields = formLayout?.field_groups
+      ?.flatMap((fieldGroup: any) => fieldGroup.fields)
+      .filter((field: any) => field.required && field.type !== 'IMAGE' && field.type !== 'VIDEO' && field.type !== 'FILE');
 
     const requiredFieldsMissing = requiredFields?.filter(
       (requiredField: any) =>
@@ -395,7 +397,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
 
     try {
       setUploading(true);
-
       if (mediaUploadPromises.length === 0) {
         await new Promise((resolve) => setTimeout(resolve, 3000));
       }
