@@ -51,7 +51,7 @@ export type TVideoUpload = {
 };
 
 const spanFullWidth = (field: any) => {
-  const fullWidthTypes = ['TEXTAREA', 'FILE', 'IMAGE', 'VIDEO', 'CHECKBOX', 'RADIO'];
+  const fullWidthTypes = ['TEXTAREA', 'FILE', 'IMAGE', 'VIDEO', 'CHECKBOX', 'RADIO', 'CONSENT_CHECKBOX'];
   return fullWidthTypes.includes(field.type);
 };
 
@@ -86,6 +86,29 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         type: getCorrespondingType(event.target.name)
       }
     });
+  };
+
+  const handleCheckboxFormDataChange = (event: any) => {
+    const keyName = event.target.name;
+    if (event.target.checked) {
+      setFormData({
+        ...formData,
+        [event.target.name]: {
+          value: [...(formData[keyName]?.value || []), event.target.value],
+          label: getCorrespondingLabel(keyName),
+          type: getCorrespondingType(keyName)
+        }
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [event.target.name]: {
+          value: formData[keyName]?.value.filter((value: any) => value !== event.target.value),
+          label: getCorrespondingLabel(keyName),
+          type: getCorrespondingType(keyName)
+        }
+      });
+    }
   };
 
   const renderField = (field: any) => {
@@ -215,7 +238,14 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           <>
             <Typography>{field.description}</Typography>
             {field.options.map((option: any) => (
-              <FormControlLabel key={option} control={<Checkbox />} label={option} name={field.name} />
+              <FormControlLabel
+                key={option}
+                control={<Checkbox />}
+                label={option}
+                onChange={handleCheckboxFormDataChange}
+                name={field.name}
+                value={option}
+              />
             ))}
           </>
         );
@@ -223,9 +253,25 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         return (
           <>
             {/* in this description it also has <a></a> tag which needs to be displayed as link so use dangerouslySetInnerHTML */}
-            <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%'
+              }}
+            >
+              <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
+              {field.required ? <Typography color="red"> &nbsp; (*Required)</Typography> : null}
+            </Box>
+
             {field.options.map((option: any) => (
-              <FormControlLabel key={option} control={<Checkbox />} label={option} name={field.name} />
+              <FormControlLabel
+                key={option}
+                control={<Checkbox />}
+                label={option}
+                onChange={handleCheckboxFormDataChange}
+                name={field.name}
+                value={option}
+              />
             ))}
           </>
         );
@@ -331,8 +377,29 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       });
     });
 
+    // check if all the required fields are present in the form and the values are not empty or if array then length is not 0
+    const requiredFields = formLayout?.field_groups?.flatMap((fieldGroup: any) => fieldGroup.fields).filter((field: any) => field.required);
+
+    const requiredFieldsMissing = requiredFields?.filter(
+      (requiredField: any) =>
+        !form[requiredField.name]?.value || (Array.isArray(form[requiredField.name]?.value) && form[requiredField.name]?.value.length === 0)
+    );
+
+    if (requiredFieldsMissing?.length) {
+      sendNotification({
+        msg: 'Please fill all the required fields.',
+        variant: 'error'
+      });
+      return;
+    }
+
     try {
       setUploading(true);
+
+      if (mediaUploadPromises.length === 0) {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
+
       const mediaUploadResults = await Promise.all(mediaUploadPromises);
 
       mediaUploadResults.forEach((mediaUploadResult: any) => {

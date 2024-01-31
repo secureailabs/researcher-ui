@@ -27,6 +27,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
       const res = await FormDataService.getDownloadUrl(id, mediaType);
       setProfileImageUrl(res.url);
     } catch (err) {
+      setProfileImageUrl('');
       console.log(err);
     }
   };
