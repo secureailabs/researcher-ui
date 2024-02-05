@@ -32,6 +32,7 @@ import Avatar from 'src/components/extended/Avatar';
 import { UserInfo_Out } from 'src/client';
 import { useQueryClient } from 'react-query';
 import { connect } from 'react-redux';
+import { storeLoginCredentials } from 'src/pages/Login/Login';
 
 // types
 interface TabPanelProps {
@@ -66,9 +67,19 @@ const Profile: React.FC<any> = ({ userProfile }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // const { logout, user } = useAuth();
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
+      // remove tokens from local storage
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('tokenType');
+
+      storeLoginCredentials({
+        access_token: '',
+        refresh_token: '',
+        token_type: ''
+      });
+
       navigate(`/login`, {
         state: {
           from: ''
