@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Modal, Typography } from '@mui/material';
 import PatientImage from 'src/assets/images/users/avatar-3.png';
-import { convertTagsStringToArray } from 'src/utils/helper';
+import { convertTagsStringToArray, formatReceivedTimeFull } from 'src/utils/helper';
 import { FormDataService, FormMediaTypes } from 'src/tallulah-ts-client';
 import styles from './PatientDetailViewModal.module.css';
 
@@ -19,7 +19,19 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     data?.values.profilePicture?.value && data?.values.profilePicture?.value.length > 0 ? data?.values.profilePicture.value[0].id : null;
   const [mediaDetails, setMediaDetails] = useState<any>({});
 
-  const { firstName, lastName, age, location, diseaseType, storyTags, patientStory, profilePicture, ...rest } = data?.values;
+  const {
+    firstName,
+    lastName,
+    age,
+    location,
+    diseaseType,
+    storyTags,
+    patientStory,
+    profilePicture,
+    consent,
+    'gender-other': genderOther,
+    ...rest
+  } = data?.values;
 
   const fetchProfileImage = async (id: any, type: string) => {
     const mediaType = type === 'FILE' ? FormMediaTypes.FILE : type === 'IMAGE' ? FormMediaTypes.IMAGE : FormMediaTypes.VIDEO;
@@ -64,7 +76,10 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     }
 
     fetchMediaUrls();
-    fetchProfileImage(profileImageId, 'IMAGE');
+
+    if (profileImageId) {
+      fetchProfileImage(profileImageId, 'IMAGE');
+    }
   }, [data]);
 
   return (
@@ -92,7 +107,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
               <Typography variant="body1" className={styles.age}>
                 Age : {data?.values.age?.value} years
                 <Typography>Location : {data?.values.zipCode?.value}</Typography>
-                <Typography>Disease Type : {data?.values.diseaseType?.value}</Typography>
+                {data?.values?.diseaseType ? <Typography>Disease Type : {data?.values?.diseaseType?.value}</Typography> : null}
               </Typography>
             </Box>
             <Box>
@@ -103,18 +118,23 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           <Box
             sx={{
               display: 'flex',
-              flexWrap: 'wrap',
-              gap: '0.5rem',
-              marginBottom: '1rem',
-              marginTop: '1rem'
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              gap: '1rem'
             }}
           >
-            {convertTagsStringToArray(data?.values?.storyTags?.value).map((tag: string) => (
-              <Box className={styles.tag} key={tag}>
-                {tag}
-              </Box>
-            ))}
+            <Typography
+              variant="body1"
+              sx={{
+                padding: '10px',
+                backgroundColor: data?.values.consent?.value[0] === 'Yes' ? '#78bf92' : '#eba865'
+              }}
+            >
+              Date of Data Use Consent :{' '}
+              {data?.values.consent?.value[0] === 'Yes' ? formatReceivedTimeFull(data?.creation_time) : 'Pending '}
+            </Typography>
           </Box>
+
           <Box className={styles.section1}>
             <Box>
               <Typography variant="body1" className={styles.label}>
@@ -184,6 +204,20 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
                     >
                       {rest[key].value}
                     </Typography>
+                    {key === 'gender' && genderOther && genderOther?.value && (
+                      <Typography
+                        variant="body1"
+                        className={styles.value}
+                        sx={{
+                          display: '-webkit-box',
+                          overflow: 'hidden',
+                          WebkitBoxOrient: 'vertical',
+                          WebkitLineClamp: 3
+                        }}
+                      >
+                        ( {genderOther?.value} )
+                      </Typography>
+                    )}
                   </Box>
                 </Box>
               )

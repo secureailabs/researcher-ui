@@ -65,8 +65,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
   const [selectedGender, setSelectedGender] = useState('');
 
-  console.log('gender', selectedGender);
-
   const [sendNotification] = useNotification();
   let { id } = useParams();
 

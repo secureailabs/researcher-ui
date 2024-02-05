@@ -25,8 +25,6 @@ const CohortSelection: React.FC<ICohortSelection> = ({ handleChildFilterChange, 
 
   const [sendNotification] = useNotification();
 
-  console.log('filters', filters);
-
   const handleAddFilter = (): void => {
     const lastFilterId = filters.length > 0 ? filters[filters.length - 1].id : 0;
     const newFilterId = lastFilterId + 1;

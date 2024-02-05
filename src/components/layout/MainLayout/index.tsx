@@ -86,8 +86,6 @@ const MinimalLayout = (): JSX.Element => {
     refetchOnMount: 'always'
   });
 
-  console.log('status', status);
-
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#f5f5f5', position: 'relative' }}>
       {process.env.REACT_APP_ENV === 'development' && (

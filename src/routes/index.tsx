@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 
 const AllRoutes: React.FC = () => {
   const userProfile = useSelector((state: any) => state.userprofile);
-  console.log('userProfile', userProfile);
 
   return useRoutes([MainRoutes, LoginRoute, OtherRoutes]);
 };

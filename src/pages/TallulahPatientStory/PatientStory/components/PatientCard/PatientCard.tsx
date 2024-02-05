@@ -14,6 +14,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
     data?.values.profilePicture?.value && data?.values.profilePicture?.value.length > 0 ? data?.values.profilePicture.value[0].id : null;
 
   const fetchProfileImage = async () => {
+    if (!profileImageId) return;
     try {
       const res = await FormDataService.getDownloadUrl(profileImageId, FormMediaTypes.IMAGE);
       setProfileImageUrl(res.url);
@@ -43,7 +44,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
           <Typography variant="body1" className={styles.age}>
             Age : {data?.values.age.value} years
             <Typography>Location : {data?.values?.zipCode?.value}</Typography>
-            <Typography>Disease Type : {data?.values?.diseaseType?.value}</Typography>
+            {data?.values?.diseaseType ? <Typography>Disease Type : {data?.values?.diseaseType?.value}</Typography> : null}
           </Typography>
         </Box>
         <Box>

@@ -16,7 +16,7 @@ export interface IPatientStory {}
 
 const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [searchText, setSearchText] = useState<string | null>(null);
+  const [searchText, setSearchText] = useState<string | undefined>(undefined);
   const [formData, setFormData] = useState<GetFormData_Out[]>([]);
   const [filteredData, setFilteredData] = useState<GetFormData_Out[]>([]); // filteredData is a subset of formData
   const [publishedFormId, setPublishedFormId] = useState<string>('');
@@ -66,7 +66,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   };
 
   useEffect(() => {
-    if (searchText === null) {
+    if (searchText === undefined) {
       return;
     }
 
@@ -75,7 +75,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     }
 
     debounceTimer.current = setTimeout(() => {
-      if (searchText === '') {
+      if (searchText === '' || searchText === undefined) {
         setFilteredData(formData);
       } else {
         fetchSearchResults(searchText);
