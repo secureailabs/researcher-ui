@@ -63,6 +63,9 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const [videoFiles, setVideoFiles] = useState<TDocumentFileUpload[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
+  const [selectedGender, setSelectedGender] = useState('');
+
+  console.log('gender', selectedGender);
 
   const [sendNotification] = useNotification();
   let { id } = useParams();
@@ -86,6 +89,12 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         type: getCorrespondingType(event.target.name)
       }
     });
+  };
+
+  const handleGenderChange = (event: any) => {
+    setSelectedGender(event.target.value);
+    handleFormDataChange(event);
+    // Add any additional logic for handling form data change
   };
 
   const handleCheckboxFormDataChange = (event: any) => {
@@ -200,26 +209,68 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           </>
         );
       case 'SELECT':
-        return (
-          <FormControl fullWidth>
-            <InputLabel
-              id={field.place_holder}
-              sx={{
-                backgroundColor: 'white',
-                paddingX: '5px'
-              }}
-            >
-              {field.place_holder}
-            </InputLabel>
-            <Select required={field.required} onChange={handleFormDataChange} labelId={field.place_holder} name={field.name}>
-              {field.options.map((option: any) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        );
+        if (field.name === 'gender') {
+          return (
+            <FormControl fullWidth>
+              <InputLabel
+                id={field.place_holder}
+                sx={{
+                  backgroundColor: 'white',
+                  paddingX: '5px'
+                }}
+              >
+                {field.place_holder}
+              </InputLabel>
+              <Select
+                labelId={`${field.name}-label`}
+                name={field.name}
+                onChange={handleGenderChange}
+                value={selectedGender}
+                required={field.required}
+              >
+                {field.options.map((option: any) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+              {selectedGender === 'Other' && (
+                <TextField
+                  fullWidth
+                  type="text"
+                  name={`${field.name}-other`}
+                  variant="outlined"
+                  placeholder="Please specify (optional)"
+                  onChange={handleFormDataChange}
+                  sx={{
+                    marginTop: '10px'
+                  }}
+                />
+              )}
+            </FormControl>
+          );
+        } else {
+          return (
+            <FormControl fullWidth>
+              <InputLabel
+                id={field.place_holder}
+                sx={{
+                  backgroundColor: 'white',
+                  paddingX: '5px'
+                }}
+              >
+                {field.place_holder}
+              </InputLabel>
+              <Select required={field.required} onChange={handleFormDataChange} labelId={field.place_holder} name={field.name}>
+                {field.options.map((option: any) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          );
+        }
       case 'RADIO':
         return (
           <>
