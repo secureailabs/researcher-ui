@@ -35,7 +35,7 @@ export const storeLoginCredentials = (tokens: LoginSuccess_Out) => {
   );
 };
 
-const roleBasedHomeRouting = (roles: UserRole[]) => {
+export const roleBasedHomeRouting = (roles: UserRole[]) => {
   if (roles.includes(UserRole.TALLULAH_ADMIN) || roles.includes(UserRole.EMAIL_INTEGRATION_USER)) {
     return '/home';
   } else if (roles.includes(UserRole.FORM_INTAKE_USER)) {

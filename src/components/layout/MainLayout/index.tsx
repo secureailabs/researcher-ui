@@ -1,12 +1,12 @@
 import { Box, Breadcrumbs, Container, Toolbar } from '@mui/material';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Header from './Header';
 import Drawer from './Drawer';
 import { RootStateProps } from 'src/types/root';
 import { openDrawer } from 'src/store/reducers/menu';
-import { storeLoginCredentials } from 'src/pages/Login/Login';
+import { roleBasedHomeRouting, storeLoginCredentials } from 'src/pages/Login/Login';
 import { ApiError, DefaultService, OpenAPI, UserInfo_Out } from 'src/tallulah-ts-client';
 import { REACT_APP_SAIL_API_SERVICE_URL } from 'src/config';
 import { useQuery } from 'react-query';
@@ -35,8 +35,12 @@ const MinimalLayout = (): JSX.Element => {
   const [open, setOpen] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
 
   const menu = useSelector((state: RootStateProps) => state.menu);
+
+  const userProfile = useSelector((state: any) => state.userprofile);
+
   const { drawerOpen } = menu;
 
   const handleDrawerToggle = () => {
@@ -78,9 +82,11 @@ const MinimalLayout = (): JSX.Element => {
     }
   }, []);
 
-  useQuery<UserInfo_Out, ApiError>('userData', checkUserSession, {
+  const { data: userInfo, status } = useQuery<UserInfo_Out, ApiError>('userData', checkUserSession, {
     refetchOnMount: 'always'
   });
+
+  console.log('status', status);
 
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#f5f5f5', position: 'relative' }}>
@@ -121,7 +127,7 @@ const MinimalLayout = (): JSX.Element => {
           }}
         >
           <BreadcrumbsWrapper />
-          <Outlet />
+          {status === 'success' ? <Outlet /> : null}
         </Container>
       </Box>
     </Box>

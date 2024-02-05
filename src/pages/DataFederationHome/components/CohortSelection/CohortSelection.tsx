@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import CohortConditionDropdown from 'src/pages/home/components/CohortConditionDropdown';
+import CohortConditionDropdown from 'src/pages/DataFederationHome/components/CohortConditionDropdown';
 import styles from './CohortSelection.module.css';
 import { type TOperatorString, type IFilter, type ICohortListData, IAutocompleteOptionData } from 'src/shared/types/customTypes';
 import OperatorDropdown from '../OperatorDropdown';
