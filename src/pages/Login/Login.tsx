@@ -37,11 +37,11 @@ export const storeLoginCredentials = (tokens: LoginSuccess_Out) => {
 
 export const roleBasedHomeRouting = (roles: UserRole[]) => {
   if (roles.includes(UserRole.TALLULAH_ADMIN) || roles.includes(UserRole.EMAIL_INTEGRATION_USER)) {
-    return '/home';
+    return '/email-assistant';
   } else if (roles.includes(UserRole.FORM_INTAKE_USER)) {
     return '/patient-story';
   } else {
-    return '/home';
+    return '/email-assistant';
   }
 };
 
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
       storeLoginCredentials(res);
 
       const res2 = await DefaultService.getCurrentUserInfo();
-      navigate(roleBasedHomeRouting(res2.roles));
+      navigate('/home');
       return res;
     } catch (error) {
       if (error) {

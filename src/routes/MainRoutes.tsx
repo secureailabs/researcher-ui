@@ -21,12 +21,12 @@ const MainRoutes = {
     {
       path: '/',
       element: <Home />,
-      breadcrumb: 'Email Assistant'
+      breadcrumb: 'Home'
     },
     {
       path: 'home',
       element: <Home />,
-      breadcrumb: 'Email Assistant'
+      breadcrumb: 'Home'
     },
     {
       path: 'tallulah-search',

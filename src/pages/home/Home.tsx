@@ -13,7 +13,7 @@ const Home: React.FC = () => {
     navigate(roleRoute);
   }, []);
 
-  return <div className={styles.container}>dfd</div>;
+  return <div className={styles.container}></div>;
 };
 
 export default Home;
