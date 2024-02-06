@@ -515,7 +515,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     );
   }
 
-  const formPublicLink = 'https://test.tallulah.ai/form/';
+  const formPublicLink = window.location.origin + '/form/';
 
   return (
     <Box className={styles.container}>
