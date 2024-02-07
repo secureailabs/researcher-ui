@@ -42,8 +42,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
 
   const emailDisplayRef = useRef<EmailDisplaySectionRef | null>(null);
 
-  // get only yhe base url of the current page and append the redirect uri i.e. mail/authorize to it
-  const OUTLOOK_REDIRECT_URI = window.location.origin + '/mail/authorize';
+  const OUTLOOK_REDIRECT_URI = window.location.origin + '/mailbox/authorize';
 
   const open = Boolean(anchorEl);
 
