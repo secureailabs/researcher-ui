@@ -67,7 +67,6 @@ const ResponseTemplateSelection: React.FC<IResponseTemplateSelection> = ({
   };
 
   const handleOnSelect = (template: GetResponseTemplate_Out) => {
-    console.log('template', template);
     if (template && template.subject) {
       setEmailSubject(template.subject);
     }

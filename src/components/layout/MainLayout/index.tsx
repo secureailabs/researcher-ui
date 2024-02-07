@@ -1,18 +1,19 @@
 import { Box, Breadcrumbs, Container, Toolbar } from '@mui/material';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Header from './Header';
 import Drawer from './Drawer';
 import { RootStateProps } from 'src/types/root';
 import { openDrawer } from 'src/store/reducers/menu';
-import { storeLoginCredentials } from 'src/pages/Login/Login';
+import { roleBasedHomeRouting, storeLoginCredentials } from 'src/pages/Login/Login';
 import { ApiError, DefaultService, OpenAPI, UserInfo_Out } from 'src/tallulah-ts-client';
 import { REACT_APP_SAIL_API_SERVICE_URL } from 'src/config';
 import { useQuery } from 'react-query';
 import { updateUserProfile } from 'src/store/reducers/userprofile';
 import { updateSCNDetails } from 'src/store/reducers/scn_details';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
+import { initAmplitude } from 'src/utils/Amplitude/amplitude';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 
@@ -34,8 +35,12 @@ const MinimalLayout = (): JSX.Element => {
   const [open, setOpen] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
 
   const menu = useSelector((state: RootStateProps) => state.menu);
+
+  const userProfile = useSelector((state: any) => state.userprofile);
+
   const { drawerOpen } = menu;
 
   const handleDrawerToggle = () => {
@@ -52,6 +57,7 @@ const MinimalLayout = (): JSX.Element => {
       try {
         const res = await DefaultService.getCurrentUserInfo();
         dispatch(updateUserProfile(res));
+        initAmplitude(res.organization);
         return res;
       } catch (err) {
         console.log(err);
@@ -74,26 +80,9 @@ const MinimalLayout = (): JSX.Element => {
     } else {
       navigate('/login');
     }
-
-    // try {
-    //   (async () => {
-    //     const res = await DefaultService.getAllSecureComputationNodes();
-    //     const node = res.secure_computation_nodes[0];
-    //     if (node.url) {
-    //       localStorage.setItem('scnUrl', node.url);
-    //     }
-    //     dispatch(
-    //       updateSCNDetails({
-    //         baseUrl: node.url
-    //       })
-    //     );
-    //   })();
-    // } catch (err) {
-    //   console.log(err);
-    // }
   }, []);
 
-  useQuery<UserInfo_Out, ApiError>('userData', checkUserSession, {
+  const { data: userInfo, status } = useQuery<UserInfo_Out, ApiError>('userData', checkUserSession, {
     refetchOnMount: 'always'
   });
 
@@ -136,7 +125,7 @@ const MinimalLayout = (): JSX.Element => {
           }}
         >
           <BreadcrumbsWrapper />
-          <Outlet />
+          {status === 'success' ? <Outlet /> : null}
         </Container>
       </Box>
     </Box>

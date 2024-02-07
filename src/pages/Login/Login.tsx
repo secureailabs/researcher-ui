@@ -12,8 +12,8 @@ import styles from './Login.module.css';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { LoginSuccess_Out, OpenAPI } from 'src/tallulah-ts-client';
-import { DefaultService, Body_login } from 'src/tallulah-ts-client';
+import { LoginSuccess_Out, OpenAPI, DefaultService, Body_login, UserRole } from 'src/tallulah-ts-client';
+
 import useNotification from 'src/hooks/useNotification';
 import { activeAccessToken, activeRefreshToken, tokenType, updateAuthState } from 'src/store/reducers/Auth';
 import { dispatch } from 'src/store';
@@ -33,6 +33,16 @@ export const storeLoginCredentials = (tokens: LoginSuccess_Out) => {
       tokenType: tokens.token_type
     })
   );
+};
+
+export const roleBasedHomeRouting = (roles: UserRole[]) => {
+  if (roles.includes(UserRole.TALLULAH_ADMIN) || roles.includes(UserRole.EMAIL_INTEGRATION_USER)) {
+    return '/email-assistant';
+  } else if (roles.includes(UserRole.FORM_INTAKE_USER)) {
+    return '/patient-story';
+  } else {
+    return '/email-assistant';
+  }
 };
 
 const Login: React.FC = () => {
@@ -70,6 +80,8 @@ const Login: React.FC = () => {
       localStorage.setItem('refreshToken', res.refresh_token);
       localStorage.setItem('tokenType', res.token_type);
       storeLoginCredentials(res);
+
+      const res2 = await DefaultService.getCurrentUserInfo();
       navigate('/home');
       return res;
     } catch (error) {
@@ -166,14 +178,14 @@ const Login: React.FC = () => {
           <Button onClick={handleSubmit(onSubmit)} type="submit" fullWidth variant="contained" sx={{ mb: 2 }}>
             Log In
           </Button>
-          <Divider sx={{ my: 3 }}>
+          {/* <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'primary' }}>
               Login with
             </Typography>
           </Divider>
           <Box component="form">
             <Socials />
-          </Box>
+          </Box> */}
         </Box>
       </Box>
     </Box>

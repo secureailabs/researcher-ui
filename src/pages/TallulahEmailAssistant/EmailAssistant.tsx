@@ -42,13 +42,14 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
 
   const emailDisplayRef = useRef<EmailDisplaySectionRef | null>(null);
 
-  const OUTLOOK_REDIRECT_URI = process.env.REACT_APP_OUTLOOK_REDIRECT_URI || '';
+  const OUTLOOK_REDIRECT_URI = window.location.origin + '/mailbox/authorize';
 
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };

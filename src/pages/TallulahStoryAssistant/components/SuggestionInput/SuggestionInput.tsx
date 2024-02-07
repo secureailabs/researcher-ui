@@ -49,11 +49,6 @@ const SuggestionInput: React.FC<ISuggestionInput> = ({
   const [atSymbolPositions, setAtSymbolPositions] = useState<number[]>([]);
   const [showLoader, setShowLoader] = useState<boolean>(false);
 
-  console.log('selectedNames', selectedNames);
-  console.log('atSymbolPositions', atSymbolPositions);
-
-  console.log('names', names);
-
   const inputRef = useRef<any>(null);
 
   const handleInputChange = (e: any) => {

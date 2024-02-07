@@ -31,3 +31,10 @@ yarn build
 make build_image
 make push_image
 ```
+
+## Deploy using terraform
+
+```
+terraform init
+terraform apply
+```

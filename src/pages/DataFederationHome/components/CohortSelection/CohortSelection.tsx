@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import CohortConditionDropdown from 'src/pages/home/components/CohortConditionDropdown';
+import CohortConditionDropdown from 'src/pages/DataFederationHome/components/CohortConditionDropdown';
 import styles from './CohortSelection.module.css';
 import { type TOperatorString, type IFilter, type ICohortListData, IAutocompleteOptionData } from 'src/shared/types/customTypes';
 import OperatorDropdown from '../OperatorDropdown';
@@ -24,8 +24,6 @@ const CohortSelection: React.FC<ICohortSelection> = ({ handleChildFilterChange, 
   const [openNewCohortDialog, setOpenNewCohortDialog] = useState<boolean>(false);
 
   const [sendNotification] = useNotification();
-
-  console.log('filters', filters);
 
   const handleAddFilter = (): void => {
     const lastFilterId = filters.length > 0 ? filters[filters.length - 1].id : 0;

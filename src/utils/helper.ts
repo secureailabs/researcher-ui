@@ -20,6 +20,21 @@ const formatReceivedTime = (receivedTime: string) => {
   }
 };
 
+const formatReceivedTimeFull = (receivedTime: string) => {
+  const currentDate = new Date();
+  const receivedDate = new Date(receivedTime);
+
+  const currentYear = currentDate.getFullYear();
+  const receivedYear = receivedDate.getFullYear();
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  // If it's a different year, format as '10 Oct 2022'
+  const day = receivedDate.getDate();
+  const month = monthNames[receivedDate.getMonth()];
+  const year = receivedYear;
+  return `${day} ${month} ${year}`;
+};
+
 const LABEL_CONFIG = [
   {
     color: '#f58c8c',
@@ -55,4 +70,10 @@ const getAllEmailLabels = () => {
   return LABEL_CONFIG;
 };
 
-export { formatReceivedTime, getEmailLabel, getAllEmailLabels };
+const convertTagsStringToArray = (tags: string | undefined) => {
+  if (!tags) return [];
+
+  return tags.split(',');
+};
+
+export { formatReceivedTime, getEmailLabel, getAllEmailLabels, convertTagsStringToArray, formatReceivedTimeFull };
