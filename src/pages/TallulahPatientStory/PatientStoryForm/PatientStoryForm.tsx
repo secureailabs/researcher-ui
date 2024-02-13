@@ -79,6 +79,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   };
 
   const handleFormDataChange = (event: any) => {
+    console.log(event.target.name, event.target.value);
     setFormData({
       ...formData,
       [event.target.name]: {
@@ -93,6 +94,17 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     setSelectedGender(event.target.value);
     handleFormDataChange(event);
     // Add any additional logic for handling form data change
+  };
+
+  const handleRadioFormDataChange = (event: any) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: {
+        value: [event.target.value],
+        label: getCorrespondingLabel(event.target.name),
+        type: getCorrespondingType(event.target.name)
+      }
+    });
   };
 
   const handleCheckboxFormDataChange = (event: any) => {
@@ -272,9 +284,17 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       case 'RADIO':
         return (
           <>
-            <Typography>{field.description}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%'
+              }}
+            >
+              <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
+              {field.required ? <Typography color="red"> &nbsp; (*Required)</Typography> : null}
+            </Box>
             <FormControl component="fieldset">
-              <RadioGroup aria-label={field.name} onChange={handleFormDataChange} row name={field.name}>
+              <RadioGroup aria-label={field.name} onChange={handleRadioFormDataChange} row name={field.name}>
                 {field.options.map((option: any) => (
                   <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
                 ))}
@@ -285,7 +305,15 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       case 'CHECKBOX':
         return (
           <>
-            <Typography>{field.description}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%'
+              }}
+            >
+              <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
+              {field.required ? <Typography color="red"> &nbsp; (*Required)</Typography> : null}
+            </Box>
             {field.options.map((option: any) => (
               <FormControlLabel
                 key={option}

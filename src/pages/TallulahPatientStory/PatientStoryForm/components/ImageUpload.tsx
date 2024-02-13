@@ -90,6 +90,9 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing, se
     return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
   }, [files]);
 
+  console.log('fileRejections', fileRejections);
+  console.log('acceptedFiles', acceptedFiles);
+
   useEffect(() => {
     if (setImageFiles) {
       setImageFiles((prev: TImageFileUpload[]) => {
@@ -115,7 +118,7 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing, se
     <Box>
       <section className="container">
         <div {...getRootProps({ className: 'dropzone' })}>
-          <input {...getInputProps()} />
+          <input {...getInputProps()} type="file" />
           {fieldName === 'profilePicture' ? (
             <Stack
               sx={{
