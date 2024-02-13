@@ -411,6 +411,15 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     } else {
       fetchFormTemplateById(id);
     }
+
+    const viewportMeta = document.createElement('meta');
+    viewportMeta.name = 'viewport';
+    viewportMeta.content = 'width=device-width, initial-scale=1';
+    document.head.appendChild(viewportMeta);
+
+    return () => {
+      document.head.removeChild(viewportMeta);
+    };
   }, []);
 
   const handleSubmit = async (event: any) => {
