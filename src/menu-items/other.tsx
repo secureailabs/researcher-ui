@@ -83,10 +83,30 @@ const other: any = {
               type: 'item',
               url: '/tallulah-find-stories/story-status',
               target: false
-            },
-           
+            }
           ]
         },
+        {
+          id: 'video-story',
+          title: 'Story Via Video',
+          type: 'item',
+          url: '/tallulah-video-story',
+          target: false
+        },
+        {
+          id: 'audio-story',
+          title: 'Story Via Audio',
+          type: 'item',
+          url: '/tallulah-audio-story',
+          target: false
+        },
+        {
+          id: 'translate-to-structured',
+          title: 'Translate to Structured Data',
+          type: 'item',
+          url: '/translate-to-structured-data',
+          target: false
+        }
       ]
     }
   ].filter(Boolean)

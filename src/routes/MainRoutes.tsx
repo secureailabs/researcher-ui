@@ -8,9 +8,11 @@ import Invalid404 from 'src/pages/invalid404';
 import Compare from 'src/pages/Compare';
 import StoryStatus from 'src/pages/TallulahStorySolicit/components/StoryStatus/StoryStatusTable';
 import SocialSearchResults from 'src/pages/TallulahStorySolicit/components/RunSearch/RunSearch';
+import StoryViaVideo from 'src/pages/StoryViaVideo';
+import StoryViaAudio from 'src/pages/StoryViaAudio';
+import TranslateToStructured from 'src/pages/TranslateToStructured';
 
-const Home = Loadable(lazy(async () => await import('src/pages/home')));
-const DemoLongitudinal = Loadable(lazy(async () => await import('src/pages/DemoLongitudinal')));
+// const Home = Loadable(lazy(async () => await import('src/pages/home')));
 const DataModel = Loadable(lazy(async () => await import('src/pages/DataModel')));
 const PAG = Loadable(lazy(async () => await import('src/pages/PAG')));
 const Datasets = Loadable(lazy(async () => await import('src/pages/Datasets')));
@@ -67,6 +69,18 @@ const MainRoutes = {
     {
       path: 'tallulah-find-stories/search',
       element: <SocialSearchResults />
+    },
+    {
+      path: 'tallulah-video-story',
+      element: <StoryViaVideo />
+    },
+    {
+      path: 'tallulah-audio-story',
+      element: <StoryViaAudio />
+    },
+    {
+      path: 'translate-to-structured-data',
+      element: <TranslateToStructured />
     }
     // {
     //   path: 'home',
