@@ -1554,6 +1554,18 @@
   resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.6.0.tgz#53fa5fe9c34faee89469e48f91d51a3766108bc8"
   integrity sha512-/Z3l6pXthq0JvMYdUFyX9j0MaCltlIn6mfh9jLyQwg5aPKxkyNa0PTHtU1AlFXLNk55ZuAeJRcpvq+tmLfKmaQ==
 
+"@dropzone-ui/react@^7.0.4":
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/@dropzone-ui/react/-/react-7.0.4.tgz#951eb0b3b3fc25a8f21c076c18e72284ffa4e16e"
+  integrity sha512-wgSsJt98ogNn67RGbVYOQERqX9KS74cmKa6NkO0BUIYX+gZJMXT5HnjLeTFbeSA7JGELnl/xOesccuvcsFdc1w==
+  dependencies:
+    "@files-ui/react" latest
+
+"@dynamicss/dynamicss@^2.2.8":
+  version "2.2.8"
+  resolved "https://registry.yarnpkg.com/@dynamicss/dynamicss/-/dynamicss-2.2.8.tgz#e28c3209ed44fa768ea1ba609d0825b402ca72f7"
+  integrity sha512-e6hrGUydr8f+c9E/9fHFSG5LoSLdq/MdZXXfbzEDWIVuzKF2hcdxZE7nHNqUNF2htw1mZ17Pyoshu3A6kFEeFA==
+
 "@emotion/babel-plugin@^11.10.6":
   version "11.10.6"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.10.6.tgz#a68ee4b019d661d6f37dec4b8903255766925ead"
@@ -1719,6 +1731,19 @@
   version "8.36.0"
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.36.0.tgz#9837f768c03a1e4a30bd304a64fb8844f0e72efe"
   integrity sha512-lxJ9R5ygVm8ZWgYdUweoq5ownDlJ4upvoWmO4eLxBYHdMo+vZ/Rx0EN6MbKWDJOSUGrqJy2Gt+Dyv/VKml0fjg==
+
+"@files-ui/core@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@files-ui/core/-/core-2.0.7.tgz#edb99391a09e982d463c57fa92be9f89193ead29"
+  integrity sha512-L/DqdMWMusULUTrOd6AEpiC+Lkfy9eMNN8LVLzPyfHrUgW9jw2b2Aa5BBJyjdiTHTmd8hM/huc0kVu7CgeZWIQ==
+
+"@files-ui/react@latest":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@files-ui/react/-/react-1.2.4.tgz#e6f338da874330ffd20abdf32d44ce061cec013e"
+  integrity sha512-7nOfTNhb5FxG5Lgt2/fec4JjeVFiKzqfRAU3tnrqWMUtRh2v53vZOSO39R58g3A5d5Skh1gQUFSx274wW4ozzw==
+  dependencies:
+    "@dynamicss/dynamicss" "^2.2.8"
+    "@files-ui/core" "^2.0.7"
 
 "@floating-ui/core@^1.4.2":
   version "1.5.0"
@@ -6631,12 +6656,12 @@ file-loader@^6.2.0:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
 
-file-selector@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-0.6.0.tgz#fa0a8d9007b829504db4d07dd4de0310b65287dc"
-  integrity sha512-QlZ5yJC0VxHxQQsQhXvBaC7VRJ2uaxTf+Tfpu4Z/OcVQJVpZO+DGU0rkoVW5ce2SccxugvpBJoMvUs59iILYdw==
+file-selector@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-0.5.0.tgz#21c7126dc9728b31a2742d91cab20d55e67e4fb4"
+  integrity sha512-s8KNnmIDTBoD0p9uJ9uD0XY38SCeBOtj0UMXyQSLg1Ypfrfj8+dAvwsLjYQkQ2GjhVtp2HrnF5cJzMhBjfD8HA==
   dependencies:
-    tslib "^2.4.0"
+    tslib "^2.0.3"
 
 filelist@^1.0.1:
   version "1.0.4"
@@ -11272,13 +11297,13 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
-react-dropzone@^14.2.3:
-  version "14.2.3"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-14.2.3.tgz#0acab68308fda2d54d1273a1e626264e13d4e84b"
-  integrity sha512-O3om8I+PkFKbxCukfIR3QAGftYXDZfOE2N1mr/7qebQJHs7U+/RSL/9xomJNpRg9kM5h9soQSdf0Gc7OHF5Fug==
+react-dropzone@14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-14.0.0.tgz#3b331f333a5d9d483e938f620b64235786713062"
+  integrity sha512-YOU/JrRSYYXNc/C3OlaFJIL+COMueD54qBJ1/gfNY2XEJUmlpyl/8AJOgsTYnyA/WZWeKqtsRp0rtVAz/W0+sA==
   dependencies:
     attr-accept "^2.2.2"
-    file-selector "^0.6.0"
+    file-selector "^0.5.0"
     prop-types "^15.8.1"
 
 react-error-overlay@^6.0.11:
