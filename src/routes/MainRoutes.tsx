@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
 import MainLayout from 'src/components/layout/MainLayout';
+import ContentGenerationForm from 'src/pages/TallulahContentGeneration/ContentGenerationForm';
 
 const Home = Loadable(lazy(async () => await import('src/pages/Home')));
 const TallulahSearch = Loadable(lazy(async () => await import('src/pages/TallulahSearch')));
@@ -64,6 +65,10 @@ const MainRoutes = {
     {
       path: 'patient-story',
       element: <PatientStory />
+    },
+    {
+      path: 'content-generation-form',
+      element: <ContentGenerationForm />
     }
   ]
 };
