@@ -18,7 +18,7 @@ const pagesIdAndCorrespondingRoles: { [key: string]: UserRole[] } = {
   // pages
   'tallulah-email-assistant': [UserRole.EMAIL_INTEGRATION_USER],
   'patient-story': [UserRole.FORM_INTAKE_USER],
-  'content-generation': [UserRole.USER]
+  'content-generation': [UserRole.CONTENT_GENERATION_USER]
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
