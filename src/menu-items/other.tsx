@@ -76,6 +76,13 @@ const pages = [
         type: 'item',
         url: '/content-generation-form',
         target: false
+      },
+      {
+        id: 'content-generation',
+        title: 'Generated Content',
+        type: 'item',
+        url: '/content-generation',
+        target: false
       }
     ]
   }

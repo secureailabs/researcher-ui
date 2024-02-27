@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
 import MainLayout from 'src/components/layout/MainLayout';
+import ContentGeneration from 'src/pages/TallulahContentGeneration/ContentGeneration';
 import ContentGenerationForm from 'src/pages/TallulahContentGeneration/ContentGenerationForm';
 
 const Home = Loadable(lazy(async () => await import('src/pages/Home')));
@@ -69,6 +70,10 @@ const MainRoutes = {
     {
       path: 'content-generation-form',
       element: <ContentGenerationForm />
+    },
+    {
+      path: 'content-generation',
+      element: <ContentGeneration />
     }
   ]
 };
