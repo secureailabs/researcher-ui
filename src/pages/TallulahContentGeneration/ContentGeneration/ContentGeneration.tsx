@@ -9,9 +9,9 @@ import {
 import { useEffect, useState } from 'react';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import { GridColDef, GridSelectionModel } from '@mui/x-data-grid';
-import { set } from 'react-hook-form';
 import { formatReceivedTimeFull } from 'src/utils/helper';
 import ContentDetailView from './components/ContentDetailView';
+import useNotification from 'src/hooks/useNotification';
 
 export interface IContentGeneration {}
 
@@ -31,6 +31,7 @@ const ContentGeneration: React.FC<IContentGeneration> = ({}) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [selectedRow, setSelectedRow] = useState<any>({});
   const [selectedTemplate, setSelectedTemplate] = useState<any>('all');
+  const [sendNotification] = useNotification();
 
   const fetchGeneratedContentForTemplates = async (templates: GetContentGenerationTemplate_Out[], offset = 0) => {
     setLoading(true);
@@ -110,14 +111,11 @@ const ContentGeneration: React.FC<IContentGeneration> = ({}) => {
   };
 
   const filterRowsByTemplate = (templateName: string) => {
-    // If 'all' is selected, set rows to all generated content
     if (templateName === 'all') {
       setRows(generatedContent);
     } else {
-      // Find the template ID matching the selected template name
       const template = contentGenerationTemplates.find((t) => t.name === templateName);
       if (template) {
-        // Filter generated content by the selected template ID
         const filteredContent = generatedContent.filter((content) => content.template_id === template.id);
         setRows(filteredContent);
       }
@@ -130,6 +128,25 @@ const ContentGeneration: React.FC<IContentGeneration> = ({}) => {
 
   const handleRefresh = () => {
     fetchAllContentGenerartionTemplates();
+  };
+
+  const handleRetry = async (id: string) => {
+    setLoading(true);
+    try {
+      const response = await ContentGenerationsService.retryContentGeneration(id);
+      fetchAllContentGenerartionTemplates();
+      sendNotification({
+        msg: 'Content generation has been retried',
+        variant: 'success'
+      });
+    } catch (error) {
+      console.error('Error retrying content generation', error);
+      sendNotification({
+        msg: 'Error retrying content generation',
+        variant: 'error'
+      });
+    }
+    setLoading(false);
   };
 
   const columns: GridColDef[] = [
@@ -182,28 +199,34 @@ const ContentGeneration: React.FC<IContentGeneration> = ({}) => {
       flex: 0.75,
       sortable: false,
       renderCell: (params) => (
-        <Typography
-          variant="body1"
+        <Box
           sx={{
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            maxWidth: '120ch',
-            fontSize: '0.6rem',
-            padding: '5px',
-            borderRadius: '5px',
-            backgroundColor:
-              params.row.state === 'DONE'
-                ? '#C9EAC8'
-                : params.row.state === 'ERROR'
-                ? '#f58c8c'
-                : params.row.state === 'RECEIVED'
-                ? '#AEDFF7'
-                : '#F8D7E9'
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'
           }}
         >
-          {params.row.state}
-        </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: '0.6rem',
+              padding: '5px',
+              borderRadius: '5px',
+              backgroundColor:
+                params.row.state === 'DONE'
+                  ? '#C9EAC8'
+                  : params.row.state === 'ERROR'
+                  ? '#f58c8c'
+                  : params.row.state === 'RECEIVED'
+                  ? '#AEDFF7'
+                  : '#F8D7E9'
+            }}
+          >
+            {params.row.state}
+          </Typography>
+          {params.row.state === 'ERROR' && <Button onClick={() => handleRetry(params.row.id)}>Retry</Button>}
+        </Box>
       )
     },
     {
@@ -333,9 +356,7 @@ const ContentGeneration: React.FC<IContentGeneration> = ({}) => {
           getCellClassName={(params: any) => {
             return styles.cell;
           }}
-          onRowClick={(params: any) => {
-            // filter row with selected row id and
-          }}
+          onRowClick={(params: any) => {}}
           loading={loading}
           keepNonExistentRowsSelected
           emptyRowsMessage="No data found. Kindly refresh."
@@ -349,7 +370,7 @@ const ContentGeneration: React.FC<IContentGeneration> = ({}) => {
           sx: { width: '60%', padding: '20px 0 0 20px' }
         }}
       >
-        <ContentDetailView data={selectedRow} />
+        <ContentDetailView data={selectedRow} getTemplateName={getTemplateName} />
       </Drawer>
     </Box>
   );

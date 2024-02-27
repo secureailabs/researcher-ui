@@ -40,6 +40,8 @@ export const roleBasedHomeRouting = (roles: UserRole[]) => {
     return '/email-assistant';
   } else if (roles.includes(UserRole.FORM_INTAKE_USER)) {
     return '/patient-story';
+  } else if (roles.includes(UserRole.CONTENT_GENERATION_USER)) {
+    return '/content-generation';
   } else {
     return '/email-assistant';
   }

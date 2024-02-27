@@ -5,6 +5,7 @@ import { formatReceivedTimeFull } from 'src/utils/helper';
 
 export interface IContentDetailView {
   data: any;
+  getTemplateName: (templateId: string) => string | undefined;
 }
 
 const LabelValue: React.FC<{ label: string; value: string }> = ({ label, value }) => {
@@ -28,7 +29,7 @@ const getEntries = (data: any) => {
   return Object.entries(data);
 };
 
-const ContentDetailView: React.FC<IContentDetailView> = ({ data }) => {
+const ContentDetailView: React.FC<IContentDetailView> = ({ data, getTemplateName }) => {
   const createMarkup = (htmlText: any) => {
     return { __html: htmlText };
   };
@@ -37,7 +38,7 @@ const ContentDetailView: React.FC<IContentDetailView> = ({ data }) => {
 
   return (
     <Box>
-      <LabelValue label="Template Name" value={data.template_id} />
+      <LabelValue label="Template Name" value={getTemplateName(data.template_id) as string} />
       <LabelValue label="Created On" value={formatReceivedTimeFull(data.creation_time)} />
 
       <Box

@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import useNotification from 'src/hooks/useNotification';
 import { useNavigate } from 'react-router-dom';
+import { set } from 'react-hook-form';
 
 export interface IContentGenerationForm {}
 
@@ -18,17 +19,20 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
   const [formData, setFormData] = useState<any>({});
   const [selectedGender, setSelectedGender] = useState<string>('');
   const [isDataSubmitting, setIsDataSubmitting] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const [sendNotification] = useNotification();
 
   const fetchAllContentGenerartionTemplates = async () => {
+    setIsLoading(true);
     try {
       const response: GetMultipleContentGenerationTemplate_Out = await ContentGenerationTemplatesService.getAllContentGenerationTemplates();
       setContentGenerationTemplates(response.templates);
     } catch (error) {
       console.error(error);
     }
+    setIsLoading(false);
   };
 
   const handleFormDataChange = (event: any) => {
@@ -213,11 +217,17 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
     setIsDataSubmitting(true);
     try {
       const response = await ContentGenerationsService.createContentGeneration(body);
-      sendNotification('success', 'Content Generation', 'Content generated successfully');
       navigate('/content-generation');
+      sendNotification({
+        msg: 'Content generated successfully',
+        variant: 'success'
+      });
     } catch (error) {
       console.error(error);
-      sendNotification('error', 'Content Generation', 'Failed to generate content');
+      sendNotification({
+        msg: 'Failed to generate content',
+        variant: 'error'
+      });
     }
     setIsDataSubmitting(false);
   };
@@ -268,6 +278,18 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
           ))}
         </Select>
       </FormControl>
+      {isLoading && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%'
+          }}
+        >
+          <Typography>Fetching templates please wait...</Typography>
+        </Box>
+      )}
       <Typography
         sx={{
           fontSize: '12px',
@@ -276,44 +298,42 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
       >
         {selectedTemplate?.description}
       </Typography>
-      <Box
-        sx={{
-          backgroundColor: 'white',
-          padding: '20px',
-          marginTop: '20px'
-        }}
-      >
-        {selectedTemplate && (
-          <>
-            <Box>
-              {selectedTemplate?.parameters?.map((field: any) => (
-                <Box
-                  key={field.name}
-                  mt={2}
-                  sx={{
-                    backgroundColor: 'white'
-                  }}
-                >
-                  {renderField(field)}
-                </Box>
-              ))}
-            </Box>
-            <Box>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
+      {selectedTemplate && (
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            padding: '20px',
+            marginTop: '20px'
+          }}
+        >
+          <Box>
+            {selectedTemplate?.parameters?.map((field: any) => (
+              <Box
+                key={field.name}
+                mt={2}
                 sx={{
-                  marginTop: '20px'
+                  backgroundColor: 'white'
                 }}
-                onClick={handleSubmit}
               >
-                Generate Content
-              </Button>
-            </Box>
-          </>
-        )}
-      </Box>
+                {renderField(field)}
+              </Box>
+            ))}
+          </Box>
+          <Box>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{
+                marginTop: '20px'
+              }}
+              onClick={handleSubmit}
+            >
+              Generate Content
+            </Button>
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 };
