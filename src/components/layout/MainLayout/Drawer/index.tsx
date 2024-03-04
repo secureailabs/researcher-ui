@@ -6,6 +6,7 @@ import { Box } from '@mui/material';
 import DrawerHeader from './DrawerHeader';
 import DrawerContent from './DrawerContent';
 import MiniDrawerStyled from './MiniDrawerStyled';
+import { SideBarMenuEnum } from '../../MainLayout';
 
 // ==============================|| MAIN LAYOUT - DRAWER ||============================== //
 
@@ -13,11 +14,12 @@ interface Props {
   open: boolean;
   window?: () => Window;
   handleDrawerToggle?: () => void;
+  sideBarMenuType: SideBarMenuEnum;
 }
 
-const MainDrawer = ({ open, handleDrawerToggle, window }: Props) => {
+const MainDrawer = ({ open, handleDrawerToggle, window, sideBarMenuType }: Props) => {
   // header content
-  const drawerContent = useMemo(() => <DrawerContent />, []);
+  const drawerContent = useMemo(() => <DrawerContent sideBarMenuType={sideBarMenuType} />, [sideBarMenuType]);
   const drawerHeader = useMemo(() => <DrawerHeader open={open} />, [open]);
 
   return (

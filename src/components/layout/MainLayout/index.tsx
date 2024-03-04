@@ -17,6 +17,11 @@ import { initAmplitude } from 'src/utils/Amplitude/amplitude';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 
+export const enum SideBarMenuEnum {
+  SETTINGS = 'settings',
+  DEFAULT = 'default'
+}
+
 const BreadcrumbsWrapper = (): JSX.Element => {
   const breadcrumbs = useBreadcrumbs();
   return (
@@ -30,7 +35,7 @@ const BreadcrumbsWrapper = (): JSX.Element => {
   );
 };
 
-const MinimalLayout = (): JSX.Element => {
+const MinimalLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Element => {
   const [leftDrawerOpened, setLeftDrawerOpened] = useState(true);
   const [open, setOpen] = useState(true);
   const dispatch = useDispatch();
@@ -111,7 +116,7 @@ const MinimalLayout = (): JSX.Element => {
       )}
 
       <Header open={open} handleDrawerToggle={handleDrawerToggle} />
-      <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
+      <Drawer open={open} handleDrawerToggle={handleDrawerToggle} sideBarMenuType={sideBarMenuType} />
       <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
         <Container
           maxWidth="xl"
