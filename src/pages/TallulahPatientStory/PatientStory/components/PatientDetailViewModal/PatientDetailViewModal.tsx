@@ -7,6 +7,7 @@ import styles from './PatientDetailViewModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 import useNotification from 'src/hooks/useNotification';
+import PatientDetailEditModal from '../PatientDetailEditModal';
 
 export interface IPatientDetailViewModal {
   openModal: boolean;
@@ -27,10 +28,16 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
 
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+
   const [sendNotification] = useNotification();
 
   const handleCloseDeleteModal = () => {
     setOpenDeleteModal(false);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
   };
 
   const handleDelete = async () => {
@@ -174,6 +181,13 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             }}
             onClose={handleClose}
           >
+            <MenuItem
+              onClick={() => {
+                setShowEditModal(true);
+              }}
+            >
+              Edit
+            </MenuItem>
             <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
           </Menu>
           <CloseIcon
@@ -232,7 +246,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
                 Journey
               </Typography>
               <Typography variant="body1" className={styles.value}>
-                {data.values.patientStory.value}
+                {data.values?.patientStory?.value}
               </Typography>
             </Box>
           </Box>
@@ -319,6 +333,13 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           openDeleteModal={openDeleteModal}
           handleCloseDeleteModal={handleCloseDeleteModal}
           handleDelete={handleDelete}
+        />
+        <PatientDetailEditModal
+          openModal={showEditModal}
+          handleCloseModal={handleCloseEditModal}
+          formDataId={data._id}
+          data={data.values}
+          handleParentClose={handleCloseModal}
         />
       </Box>
     </Modal>

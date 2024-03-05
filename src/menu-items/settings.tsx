@@ -1,13 +1,9 @@
 // assets
-import { IconChartHistogram, IconDatabaseCog, IconUpload, IconDeviceDesktopAnalytics, IconId } from '@tabler/icons-react';
+import { IconSettings } from '@tabler/icons-react';
 
 // icons
 const icons = {
-  IconChartHistogram,
-  IconDatabaseCog,
-  IconUpload,
-  IconDeviceDesktopAnalytics,
-  IconId
+  IconSettings
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -18,7 +14,7 @@ const pages = [
     id: 'user-settings',
     title: 'User Settings',
     type: 'collapse',
-    icon: icons.IconChartHistogram,
+    icon: icons.IconSettings,
     children: [
       {
         id: 'password-reset',

@@ -96,7 +96,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const handleGenderChange = (event: any) => {
     setSelectedGender(event.target.value);
     handleFormDataChange(event);
-    // Add any additional logic for handling form data change
   };
 
   const handleRadioFormDataChange = (event: any) => {
