@@ -80,7 +80,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
               WebkitLineClamp: 3
             }}
           >
-            {data.values?.patientStory?.value}
+            {data.values?.patientStory?.value ? data.values?.patientStory?.value : 'n/a'}
           </Typography>
         </Box>
       </Box>

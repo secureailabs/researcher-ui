@@ -234,7 +234,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
               Date of Data Use Consent :{' '}
               {data?.values.consent?.value[0] === 'Yes'
                 ? formatReceivedTimeFull(data?.creation_time)
-                : data?.values.consent?.value[0] === 'No'
+                : data?.values?.consent?.value[0] === 'No'
                 ? 'No'
                 : 'Pending '}
             </Typography>
@@ -269,9 +269,9 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
                             gap: '2rem'
                           }}
                         >
-                          {data.values[key].type === 'IMAGE' ? (
+                          {data.values[key]?.type === 'IMAGE' ? (
                             <img src={mediaDetails[media.id]?.url} alt="Patient Media" className={styles.image} />
-                          ) : data.values[key].type === 'VIDEO' ? (
+                          ) : data.values[key]?.type === 'VIDEO' ? (
                             <video src={mediaDetails[media.id]?.url} controls className={styles.video} />
                           ) : (
                             <Typography
