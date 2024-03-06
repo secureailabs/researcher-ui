@@ -156,7 +156,7 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
             }}
           >
             <Typography variant="h4" sx={{ margin: '1rem', textAlign: 'center' }}>
-              Edit Patient
+              Edit Patient Story Details
             </Typography>
           </Box>
           <Box

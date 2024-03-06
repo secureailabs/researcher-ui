@@ -138,6 +138,187 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     }
   }, [data]);
 
+  const renderModalCardHeader = (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        gap: '1rem',
+        padding: '1rem'
+      }}
+    >
+      <Button
+        id="basic-button"
+        aria-controls={openOptionsMenu ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={openOptionsMenu ? 'true' : undefined}
+        onClick={handleOptionsMenuClick}
+        variant="outlined"
+      >
+        Actions
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={openOptionsMenu}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button'
+        }}
+        onClose={handleClose}
+      >
+        <MenuItem
+          onClick={() => {
+            setShowEditModal(true);
+          }}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
+      </Menu>
+      <CloseIcon
+        onClick={handleCloseModal}
+        sx={{
+          cursor: 'pointer'
+        }}
+      />
+    </Box>
+  );
+
+  const renderModalCardContent = (
+    <Box className={styles.container}>
+      {/* Patient Details */}
+      <Box className={styles.cardHeaderLayout}>
+        <Box>
+          <Typography variant="h6" className={styles.name}>
+            {data.values.firstName?.value} {data.values.lastName?.value}
+          </Typography>
+          <Typography variant="body1" className={styles.age}>
+            Age : {data?.values.age?.value} years
+            <Typography>Location : {data?.values.zipCode?.value}</Typography>
+            {data?.values?.diseaseType ? <Typography>Disease Type : {data?.values?.diseaseType?.value}</Typography> : null}
+          </Typography>
+        </Box>
+        <Box>
+          {/* display image  */}
+          <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient Image" className={styles.profileImage} />
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          gap: '1rem'
+        }}
+      >
+        <Typography
+          variant="body1"
+          sx={{
+            padding: '10px',
+            backgroundColor: data?.values.consent?.value[0] === 'Yes' ? '#78bf92' : '#eba865'
+          }}
+        >
+          Date of Data Use Consent :{' '}
+          {data?.values.consent?.value[0] === 'Yes'
+            ? formatReceivedTimeFull(data?.creation_time)
+            : data?.values?.consent?.value[0] === 'No'
+            ? 'No'
+            : 'Pending '}
+        </Typography>
+      </Box>
+
+      <Box className={styles.section1}>
+        <Box>
+          <Typography variant="body1" className={styles.label}>
+            Journey
+          </Typography>
+          <Typography variant="body1" className={styles.value}>
+            {data.values?.patientStory?.value}
+          </Typography>
+        </Box>
+      </Box>
+      {
+        // rest of the data
+        Object.keys(rest).map((key: any) =>
+          mediaTypes.includes(data.values[key].type) ? (
+            <Box className={styles.section1} key={key}>
+              <Box>
+                <Typography variant="body1" className={styles.label}>
+                  {rest[key].label}
+                </Typography>
+                <Box>
+                  {rest[key].value.map((media: any) => (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                        alignItems: 'flex-start',
+                        gap: '2rem'
+                      }}
+                    >
+                      {data.values[key]?.type === 'IMAGE' ? (
+                        <img src={mediaDetails[media.id]?.url} alt="Patient Media" className={styles.image} />
+                      ) : data.values[key]?.type === 'VIDEO' ? (
+                        <video src={mediaDetails[media.id]?.url} controls className={styles.video} />
+                      ) : (
+                        <Typography
+                          variant="body1"
+                          className={styles.value}
+                          sx={{
+                            marginY: '5px'
+                          }}
+                        >
+                          <a href={mediaDetails[media.id]?.url} target="_blank" rel="noreferrer">
+                            {mediaDetails[media.id]?.name}
+                          </a>
+                        </Typography>
+                      )}
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Box>
+          ) : (
+            <Box className={styles.section1} key={key}>
+              <Box>
+                <Typography variant="body1" className={styles.label}>
+                  {rest[key].label}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  className={styles.value}
+                  sx={{
+                    display: '-webkit-box',
+                    overflow: 'hidden',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 3
+                  }}
+                >
+                  {rest[key].value}
+                </Typography>
+                {key === 'gender' && genderOther && genderOther?.value && (
+                  <Typography
+                    variant="body1"
+                    className={styles.value}
+                    sx={{
+                      display: '-webkit-box',
+                      overflow: 'hidden',
+                      WebkitBoxOrient: 'vertical',
+                      WebkitLineClamp: 3
+                    }}
+                  >
+                    ( {genderOther?.value} )
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+          )
+        )
+      }
+    </Box>
+  );
+
   return (
     <Modal open={openModal} onClose={handleCloseModal}>
       <Box
@@ -153,182 +334,9 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           backgroundColor: '#fff'
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            gap: '1rem',
-            padding: '1rem'
-          }}
-        >
-          <Button
-            id="basic-button"
-            aria-controls={openOptionsMenu ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={openOptionsMenu ? 'true' : undefined}
-            onClick={handleOptionsMenuClick}
-            variant="outlined"
-          >
-            Actions
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={openOptionsMenu}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button'
-            }}
-            onClose={handleClose}
-          >
-            <MenuItem
-              onClick={() => {
-                setShowEditModal(true);
-              }}
-            >
-              Edit
-            </MenuItem>
-            <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
-          </Menu>
-          <CloseIcon
-            onClick={handleCloseModal}
-            sx={{
-              cursor: 'pointer'
-            }}
-          />
-        </Box>
+        {renderModalCardHeader}
+        {renderModalCardContent}
 
-        <Box className={styles.container}>
-          {/* Patient Details */}
-          <Box className={styles.cardHeaderLayout}>
-            <Box>
-              <Typography variant="h6" className={styles.name}>
-                {data.values.firstName?.value} {data.values.lastName?.value}
-              </Typography>
-              <Typography variant="body1" className={styles.age}>
-                Age : {data?.values.age?.value} years
-                <Typography>Location : {data?.values.zipCode?.value}</Typography>
-                {data?.values?.diseaseType ? <Typography>Disease Type : {data?.values?.diseaseType?.value}</Typography> : null}
-              </Typography>
-            </Box>
-            <Box>
-              {/* display image  */}
-              <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient Image" className={styles.profileImage} />
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              gap: '1rem'
-            }}
-          >
-            <Typography
-              variant="body1"
-              sx={{
-                padding: '10px',
-                backgroundColor: data?.values.consent?.value[0] === 'Yes' ? '#78bf92' : '#eba865'
-              }}
-            >
-              Date of Data Use Consent :{' '}
-              {data?.values.consent?.value[0] === 'Yes'
-                ? formatReceivedTimeFull(data?.creation_time)
-                : data?.values?.consent?.value[0] === 'No'
-                ? 'No'
-                : 'Pending '}
-            </Typography>
-          </Box>
-
-          <Box className={styles.section1}>
-            <Box>
-              <Typography variant="body1" className={styles.label}>
-                Journey
-              </Typography>
-              <Typography variant="body1" className={styles.value}>
-                {data.values?.patientStory?.value}
-              </Typography>
-            </Box>
-          </Box>
-          {
-            // rest of the data
-            Object.keys(rest).map((key: any) =>
-              mediaTypes.includes(data.values[key].type) ? (
-                <Box className={styles.section1} key={key}>
-                  <Box>
-                    <Typography variant="body1" className={styles.label}>
-                      {rest[key].label}
-                    </Typography>
-                    <Box>
-                      {rest[key].value.map((media: any) => (
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                            gap: '2rem'
-                          }}
-                        >
-                          {data.values[key]?.type === 'IMAGE' ? (
-                            <img src={mediaDetails[media.id]?.url} alt="Patient Media" className={styles.image} />
-                          ) : data.values[key]?.type === 'VIDEO' ? (
-                            <video src={mediaDetails[media.id]?.url} controls className={styles.video} />
-                          ) : (
-                            <Typography
-                              variant="body1"
-                              className={styles.value}
-                              sx={{
-                                marginY: '5px'
-                              }}
-                            >
-                              <a href={mediaDetails[media.id]?.url} target="_blank" rel="noreferrer">
-                                {mediaDetails[media.id]?.name}
-                              </a>
-                            </Typography>
-                          )}
-                        </Box>
-                      ))}
-                    </Box>
-                  </Box>
-                </Box>
-              ) : (
-                <Box className={styles.section1} key={key}>
-                  <Box>
-                    <Typography variant="body1" className={styles.label}>
-                      {rest[key].label}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      className={styles.value}
-                      sx={{
-                        display: '-webkit-box',
-                        overflow: 'hidden',
-                        WebkitBoxOrient: 'vertical',
-                        WebkitLineClamp: 3
-                      }}
-                    >
-                      {rest[key].value}
-                    </Typography>
-                    {key === 'gender' && genderOther && genderOther?.value && (
-                      <Typography
-                        variant="body1"
-                        className={styles.value}
-                        sx={{
-                          display: '-webkit-box',
-                          overflow: 'hidden',
-                          WebkitBoxOrient: 'vertical',
-                          WebkitLineClamp: 3
-                        }}
-                      >
-                        ( {genderOther?.value} )
-                      </Typography>
-                    )}
-                  </Box>
-                </Box>
-              )
-            )
-          }
-        </Box>
         <DeleteConfirmationModal
           openDeleteModal={openDeleteModal}
           handleCloseDeleteModal={handleCloseDeleteModal}
