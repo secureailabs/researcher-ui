@@ -438,8 +438,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         label: imageFile.fieldName,
         type: 'IMAGE'
       };
-      imageFile.files.forEach((file: File) => {
-        mediaUploadPromises.push(handleMediaUpload(file, 'IMAGE', imageFile.fieldName));
+      imageFile.files.forEach((file: any) => {
+        mediaUploadPromises.push(handleMediaUpload(file.file, 'IMAGE', imageFile.fieldName));
       });
     });
 
@@ -449,8 +449,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         label: videoFile.fieldName,
         type: 'VIDEO'
       };
-      videoFile.files.forEach((file: File) => {
-        mediaUploadPromises.push(handleMediaUpload(file, 'VIDEO', videoFile.fieldName));
+      videoFile.files.forEach((file: any) => {
+        mediaUploadPromises.push(handleMediaUpload(file.file, 'VIDEO', videoFile.fieldName));
       });
     });
 
@@ -460,8 +460,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         label: documentFile.fieldName,
         type: 'FILE'
       };
-      documentFile.files.forEach((file: File) => {
-        mediaUploadPromises.push(handleMediaUpload(file, 'FILE', documentFile.fieldName));
+      documentFile.files.forEach((file: any) => {
+        mediaUploadPromises.push(handleMediaUpload(file.file, 'FILE', documentFile.fieldName));
       });
     });
 
@@ -518,7 +518,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     if (uploaded) {
       setTimeout(() => {
         setUploaded(false);
-        window.location.reload();
+        // window.location.reload();
       }, 5000);
     }
   }, [uploaded]);
