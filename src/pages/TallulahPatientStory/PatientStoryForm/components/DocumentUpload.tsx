@@ -18,8 +18,14 @@ export interface IUploadMedia {
 const DocumentsUpload: React.FC<IUploadMedia> = ({ fieldName, setDocumentFiles }) => {
   const [files, setFiles] = useState<any[]>([]);
 
+  const updateFiles = (incomingFiles: any) => {
+    setFiles(incomingFiles);
+  };
+
   useEffect(() => {
+    console.log('files1');
     if (setDocumentFiles) {
+      console.log('files2');
       setDocumentFiles((prev: TDocumentFileUpload[]) => {
         const newDocumentFiles: TDocumentFileUpload[] = [...prev];
         const fileIndex = newDocumentFiles.findIndex((file) => file.fieldName === fieldName);
@@ -39,14 +45,10 @@ const DocumentsUpload: React.FC<IUploadMedia> = ({ fieldName, setDocumentFiles }
     }
   }, [fieldName, files, setDocumentFiles]);
 
-  const updateFiles = (incomingFiles: any) => {
-    setFiles(files);
-  };
-
   return (
     <Box>
       <section className="container">
-        <Dropzone onChange={updateFiles} value={files} maxFiles={1} footer={false} label="Upload files here">
+        <Dropzone onChange={updateFiles} value={files} maxFiles={5} footer={false} label="Upload files here">
           {files.map((file) => (
             <FileMosaic {...file} preview />
           ))}

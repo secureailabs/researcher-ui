@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 import useNotification from 'src/hooks/useNotification';
 import PatientDetailEditModal from '../PatientDetailEditModal';
+import { ConsoleView } from 'react-device-detect';
 
 export interface IPatientDetailViewModal {
   openModal: boolean;
@@ -101,6 +102,8 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     }
   };
 
+  console.log('mediaDetails', mediaDetails);
+
   useEffect(() => {
     async function fetchMediaUrls() {
       const newMediaDetails: any = {};
@@ -138,6 +141,8 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
       fetchProfileImage(profileImageId, 'IMAGE');
     }
   }, [data]);
+
+  console.log('data', data);
 
   const renderModalCardHeader = (
     <Box

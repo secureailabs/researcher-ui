@@ -132,6 +132,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     }
   };
 
+  console.log('documentFiles', documentFiles);
+
   const renderField = (field: any) => {
     switch (field.type) {
       case 'STRING':
@@ -518,7 +520,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     if (uploaded) {
       setTimeout(() => {
         setUploaded(false);
-        // window.location.reload();
+        window.location.reload();
       }, 5000);
     }
   }, [uploaded]);
