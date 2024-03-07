@@ -48,7 +48,7 @@ const VideoUpload: React.FC<IUploadMedia> = ({ spacing, editPatient, fieldName, 
   return (
     <Box>
       <section className="container">
-        <Dropzone onChange={updateFiles} value={files} accept="video/*" footer={false} label="Upload images here">
+        <Dropzone onChange={updateFiles} value={files} accept="video/*" footer={false} label="Upload video here">
           {files.map((file) => (
             <FileMosaic {...file} preview />
           ))}

@@ -86,6 +86,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     profilePicture,
     consent,
     'gender-other': genderOther,
+    tags,
     ...rest
   } = data?.values;
 
@@ -185,6 +186,88 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     </Box>
   );
 
+  const renderMediaDisplay = (key: any) => (
+    <Box className={styles.section1} key={key}>
+      <Box>
+        <Typography variant="body1" className={styles.label}>
+          {rest[key].label}
+        </Typography>
+        <Box>
+          {rest[key].value.map((media: any) => (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                gap: '2rem'
+              }}
+            >
+              {data.values[key]?.type === 'IMAGE' ? (
+                <img src={mediaDetails[media.id]?.url} alt="Patient Media" className={styles.image} />
+              ) : data.values[key]?.type === 'VIDEO' ? (
+                <video src={mediaDetails[media.id]?.url} controls className={styles.video} />
+              ) : (
+                <Typography
+                  variant="body1"
+                  className={styles.value}
+                  sx={{
+                    marginY: '5px'
+                  }}
+                >
+                  <a href={mediaDetails[media.id]?.url} target="_blank" rel="noreferrer">
+                    {mediaDetails[media.id]?.name}
+                  </a>
+                </Typography>
+              )}
+            </Box>
+          ))}
+        </Box>
+      </Box>
+    </Box>
+  );
+
+  const convertTagsStringToArray = (tags: string | undefined) => {
+    if (!tags) return [];
+
+    return tags.split(',');
+  };
+
+  const renderDataDisplay = (key: any) => (
+    <Box className={styles.section1} key={key}>
+      <Box>
+        <Typography variant="body1" className={styles.label}>
+          {rest[key].label}
+        </Typography>
+        <Typography
+          variant="body1"
+          className={styles.value}
+          sx={{
+            display: '-webkit-box',
+            overflow: 'hidden',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 3
+          }}
+        >
+          {rest[key].value}
+        </Typography>
+        {key === 'gender' && genderOther && genderOther?.value && (
+          <Typography
+            variant="body1"
+            className={styles.value}
+            sx={{
+              display: '-webkit-box',
+              overflow: 'hidden',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 3
+            }}
+          >
+            ( {genderOther?.value} )
+          </Typography>
+        )}
+      </Box>
+    </Box>
+  );
+
   const renderModalCardContent = (
     <Box className={styles.container}>
       {/* Patient Details */}
@@ -228,6 +311,20 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
         </Typography>
       </Box>
 
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+          marginBottom: '1rem',
+          marginTop: '1rem'
+        }}
+      >
+        {convertTagsStringToArray(data?.values?.tags?.value).map((tag: string) => (
+          <Box className={styles.tag}>{tag}</Box>
+        ))}
+      </Box>
+
       <Box className={styles.section1}>
         <Box>
           <Typography variant="body1" className={styles.label}>
@@ -238,84 +335,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           </Typography>
         </Box>
       </Box>
-      {
-        // rest of the data
-        Object.keys(rest).map((key: any) =>
-          mediaTypes.includes(data.values[key].type) ? (
-            <Box className={styles.section1} key={key}>
-              <Box>
-                <Typography variant="body1" className={styles.label}>
-                  {rest[key].label}
-                </Typography>
-                <Box>
-                  {rest[key].value.map((media: any) => (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start',
-                        gap: '2rem'
-                      }}
-                    >
-                      {data.values[key]?.type === 'IMAGE' ? (
-                        <img src={mediaDetails[media.id]?.url} alt="Patient Media" className={styles.image} />
-                      ) : data.values[key]?.type === 'VIDEO' ? (
-                        <video src={mediaDetails[media.id]?.url} controls className={styles.video} />
-                      ) : (
-                        <Typography
-                          variant="body1"
-                          className={styles.value}
-                          sx={{
-                            marginY: '5px'
-                          }}
-                        >
-                          <a href={mediaDetails[media.id]?.url} target="_blank" rel="noreferrer">
-                            {mediaDetails[media.id]?.name}
-                          </a>
-                        </Typography>
-                      )}
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
-            </Box>
-          ) : (
-            <Box className={styles.section1} key={key}>
-              <Box>
-                <Typography variant="body1" className={styles.label}>
-                  {rest[key].label}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  className={styles.value}
-                  sx={{
-                    display: '-webkit-box',
-                    overflow: 'hidden',
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 3
-                  }}
-                >
-                  {rest[key].value}
-                </Typography>
-                {key === 'gender' && genderOther && genderOther?.value && (
-                  <Typography
-                    variant="body1"
-                    className={styles.value}
-                    sx={{
-                      display: '-webkit-box',
-                      overflow: 'hidden',
-                      WebkitBoxOrient: 'vertical',
-                      WebkitLineClamp: 3
-                    }}
-                  >
-                    ( {genderOther?.value} )
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-          )
-        )
-      }
+      {Object.keys(rest).map((key: any) => (mediaTypes.includes(data.values[key].type) ? renderMediaDisplay(key) : renderDataDisplay(key)))}
     </Box>
   );
 
@@ -330,7 +350,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           outline: 'none',
           width: '1000px',
           overflowY: 'scroll',
-          height: '600px',
+          height: '90%',
           backgroundColor: '#fff'
         }}
       >

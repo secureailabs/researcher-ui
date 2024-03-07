@@ -61,7 +61,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
           marginTop: '1rem'
         }}
       >
-        {convertTagsStringToArray(data?.values?.storyTags?.value).map((tag: string) => (
+        {convertTagsStringToArray(data?.values?.tags?.value).map((tag: string) => (
           <Box className={styles.tag}>{tag}</Box>
         ))}
       </Box>

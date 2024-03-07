@@ -617,6 +617,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           </Box>
         </Box>
       )}
+      {/* id undefined means the form is being accessed via public link */}
       {id === undefined ? (
         <Box
           sx={{
@@ -655,37 +656,43 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       />
       <form onSubmit={handleSubmit}>
         <div>
-          {formLayout?.field_groups?.map((field: any) => (
-            <Box
-              key={field.name}
-              sx={{
-                marginY: '30px'
-              }}
-            >
-              <Typography
-                variant="h5"
+          {formLayout?.field_groups?.map((field: any) => {
+            const nonPrivateFields = field.fields.filter((field: any) => !field.private);
+            if (nonPrivateFields.length === 0) {
+              return null;
+            }
+            return (
+              <Box
+                key={field.name}
                 sx={{
-                  marginBottom: '20px'
+                  marginY: '30px'
                 }}
               >
-                {field.description}
-              </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    marginBottom: '20px'
+                  }}
+                >
+                  {field.description}
+                </Typography>
 
-              <Box className={styles.gridContainer}>
-                {field.fields.map((field: any) => (
-                  <Box
-                    key={field.name}
-                    className={`${styles.gridItem} ${spanFullWidth(field) ? styles.fullWidth : ''}`}
-                    sx={{
-                      width: '100%'
-                    }}
-                  >
-                    {renderField(field)}
-                  </Box>
-                ))}
+                <Box className={styles.gridContainer}>
+                  {field.fields.map((field: any) => (
+                    <Box
+                      key={field.name}
+                      className={`${styles.gridItem} ${spanFullWidth(field) ? styles.fullWidth : ''}`}
+                      sx={{
+                        width: '100%'
+                      }}
+                    >
+                      {renderField(field)}
+                    </Box>
+                  ))}
+                </Box>
               </Box>
-            </Box>
-          ))}
+            );
+          })}
         </div>
         {formLayout ? (
           <Button type="submit" variant="contained" fullWidth>

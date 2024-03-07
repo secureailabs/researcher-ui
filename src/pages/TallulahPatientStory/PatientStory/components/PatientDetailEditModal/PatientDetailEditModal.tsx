@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import PatientImage from 'src/assets/images/users/avatar-3.png';
 import { formatReceivedTimeFull } from 'src/utils/helper';
-import { FormDataService, FormMediaTypes } from 'src/tallulah-ts-client';
+import { FormDataService, FormMediaTypes, FormTemplatesService, GetMultipleFormTemplate_Out } from 'src/tallulah-ts-client';
 import styles from './PatientDetailEditModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
@@ -41,14 +41,35 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
 }) => {
   const [formData, setFormData] = useState<any>({ ...data });
   const [isLoading, setIsLoading] = useState(false);
+  const [privateFields, setPrivateFields] = useState<any>([]);
 
   const [sendNotification] = useNotification();
 
-  const handleFormDataChange = (event: any) => {
+  const getCorrespondingLabel = (fieldName: string) => {
+    const field = privateFields.find((field: any) => field?.name === fieldName);
+    return field?.label;
+  };
+
+  const getCorrespondingType = (fieldName: string) => {
+    const field = privateFields.find((field: any) => field?.name === fieldName);
+    return field?.type;
+  };
+
+  const handleFormDataChange = (event: any, privateField = false) => {
     const name = event.target.name;
     const value = event.target.value;
     const newFormData = { ...formData };
-    newFormData[name] = { ...newFormData[name], value: value };
+    if (name in newFormData) {
+      newFormData[name] = { ...newFormData[name], value: value };
+    } else {
+      newFormData[name] = {
+        value: value,
+        type: getCorrespondingType(event.target.name),
+        private: privateField,
+        label: getCorrespondingLabel(event.target.name)
+      };
+    }
+
     setFormData(newFormData);
   };
 
@@ -108,6 +129,81 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
     }
   };
 
+  const renderPrivateField = (field: any) => {
+    switch (field.type) {
+      case 'STRING':
+      case 'EMAIL':
+      case 'PHONE':
+      case 'URL':
+        return (
+          <TextField
+            name={field.name}
+            fullWidth
+            className={styles.inputStyle}
+            type="text"
+            placeholder={field.place_holder}
+            required={field.required}
+            variant="outlined"
+            onChange={(e) => handleFormDataChange(e, true)}
+            label={field.description}
+            defaultValue={data[field.name]?.value}
+          />
+        );
+      case 'TEXTAREA':
+        return (
+          <>
+            <Typography>{field.description}</Typography>
+            <TextField
+              name={field.name}
+              fullWidth
+              multiline
+              rows={6}
+              placeholder={field.place_holder}
+              required={field.required}
+              onChange={(e) => handleFormDataChange(e, true)}
+              sx={{
+                width: '100%'
+              }}
+              defaultValue={data[field.name]?.value}
+            />
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderEditablePrivateFields = (
+    <Box>
+      {privateFields.map((field: any) => (
+        <Box
+          sx={{
+            margin: '1rem'
+          }}
+        >
+          {renderPrivateField(field)}
+        </Box>
+      ))}
+    </Box>
+  );
+
+  const fetchFormTemplate = async () => {
+    try {
+      const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
+      const filteredData = res.templates.filter((formTemplate: any) => formTemplate.state === 'PUBLISHED');
+      const formTemplate = filteredData[0];
+      const allFields = formTemplate?.field_groups?.flatMap((group: any) => group.fields);
+      const privateFields = allFields?.filter((field: any) => 'private' in field && field.private);
+      setPrivateFields(privateFields);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchFormTemplate();
+  }, []);
+
   return (
     <Modal open={openModal} onClose={handleCloseModal}>
       <Box
@@ -165,12 +261,14 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
             }}
           >
             {Object.entries(data).map((field: any) => {
+              if ('private' in field[1] && field[1].private === true) return null;
               return (
                 <Box key={field[1].name} sx={{ margin: '1rem' }}>
                   {renderField(field[0], field[1])}
                 </Box>
               );
             })}
+            {renderEditablePrivateFields}
           </Box>
         </Box>
 
