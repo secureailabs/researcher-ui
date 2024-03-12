@@ -12,7 +12,7 @@ import styles from './Login.module.css';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { LoginSuccess_Out, OpenAPI, DefaultService, Body_login, UserRole } from 'src/tallulah-ts-client';
+import { LoginSuccess_Out, OpenAPI, AuthenticationService, Body_login, UserRole } from 'src/tallulah-ts-client';
 
 import useNotification from 'src/hooks/useNotification';
 import { activeAccessToken, activeRefreshToken, tokenType, updateAuthState } from 'src/store/reducers/Auth';
@@ -40,6 +40,8 @@ export const roleBasedHomeRouting = (roles: UserRole[]) => {
     return '/email-assistant';
   } else if (roles.includes(UserRole.FORM_INTAKE_USER)) {
     return '/patient-story';
+  } else if (roles.includes(UserRole.CONTENT_GENERATION_USER)) {
+    return '/content-generation';
   } else {
     return '/email-assistant';
   }
@@ -74,14 +76,14 @@ const Login: React.FC = () => {
       password: data.password
     };
     try {
-      const res = await DefaultService.login(login_req);
+      const res = await AuthenticationService.login(login_req);
       OpenAPI.TOKEN = res.access_token;
       localStorage.setItem('accessToken', res.access_token);
       localStorage.setItem('refreshToken', res.refresh_token);
       localStorage.setItem('tokenType', res.token_type);
       storeLoginCredentials(res);
 
-      const res2 = await DefaultService.getCurrentUserInfo();
+      const res2 = await AuthenticationService.getCurrentUserInfo();
       navigate('/home');
       return res;
     } catch (error) {

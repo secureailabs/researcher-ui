@@ -7,7 +7,7 @@ import Drawer from './Drawer';
 import { RootStateProps } from 'src/types/root';
 import { openDrawer } from 'src/store/reducers/menu';
 import { roleBasedHomeRouting, storeLoginCredentials } from 'src/pages/Login/Login';
-import { ApiError, DefaultService, OpenAPI, UserInfo_Out } from 'src/tallulah-ts-client';
+import { ApiError, AuthenticationService, OpenAPI, UserInfo_Out } from 'src/tallulah-ts-client';
 import { REACT_APP_SAIL_API_SERVICE_URL } from 'src/config';
 import { useQuery } from 'react-query';
 import { updateUserProfile } from 'src/store/reducers/userprofile';
@@ -52,10 +52,11 @@ const MinimalLayout = (): JSX.Element => {
     if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
     OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
     const token = localStorage.getItem('accessToken');
+
     if (token) {
       OpenAPI.TOKEN = token;
       try {
-        const res = await DefaultService.getCurrentUserInfo();
+        const res = await AuthenticationService.getCurrentUserInfo();
         dispatch(updateUserProfile(res));
         initAmplitude(res.organization);
         return res;

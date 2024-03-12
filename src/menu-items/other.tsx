@@ -17,7 +17,8 @@ const icons = {
 const pagesIdAndCorrespondingRoles: { [key: string]: UserRole[] } = {
   // pages
   'tallulah-email-assistant': [UserRole.EMAIL_INTEGRATION_USER],
-  'patient-story': [UserRole.FORM_INTAKE_USER]
+  'patient-story': [UserRole.FORM_INTAKE_USER],
+  'content-generation': [UserRole.CONTENT_GENERATION_USER]
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -59,6 +60,28 @@ const pages = [
         title: 'Patient Story',
         type: 'item',
         url: '/patient-story',
+        target: false
+      }
+    ]
+  },
+  {
+    id: 'content-generation',
+    title: 'Content Generation',
+    type: 'collapse',
+    icon: icons.IconId,
+    children: [
+      {
+        id: 'content-generation-form',
+        title: 'Content Generation Form',
+        type: 'item',
+        url: '/content-generation-form',
+        target: false
+      },
+      {
+        id: 'content-generation',
+        title: 'Generated Content',
+        type: 'item',
+        url: '/content-generation',
         target: false
       }
     ]

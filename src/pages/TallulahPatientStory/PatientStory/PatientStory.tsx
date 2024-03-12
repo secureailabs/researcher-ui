@@ -52,6 +52,10 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     setIsFormTemplateFetching(false);
   };
 
+  const handleRefresh = () => {
+    fetchPublishedFormTemplate();
+  };
+
   const fetchSearchResults = async (text: string) => {
     setIsFormDataFetching(true);
     const res = await FormDataService.searchFormData(publishedFormId, text);
@@ -165,7 +169,12 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
         ))}
       </Grid>
       {selectedPatientData ? (
-        <PatientDetailViewModal openModal={openModal} handleCloseModal={handleCloseModal} data={selectedPatientData} />
+        <PatientDetailViewModal
+          openModal={openModal}
+          handleCloseModal={handleCloseModal}
+          data={selectedPatientData}
+          handleRefresh={handleRefresh}
+        />
       ) : null}
     </Box>
   );

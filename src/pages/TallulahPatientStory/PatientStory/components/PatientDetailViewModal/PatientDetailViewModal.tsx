@@ -1,23 +1,72 @@
 import { useEffect, useState } from 'react';
-import { Box, Modal, Typography } from '@mui/material';
+import { Box, Button, Menu, MenuItem, Modal, Typography } from '@mui/material';
 import PatientImage from 'src/assets/images/users/avatar-3.png';
-import { convertTagsStringToArray, formatReceivedTimeFull } from 'src/utils/helper';
+import { formatReceivedTimeFull } from 'src/utils/helper';
 import { FormDataService, FormMediaTypes } from 'src/tallulah-ts-client';
 import styles from './PatientDetailViewModal.module.css';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
+import useNotification from 'src/hooks/useNotification';
 
 export interface IPatientDetailViewModal {
   openModal: boolean;
   handleCloseModal: () => void;
   data: any;
+  handleRefresh: () => void;
 }
 
 const mediaTypes = ['FILE', 'IMAGE', 'VIDEO'];
 
-const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, handleCloseModal, data }) => {
+const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, handleCloseModal, data, handleRefresh }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
+
   const profileImageId =
     data?.values.profilePicture?.value && data?.values.profilePicture?.value.length > 0 ? data?.values.profilePicture.value[0].id : null;
   const [mediaDetails, setMediaDetails] = useState<any>({});
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+
+  const [sendNotification] = useNotification();
+
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false);
+  };
+
+  const handleDelete = async () => {
+    setOpenDeleteModal(false);
+    try {
+      await FormDataService.deleteFormData(data._id);
+      sendNotification({
+        msg: 'Story removed successfully',
+        variant: 'success'
+      });
+      handleRefresh();
+    } catch (error) {
+      console.log(error);
+      sendNotification({
+        msg: 'Failed to remove story',
+        variant: 'error'
+      });
+    }
+
+    handleCloseModal();
+    handleCloseDeleteModal();
+  };
+
+  const openOptionsMenu = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOptionsMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleDeleteClick = () => {
+    handleClose();
+    setOpenDeleteModal(true);
+  };
 
   const {
     firstName,
@@ -97,6 +146,44 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           backgroundColor: '#fff'
         }}
       >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            gap: '1rem',
+            padding: '1rem'
+          }}
+        >
+          <Button
+            id="basic-button"
+            aria-controls={openOptionsMenu ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={openOptionsMenu ? 'true' : undefined}
+            onClick={handleOptionsMenuClick}
+            variant="outlined"
+          >
+            Actions
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={openOptionsMenu}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button'
+            }}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
+          </Menu>
+          <CloseIcon
+            onClick={handleCloseModal}
+            sx={{
+              cursor: 'pointer'
+            }}
+          />
+        </Box>
+
         <Box className={styles.container}>
           {/* Patient Details */}
           <Box className={styles.cardHeaderLayout}>
@@ -131,7 +218,11 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
               }}
             >
               Date of Data Use Consent :{' '}
-              {data?.values.consent?.value[0] === 'Yes' ? formatReceivedTimeFull(data?.creation_time) : 'Pending '}
+              {data?.values.consent?.value[0] === 'Yes'
+                ? formatReceivedTimeFull(data?.creation_time)
+                : data?.values.consent?.value[0] === 'No'
+                ? 'No'
+                : 'Pending '}
             </Typography>
           </Box>
 
@@ -224,6 +315,11 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             )
           }
         </Box>
+        <DeleteConfirmationModal
+          openDeleteModal={openDeleteModal}
+          handleCloseDeleteModal={handleCloseDeleteModal}
+          handleDelete={handleDelete}
+        />
       </Box>
     </Modal>
   );

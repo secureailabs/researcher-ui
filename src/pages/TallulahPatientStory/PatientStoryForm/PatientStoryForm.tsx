@@ -32,6 +32,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import VideoUpload from './components/VideoUpload';
 import useNotification from 'src/hooks/useNotification';
+import Lottie from 'lottie-react';
+import checkMarkAnimantion from 'src/assets/lottie/check_mark.json';
 
 export interface IPatientStoryForm {}
 
@@ -62,6 +64,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const [documentFiles, setDocumentFiles] = useState<TDocumentFileUpload[]>([]);
   const [videoFiles, setVideoFiles] = useState<TDocumentFileUpload[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [uploaded, setUploaded] = useState<boolean>(false);
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
   const [selectedGender, setSelectedGender] = useState('');
 
@@ -79,6 +82,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   };
 
   const handleFormDataChange = (event: any) => {
+    console.log(event.target.name, event.target.value);
     setFormData({
       ...formData,
       [event.target.name]: {
@@ -93,6 +97,17 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     setSelectedGender(event.target.value);
     handleFormDataChange(event);
     // Add any additional logic for handling form data change
+  };
+
+  const handleRadioFormDataChange = (event: any) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: {
+        value: [event.target.value],
+        label: getCorrespondingLabel(event.target.name),
+        type: getCorrespondingType(event.target.name)
+      }
+    });
   };
 
   const handleCheckboxFormDataChange = (event: any) => {
@@ -272,9 +287,17 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       case 'RADIO':
         return (
           <>
-            <Typography>{field.description}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%'
+              }}
+            >
+              <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
+              {field.required ? <Typography color="red"> &nbsp; (*Required)</Typography> : null}
+            </Box>
             <FormControl component="fieldset">
-              <RadioGroup aria-label={field.name} onChange={handleFormDataChange} row name={field.name}>
+              <RadioGroup aria-label={field.name} onChange={handleRadioFormDataChange} row name={field.name}>
                 {field.options.map((option: any) => (
                   <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
                 ))}
@@ -285,7 +308,15 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       case 'CHECKBOX':
         return (
           <>
-            <Typography>{field.description}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%'
+              }}
+            >
+              <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
+              {field.required ? <Typography color="red"> &nbsp; (*Required)</Typography> : null}
+            </Box>
             {field.options.map((option: any) => (
               <FormControlLabel
                 key={option}
@@ -380,6 +411,15 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     } else {
       fetchFormTemplateById(id);
     }
+
+    const viewportMeta = document.createElement('meta');
+    viewportMeta.name = 'viewport';
+    viewportMeta.content = 'width=device-width, initial-scale=1';
+    document.head.appendChild(viewportMeta);
+
+    return () => {
+      document.head.removeChild(viewportMeta);
+    };
   }, []);
 
   const handleSubmit = async (event: any) => {
@@ -468,12 +508,21 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         msg: "Patient's story submitted successfully.",
         variant: 'success'
       });
-      window.location.reload();
+      setUploaded(true);
     } catch (error) {
       console.error('Error submitting form:', error);
     }
     setUploading(false);
   };
+
+  useEffect(() => {
+    if (uploaded) {
+      setTimeout(() => {
+        setUploaded(false);
+        window.location.reload();
+      }, 5000);
+    }
+  }, [uploaded]);
 
   const handleMediaUpload = async (file: any, type: string, fieldName: string) => {
     const typeEnum = type === 'FILE' ? FormMediaTypes.FILE : type === 'IMAGE' ? FormMediaTypes.IMAGE : FormMediaTypes.VIDEO;
@@ -541,6 +590,32 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           <Typography variant="h5" color="white">
             It may take a while, kindly do not refresh the page.
           </Typography>
+        </Box>
+      )}
+      {uploaded && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: '100%',
+            width: '100%',
+            backgroundColor: 'rgba(158, 240, 187, 0.4)',
+            zIndex: 1000,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Box
+            sx={{
+              width: '60%',
+              height: '60%'
+            }}
+          >
+            <Lottie animationData={checkMarkAnimantion} loop={false} />;
+          </Box>
         </Box>
       )}
       {id === undefined ? (

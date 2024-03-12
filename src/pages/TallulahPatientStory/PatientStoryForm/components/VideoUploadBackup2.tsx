@@ -1,8 +1,9 @@
 import { Box, Button, Stack } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDropzone, FileRejection } from 'react-dropzone';
+import { Typography } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { TVideoUpload } from '../PatientStoryForm';
-import { Dropzone, FileMosaic } from '@dropzone-ui/react';
 
 export interface IFile {
   url: string;
@@ -17,8 +18,12 @@ export interface IUploadMedia {
 }
 
 const VideoUpload: React.FC<IUploadMedia> = ({ spacing, editPatient, fieldName, setVideoFiles }) => {
-  const [files, setFiles] = useState<any[]>([]);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const files = acceptedFiles.map((file) => (
+    <li key={file.name}>
+      {file.name} - {file.size} bytes
+    </li>
+  ));
 
   useEffect(() => {
     if (setVideoFiles) {
@@ -41,18 +46,29 @@ const VideoUpload: React.FC<IUploadMedia> = ({ spacing, editPatient, fieldName, 
     }
   }, [acceptedFiles]);
 
-  const updateFiles = (incommingFiles: any) => {
-    setFiles(incommingFiles);
-  };
-
   return (
     <Box>
       <section className="container">
-        <Dropzone onChange={updateFiles} value={files} accept="video/*" footer={false} label="Upload images here">
-          {files.map((file) => (
-            <FileMosaic {...file} preview />
-          ))}
-        </Dropzone>
+        <div {...getRootProps({ className: 'dropzone' })}>
+          <input {...getInputProps()} />
+          <Stack
+            sx={{ p: 4, borderStyle: 'dashed', borderColor: 'lightgray', borderWidth: 2 }}
+            direction={'column'}
+            spacing={spacing}
+            justifyContent={'center'}
+            alignItems={'center'}
+          >
+            <Typography>Drag & drop files here, or click below</Typography>
+            <Button variant="outlined" startIcon={<CloudUploadIcon />}>
+              Upload Files
+            </Button>
+          </Stack>
+        </div>
+        <aside>
+          {files.length > 0 && !editPatient ? <Typography sx={{ mt: 1 }}>Selected Files:</Typography> : null}
+          {files.length > 0 && editPatient ? <Typography sx={{ mt: 1, fontWeight: 600 }}>Files to Add:</Typography> : null}
+          <ul>{files}</ul>
+        </aside>
       </section>
     </Box>
   );
