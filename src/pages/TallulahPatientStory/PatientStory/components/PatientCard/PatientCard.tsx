@@ -42,7 +42,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
             {data.values?.firstName?.value} {data.values?.lastName?.value}
           </Typography>
           <Typography variant="body1" className={styles.age}>
-            Age : {data?.values.age.value} years
+            Age : {data?.values?.age?.value} years
             <Typography>Location : {data?.values?.zipCode?.value}</Typography>
             {data?.values?.diseaseType ? <Typography>Disease Type : {data?.values?.diseaseType?.value}</Typography> : null}
           </Typography>
