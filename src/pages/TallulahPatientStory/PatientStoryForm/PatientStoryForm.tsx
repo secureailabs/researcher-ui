@@ -96,7 +96,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const handleGenderChange = (event: any) => {
     setSelectedGender(event.target.value);
     handleFormDataChange(event);
-    // Add any additional logic for handling form data change
   };
 
   const handleRadioFormDataChange = (event: any) => {
@@ -132,6 +131,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       });
     }
   };
+
+  console.log('documentFiles', documentFiles);
 
   const renderField = (field: any) => {
     switch (field.type) {
@@ -439,8 +440,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         label: imageFile.fieldName,
         type: 'IMAGE'
       };
-      imageFile.files.forEach((file: File) => {
-        mediaUploadPromises.push(handleMediaUpload(file, 'IMAGE', imageFile.fieldName));
+      imageFile.files.forEach((file: any) => {
+        mediaUploadPromises.push(handleMediaUpload(file.file, 'IMAGE', imageFile.fieldName));
       });
     });
 
@@ -450,8 +451,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         label: videoFile.fieldName,
         type: 'VIDEO'
       };
-      videoFile.files.forEach((file: File) => {
-        mediaUploadPromises.push(handleMediaUpload(file, 'VIDEO', videoFile.fieldName));
+      videoFile.files.forEach((file: any) => {
+        mediaUploadPromises.push(handleMediaUpload(file.file, 'VIDEO', videoFile.fieldName));
       });
     });
 
@@ -461,8 +462,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         label: documentFile.fieldName,
         type: 'FILE'
       };
-      documentFile.files.forEach((file: File) => {
-        mediaUploadPromises.push(handleMediaUpload(file, 'FILE', documentFile.fieldName));
+      documentFile.files.forEach((file: any) => {
+        mediaUploadPromises.push(handleMediaUpload(file.file, 'FILE', documentFile.fieldName));
       });
     });
 
@@ -618,6 +619,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           </Box>
         </Box>
       )}
+      {/* id undefined means the form is being accessed via public link */}
       {id === undefined ? (
         <Box
           sx={{
@@ -656,37 +658,43 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       />
       <form onSubmit={handleSubmit}>
         <div>
-          {formLayout?.field_groups?.map((field: any) => (
-            <Box
-              key={field.name}
-              sx={{
-                marginY: '30px'
-              }}
-            >
-              <Typography
-                variant="h5"
+          {formLayout?.field_groups?.map((field: any) => {
+            const nonPrivateFields = field.fields.filter((field: any) => !field.private);
+            if (nonPrivateFields.length === 0) {
+              return null;
+            }
+            return (
+              <Box
+                key={field.name}
                 sx={{
-                  marginBottom: '20px'
+                  marginY: '30px'
                 }}
               >
-                {field.description}
-              </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    marginBottom: '20px'
+                  }}
+                >
+                  {field.description}
+                </Typography>
 
-              <Box className={styles.gridContainer}>
-                {field.fields.map((field: any) => (
-                  <Box
-                    key={field.name}
-                    className={`${styles.gridItem} ${spanFullWidth(field) ? styles.fullWidth : ''}`}
-                    sx={{
-                      width: '100%'
-                    }}
-                  >
-                    {renderField(field)}
-                  </Box>
-                ))}
+                <Box className={styles.gridContainer}>
+                  {field.fields.map((field: any) => (
+                    <Box
+                      key={field.name}
+                      className={`${styles.gridItem} ${spanFullWidth(field) ? styles.fullWidth : ''}`}
+                      sx={{
+                        width: '100%'
+                      }}
+                    >
+                      {renderField(field)}
+                    </Box>
+                  ))}
+                </Box>
               </Box>
-            </Box>
-          ))}
+            );
+          })}
         </div>
         {formLayout ? (
           <Button type="submit" variant="contained" fullWidth>

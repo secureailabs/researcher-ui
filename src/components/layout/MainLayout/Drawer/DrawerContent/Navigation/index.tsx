@@ -6,7 +6,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 
 // project import
 import NavGroup from './NavGroup';
-import { getMenuItemsList } from 'src/menu-items';
+import { getMenuItemsList, getSettingsMenuItemsList } from 'src/menu-items';
 
 import { useSelector } from 'src/store';
 import useConfig from 'src/hooks/useConfig';
@@ -15,14 +15,19 @@ import { HORIZONTAL_MAX_ITEM } from 'src/config';
 // types
 import { NavItemType } from 'src/types/menu';
 import { LAYOUT_CONST } from 'src/types/config';
+import { SideBarMenuEnum } from '../../..';
 
 // ==============================|| DRAWER CONTENT - NAVIGATION ||============================== //
 
-const Navigation = () => {
+interface Props {
+  sideBarMenuType: SideBarMenuEnum;
+}
+
+const Navigation = ({ sideBarMenuType }: Props) => {
   const userProfile = useSelector((state) => state.userprofile);
   const userRole = userProfile.roles;
 
-  let menuItems = getMenuItemsList();
+  let menuItems = sideBarMenuType === SideBarMenuEnum.SETTINGS ? getSettingsMenuItemsList() : getMenuItemsList();
 
   const theme = useTheme();
 
@@ -51,7 +56,11 @@ const Navigation = () => {
   }
 
   useEffect(() => {
-    menuItems = getMenuItemsList();
+    if (sideBarMenuType === SideBarMenuEnum.SETTINGS) {
+      menuItems = getSettingsMenuItemsList();
+    } else {
+      menuItems = getMenuItemsList();
+    }
   }, [userProfile.roles]);
 
   const navGroups = menuItems.items.slice(0, lastItemIndex + 1).map((item) => {

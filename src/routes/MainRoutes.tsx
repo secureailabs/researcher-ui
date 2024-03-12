@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
 import MainLayout from 'src/components/layout/MainLayout';
+import ResetPassword from 'src/pages/AdminPages/ResetPassword';
 import ContentGeneration from 'src/pages/TallulahContentGeneration/ContentGeneration';
 import ContentGenerationForm from 'src/pages/TallulahContentGeneration/ContentGenerationForm';
 

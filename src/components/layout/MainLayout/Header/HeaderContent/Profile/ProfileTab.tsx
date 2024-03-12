@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // material-ui
-import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { List, ListItemButton, ListItemIcon, ListItemText, Switch } from '@mui/material';
 
 // assets
 import { EditOutlined, ProfileOutlined, LogoutOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 // ==============================|| HEADER PROFILE - PROFILE TAB ||============================== //
 
@@ -14,9 +15,22 @@ interface Props {
 
 const ProfileTab = ({ handleLogout }: Props) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  const navigate = useNavigate();
+
   const handleListItemClick = (event: React.MouseEvent<HTMLDivElement>, index: number) => {
     setSelectedIndex(index);
   };
+
+  useEffect(() => {
+    switch (selectedIndex) {
+      case 0:
+        navigate('/settings/password-reset');
+        break;
+      default:
+        break;
+    }
+  }, [selectedIndex]);
 
   return (
     <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32 } }}>
@@ -24,7 +38,7 @@ const ProfileTab = ({ handleLogout }: Props) => {
         <ListItemIcon>
           <UserOutlined />
         </ListItemIcon>
-        <ListItemText primary="View Profile" />
+        <ListItemText primary="Reset Password" />
       </ListItemButton>
       <ListItemButton selected={selectedIndex === 1} onClick={handleLogout}>
         <ListItemIcon>

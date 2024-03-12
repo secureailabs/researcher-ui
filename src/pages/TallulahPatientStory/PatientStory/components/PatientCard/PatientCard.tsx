@@ -42,7 +42,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
             {data.values?.firstName?.value} {data.values?.lastName?.value}
           </Typography>
           <Typography variant="body1" className={styles.age}>
-            Age : {data?.values.age.value} years
+            Age : {data?.values?.age?.value} years
             <Typography>Location : {data?.values?.zipCode?.value}</Typography>
             {data?.values?.diseaseType ? <Typography>Disease Type : {data?.values?.diseaseType?.value}</Typography> : null}
           </Typography>
@@ -61,7 +61,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
           marginTop: '1rem'
         }}
       >
-        {convertTagsStringToArray(data?.values?.storyTags?.value).map((tag: string) => (
+        {convertTagsStringToArray(data?.values?.tags?.value).map((tag: string) => (
           <Box className={styles.tag}>{tag}</Box>
         ))}
       </Box>
@@ -80,7 +80,7 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
               WebkitLineClamp: 3
             }}
           >
-            {data.values?.patientStory?.value}
+            {data.values?.patientStory?.value ? data.values?.patientStory?.value : 'n/a'}
           </Typography>
         </Box>
       </Box>

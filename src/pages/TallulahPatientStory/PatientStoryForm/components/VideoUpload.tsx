@@ -1,6 +1,5 @@
 import { Box, Button, Stack } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useDropzone, FileRejection } from 'react-dropzone';
 import { TVideoUpload } from '../PatientStoryForm';
 import { Dropzone, FileMosaic } from '@dropzone-ui/react';
 
@@ -16,9 +15,8 @@ export interface IUploadMedia {
   fieldName: string;
 }
 
-const VideoUpload: React.FC<IUploadMedia> = ({ spacing, editPatient, fieldName, setVideoFiles }) => {
+const VideoUpload: React.FC<IUploadMedia> = ({ fieldName, setVideoFiles }) => {
   const [files, setFiles] = useState<any[]>([]);
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
   useEffect(() => {
     if (setVideoFiles) {
@@ -28,18 +26,18 @@ const VideoUpload: React.FC<IUploadMedia> = ({ spacing, editPatient, fieldName, 
         if (fileIndex === -1) {
           newDocumentFiles.push({
             fieldName: fieldName,
-            files: acceptedFiles
+            files: files
           });
         } else {
           newDocumentFiles[fileIndex] = {
             fieldName: fieldName,
-            files: acceptedFiles
+            files: files
           };
         }
         return newDocumentFiles;
       });
     }
-  }, [acceptedFiles]);
+  }, [fieldName, files, setVideoFiles]);
 
   const updateFiles = (incommingFiles: any) => {
     setFiles(incommingFiles);
@@ -48,7 +46,7 @@ const VideoUpload: React.FC<IUploadMedia> = ({ spacing, editPatient, fieldName, 
   return (
     <Box>
       <section className="container">
-        <Dropzone onChange={updateFiles} value={files} accept="video/*" footer={false} label="Upload images here">
+        <Dropzone onChange={updateFiles} value={files} accept="video/*" footer={false} label="Upload video here">
           {files.map((file) => (
             <FileMosaic {...file} preview />
           ))}

@@ -1,9 +1,7 @@
 import { Box, Button, Stack } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useDropzone, FileRejection } from 'react-dropzone';
-import { Typography } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { TDocumentFileUpload } from '../PatientStoryForm';
+import { Dropzone, FileMosaic } from '@dropzone-ui/react';
 
 export interface IFile {
   url: string;
@@ -17,58 +15,44 @@ export interface IUploadMedia {
   fieldName: string;
 }
 
-const DocumentsUpload: React.FC<IUploadMedia> = ({ spacing, editPatient, fieldName, setDocumentFiles }) => {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-  const files = acceptedFiles.map((file) => (
-    <li key={file.name}>
-      {file.name} - {file.size} bytes
-    </li>
-  ));
+const DocumentsUpload: React.FC<IUploadMedia> = ({ fieldName, setDocumentFiles }) => {
+  const [files, setFiles] = useState<any[]>([]);
+
+  const updateFiles = (incomingFiles: any) => {
+    setFiles(incomingFiles);
+  };
 
   useEffect(() => {
+    console.log('files1');
     if (setDocumentFiles) {
+      console.log('files2');
       setDocumentFiles((prev: TDocumentFileUpload[]) => {
         const newDocumentFiles: TDocumentFileUpload[] = [...prev];
         const fileIndex = newDocumentFiles.findIndex((file) => file.fieldName === fieldName);
         if (fileIndex === -1) {
           newDocumentFiles.push({
             fieldName: fieldName,
-            files: acceptedFiles
+            files: files
           });
         } else {
           newDocumentFiles[fileIndex] = {
             fieldName: fieldName,
-            files: acceptedFiles
+            files: files
           };
         }
         return newDocumentFiles;
       });
     }
-  }, [acceptedFiles]);
+  }, [fieldName, files, setDocumentFiles]);
 
   return (
     <Box>
       <section className="container">
-        <div {...getRootProps({ className: 'dropzone' })}>
-          <input {...getInputProps()} />
-          <Stack
-            sx={{ p: 4, borderStyle: 'dashed', borderColor: 'lightgray', borderWidth: 2 }}
-            direction={'column'}
-            spacing={spacing}
-            justifyContent={'center'}
-            alignItems={'center'}
-          >
-            <Typography>Drag & drop files here, or click below</Typography>
-            <Button variant="outlined" startIcon={<CloudUploadIcon />}>
-              Upload Files
-            </Button>
-          </Stack>
-        </div>
-        <aside>
-          {files.length > 0 && !editPatient ? <Typography sx={{ mt: 1 }}>Selected Files:</Typography> : null}
-          {files.length > 0 && editPatient ? <Typography sx={{ mt: 1, fontWeight: 600 }}>Files to Add:</Typography> : null}
-          <ul>{files}</ul>
-        </aside>
+        <Dropzone onChange={updateFiles} value={files} maxFiles={5} footer={false} label="Upload files here">
+          {files.map((file) => (
+            <FileMosaic {...file} preview />
+          ))}
+        </Dropzone>
       </section>
     </Box>
   );
