@@ -5,12 +5,15 @@ import {
   FormDataService,
   FormTemplatesService,
   GetFormData_Out,
+  GetFormTemplate_Out,
   GetMultipleFormData_Out,
   GetMultipleFormTemplate_Out
 } from 'src/tallulah-ts-client';
 import PatientCard from './components/PatientCard';
 import SearchBar from 'src/components/SearchBar';
 import PatientDetailViewModal from './components/PatientDetailViewModal';
+import CardTemplates from './components/CardTemplates';
+import { TemplateNames } from './components/CardTemplates/CardTemplates';
 
 export interface IPatientStory {}
 
@@ -20,6 +23,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [formData, setFormData] = useState<GetFormData_Out[]>([]);
   const [filteredData, setFilteredData] = useState<GetFormData_Out[]>([]); // filteredData is a subset of formData
   const [publishedFormId, setPublishedFormId] = useState<string>('');
+  const [formTemplate, setFormTemplate] = useState<GetFormTemplate_Out>();
   const [selectedPatientData, setSelectedPatientData] = useState<any>(null);
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
   const [isFormDataFetching, setIsFormDataFetching] = useState<boolean>(false);
@@ -45,6 +49,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       // filter the published state
       const filteredData = res.templates.filter((formTemplate) => formTemplate.state === 'PUBLISHED');
       setPublishedFormId(filteredData[0]._id);
+      setFormTemplate(filteredData[0]);
       fetchFormData(filteredData[0]._id);
     } catch (err) {
       console.log(err);
@@ -150,7 +155,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       ) : null}
 
       <Grid container spacing={3}>
-        {filteredData.map((patientData: any) => (
+        {filteredData.map((patientData: GetFormData_Out) => (
           <Grid
             item
             key={patientData._id}
@@ -164,7 +169,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
             }}
             className={styles.patientCardGridItem}
           >
-            <PatientCard data={patientData} />
+            <CardTemplates data={patientData} templateName={TemplateNames.TEMPLATE4} formTemplate={formTemplate} />
           </Grid>
         ))}
       </Grid>

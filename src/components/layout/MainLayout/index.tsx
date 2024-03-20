@@ -107,11 +107,8 @@ const MinimalLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Eleme
     },
     async (error) => {
       const originalRequest = error.config;
-      if (error.response?.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
-        await refreshAuthToken();
-        originalRequest.headers['Authorization'] = `Bearer ${OpenAPI.TOKEN}`;
-        return axios(originalRequest);
+      if (error.response?.status === 401) {
+        handleLogout();
       }
       return Promise.reject(error);
     }

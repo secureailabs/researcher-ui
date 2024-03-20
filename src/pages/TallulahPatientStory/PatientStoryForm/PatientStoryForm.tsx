@@ -132,8 +132,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     }
   };
 
-  console.log('documentFiles', documentFiles);
-
   const renderField = (field: any) => {
     switch (field.type) {
       case 'STRING':
