@@ -33,7 +33,7 @@ import axios from 'axios';
 import VideoUpload from './components/VideoUpload';
 import useNotification from 'src/hooks/useNotification';
 import Lottie from 'lottie-react';
-import checkMarkAnimantion from 'src/assets/lottie/check_mark.json';
+import checkMarkAnimation from 'src/assets/lottie/check_mark.json';
 
 export interface IPatientStoryForm {}
 
@@ -67,6 +67,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const [uploaded, setUploaded] = useState<boolean>(false);
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
   const [selectedGender, setSelectedGender] = useState('');
+  console.log('formData', formData);
 
   const [sendNotification] = useNotification();
   let { id } = useParams();
@@ -83,14 +84,14 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
 
   const handleFormDataChange = (event: any) => {
     console.log(event.target.name, event.target.value);
-    setFormData({
-      ...formData,
-      [event.target.name]: {
-        value: event.target.value,
-        label: getCorrespondingLabel(event.target.name),
-        type: getCorrespondingType(event.target.name)
-      }
-    });
+
+    const newFormData = { ...formData };
+    newFormData[event.target.name] = {
+      value: event.target.value,
+      label: getCorrespondingLabel(event.target.name),
+      type: getCorrespondingType(event.target.name)
+    };
+    setFormData(newFormData);
   };
 
   const handleGenderChange = (event: any) => {
@@ -385,6 +386,18 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     try {
       const res: GetFormTemplate_Out = await FormTemplatesService.getPublishedFormTemplate(id);
       setFormLayout(res);
+      // create form data object with empty values
+      const formDataObj: any = {};
+      res?.field_groups
+        ?.flatMap((fieldGroup: any) => fieldGroup.fields)
+        .forEach((field: any) => {
+          formDataObj[field.name] = {
+            value: '',
+            label: field.label,
+            type: field.type
+          };
+        });
+      setFormData(formDataObj);
     } catch (err) {
       console.log(err);
     }
@@ -398,6 +411,18 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       const filteredData = res.templates.filter((formTemplate: any) => formTemplate.state === 'PUBLISHED');
       const formTemplate = filteredData[0];
       setFormLayout(formTemplate);
+      // create form data object with empty values
+      const formDataObj: any = {};
+      formTemplate?.field_groups
+        ?.flatMap((fieldGroup: any) => fieldGroup.fields)
+        .forEach((field: any) => {
+          formDataObj[field.name] = {
+            value: '',
+            label: field.label,
+            type: field.type
+          };
+        });
+      setFormData(formDataObj);
     } catch (err) {
       console.log(err);
     }
@@ -613,7 +638,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
               height: '60%'
             }}
           >
-            <Lottie animationData={checkMarkAnimantion} loop={false} />;
+            <Lottie animationData={checkMarkAnimation} loop={false} />;
           </Box>
         </Box>
       )}
