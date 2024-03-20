@@ -14,8 +14,6 @@ const Template1: React.FC<ICard> = ({ data, formTemplate }) => {
   const profileImageId =
     data?.values.profilePicture?.value && data?.values.profilePicture?.value.length > 0 ? data?.values.profilePicture.value[0].id : null;
 
-  console.log('data', data);
-
   const fetchProfileImage = async () => {
     if (!profileImageId) return;
     try {

@@ -23,9 +23,7 @@ const DocumentsUpload: React.FC<IUploadMedia> = ({ fieldName, setDocumentFiles }
   };
 
   useEffect(() => {
-    console.log('files1');
     if (setDocumentFiles) {
-      console.log('files2');
       setDocumentFiles((prev: TDocumentFileUpload[]) => {
         const newDocumentFiles: TDocumentFileUpload[] = [...prev];
         const fileIndex = newDocumentFiles.findIndex((file) => file.fieldName === fieldName);

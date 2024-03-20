@@ -67,7 +67,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const [uploaded, setUploaded] = useState<boolean>(false);
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
   const [selectedGender, setSelectedGender] = useState('');
-  console.log('formData', formData);
 
   const [sendNotification] = useNotification();
   let { id } = useParams();
@@ -83,8 +82,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   };
 
   const handleFormDataChange = (event: any) => {
-    console.log(event.target.name, event.target.value);
-
     const newFormData = { ...formData };
     newFormData[event.target.name] = {
       value: event.target.value,
