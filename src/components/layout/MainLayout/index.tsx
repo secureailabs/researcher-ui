@@ -38,7 +38,7 @@ const BreadcrumbsWrapper = (): JSX.Element => {
   );
 };
 
-const MinimalLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Element => {
+const MainLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Element => {
   const [leftDrawerOpened, setLeftDrawerOpened] = useState(true);
   const [open, setOpen] = useState(true);
   const dispatch = useDispatch();
@@ -155,7 +155,7 @@ const MinimalLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Eleme
 
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#f5f5f5', position: 'relative' }}>
-      {process.env.REACT_APP_ENV === 'development' && (
+      {/* {process.env.REACT_APP_ENV === 'development' && (
         <Box
           sx={{
             position: 'sticky',
@@ -174,7 +174,7 @@ const MinimalLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Eleme
         >
           Development
         </Box>
-      )}
+      )} */}
 
       <Header open={open} handleDrawerToggle={handleDrawerToggle} />
       <Drawer open={open} handleDrawerToggle={handleDrawerToggle} sideBarMenuType={sideBarMenuType} />
@@ -199,4 +199,4 @@ const MinimalLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Eleme
   );
 };
 
-export default MinimalLayout;
+export default MainLayout;

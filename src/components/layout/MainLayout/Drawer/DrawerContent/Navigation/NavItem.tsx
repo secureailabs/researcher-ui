@@ -114,7 +114,12 @@ const NavItem = ({ item, level }: Props) => {
             })
           }}
           {...(matchDownLg && {
-            onClick: () => dispatch(openDrawer(false))
+            onClick: () =>
+              dispatch(
+                openDrawer({
+                  drawerOpen: !drawerOpen
+                })
+              )
           })}
         >
           {itemIcon && (

@@ -10,6 +10,7 @@ import HeaderContent from './HeaderContent';
 import IconButton from 'src/components/extended/IconButton';
 
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { DRAWER_WIDTH, DRAWER_WIDTH_COLLAPSED } from 'src/config';
 
 // ==============================|| MAIN LAYOUT - HEADER ||============================== //
 
@@ -33,16 +34,8 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
         justifyContent: 'space-between'
       }}
     >
-      <IconButton
-        aria-label="open drawer"
-        onClick={handleDrawerToggle}
-        edge="start"
-        color="primary"
-        variant="dashed"
-        shape="square"
-        sx={{ color: 'text.primary' }}
-      >
-        {!open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+      <IconButton aria-label="open drawer" onClick={handleDrawerToggle} edge="start" color="primary" variant="text" shape="square">
+        {!open ? <MenuUnfoldOutlined /> : <MenuUnfoldOutlined />}
       </IconButton>
       {headerContent}
     </Toolbar>
@@ -56,7 +49,7 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
     sx: {
       borderBottom: `1px solid ${theme.palette.divider}`,
       zIndex: 1200,
-      width: open ? 'calc(100% - 260px)' : { xs: '100%', lg: 'calc(100% - 60px)' }
+      width: open ? `calc(100% - ${DRAWER_WIDTH}px)` : `calc(100% - ${DRAWER_WIDTH_COLLAPSED}px)`
     }
   };
 
