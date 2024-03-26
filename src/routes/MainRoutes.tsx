@@ -1,9 +1,6 @@
 import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
 import MainLayout from 'src/components/layout/MainLayout';
-import ResetPassword from 'src/pages/AdminPages/ResetPassword';
-import ContentGeneration from 'src/pages/TallulahContentGeneration/ContentGeneration';
-import ContentGenerationForm from 'src/pages/TallulahContentGeneration/ContentGenerationForm';
 
 const Home = Loadable(lazy(async () => await import('src/pages/Home')));
 const TallulahSearch = Loadable(lazy(async () => await import('src/pages/TallulahSearch')));
@@ -14,6 +11,9 @@ const MSAuthorize = Loadable(lazy(async () => await import('src/pages/MSAuthoriz
 const TallulahEmailResponseTemplate = Loadable(lazy(async () => await import('src/pages/TallulahEmailResponseTemplate')));
 const PatientStoryForm = Loadable(lazy(async () => await import('src/pages/TallulahPatientStory/PatientStoryForm')));
 const PatientStory = Loadable(lazy(async () => await import('src/pages/TallulahPatientStory/PatientStory')));
+const ContentGeneration = Loadable(lazy(async () => await import('src/pages/TallulahContentGeneration/ContentGeneration')));
+const ContentGenerationForm = Loadable(lazy(async () => await import('src/pages/TallulahContentGeneration/ContentGenerationForm')));
+const TallulahPatientProfile = Loadable(lazy(async () => await import('src/pages/TallulahPatientProfile')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -75,6 +75,10 @@ const MainRoutes = {
     {
       path: 'content-generation',
       element: <ContentGeneration />
+    },
+    {
+      path: 'patient-profile',
+      element: <TallulahPatientProfile />
     }
   ]
 };

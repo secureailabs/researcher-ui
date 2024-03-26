@@ -1,6 +1,5 @@
 import { Box, Typography } from '@mui/material';
 import styles from './ContentDetailView.module.css';
-import { GetContentGenerationTemplate_Out } from 'src/tallulah-ts-client';
 import { formatReceivedTimeFull } from 'src/utils/helper';
 
 export interface IContentDetailView {
@@ -38,8 +37,8 @@ const ContentDetailView: React.FC<IContentDetailView> = ({ data, getTemplateName
 
   return (
     <Box>
-      <LabelValue label="Template Name" value={getTemplateName(data.template_id) as string} />
-      <LabelValue label="Created On" value={formatReceivedTimeFull(data.creation_time)} />
+      <LabelValue label="Template Name" value={getTemplateName(data?.template_id) as string} />
+      <LabelValue label="Created On" value={formatReceivedTimeFull(data?.creation_time)} />
 
       <Box
         sx={{
@@ -83,7 +82,7 @@ const ContentDetailView: React.FC<IContentDetailView> = ({ data, getTemplateName
         <Typography variant="h6" className={styles.label}>
           Generated Content
         </Typography>
-        {paragraphs.map((paragraph: any, index: any) => (
+        {paragraphs?.map((paragraph: any, index: any) => (
           <Typography
             key={index}
             variant="body1"

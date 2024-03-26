@@ -155,7 +155,7 @@ const MainLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Element 
 
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#f5f5f5', position: 'relative' }}>
-      {/* {process.env.REACT_APP_ENV === 'development' && (
+      {process.env.REACT_APP_ENV === 'development' && (
         <Box
           sx={{
             position: 'sticky',
@@ -174,7 +174,7 @@ const MainLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Element 
         >
           Development
         </Box>
-      )} */}
+      )}
 
       <Header open={open} handleDrawerToggle={handleDrawerToggle} />
       <Drawer open={open} handleDrawerToggle={handleDrawerToggle} sideBarMenuType={sideBarMenuType} />

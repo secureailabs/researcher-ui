@@ -47,7 +47,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     try {
       const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
       // filter the published state
-      const filteredData = res.templates.filter((formTemplate) => formTemplate.state === 'PUBLISHED');
+      const filteredData = res.templates.filter((formTemplate: any) => formTemplate.state === 'PUBLISHED');
       setPublishedFormId(filteredData[0]._id);
       setFormTemplate(filteredData[0]);
       fetchFormData(filteredData[0]._id);
