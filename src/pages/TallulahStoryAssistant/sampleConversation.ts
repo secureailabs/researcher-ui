@@ -205,10 +205,10 @@ const conversation = [
 <p>[Your Name]</p>
 <p>[Your Organization]</p>
 <p>[Contact Information]</p>`
-},
-{
-  question: 'Facebook',
-  answer: `<p>Here are several different ways you can announce John's journey and fundraising efforts on Facebook:</p>
+  },
+  {
+    question: 'Facebook',
+    answer: `<p>Here are several different ways you can announce John's journey and fundraising efforts on Facebook:</p>
 
   <p>1. <strong>Simple Announcement:</strong></p>
   <p>   🏃‍♂️ John's Journey: Running Towards a Cure for AML 🏃‍♂️</p>
@@ -240,7 +240,45 @@ const conversation = [
   <p>Host a live video or interview with John where he can share his story, his goals, and why this cause is so important. Encourage viewers to participate and donate during the live session.</p>
   
   <p>Feel free to mix and match these ideas or adapt them to your own writing style and personality when sharing John's story and mission on Facebook.</p>`
-}
+  },
+  {
+    question: 'clinical study',
+    answer: `<p>Dear Hannah,</p>
+    <p>I hope this email finds you in good spirits. I am writing to you on behalf of the <strong>Susan G. Komen Foundation</strong> to extend a heartfelt invitation to join a clinical study focused on lifestyle interventions for patients with early-stage triple negative breast cancer, specifically during chemotherapy (<em>ClinicalTrials.gov Identifier: NCT04174391</em>).</p>
+
+    <p>Your journey, marked by determination amidst the challenges of a global pandemic, delayed screenings, and the quest for a healthcare team attuned to your unique dietary needs, resonates with the core of our study's purpose. We aim to explore how tailored dietary guidance can enhance treatment efficacy and patient well-being, considering the significant role that diet, including phyto-estrogens, plays in your treatment journey.</p>
+
+    <p>This study offers an opportunity to not only potentially improve your own treatment experience but also contribute to broader research that could benefit many facing similar challenges. Your participation would be invaluable, providing insights that only someone with your unique perspective and experiences can offer.</p>
+
+    <p>If you're interested or have any questions, please don't hesitate to reach out to us. Your participation is voluntary, and we're here to support you with all the information you need to make an informed decision.</p>
+
+    <p>Thank you for considering this opportunity to make a difference in the fight against breast cancer. We look forward to potentially welcoming you into our study community.</p>
+
+    <p>Warm regards,</p>
+    <p>[Your Name]<br>
+    [Your Position]<br>
+    <strong>Susan G. Komen Foundation</strong><br>
+    [Contact Information]</p>`
+  },
+  {
+    question: 'interest written from',
+    answer: ` <p>Dear Hannah,</p>
+
+    <p>I hope this email finds you well. My name is Linda Liu, and like you, I am navigating the journey of living with triple negative breast cancer. I was diagnosed in late 2022, and just like you, I've faced the unique challenges of managing our condition alongside our dietary habits influenced by our Asian heritage.</p>
+
+    <p>Our paths might be different, yet they resonate deeply with shared experiences - from the hurdles of finding healthcare professionals who understand the intricacies of our diets to the relentless pursuit of treatments that respect our bodies' unique reactions, particularly to phyto-estrogens. Your story, especially your determination in the face of such challenges, has inspired me to reach out to you.</p>
+
+    <p>I am writing to share an opportunity that I believe could be beneficial for both of us. The <strong>Susan G. Komen Foundation</strong> is conducting a clinical study focused on lifestyle interventions for patients with early-stage triple negative breast cancer undergoing chemotherapy. Given our shared experiences and the focus on dietary impacts, I thought of you immediately. This study aims to explore how tailored dietary changes can potentially enhance our treatment outcomes and overall well-being.</p>
+
+    <p>I understand that this is a significant decision, and there's a lot to consider. Participating in this study feels like a step forward, not just for our own healing, but also in contributing to research that could help others in our situation feel seen and understood.</p>
+
+    <p>I truly believe that by sharing our stories and experiences, we can help each other navigate this journey with a bit more hope and less isolation. If you're interested in learning more about this study, or if you just need someone to talk to who understands what you're going through, please feel free to reach out.</p>
+
+    <p>Take care, and I hope to hear from you soon.</p>
+
+    <p>Warmest regards,<br>
+    Linda Liu</p>`
+  }
 ];
 
 export default conversation;

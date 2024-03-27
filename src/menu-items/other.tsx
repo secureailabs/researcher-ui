@@ -106,6 +106,20 @@ const other: any = {
           type: 'item',
           url: '/translate-to-structured-data',
           target: false
+        },
+        {
+          id: 'content-generation',
+          title: 'Content Generation',
+          type: 'item',
+          url: '/content-generation',
+          target: false
+        },
+        {
+          id: 'content-generation-form',
+          title: 'Content Generation Form',
+          type: 'item',
+          url: '/content-generation-form',
+          target: false
         }
       ]
     }

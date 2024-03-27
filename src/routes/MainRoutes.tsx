@@ -11,6 +11,8 @@ import SocialSearchResults from 'src/pages/TallulahStorySolicit/components/RunSe
 import StoryViaVideo from 'src/pages/StoryViaVideo';
 import StoryViaAudio from 'src/pages/StoryViaAudio';
 import TranslateToStructured from 'src/pages/TranslateToStructured';
+import ContentGeneration from 'src/pages/TallulahContentGeneration/ContentGeneration';
+import ContentGenerationForm from 'src/pages/TallulahContentGeneration/ContentGenerationForm';
 
 // const Home = Loadable(lazy(async () => await import('src/pages/home')));
 const DataModel = Loadable(lazy(async () => await import('src/pages/DataModel')));
@@ -81,6 +83,14 @@ const MainRoutes = {
     {
       path: 'translate-to-structured-data',
       element: <TranslateToStructured />
+    },
+    {
+      path: 'content-generation-form',
+      element: <ContentGenerationForm />
+    },
+    {
+      path: 'content-generation',
+      element: <ContentGeneration />
     }
     // {
     //   path: 'home',

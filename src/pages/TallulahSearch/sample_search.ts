@@ -10,7 +10,7 @@ const SAMPLE_DATA = [
       Location: [37.4747, -121.7513],
       'Life Story':
         'John was diagnosed with AML after feeling extremely fatigued for 3 weeks in January 2022. He was always very active and was having trouble working out for more than 2 minutes. He and has undergone an aggressive treatment plan, including chemotherapy. Despite experiencing side effects like fatigue, nausea, and hair loss, John remained committed to his treatment plan. He responded well to treatment and is currently in remission. John faced challenges related to his job during treatment but received support from his employer, allowing him to work remotely when needed. John heard about Leukaemia Warriors United from his physician at Stanford and said he used the online education resources to learn more about what to expect during treatment. He also signed up for the patient registry. Now that he is in remission, he is fundraising for the upcoming 5k and is training to run.',
-      Tags: ['Patient', 'Acute Myeloid Leukaemia', 'White/Caucasian', 'Registry Member'],
+      Tags: ['Patient', 'Acute Myeloid Leukaemia', 'White', 'Registry Member'],
       gender: 'MALE',
       ethnicity: 'White',
       location: 'Oakridge, California',
@@ -23,13 +23,13 @@ const SAMPLE_DATA = [
       relatedDisease: 'Lumpectomy',
       outcome: 'Partial Remission',
       diseaseType: 'Acute Myeloid Leukaemia',
-      diagnosisDate:'01/25/2022',
-      firstSymptomsDate:'01/03/2022',
+      diagnosisDate: '01/25/2022',
+      firstSymptomsDate: '01/03/2022',
       tone: 'Upbeat, Hero’s Journey',
       barriersToCare: 'Time off work',
       storyUsage: 'Summer Campaign 2023',
       outboundCommunication: 'Monthly Newsletter, West Coast Events, National Events',
-      Comments:'',
+      Comments: '',
       insuranceAccess: 'Medicare',
       documentName: 'John Interview July 2022.docx',
       documentName2: 'Web Story Intake Form_6.10.2022.docx',
@@ -147,7 +147,7 @@ const SAMPLE_DATA = [
     _source: {
       Name: 'Sarah Mitchell',
       Age: 42,
-      Location: [29.9559, -95.5460],
+      Location: [29.9559, -95.546],
       'Life Story':
         "Sarah Mitchell, is a 42-year-old woman, was diagnosed with Chronic Lymphocytic Leukaemia (CLL). Sarah received her CLL diagnosis after her general physician noticed enlarged lymph nodes during her annual physical. Her doctor recommended participation in a clinical trial for a bone marrow transplant, which offered a potentially curative treatment option. However, the clinical trial was located in another state, creating significant financial and logistical challenges. Sarah was an elementary school teacher and the transplant recovery required her to take an extended, unpaid leave of absence from her job. This loss of income, combined with the added expenses associated with her medical care and travel, was the primary reason why she needed financial assistance from the patient organization. In her search for assistance, she came across Leukaemia Warriors United and applied financial assistance to cover travel and lodging expenses. She underwent a bone marrow transplant as part of the trial, facing both physical and emotional challenges during treatment. Sarah's perseverance paid off, and the bone marrow transplant was successful. Over time, she saw a significant improvement in her health, and her CLL went into remission. Sarah's journey, while challenging, ultimately led to a positive outcome, and she was able to return to her normal life with a renewed sense of hope. ",
       Tags: [
@@ -171,13 +171,13 @@ const SAMPLE_DATA = [
       relatedDisease: 'Breast Cancer',
       outcome: 'Remission',
       diseaseType: 'Chronic Lymphocytic Leukaemia',
-      diagnosisDate:'06/14/2017',
-      firstSymptomsDate:'02/22/2017',
+      diagnosisDate: '06/14/2017',
+      firstSymptomsDate: '02/22/2017',
       tone: 'Hopeful',
       barriersToCare: 'Financial, Travel',
       storyUsage: 'Spring 2023 Direct Mailing, December 2022 Blog Post',
       outboundCommunication: 'Monthly Newsletter, West Coast Events, National Events',
-      Comments:'',
+      Comments: '',
       insuranceAccess: 'Financial Assistance',
       documentName: 'Sarah Interview 1.docx',
       documentName2: 'Web Story Intake Form_6.10.2022.docx',
@@ -310,13 +310,13 @@ const SAMPLE_DATA = [
       documentName2: 'Web Story Intake Form_6.10.2022.docx',
       outcome: 'Unsuccessful',
       diseaseType: 'Acute Lymphoblastic Leukaemia',
-      diagnosisDate:'12/02/2020',
-      firstSymptomsDate:'11/19/2020',
+      diagnosisDate: '12/02/2020',
+      firstSymptomsDate: '11/19/2020',
       tone: 'Somber, Reflective, Hope',
       barriersToCare: 'N/A',
       storyUsage: 'Annual Giving Campaign 2022, Peer-to-peer Website Page, Monthly Newsletter (Aug. 21)',
       outboundCommunication: 'Peer-to-peer, Monthly Newsletter, National Events ',
-      Comments:'',
+      Comments: '',
       Picture_gender: {
         Value: 'Female',
         Confidence: 99.99440002441406
@@ -426,12 +426,12 @@ const SAMPLE_DATA = [
     _score: 1.0,
     _ignored: ['Life Story.keyword', 'Additional Documents_content.keyword'],
     _source: {
-      Name: 'Emily Chen',
+      Name: 'Aiko Yamamoto',
       Age: 3,
-      Location: [41.4090, -75.6624],
+      Location: [41.409, -75.6624],
       'Life Story':
-        'Emily is a patient, a 3-year-old girl of Asia/Pacific Islander with Acute Lymphoblastic Leukemia. Emily was diagnosed with ALL at 18 months, and her medical team at CHOP immediately started her on chemotherapy to control the disease. Because Emily’s mom Lisa had to stop working to care for her during this time, they had issues with their insurance coverage. They reached out to Leukemia Warriors United to ask about financial assistance and applied. They were so thankful to receive the financial support - it helped them concentrate on Emily getting better, rather than how they were going to pay for treatment. Emily initially went into remission, however, she relapsed and the best treatment option is now a bone marrow transplant. She joined the patient registry and did family testing and they found that her older sister Sarah was a match. Emily’s transplant is scheduled for August 2023. Update 9/23: Initial transplant was successful, Emily and sister are doing well. Waiting for engraftment - see social media by mom Lisa @MonaLisaMom for updates ',
-      Tags: ['Patient', 'Pediatric', 'Acute Lymphoblastic Leukaemia', 'Asia/Pacific Islander', 'Patient Registry', 'Transplant Recipient', 'Chemotherapy'],
+        "Aiko Yamamoto, a joyful and spirited 3-year-old, faces a challenging journey ahead. In early 2024, Aiko was diagnosed with a rare genetic disorder called Pompe disease, which affects muscle and nerve function, leading to progressive muscle weakness. Her parents, both dedicated and loving, were devastated by the news but remain hopeful. The rarity of Pompe disease means treatment options are limited and costly, involving specialized enzyme replacement therapy not readily available in Japan. Aiko's family has embarked on a heartfelt mission to raise funds for her treatment and to increase awareness of her condition.",
+      Tags: ['Patient', 'Pediatric', 'Patient Registry', 'Transplant Recipient', 'asian'],
       storyUsed: 3,
       Picture_source: 'images/like_image2.jpg',
       imageName: 'sf-9.png',
@@ -448,13 +448,13 @@ const SAMPLE_DATA = [
       documentName2: '9.23 Phone Call Notes.pdf',
       outcome: 'Remission',
       diseaseType: 'Acute Lymphoblastic Leukaemia',
-      diagnosisDate:'02/25/2022',
-      firstSymptomsDate:'12/15/2021',
+      diagnosisDate: '02/25/2022',
+      firstSymptomsDate: '12/15/2021',
       tone: 'Happy, Family',
       barriersToCare: 'N/A',
       storyUsage: '',
       outboundCommunication: 'Monthly Newsletter',
-      Comments:'',
+      Comments: '',
       Picture_gender: {
         Value: 'Female',
         Confidence: 99.99440002441406
@@ -556,6 +556,110 @@ const SAMPLE_DATA = [
       'Additional Documents_source': 'mary_demo_doc.docx',
       'Additional Documents_content': '',
       consentStatus: 'Granted July  2023'
+    }
+  },
+  {
+    _index: 'patient_stories_v2',
+    _id: 'jM-XsokBcSxl6T_-Y7IB',
+    _score: 1.0,
+    _ignored: ['Life Story.keyword', 'Additional Documents_content.keyword'],
+    _source: {
+      Name: 'Hannah Zhang',
+      Age: 34,
+      Location: [34.0522, -118.2437], // Los Angeles coordinates for representation
+      'Life Story':
+        "Hannah Zhang was diagnosed with triple negative breast cancer in early 2021, a time already fraught with global healthcare challenges due to the COVID-19 pandemic. Despite the additional hurdles presented by the pandemic, including delayed screenings and overburdened healthcare systems, Hannah began her treatment journey with determination. She underwent a combination of surgery and chemotherapy, the standard treatment for her cancer type, soon after her diagnosis. Throughout this period, Hannah's response to treatment was closely monitored, with her unique reaction to phyto-estrogens becoming a focal point of concern. As she navigated her treatment, the challenge of finding healthcare professionals who understood the interplay between her diet and her cancer treatment became increasingly apparent, underscoring the necessity for a personalized approach to her care.",
+      Tags: ['Patient', 'Triple Negative Breast Cancer', 'Patient Registry', 'Asian', 'AAPI'],
+      storyUsed: 1,
+      Picture_source: 'images/hannah_zhang_cooking.jpg',
+      imageName: 'sample-face-image-9.png',
+      Picture_age: {
+        Low: 30,
+        High: 38
+      },
+      gender: 'FEMALE',
+      ethnicity: 'Asian',
+      location: 'Los Angeles, California',
+      relatedDisease: 'Triple Negative Breast Cancer',
+      insuranceAccess: 'Private Insurance',
+      documentName: 'Hannah_Zhang_Treatment_Journey.pdf',
+      documentName2: 'Diet_and_TNBC_Response_Research.pdf',
+      outcome: 'Ongoing Treatment',
+      diseaseType: 'Triple Negative Breast Cancer',
+      diagnosisDate: '01/15/2021',
+      firstSymptomsDate: '12/01/2020',
+      tone: 'Resilient, Challenging',
+      barriersToCare: 'Personal Nutrition',
+      storyUsage: 'Awareness Campaigns, Support Group Meetings',
+      outboundCommunication: 'Quarterly Health Bulletin',
+      Comments:
+        "Hannah's journey highlights the importance of personalized care and the challenges of navigating cancer treatment during a pandemic.",
+      Picture_gender: {
+        Value: 'Female',
+        Confidence: 99.99440002441406
+      },
+      Picture_emotions: ['Hopeful'],
+      Picture_face_occulded: {
+        Value: false,
+        Confidence: 99.65045928955078
+      },
+      Picture_labels: ['Face', 'Head', 'Person', 'Cooking', 'Healthy Food', 'Adult', 'Female', 'Woman', 'Kitchen'],
+      Picture_image_embedding: [], // This field is typically reserved for machine learning models and would not be filled out manually.
+      'Additional Documents_source': 'hannah_zhang_nutrition_guidelines.docx',
+      'Additional Documents_content': '',
+      consentStatus: 'Granted February 2021'
+    }
+  },
+  {
+    _index: 'patient_stories_v2',
+    _id: 'new_unique_identifier_here', // Ensure this ID is unique
+    _score: 1.0,
+    _ignored: ['Life Story.keyword', 'Additional Documents_content.keyword'],
+    _source: {
+      Name: 'Linda Liu',
+      Age: 37,
+      Location: [40.7128, -74.006], // New York City coordinates for representation
+      'Life Story':
+        "Linda Liu’s life took an unexpected turn when she was diagnosed with triple negative breast cancer in late 2022, a period marked by personal challenges that compounded the gravity of her health situation. Her battle is further complicated by her dietary habits, deeply influenced by her Asian heritage, which prominently features soy-based foods rich in phytoestrogens. Following her diagnosis, Linda embarked on a rigorous treatment plan involving chemotherapy, while simultaneously navigating the complex landscape of finding oncologists who are knowledgeable about the nuances of her diet and its potential impact on her treatment. Linda's journey reflects a determined pursuit of personalized care, highlighting the importance of cultural and dietary awareness in the medical field, especially for patients facing diagnoses that intersect with unique personal and cultural backgrounds.",
+      Tags: ['Patient', 'Triple Negative Breast Cancer', 'Patient Registry', 'white', 'Dietary Considerations'],
+      storyUsed: 1,
+      Picture_source: 'images/linda_liu_cooking.jpg',
+      imageName: 'sample-face-image-10.png',
+      Picture_age: {
+        Low: 35,
+        High: 40
+      },
+      gender: 'FEMALE',
+      ethnicity: 'Asian',
+      location: 'New York City, New York',
+      relatedDisease: 'Triple Negative Breast Cancer',
+      insuranceAccess: 'Private Insurance',
+      documentName: 'Linda_Liu_Treatment_Plan.pdf',
+      documentName2: 'Impact_of_Diet_on_TNBC.pdf',
+      outcome: 'Under Treatment',
+      diseaseType: 'Triple Negative Breast Cancer',
+      diagnosisDate: '10/22/2022',
+      firstSymptomsDate: '09/15/2022',
+      tone: 'Determined, Culturally Aware',
+      barriersToCare: 'Cultural and Dietary Understanding',
+      storyUsage: 'Educational Materials, Cultural Sensitivity Training',
+      outboundCommunication: 'Bi-Annual Health Newsletter',
+      Comments:
+        "Linda's story underscores the need for a more nuanced understanding of the patient's cultural and dietary background in treatment planning.",
+      Picture_gender: {
+        Value: 'Female',
+        Confidence: 99.99440002441406
+      },
+      Picture_emotions: ['Determined'],
+      Picture_face_occulded: {
+        Value: false,
+        Confidence: 99.65045928955078
+      },
+      Picture_labels: ['Face', 'Head', 'Person', 'Cooking', 'Healthy Food', 'Adult', 'Female', 'Woman', 'Kitchen'],
+      Picture_image_embedding: [], // Left empty; typically used for machine learning model outputs
+      'Additional Documents_source': 'linda_liu_dietary_considerations.docx',
+      'Additional Documents_content': '',
+      consentStatus: 'Granted December 2022'
     }
   }
 ];

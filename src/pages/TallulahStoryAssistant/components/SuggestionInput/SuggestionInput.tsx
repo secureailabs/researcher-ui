@@ -49,11 +49,6 @@ const SuggestionInput: React.FC<ISuggestionInput> = ({
   const [atSymbolPositions, setAtSymbolPositions] = useState<number[]>([]);
   const [showLoader, setShowLoader] = useState<boolean>(false);
 
-  console.log('selectedNames', selectedNames);
-  console.log('atSymbolPositions', atSymbolPositions);
-
-  console.log('names', names);
-
   const inputRef = useRef<any>(null);
 
   const handleInputChange = (e: any) => {
@@ -103,15 +98,6 @@ const SuggestionInput: React.FC<ISuggestionInput> = ({
   };
 
   const completeWithGpt = (question: any) => {
-    // const response = await fetch(`${BASE_URL}/tallulah/fetch-story`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ prompt: inputText })
-    // });
-    // const data = await response.json();
-    // setGptCompletion([...gptCompletion, data.data]);
     const answer = getAnswer(question);
     setGptCompletion([...gptCompletion, answer]);
   };
