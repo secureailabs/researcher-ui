@@ -5,12 +5,20 @@ import { Box, Typography } from '@mui/material';
 import styles from './Template1.module.css';
 import PatientImage from 'src/assets/images/users/avatar-3.png';
 
-const fieldNamesToDisplay = ['name', 'age', 'gender', 'disease_stage', 'disease_type', 'profilePicture', 'tags', 'patientStory'];
-
 const skipFieldNames = ['profilePicture', 'tags', 'name', 'firstName', 'lastName'];
 
 const Template1: React.FC<ICard> = ({ data, formTemplate }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
+
+  const fieldNamesToDisplay = formTemplate?.card_layout?.fields || [];
+
+  const getFieldLabel = (fieldName: string) => {
+    // flat map the field groups to get the fields
+    const fields = formTemplate?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields);
+    const field = fields?.find((field) => field?.name === fieldName);
+    return field?.label;
+  };
+
   const profileImageId =
     data?.values.profilePicture?.value && data?.values.profilePicture?.value.length > 0 ? data?.values.profilePicture.value[0].id : null;
 
@@ -42,6 +50,7 @@ const Template1: React.FC<ICard> = ({ data, formTemplate }) => {
         <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient Image" className={styles.image} />
       </Box>
 
+      {/* Condition to display either Name or combination of firstName and last Name */}
       <Box className={styles.section1}>
         <Box
           sx={{
@@ -58,6 +67,7 @@ const Template1: React.FC<ICard> = ({ data, formTemplate }) => {
             </Typography>
           ) : null}
         </Box>
+        {/* Display Tags */}
         {data?.values && 'tags' in data?.values && fieldNamesToDisplay.includes('tags') ? (
           <Box
             sx={{
@@ -73,6 +83,7 @@ const Template1: React.FC<ICard> = ({ data, formTemplate }) => {
             ))}
           </Box>
         ) : null}
+        {/* Display the field names from card layout */}
         <Box>
           {fieldNamesToDisplay.map((fieldName) => {
             if (skipFieldNames.includes(fieldName)) {
@@ -81,7 +92,11 @@ const Template1: React.FC<ICard> = ({ data, formTemplate }) => {
             return (
               <Box className={styles.valueContainer}>
                 <Typography variant="body1" className={styles.label}>
-                  {data.values[fieldName]?.label ? data.values[fieldName]?.label : 'n/a'}
+                  {data.values[fieldName]?.label
+                    ? data.values[fieldName]?.label
+                    : getFieldLabel(fieldName)
+                    ? getFieldLabel(fieldName)
+                    : fieldName}
                 </Typography>
                 <Typography
                   variant="body1"

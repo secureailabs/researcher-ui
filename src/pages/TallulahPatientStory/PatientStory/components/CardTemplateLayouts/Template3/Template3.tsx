@@ -5,11 +5,20 @@ import { Box, Typography } from '@mui/material';
 import styles from './Template3.module.css';
 import PatientImage from 'src/assets/images/users/avatar-3.png';
 
-const fieldNamesToDisplay = ['name', 'age', 'gender', 'disease_stage', 'disease_type', 'profilePicture', 'tags', 'patientStory'];
 const skipFieldNames = ['name', 'firstName', 'lastName', 'profilePicture', 'tags'];
 
-const Template3: React.FC<ICard> = ({ data }) => {
+const Template3: React.FC<ICard> = ({ data, formTemplate }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
+
+  const fieldNamesToDisplay = formTemplate?.card_layout?.fields as string[];
+
+  const getFieldLabel = (fieldName: string) => {
+    // flat map the field groups to get the fields
+    const fields = formTemplate?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields);
+    const field = fields?.find((field) => field?.name === fieldName);
+    return field?.label;
+  };
+
   const profileImageId =
     data?.values.profilePicture?.value && data?.values.profilePicture?.value.length > 0 ? data?.values.profilePicture.value[0].id : null;
 
@@ -58,7 +67,11 @@ const Template3: React.FC<ICard> = ({ data }) => {
           return (
             <Box className={styles.valueContainer}>
               <Typography variant="body1" className={styles.label}>
-                {data.values[fieldName]?.label ? data.values[fieldName]?.label : 'n/a'}
+                {data.values[fieldName]?.label
+                  ? data.values[fieldName]?.label
+                  : getFieldLabel(fieldName)
+                  ? getFieldLabel(fieldName)
+                  : fieldName}
               </Typography>
               <Typography
                 variant="body1"

@@ -43,6 +43,10 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [privateFields, setPrivateFields] = useState<any>([]);
 
+  console.log('data: ', data);
+
+  console.log('privateFields: ', privateFields);
+
   const [sendNotification] = useNotification();
 
   const getCorrespondingLabel = (fieldName: string) => {
@@ -200,26 +204,17 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
     }
   };
 
+  const isPrivateField = (fieldName: string) => {
+    return privateFields.some((field: any) => field.name === fieldName);
+  };
+
   useEffect(() => {
     fetchFormTemplate();
   }, []);
 
   return (
     <Modal open={openModal} onClose={handleCloseModal}>
-      <Box
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          outline: 'none',
-          width: '1000px',
-          overflowY: 'scroll',
-          height: '700px',
-          backgroundColor: '#fff',
-          border: '2px solid orange'
-        }}
-      >
+      <Box className={styles.container}>
         <Box
           sx={{
             display: 'flex',
@@ -261,7 +256,7 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
             }}
           >
             {Object.entries(data).map((field: any) => {
-              if ('private' in field[1] && field[1].private === true) return null;
+              if (isPrivateField(field[0])) return null;
               return (
                 <Box key={field[1].name} sx={{ margin: '1rem' }}>
                   {renderField(field[0], field[1])}

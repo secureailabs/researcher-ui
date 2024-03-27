@@ -61,12 +61,12 @@
 
 .label {
   font-weight: bold;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   color: #4a4a4a;
 }
 
 .value {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-style: italic;
   font-weight: 400;
 }

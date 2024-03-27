@@ -62,13 +62,14 @@
 .label {
   font-weight: bold;
   font-size: 0.82rem;
-  color: #4a4a4a;
+  color: #3e3e3e;
 }
 
 .value {
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-style: italic;
   font-weight: 400;
+  color: #545454;
 }
 
 .valueContainer {

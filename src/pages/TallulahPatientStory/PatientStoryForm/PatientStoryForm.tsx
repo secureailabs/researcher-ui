@@ -639,7 +639,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           </Box>
         </Box>
       )}
-      {/* id undefined means the form is being accessed via public link */}
+      {/* id undefined means the form is being accessed via non public link */}
       {id === undefined ? (
         <Box
           sx={{
@@ -670,9 +670,14 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           />
         </Box>
       ) : null}
+      {id !== undefined && formLayout?.logo && (
+        <Box className={styles.logoContainer}>
+          <img src={formLayout?.logo} alt="logo" className={styles.logo} />
+        </Box>
+      )}
       <Divider
         sx={{
-          marginY: '30px',
+          marginY: '10px',
           width: '100%'
         }}
       />

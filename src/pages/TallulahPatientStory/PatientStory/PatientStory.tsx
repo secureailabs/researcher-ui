@@ -30,6 +30,9 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const templateNameString = 'TEMPLATE2';
+  const templateNameEnum = TemplateNames[templateNameString as keyof typeof TemplateNames];
+
   const fetchFormData = async (formId: string) => {
     setIsFormDataFetching(true);
     try {
@@ -155,7 +158,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       ) : null}
 
       <Grid container spacing={3}>
-        {filteredData.map((patientData: GetFormData_Out) => (
+        {filteredData?.map((patientData: GetFormData_Out) => (
           <Grid
             item
             key={patientData._id}
@@ -169,7 +172,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
             }}
             className={styles.patientCardGridItem}
           >
-            <CardTemplates data={patientData} templateName={TemplateNames.TEMPLATE4} formTemplate={formTemplate} />
+            <CardTemplates data={patientData} templateName={templateNameEnum} formTemplate={formTemplate} />
           </Grid>
         ))}
       </Grid>

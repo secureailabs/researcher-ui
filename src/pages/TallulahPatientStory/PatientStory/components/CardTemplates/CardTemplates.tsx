@@ -1,7 +1,5 @@
-import { FormDataService, FormMediaTypes, GetFormData_Out, GetFormTemplate_Out } from 'src/tallulah-ts-client';
+import { GetFormData_Out, GetFormTemplate_Out } from 'src/tallulah-ts-client';
 import styles from './CardTemplates.module.css';
-import { Box, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
 import Template1 from '../CardTemplateLayouts/Template1';
 import Template2 from '../CardTemplateLayouts/Template2';
 import Template0 from '../CardTemplateLayouts/Template0';
@@ -15,11 +13,11 @@ export interface ICardTemplates {
 }
 
 export enum TemplateNames {
-  TEMPLATE0 = 'template0',
-  TEMPLATE1 = 'template1',
-  TEMPLATE2 = 'template2',
-  TEMPLATE3 = 'template3',
-  TEMPLATE4 = 'template4'
+  TEMPLATE0 = 'Template0',
+  TEMPLATE1 = 'Template1',
+  TEMPLATE2 = 'Template2',
+  TEMPLATE3 = 'Template3',
+  TEMPLATE4 = 'Template4'
 }
 
 export interface ICard {
