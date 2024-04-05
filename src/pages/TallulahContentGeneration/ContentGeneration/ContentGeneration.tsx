@@ -662,40 +662,37 @@ const ContentGeneration: React.FC<IContentGeneration> = ({}) => {
   const [sendNotification] = useNotification();
 
   const fetchGeneratedContentForTemplates = async (templates: GetContentGenerationTemplate_Out[], offset = 0) => {
-    setLoading(true);
-    try {
-      let allGeneratedContents: any[] = [];
-      await Promise.all(
-        templates.map(async (template) => {
-          const content = await ContentGenerationsService.getAllContentGenerations(template.id, offset, resetPaginationData.limit);
-          const generatedContents = content.content_generations;
-
-          allGeneratedContents = [...allGeneratedContents, ...generatedContents];
-
-          setPaginationData({
-            count: content.count,
-            limit: content.limit,
-            next: content.next
-          });
-        })
-      );
-      allGeneratedContents.sort((a, b) => {
-        return new Date(b.creation_time).getTime() - new Date(a.creation_time).getTime();
-      });
-
-      setRows(allGeneratedContents);
-      setGeneratedContent(allGeneratedContents);
-    } catch (error) {
-      console.error('Error fetching generated content', error);
-    }
-    setLoading(false);
+    // setLoading(true);
+    // try {
+    //   let allGeneratedContents: any[] = [];
+    //   await Promise.all(
+    //     templates.map(async (template) => {
+    //       const content = await ContentGenerationsService.getAllContentGenerations(template.id, offset, resetPaginationData.limit);
+    //       const generatedContents = content.content_generations;
+    //       allGeneratedContents = [...allGeneratedContents, ...generatedContents];
+    //       setPaginationData({
+    //         count: content.count,
+    //         limit: content.limit,
+    //         next: content.next
+    //       });
+    //     })
+    //   );
+    //   allGeneratedContents.sort((a, b) => {
+    //     return new Date(b.creation_time).getTime() - new Date(a.creation_time).getTime();
+    //   });
+    //   setRows(allGeneratedContents);
+    //   setGeneratedContent(allGeneratedContents);
+    // } catch (error) {
+    //   console.error('Error fetching generated content', error);
+    // }
+    // setLoading(false);
   };
 
   const fetchAllContentGenerartionTemplates = async () => {
     try {
       const response: GetMultipleContentGenerationTemplate_Out = await ContentGenerationTemplatesService.getAllContentGenerationTemplates();
-      setContentGenerationTemplates(response.templates);
-      fetchGeneratedContentForTemplates(response.templates);
+      // setContentGenerationTemplates(ALL_TEMPLATES);
+      // fetchGeneratedContentForTemplates(ALL_TEMPLATES);
     } catch (error) {
       console.error(error);
     }

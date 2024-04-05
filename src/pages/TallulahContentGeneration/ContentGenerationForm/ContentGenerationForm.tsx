@@ -601,7 +601,7 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
     setIsLoading(true);
     try {
       const response: GetMultipleContentGenerationTemplate_Out = await ContentGenerationTemplatesService.getAllContentGenerationTemplates();
-      setContentGenerationTemplates(response.templates);
+      setContentGenerationTemplates(ALL_TEMPLATES);
     } catch (error) {
       console.error(error);
     }

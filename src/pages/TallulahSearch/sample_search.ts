@@ -431,7 +431,7 @@ const SAMPLE_DATA = [
       Location: [41.409, -75.6624],
       'Life Story':
         "Aiko Yamamoto, a joyful and spirited 3-year-old, faces a challenging journey ahead. In early 2024, Aiko was diagnosed with a rare genetic disorder called Pompe disease, which affects muscle and nerve function, leading to progressive muscle weakness. Her parents, both dedicated and loving, were devastated by the news but remain hopeful. The rarity of Pompe disease means treatment options are limited and costly, involving specialized enzyme replacement therapy not readily available in Japan. Aiko's family has embarked on a heartfelt mission to raise funds for her treatment and to increase awareness of her condition.",
-      Tags: ['Patient', 'Pediatric', 'Patient Registry', 'Transplant Recipient', 'asian'],
+      Tags: ['Patient', 'Pediatric', 'Patient Registry', 'Transplant Recipient', 'Asian'],
       storyUsed: 3,
       Picture_source: 'images/like_image2.jpg',
       imageName: 'sf-9.png',
@@ -621,7 +621,7 @@ const SAMPLE_DATA = [
       Location: [40.7128, -74.006], // New York City coordinates for representation
       'Life Story':
         "Linda Liu’s life took an unexpected turn when she was diagnosed with triple negative breast cancer in late 2022, a period marked by personal challenges that compounded the gravity of her health situation. Her battle is further complicated by her dietary habits, deeply influenced by her Asian heritage, which prominently features soy-based foods rich in phytoestrogens. Following her diagnosis, Linda embarked on a rigorous treatment plan involving chemotherapy, while simultaneously navigating the complex landscape of finding oncologists who are knowledgeable about the nuances of her diet and its potential impact on her treatment. Linda's journey reflects a determined pursuit of personalized care, highlighting the importance of cultural and dietary awareness in the medical field, especially for patients facing diagnoses that intersect with unique personal and cultural backgrounds.",
-      Tags: ['Patient', 'Triple Negative Breast Cancer', 'Patient Registry', 'white', 'Dietary Considerations'],
+      Tags: ['Patient', 'Triple Negative Breast Cancer', 'Patient Registry', 'Asian', 'Dietary Considerations'],
       storyUsed: 1,
       Picture_source: 'images/linda_liu_cooking.jpg',
       imageName: 'sample-face-image-10.png',

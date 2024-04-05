@@ -242,6 +242,25 @@ const conversation = [
   <p>Feel free to mix and match these ideas or adapt them to your own writing style and personality when sharing John's story and mission on Facebook.</p>`
   },
   {
+    question: 'Linda Liu',
+    answer: ` <p>Dear Hannah,</p>
+
+    <p>I hope this email finds you well. My name is Linda Liu, and like you, I am navigating the journey of living with triple negative breast cancer. I was diagnosed in late 2022, and just like you, I've faced the unique challenges of managing our condition alongside our dietary habits influenced by our Asian heritage.</p>
+
+    <p>Our paths might be different, yet they resonate deeply with shared experiences - from the hurdles of finding healthcare professionals who understand the intricacies of our diets to the relentless pursuit of treatments that respect our bodies' unique reactions, particularly to phyto-estrogens. Your story, especially your determination in the face of such challenges, has inspired me to reach out to you.</p>
+
+    <p>I am writing to share an opportunity that I believe could be beneficial for both of us. The <strong>Susan G. Komen Foundation</strong> is conducting a clinical study focused on lifestyle interventions for patients with early-stage triple negative breast cancer undergoing chemotherapy. Given our shared experiences and the focus on dietary impacts, I thought of you immediately. This study aims to explore how tailored dietary changes can potentially enhance our treatment outcomes and overall well-being.</p>
+
+    <p>I understand that this is a significant decision, and there's a lot to consider. Participating in this study feels like a step forward, not just for our own healing, but also in contributing to research that could help others in our situation feel seen and understood.</p>
+
+    <p>I truly believe that by sharing our stories and experiences, we can help each other navigate this journey with a bit more hope and less isolation. If you're interested in learning more about this study, or if you just need someone to talk to who understands what you're going through, please feel free to reach out.</p>
+
+    <p>Take care, and I hope to hear from you soon.</p>
+
+    <p>Warmest regards,<br>
+    Linda Liu</p>`
+  },
+  {
     question: 'clinical study',
     answer: `<p>Dear Hannah,</p>
     <p>I hope this email finds you in good spirits. I am writing to you on behalf of the <strong>Susan G. Komen Foundation</strong> to extend a heartfelt invitation to join a clinical study focused on lifestyle interventions for patients with early-stage triple negative breast cancer, specifically during chemotherapy (<em>ClinicalTrials.gov Identifier: NCT04174391</em>).</p>
@@ -259,25 +278,6 @@ const conversation = [
     [Your Position]<br>
     <strong>Susan G. Komen Foundation</strong><br>
     [Contact Information]</p>`
-  },
-  {
-    question: 'interest written from',
-    answer: ` <p>Dear Hannah,</p>
-
-    <p>I hope this email finds you well. My name is Linda Liu, and like you, I am navigating the journey of living with triple negative breast cancer. I was diagnosed in late 2022, and just like you, I've faced the unique challenges of managing our condition alongside our dietary habits influenced by our Asian heritage.</p>
-
-    <p>Our paths might be different, yet they resonate deeply with shared experiences - from the hurdles of finding healthcare professionals who understand the intricacies of our diets to the relentless pursuit of treatments that respect our bodies' unique reactions, particularly to phyto-estrogens. Your story, especially your determination in the face of such challenges, has inspired me to reach out to you.</p>
-
-    <p>I am writing to share an opportunity that I believe could be beneficial for both of us. The <strong>Susan G. Komen Foundation</strong> is conducting a clinical study focused on lifestyle interventions for patients with early-stage triple negative breast cancer undergoing chemotherapy. Given our shared experiences and the focus on dietary impacts, I thought of you immediately. This study aims to explore how tailored dietary changes can potentially enhance our treatment outcomes and overall well-being.</p>
-
-    <p>I understand that this is a significant decision, and there's a lot to consider. Participating in this study feels like a step forward, not just for our own healing, but also in contributing to research that could help others in our situation feel seen and understood.</p>
-
-    <p>I truly believe that by sharing our stories and experiences, we can help each other navigate this journey with a bit more hope and less isolation. If you're interested in learning more about this study, or if you just need someone to talk to who understands what you're going through, please feel free to reach out.</p>
-
-    <p>Take care, and I hope to hear from you soon.</p>
-
-    <p>Warmest regards,<br>
-    Linda Liu</p>`
   }
 ];
 
