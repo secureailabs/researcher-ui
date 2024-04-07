@@ -5,9 +5,7 @@
 import type { Guardian } from './Guardian';
 import type { PatientRequests } from './PatientRequests';
 
-export type RegisterPatientProfile_In = {
-    _id: string;
-    repository_id: string;
+export type UpdatePatientProfile_In = {
     name: string;
     primary_cancer_diagnosis: string;
     social_worker_name: string;
