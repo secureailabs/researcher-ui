@@ -19,6 +19,12 @@ export interface IPatientDetailViewModal {
 
 const mediaTypes = ['FILE', 'IMAGE', 'VIDEO'];
 
+const convertTagsStringToArray = (tags: string | undefined) => {
+  if (!tags) return [];
+
+  return tags.split(',');
+};
+
 const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, handleCloseModal, data, handleRefresh }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
 
@@ -76,20 +82,9 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     setOpenDeleteModal(true);
   };
 
-  const {
-    firstName,
-    lastName,
-    age,
-    location,
-    diseaseType,
-    storyTags,
-    patientStory,
-    profilePicture,
-    consent,
-    'gender-other': genderOther,
-    tags,
-    ...rest
-  } = data?.values;
+  const { firstName, lastName, storyTags, profilePicture, consent, 'gender-other': genderOther, tags, ...rest } = data?.values;
+
+  const skipFieldNames = ['firstName', 'lastName', 'name', 'tags', 'profilePicture', 'consent'];
 
   const fetchProfileImage = async (id: any, type: string) => {
     const mediaType = type === 'FILE' ? FormMediaTypes.FILE : type === 'IMAGE' ? FormMediaTypes.IMAGE : FormMediaTypes.VIDEO;
@@ -101,8 +96,6 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
       console.log(err);
     }
   };
-
-  console.log('mediaDetails', mediaDetails);
 
   useEffect(() => {
     async function fetchMediaUrls() {
@@ -142,8 +135,6 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     }
   }, [data]);
 
-  console.log('data', data);
-
   const renderModalCardHeader = (
     <Box
       sx={{
@@ -176,11 +167,19 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
         <MenuItem
           onClick={() => {
             setShowEditModal(true);
+            handleClose();
           }}
         >
           Edit
         </MenuItem>
-        <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleDeleteClick();
+            handleClose();
+          }}
+        >
+          Delete
+        </MenuItem>
       </Menu>
       <CloseIcon
         onClick={handleCloseModal}
@@ -231,31 +230,16 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     </Box>
   );
 
-  const convertTagsStringToArray = (tags: string | undefined) => {
-    if (!tags) return [];
-
-    return tags.split(',');
-  };
-
-  const renderDataDisplay = (key: any) => (
-    <Box className={styles.section1} key={key}>
-      <Box>
-        <Typography variant="body1" className={styles.label}>
-          {rest[key].label}
-        </Typography>
-        <Typography
-          variant="body1"
-          className={styles.value}
-          sx={{
-            display: '-webkit-box',
-            overflow: 'hidden',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 3
-          }}
-        >
-          {rest[key].value}
-        </Typography>
-        {key === 'gender' && genderOther && genderOther?.value && (
+  const renderDataDisplay = (key: any) => {
+    if (skipFieldNames.includes(key)) {
+      return null;
+    }
+    return (
+      <Box className={styles.section1} key={key}>
+        <Box>
+          <Typography variant="body1" className={styles.label}>
+            {rest[key].label}
+          </Typography>
           <Typography
             variant="body1"
             className={styles.value}
@@ -266,40 +250,49 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
               WebkitLineClamp: 3
             }}
           >
-            ( {genderOther?.value} )
+            {rest[key].value}
           </Typography>
-        )}
+          {key === 'gender' && genderOther && genderOther?.value && (
+            <Typography
+              variant="body1"
+              className={styles.value}
+              sx={{
+                display: '-webkit-box',
+                overflow: 'hidden',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 3
+              }}
+            >
+              ( {genderOther?.value} )
+            </Typography>
+          )}
+        </Box>
       </Box>
-    </Box>
-  );
+    );
+  };
 
   const renderModalCardContent = (
     <Box className={styles.container}>
       {/* Patient Details */}
       <Box className={styles.cardHeaderLayout}>
         <Box>
-          <Typography variant="h6" className={styles.name}>
-            {data.values.firstName?.value} {data.values.lastName?.value}
-          </Typography>
-          <Typography variant="body1" className={styles.age}>
-            Age : {data?.values.age?.value} years
-            <Typography>Location : {data?.values.zipCode?.value}</Typography>
-            {data?.values?.diseaseType ? <Typography>Disease Type : {data?.values?.diseaseType?.value}</Typography> : null}
-          </Typography>
+          {data.values.firstName ? (
+            <Typography variant="h6" className={styles.name}>
+              {data.values.firstName?.value} {data.values.lastName?.value}
+            </Typography>
+          ) : data.values.name ? (
+            <Typography variant="h6" className={styles.name}>
+              {data.values?.name?.value}
+            </Typography>
+          ) : null}
         </Box>
         <Box>
           {/* display image  */}
-          <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient Image" className={styles.profileImage} />
+          <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient" className={styles.profileImage} />
         </Box>
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          gap: '1rem'
-        }}
-      >
+      {/* consent section */}
+      <Box className={styles.consentDiv}>
         <Typography
           variant="body1"
           sx={{
@@ -315,31 +308,13 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             : 'Pending '}
         </Typography>
       </Box>
-
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '0.5rem',
-          marginBottom: '1rem',
-          marginTop: '1rem'
-        }}
-      >
+      {/* tags section */}
+      <Box className={styles.tagsDiv}>
         {convertTagsStringToArray(data?.values?.tags?.value).map((tag: string) => (
           <Box className={styles.tag}>{tag}</Box>
         ))}
       </Box>
 
-      <Box className={styles.section1}>
-        <Box>
-          <Typography variant="body1" className={styles.label}>
-            Journey
-          </Typography>
-          <Typography variant="body1" className={styles.value}>
-            {data.values?.patientStory?.value}
-          </Typography>
-        </Box>
-      </Box>
       {Object.keys(rest).map((key: any) => (mediaTypes.includes(data.values[key].type) ? renderMediaDisplay(key) : renderDataDisplay(key)))}
     </Box>
   );

@@ -18,7 +18,8 @@ const pagesIdAndCorrespondingRoles: { [key: string]: UserRole[] } = {
   // pages
   'tallulah-email-assistant': [UserRole.EMAIL_INTEGRATION_USER],
   'patient-story': [UserRole.FORM_INTAKE_USER],
-  'content-generation': [UserRole.CONTENT_GENERATION_USER]
+  'content-generation': [UserRole.CONTENT_GENERATION_USER],
+  'patient-profile': [UserRole.FORM_INTAKE_USER] //TODO: Change this to the correct role
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -82,6 +83,21 @@ const pages = [
         title: 'Generated Content',
         type: 'item',
         url: '/content-generation',
+        target: false
+      }
+    ]
+  },
+  {
+    id: 'patient-profile',
+    title: 'Patient Profile',
+    type: 'collapse',
+    icon: icons.IconId,
+    children: [
+      {
+        id: 'patient-profile',
+        title: 'Patient Profile',
+        type: 'item',
+        url: '/patient-profile',
         target: false
       }
     ]

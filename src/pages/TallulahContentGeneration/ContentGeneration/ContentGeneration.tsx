@@ -51,14 +51,10 @@ const ContentGeneration: React.FC<IContentGeneration> = ({}) => {
           });
         })
       );
-      // sort by created_on date
-      // Sort allGeneratedContents by creation_time in descending order
       allGeneratedContents.sort((a, b) => {
-        // Assuming creation_time is in a format that can be directly compared,
-        // such as ISO 8601 (e.g., "2021-03-10T02:00:00Z").
-        // If it's in a different format, you might need to parse it into a Date object first.
         return new Date(b.creation_time).getTime() - new Date(a.creation_time).getTime();
       });
+
       setRows(allGeneratedContents);
       setGeneratedContent(allGeneratedContents);
     } catch (error) {

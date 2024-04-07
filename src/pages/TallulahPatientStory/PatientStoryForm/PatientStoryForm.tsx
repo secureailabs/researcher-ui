@@ -33,7 +33,7 @@ import axios from 'axios';
 import VideoUpload from './components/VideoUpload';
 import useNotification from 'src/hooks/useNotification';
 import Lottie from 'lottie-react';
-import checkMarkAnimantion from 'src/assets/lottie/check_mark.json';
+import checkMarkAnimation from 'src/assets/lottie/check_mark.json';
 
 export interface IPatientStoryForm {}
 
@@ -82,15 +82,13 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   };
 
   const handleFormDataChange = (event: any) => {
-    console.log(event.target.name, event.target.value);
-    setFormData({
-      ...formData,
-      [event.target.name]: {
-        value: event.target.value,
-        label: getCorrespondingLabel(event.target.name),
-        type: getCorrespondingType(event.target.name)
-      }
-    });
+    const newFormData = { ...formData };
+    newFormData[event.target.name] = {
+      value: event.target.value,
+      label: getCorrespondingLabel(event.target.name),
+      type: getCorrespondingType(event.target.name)
+    };
+    setFormData(newFormData);
   };
 
   const handleGenderChange = (event: any) => {
@@ -131,8 +129,6 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       });
     }
   };
-
-  console.log('documentFiles', documentFiles);
 
   const renderField = (field: any) => {
     switch (field.type) {
@@ -387,6 +383,18 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     try {
       const res: GetFormTemplate_Out = await FormTemplatesService.getPublishedFormTemplate(id);
       setFormLayout(res);
+      // create form data object with empty values
+      const formDataObj: any = {};
+      res?.field_groups
+        ?.flatMap((fieldGroup: any) => fieldGroup.fields)
+        .forEach((field: any) => {
+          formDataObj[field.name] = {
+            value: '',
+            label: field.label,
+            type: field.type
+          };
+        });
+      setFormData(formDataObj);
     } catch (err) {
       console.log(err);
     }
@@ -400,6 +408,18 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       const filteredData = res.templates.filter((formTemplate: any) => formTemplate.state === 'PUBLISHED');
       const formTemplate = filteredData[0];
       setFormLayout(formTemplate);
+      // create form data object with empty values
+      const formDataObj: any = {};
+      formTemplate?.field_groups
+        ?.flatMap((fieldGroup: any) => fieldGroup.fields)
+        .forEach((field: any) => {
+          formDataObj[field.name] = {
+            value: '',
+            label: field.label,
+            type: field.type
+          };
+        });
+      setFormData(formDataObj);
     } catch (err) {
       console.log(err);
     }
@@ -615,11 +635,11 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
               height: '60%'
             }}
           >
-            <Lottie animationData={checkMarkAnimantion} loop={false} />;
+            <Lottie animationData={checkMarkAnimation} loop={false} />;
           </Box>
         </Box>
       )}
-      {/* id undefined means the form is being accessed via public link */}
+      {/* id undefined means the form is being accessed via non public link */}
       {id === undefined ? (
         <Box
           sx={{
@@ -650,9 +670,14 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           />
         </Box>
       ) : null}
+      {id !== undefined && formLayout?.logo && (
+        <Box className={styles.logoContainer}>
+          <img src={formLayout?.logo} alt="logo" className={styles.logo} />
+        </Box>
+      )}
       <Divider
         sx={{
-          marginY: '30px',
+          marginY: '10px',
           width: '100%'
         }}
       />

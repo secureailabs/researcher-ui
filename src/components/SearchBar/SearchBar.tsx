@@ -3,6 +3,7 @@ import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './SearchBar.module.css';
+import { useRef, useState } from 'react';
 
 export interface ISearchBar {
   placeholder?: string;
@@ -46,6 +47,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const SearchBar: React.FC<ISearchBar> = ({ placeholder, searchText, handleSearchChange }) => {
+  const [text, setText] = useState<string>('');
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const onSearchChange = (text: string) => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    debounceTimer.current = setTimeout(() => {
+      handleSearchChange(text);
+    }, 500); // 500ms delay
+  };
+
   return (
     <Box sx={{ flex: 1, marginRight: '20px' }}>
       <Search>
@@ -53,18 +67,20 @@ const SearchBar: React.FC<ISearchBar> = ({ placeholder, searchText, handleSearch
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
+          value={text}
           placeholder={placeholder ? placeholder : 'Search…'}
           inputProps={{ 'aria-label': 'search' }}
-          value={searchText}
           onChange={(e) => {
-            handleSearchChange(e.target.value);
+            setText(e.target.value);
+            onSearchChange(e.target.value);
           }}
         />
         {searchText !== '' && searchText !== undefined ? (
           <IconButton
             aria-label="delete"
             onClick={() => {
-              handleSearchChange('');
+              setText('');
+              onSearchChange('');
             }}
           >
             <CloseIcon />

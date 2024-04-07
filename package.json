@@ -45,6 +45,7 @@
     "react-dropzone": "14.0.0",
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.43.9",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-microsoft-login": "^2.0.1",
     "react-notifications-component": "^4.0.1",
     "react-perfect-scrollbar": "^1.5.8",

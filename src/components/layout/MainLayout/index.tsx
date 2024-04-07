@@ -14,6 +14,9 @@ import { updateUserProfile } from 'src/store/reducers/userprofile';
 import { updateSCNDetails } from 'src/store/reducers/scn_details';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 import { initAmplitude } from 'src/utils/Amplitude/amplitude';
+import axios from 'axios';
+import { notification } from 'antd';
+import useNotification from 'src/hooks/useNotification';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 
@@ -35,12 +38,14 @@ const BreadcrumbsWrapper = (): JSX.Element => {
   );
 };
 
-const MinimalLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Element => {
+const MainLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Element => {
   const [leftDrawerOpened, setLeftDrawerOpened] = useState(true);
   const [open, setOpen] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
+
+  const [sendNotification] = useNotification();
 
   const menu = useSelector((state: RootStateProps) => state.menu);
 
@@ -52,6 +57,62 @@ const MinimalLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Eleme
     setOpen((prev) => !prev);
     dispatch(openDrawer({ drawerOpen: !open }));
   };
+
+  const handleLogout = () => {
+    try {
+      // remove tokens from local storage
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('tokenType');
+
+      storeLoginCredentials({
+        access_token: '',
+        refresh_token: '',
+        token_type: ''
+      });
+
+      navigate(`/login`, {
+        state: {
+          from: ''
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  async function refreshAuthToken() {
+    if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
+    OpenAPI.BASE = process.env.REACT_APP_SAIL_API_SERVICE_URL;
+    const refreshToken = localStorage.getItem('refreshToken');
+    const tokenType = localStorage.getItem('tokenType');
+    if (refreshToken && tokenType) {
+      try {
+        const res = await AuthenticationService.getRefreshToken({
+          refresh_token: refreshToken
+        });
+        storeLoginCredentials(res);
+      } catch (err) {
+        console.error('Token refresh failed', err);
+        handleLogout();
+      }
+    } else {
+      handleLogout();
+    }
+  }
+
+  const AxiosInterceptor = axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    async (error) => {
+      const originalRequest = error.config;
+      if (error.response?.status === 401) {
+        handleLogout();
+      }
+      return Promise.reject(error);
+    }
+  );
 
   const checkUserSession = async (): Promise<UserInfo_Out> => {
     if (!process.env.REACT_APP_SAIL_API_SERVICE_URL) throw new Error('REACT_APP_SAIL_API_SERVICE_URL not set');
@@ -66,7 +127,7 @@ const MinimalLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Eleme
         initAmplitude(res.organization);
         return res;
       } catch (err) {
-        console.log(err);
+        console.error('User session fetch failed', err);
         throw new Error('User session fetch failed');
       }
     } else throw new Error('No token found');
@@ -138,4 +199,4 @@ const MinimalLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Eleme
   );
 };
 
-export default MinimalLayout;
+export default MainLayout;

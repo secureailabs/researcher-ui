@@ -38,6 +38,8 @@ const Navigation = ({ sideBarMenuType }: Props) => {
   const [selectedItems, setSelectedItems] = useState<string | undefined>('');
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
 
+  console.log('drawerOpen', drawerOpen);
+
   const isHorizontal = menuOrientation === LAYOUT_CONST.HORIZONTAL_LAYOUT && !downLG;
 
   const lastItem = isHorizontal ? HORIZONTAL_MAX_ITEM : null;

@@ -1,6 +1,5 @@
 .container {
   padding: 50px;
-  margin-top: 20px;
   background-color: white;
 }
 
@@ -17,4 +16,14 @@
 
 .fullWidth {
   grid-column: 1 / -1; /* This will make the item take full width */
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+}
+
+.logoContainer {
+  display: flex;
+  justify-content: center;
 }
