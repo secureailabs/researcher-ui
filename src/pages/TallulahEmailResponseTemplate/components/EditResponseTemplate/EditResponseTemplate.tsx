@@ -51,7 +51,7 @@ const EditResponseTemplate: React.FC<IEditResponseTemplate> = ({ initialData, se
       }
     };
     try {
-      const response = await ResponseTemplatesService.updateResponseTemplate(initialData!._id, body);
+      const response = await ResponseTemplatesService.updateResponseTemplate(initialData!.id, body);
       handleRefresh();
       sendNotification({
         msg: 'Template modified successfully',

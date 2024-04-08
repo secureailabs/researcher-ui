@@ -1,45 +1,45 @@
 import { Box, CircularProgress, Grid, LinearProgress, Pagination, Typography } from '@mui/material';
-import styles from './TallulahPatientProfile.module.css';
+import styles from './TallulahETapestry.module.css';
 import { useQuery } from 'react-query';
 import {
-  GetMultiplePatientProfileRepository_Out,
-  GetMultiplePatientProfiles_Out,
-  GetPatientProfileRepository_Out,
-  GetPatientProfile_Out,
-  PatientProfileRepositoriesService,
-  PatientProfilesService
+  EtapestryDataService,
+  EtapestryRepositoriesService,
+  GetETapestryData_Out,
+  GetETapestryRepository_Out,
+  GetMultipleETapestryData_Out,
+  GetMultipleETapestryRepository_Out
 } from 'src/tallulah-ts-client';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { useEffect, useState } from 'react';
 import SearchBar from 'src/components/SearchBar';
 import PatientCard from './components/PatientCard';
 import PatientProfileViewModal from './components/PatientProfileViewModal';
 
-export interface ITallulahPatientProfile {}
+export interface ITallulahETapestry {}
 
-const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
+const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
   const [searchText, setSearchText] = useState('');
   const [paginationDetails, setPaginationDetails] = useState({
     count: 0,
     limit: 20,
     next: 0
   });
-  const [patientProfiles, setPatientProfiles] = useState<GetPatientProfile_Out[]>([]);
-  const [profileRepository, setProfileRepository] = useState<GetPatientProfileRepository_Out>();
+  const [patientProfiles, setPatientProfiles] = useState<GetETapestryData_Out[]>([]);
+  const [profileRepository, setProfileRepository] = useState<GetETapestryRepository_Out>();
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
-  const [selectedPatientData, setSelectedPatientData] = useState<GetPatientProfile_Out>();
+  const [selectedPatientData, setSelectedPatientData] = useState<GetETapestryData_Out>();
 
   const fetchPatientProfile = async () => {
     setLoading(true);
     try {
-      const resPatientProfileRepository: GetMultiplePatientProfileRepository_Out =
-        await PatientProfileRepositoriesService.getAllPatientProfileRepositories();
+      const resPatientProfileRepository: GetMultipleETapestryRepository_Out =
+        await EtapestryRepositoriesService.getAllEtapestryRepositories();
+      console.log('resPatientProfileRepository', resPatientProfileRepository);
       setProfileRepository(resPatientProfileRepository.repositories[0]);
       const repositoryId = resPatientProfileRepository.repositories[0].id;
-      const res: GetMultiplePatientProfiles_Out = await PatientProfilesService.getAllPatientProfiles(
+      const res: GetMultipleETapestryData_Out = await EtapestryDataService.getAllEtapestryData(
         repositoryId,
         (page - 1) * paginationDetails.limit,
         paginationDetails.limit,
@@ -47,7 +47,7 @@ const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
         -1
       );
       if (res) {
-        setPatientProfiles([...res.patient_profiles]);
+        setPatientProfiles([...res.etapestry_data]);
         setPaginationDetails({
           count: res.count,
           limit: res?.limit || 10,
@@ -126,7 +126,7 @@ const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
           paddingTop: '2rem'
         }}
       >
-        {patientProfiles?.map((patientProfile: GetPatientProfile_Out) => (
+        {patientProfiles?.map((patientProfile: GetETapestryData_Out) => (
           <Grid
             item
             key={patientProfile.id}
@@ -135,6 +135,8 @@ const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
               setOpenModal(true);
               setSelectedPatientData(patientProfile);
             }}
+            xs={12}
+            md={6}
           >
             <PatientCard data={patientProfile} />
           </Grid>
@@ -168,4 +170,4 @@ const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
   );
 };
 
-export default TallulahPatientProfile;
+export default TallulahETapestry;

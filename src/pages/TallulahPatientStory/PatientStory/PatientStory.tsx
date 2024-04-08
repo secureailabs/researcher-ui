@@ -51,9 +51,9 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
       // filter the published state
       const filteredData = res.templates.filter((formTemplate: any) => formTemplate.state === 'PUBLISHED');
-      setPublishedFormId(filteredData[0]._id);
+      setPublishedFormId(filteredData[0].id);
       setFormTemplate(filteredData[0]);
-      fetchFormData(filteredData[0]._id);
+      fetchFormData(filteredData[0].id);
     } catch (err) {
       console.log(err);
     }
@@ -161,7 +161,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
         {filteredData?.map((patientData: GetFormData_Out) => (
           <Grid
             item
-            key={patientData._id}
+            key={patientData.id}
             xs={12}
             sm={6}
             md={6}

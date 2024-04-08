@@ -63,7 +63,7 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
       if (response.mailboxes.length > 0) {
         setIsMailAdded(true);
         setMailboxes(response.mailboxes);
-        setselectedMailBoxId(response.mailboxes[0]._id);
+        setselectedMailBoxId(response.mailboxes[0].id);
       }
     } catch (e) {
       console.log(e);

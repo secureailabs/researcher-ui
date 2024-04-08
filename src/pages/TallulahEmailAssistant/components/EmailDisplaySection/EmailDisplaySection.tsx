@@ -127,7 +127,7 @@ const EmailDisplaySection: React.ForwardRefRenderFunction<EmailDisplaySectionRef
   }, [props.sortDirection, props.sortKey, filterByTags, filterByState]);
 
   const handleViewNextEmailClicked = (currentEmailId: string) => {
-    const currentEmailIndex = rows.findIndex((email) => email._id === currentEmailId);
+    const currentEmailIndex = rows.findIndex((email) => email.id === currentEmailId);
     if (currentEmailIndex === -1) return;
     const nextEmailIndex = currentEmailIndex + 1;
     if (nextEmailIndex >= rows.length) return;
@@ -135,7 +135,7 @@ const EmailDisplaySection: React.ForwardRefRenderFunction<EmailDisplaySectionRef
   };
 
   const handleViewPreviousEmailClicked = (currentEmailId: string) => {
-    const currentEmailIndex = rows.findIndex((email) => email._id === currentEmailId);
+    const currentEmailIndex = rows.findIndex((email) => email.id === currentEmailId);
     if (currentEmailIndex === -1) return;
     const previousEmailIndex = currentEmailIndex - 1;
     if (previousEmailIndex < 0) return;
@@ -327,7 +327,7 @@ const EmailDisplaySection: React.ForwardRefRenderFunction<EmailDisplaySectionRef
         }}
         onRowClick={(params: any) => {
           // filter row with selected row id and
-          const filteredRows = rows.filter((row) => row._id === params.row._id);
+          const filteredRows = rows.filter((row) => row.id === params.row.id);
           setSelectedRow(filteredRows[0]);
           setOpenDrawer(true);
         }}

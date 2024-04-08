@@ -522,7 +522,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       });
 
       await FormDataService.addFormData({
-        form_template_id: formLayout?._id as string,
+        form_template_id: formLayout?.id as string,
         values: form
       });
       sendNotification({
@@ -651,8 +651,8 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
         >
           <Typography>
             Form Public Link -{' '}
-            <a href={formPublicLink + formLayout?._id} target="_blank" rel="noreferrer">
-              {formPublicLink + formLayout?._id}
+            <a href={formPublicLink + formLayout?.id} target="_blank" rel="noreferrer">
+              {formPublicLink + formLayout?.id}
             </a>
           </Typography>
 
@@ -661,7 +661,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
               cursor: 'pointer'
             }}
             onClick={() => {
-              navigator.clipboard.writeText(formPublicLink + formLayout?._id);
+              navigator.clipboard.writeText(formPublicLink + formLayout?.id);
               sendNotification({
                 msg: 'Copied to clipboard',
                 variant: 'success'
