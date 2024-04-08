@@ -1,6 +1,11 @@
 .component {
 }
 
+.container {
+  position: relative;
+  width: 100%;
+}
+
 .loadingDiv {
   display: flex;
   justify-content: center;
