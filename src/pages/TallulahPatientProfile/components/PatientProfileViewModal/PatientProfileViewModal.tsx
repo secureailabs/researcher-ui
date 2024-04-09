@@ -3,7 +3,8 @@ import { Box, Button, Menu, MenuItem, Modal, Typography } from '@mui/material';
 import styles from './PatientProfileViewModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import useNotification from 'src/hooks/useNotification';
-import { GetPatientProfile_Out } from 'src/tallulah-ts-client';
+import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
+import { PatientProfilesService, GetPatientProfile_Out } from 'src/tallulah-ts-client';
 
 export interface IPatientProfileViewModal {
   openModal: boolean;
@@ -28,8 +29,45 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
 
   const [sendNotification] = useNotification();
 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openOptionsMenu = Boolean(anchorEl);
+
   const handleCloseDeleteModal = () => {
     setOpenDeleteModal(false);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOptionsMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleDeleteClick = () => {
+    handleClose();
+    setOpenDeleteModal(true);
+  };
+
+  const handleDelete = async () => {
+    setOpenDeleteModal(false);
+    try {
+      await PatientProfilesService.deletePatientProfile(data.id);
+      sendNotification({
+        msg: 'Removed successfully',
+        variant: 'success'
+      });
+      handleRefresh();
+    } catch (error) {
+      console.log(error);
+      sendNotification({
+        msg: 'Failed to remove',
+        variant: 'error'
+      });
+    }
+
+    handleCloseModal();
+    handleCloseDeleteModal();
   };
 
   const renderModalCardHeader = (
@@ -42,6 +80,34 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
         padding: '1rem'
       }}
     >
+      <Button
+        id="basic-button"
+        aria-controls={openOptionsMenu ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={openOptionsMenu ? 'true' : undefined}
+        onClick={handleOptionsMenuClick}
+        variant="outlined"
+      >
+        Actions
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={openOptionsMenu}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button'
+        }}
+        onClose={handleClose}
+      >
+        <MenuItem
+          onClick={() => {
+            handleDeleteClick();
+            handleClose();
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
       <CloseIcon
         onClick={handleCloseModal}
         sx={{
@@ -158,6 +224,11 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
       >
         {renderModalCardHeader}
         {renderModalCardContent}
+        <DeleteConfirmationModal
+          openDeleteModal={openDeleteModal}
+          handleCloseDeleteModal={handleCloseDeleteModal}
+          handleDelete={handleDelete}
+        />
       </Box>
     </Modal>
   );
