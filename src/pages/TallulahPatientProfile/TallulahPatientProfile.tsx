@@ -71,7 +71,6 @@ const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
     try {
       const res = await PatientProfilesService.searchPatientProfiles(profileRepository?.id || '', searchText);
       if (res) {
-        console.log('res', res);
         setPatientProfiles([...res.hits?.hits?.map((hit: any) => hit._source)]);
         setPaginationDetails({
           count: res.hits?.total?.value || 0,

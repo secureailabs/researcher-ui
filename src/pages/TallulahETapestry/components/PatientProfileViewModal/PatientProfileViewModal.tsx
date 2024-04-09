@@ -55,8 +55,6 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
   const { defined_values, ...restAccounts } = data.account;
   type AccountKey = keyof typeof restAccounts;
 
-  console.log('defined_values', defined_values);
-
   const renderModalCardContent = (
     <Box className={styles.container}>
       <Box className={styles.grid}>

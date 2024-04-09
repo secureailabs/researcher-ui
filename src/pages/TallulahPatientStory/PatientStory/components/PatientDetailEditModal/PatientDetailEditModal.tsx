@@ -43,10 +43,6 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [privateFields, setPrivateFields] = useState<any>([]);
 
-  console.log('data: ', data);
-
-  console.log('privateFields: ', privateFields);
-
   const [sendNotification] = useNotification();
 
   const getCorrespondingLabel = (fieldName: string) => {
