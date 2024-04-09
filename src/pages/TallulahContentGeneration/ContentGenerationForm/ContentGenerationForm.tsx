@@ -47,7 +47,7 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
     setSelectedTemplate(template);
     // set all parameters to empty
     const newFormData: any = {};
-    template?.parameters?.forEach((parameter) => {
+    template?.parameters?.forEach((parameter: any) => {
       newFormData[parameter.name] = '';
     });
     setFormData(newFormData);
@@ -215,7 +215,8 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
     const body = {
       template_id: selectedTemplate?.id as string,
       values: formData

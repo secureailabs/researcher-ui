@@ -30,7 +30,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const templateNameString = formTemplate?.card_layout?.name;
+  const templateNameString = formTemplate?.card_layout?.name || 'TEMPLATE0';
   const templateNameEnum = TemplateNames[templateNameString as keyof typeof TemplateNames];
 
   const fetchFormData = async (formId: string) => {
