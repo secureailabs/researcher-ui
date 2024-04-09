@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Menu, MenuItem, Modal, Typography } from '@mui/material';
+import { Box, Button, Divider, Menu, MenuItem, Modal, Typography } from '@mui/material';
 import styles from './PatientProfileViewModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import useNotification from 'src/hooks/useNotification';
 import { GetETapestryData_Out, GetPatientProfile_Out } from 'src/tallulah-ts-client';
+import { convertcamelCaseToTitleCase } from 'src/utils/helper';
 
 export interface IPatientProfileViewModal {
   openModal: boolean;
@@ -54,28 +55,59 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
   const { defined_values, ...restAccounts } = data.account;
   type AccountKey = keyof typeof restAccounts;
 
+  console.log('defined_values', defined_values);
+
   const renderModalCardContent = (
     <Box className={styles.container}>
-      {Object.entries(restAccounts).map(([key]) => {
-        const accountKey = key as AccountKey;
-        if (key === 'defined_values') {
-          return null;
-        }
-        return (
-          <Box
-            sx={{
-              marginTop: '1rem'
-            }}
-          >
-            <Typography variant="h6" className={styles.label}>
-              {key}
-            </Typography>
-            <Typography variant="body1" className={styles.value}>
-              {restAccounts[accountKey] || 'N/A'}
-            </Typography>
+      <Box className={styles.grid}>
+        {Object.entries(restAccounts).map(([key]) => {
+          const accountKey = key as AccountKey;
+          if (key === 'defined_values') {
+            return null;
+          }
+          return (
+            <Box
+              sx={{
+                marginTop: '1rem'
+              }}
+            >
+              <Typography variant="h6" className={styles.label}>
+                {convertcamelCaseToTitleCase(key)}
+              </Typography>
+              <Typography variant="body1" className={styles.value}>
+                {restAccounts[accountKey] || 'N/A'}
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
+      <Divider />
+
+      {defined_values && (
+        <Box
+          sx={{
+            marginTop: '2rem'
+          }}
+        >
+          <Typography variant="h5">Defined Values</Typography>
+          <Box className={styles.grid}>
+            {Object.entries(defined_values).map(([key, value]) => (
+              <Box
+                sx={{
+                  marginTop: '1rem'
+                }}
+              >
+                <Typography variant="body1" className={styles.label}>
+                  {key}
+                </Typography>
+                <Typography variant="body1" className={styles.value}>
+                  {value || 'N/A'}
+                </Typography>
+              </Box>
+            ))}
           </Box>
-        );
-      })}
+        </Box>
+      )}
     </Box>
   );
 

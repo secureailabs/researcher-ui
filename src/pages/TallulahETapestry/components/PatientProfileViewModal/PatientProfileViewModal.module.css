@@ -1,6 +1,11 @@
 .container {
   padding: 40px;
 }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
+}
 .cardHeaderLayout {
   display: flex;
   flex-direction: row;
@@ -94,4 +99,10 @@
 
 .textSection {
   margin-top: 1rem;
+}
+
+.value {
+  font-size: 14px;
+  font-weight: 400;
+  word-break: break-all;
 }

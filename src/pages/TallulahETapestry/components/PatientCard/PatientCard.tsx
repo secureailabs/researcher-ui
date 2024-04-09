@@ -7,6 +7,21 @@ export interface IPatientCard {
 }
 
 const PatientCard: React.FC<IPatientCard> = ({ data }) => {
+  const fieldNamesToDisplay = [
+    {
+      name: 'Email',
+      value: data.account.email
+    },
+    {
+      name: 'City',
+      value: data.account.city
+    },
+    {
+      name: 'Country',
+      value: data.account.country
+    }
+  ];
+
   return (
     <Box className={styles.container}>
       <Typography
@@ -16,24 +31,18 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
           fontSize: '1rem'
         }}
       >
-        {data.account.firstName} {data.account.lastName}
+        {data.account.name}
       </Typography>
-      <Typography
-        variant="body1"
-        sx={{
-          display: '-webkit-box',
-          overflow: 'hidden',
-          WebkitBoxOrient: 'vertical',
-          WebkitLineClamp: 3,
-          wordBreak: 'break-word',
-          whiteSpace: 'normal'
-        }}
-      >
-        Email : {data.account.email}
-      </Typography>
-      <Typography variant="body1">
-        Location : {data.account.city} {data.account.country}
-      </Typography>
+      {fieldNamesToDisplay.map((field) => (
+        <Box className={styles.valueContainer}>
+          <Typography variant="body1" className={styles.label}>
+            {field.name}
+          </Typography>
+          <Typography variant="body1" className={styles.value}>
+            {field.value || 'N/A'}
+          </Typography>
+        </Box>
+      ))}
     </Box>
   );
 };

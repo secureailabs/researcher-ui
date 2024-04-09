@@ -76,4 +76,15 @@ const convertTagsStringToArray = (tags: string | undefined) => {
   return tags.split(',');
 };
 
-export { formatReceivedTime, getEmailLabel, getAllEmailLabels, convertTagsStringToArray, formatReceivedTimeFull };
+const convertcamelCaseToTitleCase = (camelCase: string) => {
+  return camelCase.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+};
+
+export {
+  formatReceivedTime,
+  getEmailLabel,
+  getAllEmailLabels,
+  convertTagsStringToArray,
+  formatReceivedTimeFull,
+  convertcamelCaseToTitleCase
+};

@@ -16,6 +16,12 @@ import PatientProfileViewModal from './components/PatientProfileViewModal';
 
 export interface ITallulahETapestry {}
 
+const INITIAL_PAGINATION_DETAILS = {
+  count: 0,
+  limit: 20,
+  next: 0
+};
+
 const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
   const [searchText, setSearchText] = useState('');
   const [paginationDetails, setPaginationDetails] = useState({
@@ -36,13 +42,12 @@ const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
     try {
       const resPatientProfileRepository: GetMultipleETapestryRepository_Out =
         await EtapestryRepositoriesService.getAllEtapestryRepositories();
-      console.log('resPatientProfileRepository', resPatientProfileRepository);
       setProfileRepository(resPatientProfileRepository.repositories[0]);
       const repositoryId = resPatientProfileRepository.repositories[0].id;
       const res: GetMultipleETapestryData_Out = await EtapestryDataService.getAllEtapestryData(
         repositoryId,
-        (page - 1) * paginationDetails.limit,
-        paginationDetails.limit,
+        (page - 1) * INITIAL_PAGINATION_DETAILS.limit,
+        INITIAL_PAGINATION_DETAILS.limit,
         'creation_time',
         -1
       );
@@ -52,6 +57,24 @@ const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
           count: res.count,
           limit: res?.limit || 10,
           next: res?.next || 0
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
+  };
+
+  const searchETapestryData = async () => {
+    setLoading(true);
+    try {
+      const res = await EtapestryDataService.searchEtapestryData(profileRepository?.id || '', searchText);
+      if (res) {
+        setPatientProfiles([...res.hits?.hits?.map((hit: any) => hit._source)]);
+        setPaginationDetails({
+          count: res.hits?.hits.length || 0,
+          limit: res.hits?.hits.length || 0,
+          next: res.hits?.hits.length || 0
         });
       }
     } catch (err) {
@@ -73,7 +96,11 @@ const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
   };
 
   useEffect(() => {
-    fetchPatientProfile();
+    if (searchText) {
+      searchETapestryData();
+    } else {
+      fetchPatientProfile();
+    }
   }, [searchText]);
 
   useEffect(() => {
@@ -108,7 +135,7 @@ const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
   return (
     <Box className={styles.container}>
       <Box className={styles.searchBarContainer}>
-        <SearchBar placeholder="Search Patient Profiles" searchText={searchText} handleSearchChange={handleSearchChange} />
+        <SearchBar placeholder="Search Profiles" searchText={searchText} handleSearchChange={handleSearchChange} />
       </Box>
       {loading && (
         <Box className={styles.loading}>
@@ -154,7 +181,7 @@ const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
             height: '50vh'
           }}
         >
-          No patient profiles found
+          No profiles found
         </Box>
       ) : null}
 

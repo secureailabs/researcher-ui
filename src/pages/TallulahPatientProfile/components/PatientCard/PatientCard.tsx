@@ -7,14 +7,41 @@ export interface IPatientCard {
 }
 
 const PatientCard: React.FC<IPatientCard> = ({ data }) => {
+  const fieldNamesToDisplay = [
+    {
+      name: 'Age',
+      value: data.age
+    },
+    {
+      name: 'Primary cancer diagnosis',
+      value: data.primary_cancer_diagnosis
+    },
+    {
+      name: 'Social worker name',
+      value: data.social_worker_name
+    },
+    {
+      name: 'Social worker organization',
+      value: data.social_worker_organization
+    },
+    {
+      name: 'Date of diagnosis',
+      value: data.date_of_diagnosis
+    }
+  ];
   return (
     <Box className={styles.container}>
       <Typography variant="h5">{data.name}</Typography>
-      <Typography variant="body2">Age : {data.age}</Typography>
-      <Typography variant="body2">Primary cancer diagnosis: {data.primary_cancer_diagnosis || 'N/A'}</Typography>
-      <Typography variant="body2">Social worker name: {data.social_worker_name || 'N/A'}</Typography>
-      <Typography variant="body2">Social worker organization: {data.social_worker_organization || 'N/A'}</Typography>
-      <Typography variant="body2">Date of diagnosis: {data.date_of_diagnosis || 'N/A'}</Typography>
+      {fieldNamesToDisplay.map((field) => (
+        <Box className={styles.valueContainer}>
+          <Typography variant="body1" className={styles.label}>
+            {field.name}
+          </Typography>
+          <Typography variant="body1" className={styles.value}>
+            {field.value}
+          </Typography>
+        </Box>
+      ))}
     </Box>
   );
 };

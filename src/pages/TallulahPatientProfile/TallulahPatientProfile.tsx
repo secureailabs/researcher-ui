@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid, LinearProgress, Pagination, Typography } from '@mui/material';
+import { Box, Grid, LinearProgress, Pagination, Typography } from '@mui/material';
 import styles from './TallulahPatientProfile.module.css';
 import { useQuery } from 'react-query';
 import {
@@ -16,6 +16,12 @@ import PatientCard from './components/PatientCard';
 import PatientProfileViewModal from './components/PatientProfileViewModal';
 
 export interface ITallulahPatientProfile {}
+
+const INITIAL_PAGINATION_DETAILS = {
+  count: 0,
+  limit: 20,
+  next: 0
+};
 
 const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
   const [searchText, setSearchText] = useState('');
@@ -41,8 +47,8 @@ const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
       const repositoryId = resPatientProfileRepository.repositories[0].id;
       const res: GetMultiplePatientProfiles_Out = await PatientProfilesService.getAllPatientProfiles(
         repositoryId,
-        (page - 1) * paginationDetails.limit,
-        paginationDetails.limit,
+        (page - 1) * INITIAL_PAGINATION_DETAILS.limit,
+        INITIAL_PAGINATION_DETAILS.limit,
         'creation_time',
         -1
       );
@@ -52,6 +58,25 @@ const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
           count: res.count,
           limit: res?.limit || 10,
           next: res?.next || 0
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
+  };
+
+  const searchPatientProfile = async () => {
+    setLoading(true);
+    try {
+      const res = await PatientProfilesService.searchPatientProfiles(profileRepository?.id || '', searchText);
+      if (res) {
+        console.log('res', res);
+        setPatientProfiles([...res.hits?.hits?.map((hit: any) => hit._source)]);
+        setPaginationDetails({
+          count: res.hits?.total?.value || 0,
+          limit: res?.limit || 10,
+          next: res.hits?.total?.value || 0
         });
       }
     } catch (err) {
@@ -73,7 +98,11 @@ const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
   };
 
   useEffect(() => {
-    fetchPatientProfile();
+    if (searchText) {
+      searchPatientProfile();
+    } else {
+      fetchPatientProfile();
+    }
   }, [searchText]);
 
   useEffect(() => {
@@ -152,7 +181,7 @@ const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
             height: '50vh'
           }}
         >
-          No patient profiles found
+          No profiles found
         </Box>
       ) : null}
 
