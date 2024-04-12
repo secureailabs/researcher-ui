@@ -240,29 +240,11 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           <Typography variant="body1" className={styles.label}>
             {rest[key].label}
           </Typography>
-          <Typography
-            variant="body1"
-            className={styles.value}
-            sx={{
-              display: '-webkit-box',
-              overflow: 'hidden',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 3
-            }}
-          >
-            {rest[key].value}
+          <Typography variant="body1" className={styles.value}>
+            {rest[key].value || 'N/A'}
           </Typography>
           {key === 'gender' && genderOther && genderOther?.value && (
-            <Typography
-              variant="body1"
-              className={styles.value}
-              sx={{
-                display: '-webkit-box',
-                overflow: 'hidden',
-                WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 3
-              }}
-            >
+            <Typography variant="body1" className={styles.value}>
               ( {genderOther?.value} )
             </Typography>
           )}
@@ -286,8 +268,8 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             </Typography>
           ) : null}
         </Box>
+        {/* display image  */}
         <Box>
-          {/* display image  */}
           <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient" className={styles.profileImage} />
         </Box>
       </Box>
@@ -314,7 +296,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           <Box className={styles.tag}>{tag}</Box>
         ))}
       </Box>
-
+      {/* Display rest of the key and value data */}
       {Object.keys(rest).map((key: any) => (mediaTypes.includes(data.values[key].type) ? renderMediaDisplay(key) : renderDataDisplay(key)))}
     </Box>
   );
