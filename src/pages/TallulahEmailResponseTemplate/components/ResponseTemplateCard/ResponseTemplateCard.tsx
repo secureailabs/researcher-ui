@@ -27,7 +27,7 @@ const ResponseTemplateCard: React.FC<IResponseTemplateCard> = ({ data, editable 
 
   const handleDelete = async () => {
     try {
-      await ResponseTemplatesService.deleteResponseTemplate(data._id);
+      await ResponseTemplatesService.deleteResponseTemplate(data.id);
       handleRefresh();
       sendNotification({
         msg: 'Template removed successfully',

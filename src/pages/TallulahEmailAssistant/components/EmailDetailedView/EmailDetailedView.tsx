@@ -35,7 +35,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
     setIsLoading(true);
 
     try {
-      const response = await EmailsService.updateEmailLabel(data._id, label);
+      const response = await EmailsService.updateEmailLabel(data.id, label);
       sendNotification({
         msg: 'Email label updated successfully',
         variant: 'success'
@@ -67,10 +67,10 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
           gap: '1rem'
         }}
       >
-        <Button variant="outlined" color="primary" onClick={() => handleViewPreviousEmailClicked(data._id)}>
+        <Button variant="outlined" color="primary" onClick={() => handleViewPreviousEmailClicked(data.id)}>
           Previous
         </Button>
-        <Button variant="outlined" color="primary" onClick={() => handleViewNextEmailClicked(data._id)}>
+        <Button variant="outlined" color="primary" onClick={() => handleViewNextEmailClicked(data.id)}>
           Next
         </Button>
       </Box>
@@ -219,7 +219,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
         }}
         fullWidth
       >
-        <EmailReply setOpenReplyModal={setOpenReplyModal} selectedEmailsIds={[data._id]} mailBoxId={mailBoxId as string} />
+        <EmailReply setOpenReplyModal={setOpenReplyModal} selectedEmailsIds={[data.id]} mailBoxId={mailBoxId as string} />
       </Dialog>
     </Box>
   );

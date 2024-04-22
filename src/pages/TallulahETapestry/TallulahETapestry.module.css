@@ -1,0 +1,25 @@
+.component {
+}
+
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.loadingDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.searchBarContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.patientProfile {
+  width: 100%;
+  word-wrap: break-word;
+}

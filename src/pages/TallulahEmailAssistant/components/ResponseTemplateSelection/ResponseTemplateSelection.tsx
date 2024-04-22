@@ -150,7 +150,7 @@ const ResponseTemplateSelection: React.FC<IResponseTemplateSelection> = ({
           <Box>
             {templateList.map((_template, _index) => (
               <ResponseTemplateCard
-                key={_template._id}
+                key={_template.id}
                 data={_template}
                 editable={false}
                 selection={true}

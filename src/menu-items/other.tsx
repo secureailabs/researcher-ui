@@ -19,7 +19,8 @@ const pagesIdAndCorrespondingRoles: { [key: string]: UserRole[] } = {
   'tallulah-email-assistant': [UserRole.EMAIL_INTEGRATION_USER],
   'patient-story': [UserRole.FORM_INTAKE_USER],
   'content-generation': [UserRole.CONTENT_GENERATION_USER],
-  'patient-profile': [UserRole.FORM_INTAKE_USER] //TODO: Change this to the correct role
+  'patient-profile': [UserRole.PATIENT_PROFILE_USER],
+  'etapestry-data': [UserRole.ETAPESTRY_USER]
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -98,6 +99,21 @@ const pages = [
         title: 'Patient Profile',
         type: 'item',
         url: '/patient-profile',
+        target: false
+      }
+    ]
+  },
+  {
+    id: 'etapestry-data',
+    title: 'ETapestry',
+    type: 'collapse',
+    icon: icons.IconId,
+    children: [
+      {
+        id: 'etapestry',
+        title: 'ETapestry',
+        type: 'item',
+        url: '/etapestry',
         target: false
       }
     ]

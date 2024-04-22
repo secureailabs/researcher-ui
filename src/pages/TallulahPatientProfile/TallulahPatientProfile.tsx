@@ -1,83 +1,197 @@
-import { Box, CircularProgress, Grid } from '@mui/material';
+import { Box, Grid, LinearProgress, Pagination, Typography } from '@mui/material';
 import styles from './TallulahPatientProfile.module.css';
 import { useQuery } from 'react-query';
-import { GetMultiplePatientProfiles_Out, GetPatientProfile_Out, PatientProfilesService } from 'src/tallulah-ts-client';
+import {
+  GetMultiplePatientProfileRepository_Out,
+  GetMultiplePatientProfiles_Out,
+  GetPatientProfileRepository_Out,
+  GetPatientProfile_Out,
+  PatientProfileRepositoriesService,
+  PatientProfilesService
+} from 'src/tallulah-ts-client';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useEffect, useState } from 'react';
 import SearchBar from 'src/components/SearchBar';
 import PatientCard from './components/PatientCard';
+import PatientProfileViewModal from './components/PatientProfileViewModal';
 
 export interface ITallulahPatientProfile {}
+
+const INITIAL_PAGINATION_DETAILS = {
+  count: 0,
+  limit: 20,
+  next: 0
+};
 
 const TallulahPatientProfile: React.FC<ITallulahPatientProfile> = ({}) => {
   const [searchText, setSearchText] = useState('');
   const [paginationDetails, setPaginationDetails] = useState({
     count: 0,
-    limit: 10,
+    limit: 20,
     next: 0
   });
+  const [patientProfiles, setPatientProfiles] = useState<GetPatientProfile_Out[]>([]);
+  const [profileRepository, setProfileRepository] = useState<GetPatientProfileRepository_Out>();
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+
+  const [selectedPatientData, setSelectedPatientData] = useState<GetPatientProfile_Out>();
 
   const fetchPatientProfile = async () => {
-    const res: GetMultiplePatientProfiles_Out = await PatientProfilesService.getAllPatientProfiles();
-    if (res) {
-      setPaginationDetails({
-        count: res.count,
-        limit: res?.limit || 10,
-        next: res?.next || 0
-      });
+    setLoading(true);
+    try {
+      const resPatientProfileRepository: GetMultiplePatientProfileRepository_Out =
+        await PatientProfileRepositoriesService.getAllPatientProfileRepositories();
+      setProfileRepository(resPatientProfileRepository.repositories[0]);
+      const repositoryId = resPatientProfileRepository.repositories[0].id;
+      const res: GetMultiplePatientProfiles_Out = await PatientProfilesService.getAllPatientProfiles(
+        repositoryId,
+        (page - 1) * INITIAL_PAGINATION_DETAILS.limit,
+        INITIAL_PAGINATION_DETAILS.limit,
+        'creation_time',
+        -1
+      );
+      if (res) {
+        setPatientProfiles([...res.patient_profiles]);
+        setPaginationDetails({
+          count: res.count,
+          limit: res?.limit || 10,
+          next: res?.next || 0
+        });
+      }
+    } catch (err) {
+      console.error(err);
     }
-    return res;
+    setLoading(false);
   };
 
-  const patientProfileQuery = useQuery(['patientProfile'], fetchPatientProfile);
+  const searchPatientProfile = async () => {
+    setLoading(true);
+    try {
+      const res = await PatientProfilesService.searchPatientProfiles(profileRepository?.id || '', searchText);
+      if (res) {
+        setPatientProfiles([...res.hits?.hits?.map((hit: any) => hit._source)]);
+        setPaginationDetails({
+          count: res.hits?.total?.value || 0,
+          limit: res?.limit || 10,
+          next: res.hits?.total?.value || 0
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleRefresh = () => {
+    fetchPatientProfile();
+  };
 
   const handleSearchChange = (text: string) => {
     setSearchText(text);
   };
 
   useEffect(() => {
-    patientProfileQuery.refetch();
+    if (searchText) {
+      searchPatientProfile();
+    } else {
+      fetchPatientProfile();
+    }
   }, [searchText]);
 
-  if (patientProfileQuery.isLoading) {
-    return (
-      <Box className={styles.loadingDiv}>
-        <CircularProgress />
+  useEffect(() => {
+    fetchPatientProfile();
+  }, [page]);
+
+  const PaginationComponent = (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        paddingTop: '2rem'
+      }}
+    >
+      <Pagination
+        count={Math.ceil(paginationDetails.count / paginationDetails.limit)}
+        color="primary"
+        onChange={(event, page) => {
+          setPage(page);
+        }}
+      />
+      <Box>
+        <Typography variant="caption" color="textSecondary">
+          {paginationDetails.count} patient profiles found
+        </Typography>
       </Box>
-    );
-  }
+    </Box>
+  );
 
   return (
     <Box className={styles.container}>
       <Box className={styles.searchBarContainer}>
         <SearchBar placeholder="Search Patient Profiles" searchText={searchText} handleSearchChange={handleSearchChange} />
       </Box>
-      <InfiniteScroll
-        dataLength={paginationDetails.count}
-        next={fetchPatientProfile}
-        hasMore={patientProfileQuery.data !== undefined && patientProfileQuery.data?.patient_profiles?.length < paginationDetails.count}
-        loader={<CircularProgress />}
+      {loading && (
+        <Box className={styles.loading}>
+          <LinearProgress />
+        </Box>
+      )}
+      {paginationDetails.count > 0 ? PaginationComponent : null}
+
+      <Box
+        sx={{
+          width: '100%',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '1rem',
+          paddingTop: '2rem'
+        }}
       >
-        <Grid
-          container
-          spacing={2}
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          xs={12}
-          lg={6}
-          xl={6}
+        {patientProfiles?.map((patientProfile: GetPatientProfile_Out) => (
+          <Grid
+            item
+            key={patientProfile.id}
+            className={styles.patientProfile}
+            onClick={() => {
+              setOpenModal(true);
+              setSelectedPatientData(patientProfile);
+            }}
+          >
+            <PatientCard data={patientProfile} />
+          </Grid>
+        ))}
+      </Box>
+
+      {paginationDetails.count > 0 ? (
+        PaginationComponent
+      ) : patientProfiles.length === 0 && !loading ? (
+        <Box
           sx={{
-            paddingTop: '20px'
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '50vh'
           }}
         >
-          {patientProfileQuery.data?.patient_profiles?.map((patientProfile: GetPatientProfile_Out) => (
-            <Grid item key={patientProfile._id} className={styles.patientProfile}>
-              <PatientCard data={patientProfile} />
-            </Grid>
-          ))}
-        </Grid>
-      </InfiniteScroll>
+          No profiles found
+        </Box>
+      ) : null}
+
+      {selectedPatientData ? (
+        <PatientProfileViewModal
+          openModal={openModal}
+          handleCloseModal={handleCloseModal}
+          data={selectedPatientData}
+          handleRefresh={handleRefresh}
+        />
+      ) : null}
     </Box>
   );
 };

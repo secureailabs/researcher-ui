@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
 import MainLayout from 'src/components/layout/MainLayout';
+import TallulahETapestry from 'src/pages/TallulahETapestry';
 
 const Home = Loadable(lazy(async () => await import('src/pages/Home')));
 const TallulahSearch = Loadable(lazy(async () => await import('src/pages/TallulahSearch')));
@@ -79,6 +80,10 @@ const MainRoutes = {
     {
       path: 'patient-profile',
       element: <TallulahPatientProfile />
+    },
+    {
+      path: 'etapestry',
+      element: <TallulahETapestry />
     }
   ]
 };

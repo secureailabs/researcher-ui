@@ -45,6 +45,12 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
   const handleTemplateChange = (event: any) => {
     const template = contentGenerationTemplates.find((template) => template.name === event.target.value);
     setSelectedTemplate(template);
+    // set all parameters to empty
+    const newFormData: any = {};
+    template?.parameters?.forEach((parameter: any) => {
+      newFormData[parameter.name] = '';
+    });
+    setFormData(newFormData);
   };
 
   const handleGenderChange = (event: any) => {
@@ -209,7 +215,8 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
     const body = {
       template_id: selectedTemplate?.id as string,
       values: formData
@@ -298,6 +305,7 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
       >
         {selectedTemplate?.description}
       </Typography>
+
       {selectedTemplate && (
         <Box
           sx={{
@@ -306,32 +314,34 @@ const ContentGenerationForm: React.FC<IContentGenerationForm> = ({}) => {
             marginTop: '20px'
           }}
         >
-          <Box>
-            {selectedTemplate?.parameters?.map((field: any) => (
-              <Box
-                key={field.name}
-                mt={2}
+          <form onSubmit={handleSubmit}>
+            <Box>
+              {selectedTemplate?.parameters?.map((field: any) => (
+                <Box
+                  key={field.name}
+                  mt={2}
+                  sx={{
+                    backgroundColor: 'white'
+                  }}
+                >
+                  {renderField(field)}
+                </Box>
+              ))}
+            </Box>
+            <Box>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
                 sx={{
-                  backgroundColor: 'white'
+                  marginTop: '20px'
                 }}
+                type="submit"
               >
-                {renderField(field)}
-              </Box>
-            ))}
-          </Box>
-          <Box>
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{
-                marginTop: '20px'
-              }}
-              onClick={handleSubmit}
-            >
-              Generate Content
-            </Button>
-          </Box>
+                Generate Content
+              </Button>
+            </Box>
+          </form>
         </Box>
       )}
     </Box>

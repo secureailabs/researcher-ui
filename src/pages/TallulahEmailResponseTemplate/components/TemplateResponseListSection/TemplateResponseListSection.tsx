@@ -16,7 +16,7 @@ const TemplateResponseListSection: React.FC<ITemplateResponseListSection> = ({ t
       {templateList && templateList.length > 0 ? (
         <Box>
           {templateList.map((_template, _index) => (
-            <ResponseTemplateCard key={_template._id} data={_template} handleRefresh={handleRefresh} />
+            <ResponseTemplateCard key={_template.id} data={_template} handleRefresh={handleRefresh} />
           ))}
         </Box>
       ) : null}
