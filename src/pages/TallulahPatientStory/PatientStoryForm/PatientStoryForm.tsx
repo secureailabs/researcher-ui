@@ -83,8 +83,11 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
 
   const handleFormDataChange = (event: any) => {
     const newFormData = { ...formData };
+    // if event.target.type is number then convert the value to number
+    const value = event.target.type === 'number' ? Number(event.target.value) : event.target.value;
+
     newFormData[event.target.name] = {
-      value: event.target.value,
+      value: value,
       label: getCorrespondingLabel(event.target.name),
       type: getCorrespondingType(event.target.name)
     };

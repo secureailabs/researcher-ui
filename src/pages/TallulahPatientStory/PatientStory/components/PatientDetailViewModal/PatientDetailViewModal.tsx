@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, Button, Menu, MenuItem, Modal, Typography } from '@mui/material';
 import PatientImage from 'src/assets/images/users/avatar-3.png';
 import { formatReceivedTimeFull } from 'src/utils/helper';
-import { FormDataService, FormMediaTypes } from 'src/tallulah-ts-client';
+import { FormDataService, FormMediaTypes, GetFormData_Out } from 'src/tallulah-ts-client';
 import styles from './PatientDetailViewModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
@@ -13,7 +13,7 @@ import { ConsoleView } from 'react-device-detect';
 export interface IPatientDetailViewModal {
   openModal: boolean;
   handleCloseModal: () => void;
-  data: any;
+  data: GetFormData_Out;
   handleRefresh: () => void;
 }
 
@@ -50,7 +50,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
   const handleDelete = async () => {
     setOpenDeleteModal(false);
     try {
-      await FormDataService.deleteFormData(data._id);
+      await FormDataService.deleteFormData(data.id);
       sendNotification({
         msg: 'Story removed successfully',
         variant: 'success'
@@ -284,7 +284,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
         >
           Date of Data Use Consent :{' '}
           {data?.values.consent?.value[0] === 'Yes'
-            ? formatReceivedTimeFull(data?.creation_time)
+            ? formatReceivedTimeFull(data?.creation_time as string)
             : data?.values?.consent?.value[0] === 'No'
             ? 'No'
             : 'Pending '}
@@ -327,7 +327,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
         <PatientDetailEditModal
           openModal={showEditModal}
           handleCloseModal={handleCloseEditModal}
-          formDataId={data._id}
+          formDataId={data.id}
           data={data.values}
           handleParentClose={handleCloseModal}
         />

@@ -14,8 +14,6 @@ const PieChartItem: React.FC<IPieChartItem> = ({ response }) => {
     return response[key];
   });
 
-  console.log('response_array', response_array);
-
   const data = response_array[0].buckets.map((bucket: any) => {
     return {
       id: bucket.key,

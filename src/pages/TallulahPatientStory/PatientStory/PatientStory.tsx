@@ -24,7 +24,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [filteredData, setFilteredData] = useState<GetFormData_Out[]>([]); // filteredData is a subset of formData
   const [publishedFormId, setPublishedFormId] = useState<string>('');
   const [formTemplate, setFormTemplate] = useState<GetFormTemplate_Out>();
-  const [selectedPatientData, setSelectedPatientData] = useState<any>(null);
+  const [selectedPatientData, setSelectedPatientData] = useState<GetFormData_Out>();
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
   const [isFormDataFetching, setIsFormDataFetching] = useState<boolean>(false);
 
@@ -180,7 +180,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
         <PatientDetailViewModal
           openModal={openModal}
           handleCloseModal={handleCloseModal}
-          data={selectedPatientData}
+          data={selectedPatientData as GetFormData_Out}
           handleRefresh={handleRefresh}
         />
       ) : null}

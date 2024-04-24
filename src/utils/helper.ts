@@ -1,3 +1,9 @@
+// convert dateTimeEpoch to human readable date
+const formatDateTimeEpoch = (dateTimeEpoch: number) => {
+  const date = new Date(dateTimeEpoch);
+  return date.toLocaleDateString();
+};
+
 const formatReceivedTime = (receivedTime: string) => {
   const currentDate = new Date();
   const receivedDate = new Date(receivedTime);
@@ -86,5 +92,6 @@ export {
   getAllEmailLabels,
   convertTagsStringToArray,
   formatReceivedTimeFull,
-  convertcamelCaseToTitleCase
+  convertcamelCaseToTitleCase,
+  formatDateTimeEpoch
 };

@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import styles from './PatientStoryDashboard.module.css';
 import {
   DashboardTemplatesService,
@@ -98,12 +98,21 @@ const PatientStoryDashboard: React.FC<IPatientStoryDashboard> = ({ sampleTextPro
 
   return (
     <Box>
-      {dashboardTemplates.map((dashboard: any) => (
-        <Box key={dashboard.id}>
-          <Box>{dashboard.name}</Box>
-          {dashboard.layout?.widgets?.map((widget: DashboardWidget) => (
-            <DashboardItem widget={widget} response={getResponseObject(dashboard, widget)} />
-          ))}
+      {dashboardTemplates.map((dashboard: IDashboardTemplate) => (
+        <Box key={dashboard.id} className={styles.outerDashboardDiv}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center'
+            }}
+          >
+            <Typography variant="h5">{dashboard.name}</Typography>{' '}
+          </Box>
+          <Box className={styles.dashboardLayout}>
+            {dashboard.layout?.widgets?.map((widget: DashboardWidget) => (
+              <DashboardItem widget={widget} response={getResponseObject(dashboard, widget)} />
+            ))}
+          </Box>
         </Box>
       ))}
     </Box>
