@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import styles from './PatientStoryDashboard.module.css';
 import {
   DashboardTemplatesService,
@@ -23,6 +23,7 @@ export interface IDashboardTemplate extends GetDashboardTemplate_Out {
 const PatientStoryDashboard: React.FC<IPatientStoryDashboard> = ({ sampleTextProp }) => {
   const [formTemplates, setFormTemplates] = useState<GetFormTemplate_Out[]>([]);
   const [dashboardTemplates, setDashboardTemplates] = useState<IDashboardTemplate[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchPublishedFormTemplate = async () => {
     try {
@@ -36,6 +37,7 @@ const PatientStoryDashboard: React.FC<IPatientStoryDashboard> = ({ sampleTextPro
   };
 
   const executeDashboardTemplates = async (templates: any) => {
+    setIsLoading(true);
     for (const dashboardTemplate of templates) {
       try {
         const res: GetDashboardTemplate_Out = await DashboardTemplatesService.executeDashboardTemplate(
@@ -58,6 +60,7 @@ const PatientStoryDashboard: React.FC<IPatientStoryDashboard> = ({ sampleTextPro
         console.log(err);
       }
     }
+    setIsLoading(false);
   };
 
   const fetchDashboardTemplates = async () => {
@@ -103,10 +106,12 @@ const PatientStoryDashboard: React.FC<IPatientStoryDashboard> = ({ sampleTextPro
           <Box
             sx={{
               display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
               justifyContent: 'center'
             }}
           >
-            <Typography variant="h5">{dashboard.name}</Typography>{' '}
+            <Typography variant="h5">{dashboard.name}</Typography> {isLoading && <CircularProgress sx={{ margin: '20px' }} />}
           </Box>
           <Box className={styles.dashboardLayout}>
             {dashboard.layout?.widgets?.map((widget: DashboardWidget) => (

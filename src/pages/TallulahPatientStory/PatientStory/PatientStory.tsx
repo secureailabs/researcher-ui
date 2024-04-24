@@ -68,7 +68,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     setIsFormDataFetching(true);
     const res = await FormDataService.searchFormData(publishedFormId, text);
     const data = res.hits.hits.map((hit: any) => hit._id);
-    const newfilteredData = formData.filter((item: any) => data.includes(item._id));
+    const newfilteredData = formData.filter((item: GetFormData_Out) => data.includes(item.id));
     setFilteredData(newfilteredData);
     setIsFormDataFetching(false);
   };
