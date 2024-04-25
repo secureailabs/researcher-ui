@@ -33,7 +33,7 @@ const pagesIdAndCorrespondingRoles: { [key: string]: UserRole[] } = {
   'content-generation': [UserRole.CONTENT_GENERATION_USER],
   'patient-profile': [UserRole.PATIENT_PROFILE_USER],
   'etapestry-data': [UserRole.ETAPESTRY_USER],
-  Dashboard: [UserRole.PATIENT_PROFILE_USER]
+  Dashboard: [UserRole.FORM_INTAKE_USER]
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
