@@ -124,7 +124,7 @@ const MainLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Element 
       try {
         const res = await AuthenticationService.getCurrentUserInfo();
         dispatch(updateUserProfile(res));
-        initAmplitude(res.organization);
+        initAmplitude(res.organization_name);
         return res;
       } catch (err) {
         console.error('User session fetch failed', err);

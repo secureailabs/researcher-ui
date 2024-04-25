@@ -1,5 +1,14 @@
 // assets
-import { IconChartHistogram, IconDatabaseCog, IconUpload, IconDeviceDesktopAnalytics, IconId } from '@tabler/icons-react';
+import {
+  IconChartHistogram,
+  IconDatabaseCog,
+  IconUpload,
+  IconDeviceDesktopAnalytics,
+  IconId,
+  IconListDetails,
+  IconPencil,
+  IconUsers
+} from '@tabler/icons-react';
 
 // type
 import { store } from 'src/store';
@@ -11,7 +20,10 @@ const icons = {
   IconDatabaseCog,
   IconUpload,
   IconDeviceDesktopAnalytics,
-  IconId
+  IconId,
+  IconListDetails,
+  IconPencil,
+  IconUsers
 };
 
 const pagesIdAndCorrespondingRoles: { [key: string]: UserRole[] } = {
@@ -20,7 +32,8 @@ const pagesIdAndCorrespondingRoles: { [key: string]: UserRole[] } = {
   'patient-story': [UserRole.FORM_INTAKE_USER],
   'content-generation': [UserRole.CONTENT_GENERATION_USER],
   'patient-profile': [UserRole.PATIENT_PROFILE_USER],
-  'etapestry-data': [UserRole.ETAPESTRY_USER]
+  'etapestry-data': [UserRole.ETAPESTRY_USER],
+  Dashboard: [UserRole.FORM_INTAKE_USER]
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -30,10 +43,17 @@ let currentMenuItems: any = [];
 // Define the pages and their structure
 const pages = [
   {
+    id: 'Dashboard',
+    title: 'Dashboard',
+    type: 'item',
+    icon: icons.IconChartHistogram,
+    url: '/dashboard'
+  },
+  {
     id: 'tallulah-email-assistant',
     title: 'Email Assistant',
     type: 'collapse',
-    icon: icons.IconChartHistogram,
+    icon: icons.IconListDetails,
     children: [
       {
         id: 'email-assistant',
@@ -70,7 +90,7 @@ const pages = [
     id: 'content-generation',
     title: 'Content Generation',
     type: 'collapse',
-    icon: icons.IconId,
+    icon: icons.IconPencil,
     children: [
       {
         id: 'content-generation-form',
@@ -92,7 +112,7 @@ const pages = [
     id: 'patient-profile',
     title: 'Patient Profile',
     type: 'collapse',
-    icon: icons.IconId,
+    icon: icons.IconUsers,
     children: [
       {
         id: 'patient-profile',
@@ -107,7 +127,7 @@ const pages = [
     id: 'etapestry-data',
     title: 'ETapestry',
     type: 'collapse',
-    icon: icons.IconId,
+    icon: icons.IconUsers,
     children: [
       {
         id: 'etapestry',

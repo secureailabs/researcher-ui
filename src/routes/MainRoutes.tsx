@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
 import MainLayout from 'src/components/layout/MainLayout';
+import Dashboard from 'src/pages/Dashboard';
 import TallulahETapestry from 'src/pages/TallulahETapestry';
 
 const Home = Loadable(lazy(async () => await import('src/pages/Home')));
@@ -31,6 +32,11 @@ const MainRoutes = {
       path: 'home',
       element: <Home />,
       breadcrumb: 'Home'
+    },
+    {
+      path: 'dashboard',
+      element: <Dashboard />,
+      breadcrumb: 'Dashboard'
     },
     {
       path: 'tallulah-search',
