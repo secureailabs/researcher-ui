@@ -14,8 +14,14 @@ import SearchBar from 'src/components/SearchBar';
 import PatientDetailViewModal from './components/PatientDetailViewModal';
 import CardTemplates from './components/CardTemplates';
 import { TemplateNames } from './components/CardTemplates/CardTemplates';
+import Filter from './components/Filter';
 
 export interface IPatientStory {}
+
+export type PatientStoryFilter = {
+  name: string;
+  options: string[];
+};
 
 const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -27,11 +33,26 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [selectedPatientData, setSelectedPatientData] = useState<GetFormData_Out>();
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
   const [isFormDataFetching, setIsFormDataFetching] = useState<boolean>(false);
+  const [selectedFilter, setSelectedFilter] = useState<any>({});
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const templateNameString = formTemplate?.card_layout?.name || 'TEMPLATE0';
   const templateNameEnum = TemplateNames[templateNameString as keyof typeof TemplateNames];
+
+  console.log('selectedFilter', selectedFilter);
+
+  const getFilterObjects = () => {
+    // flat map the field groups to get the fields and create an array with the field names and options
+    const fields = formTemplate?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields);
+    const filterObject: PatientStoryFilter[] = [];
+    fields?.forEach((field) => {
+      if (field?.type === 'SELECT' || field?.type === 'RADIO' || field?.type === 'CHECKBOX') {
+        const options = field?.options || [];
+        filterObject.push({ name: field.name, options });
+      }
+    });
+    return filterObject;
+  };
 
   const fetchFormData = async (formId: string) => {
     setIsFormDataFetching(true);
@@ -105,12 +126,9 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
 
   return (
     <Box className={styles.container}>
-      <Box
-        sx={{
-          marginY: '2rem'
-        }}
-      >
+      <Box className={styles.searchContainer}>
         <SearchBar placeholder="Search Patient By Name, Tags or Journey " searchText={searchText} handleSearchChange={handleSearchChange} />
+        <Filter filterObjects={getFilterObjects()} setSelectedFilter={setSelectedFilter} selectedFilter={selectedFilter} />
       </Box>
       {isFormTemplateFetching || isFormDataFetching ? (
         <Box
