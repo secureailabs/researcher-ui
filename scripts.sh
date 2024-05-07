@@ -47,7 +47,7 @@ push_image_to_registry() {
 # Function to build image
 build_image() {
     check_docker
-    docker build -t $1 -f "docker/Dockerfile" .
+    docker build -t $1 -f "docker/Dockerfile" --platform linux/amd64 .
 }
 
 
