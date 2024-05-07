@@ -34,6 +34,7 @@ const Filter: React.FC<IFilterProps> = ({ filterObjects, setSelectedFilter, sele
               label: option,
               sx: {
                 backgroundColor: isSelected(filterObject.name, option) ? '#a1d0f7' : 'white'
+                // override hover color
               },
               callback: (event, item) => {
                 if (selectedFilter && selectedFilter[filterObject.name] && selectedFilter[filterObject.name].includes(option)) {
@@ -44,7 +45,6 @@ const Filter: React.FC<IFilterProps> = ({ filterObjects, setSelectedFilter, sele
                   }
                   setSelectedFilter(newSelectedFilter);
                 } else {
-                  console.log('adding', option);
                   setSelectedFilter({ ...selectedFilter, [filterObject.name]: [...(selectedFilter[filterObject.name] || []), option] });
                 }
               }

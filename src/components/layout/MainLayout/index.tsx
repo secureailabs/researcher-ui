@@ -158,7 +158,7 @@ const MainLayout = ({ sideBarMenuType = SideBarMenuEnum.DEFAULT }): JSX.Element 
       {process.env.REACT_APP_ENV === 'development' && (
         <Box
           sx={{
-            position: 'sticky',
+            position: 'absolute',
             top: 0,
             left: 0,
             height: '20px',
