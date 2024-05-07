@@ -1,7 +1,7 @@
 import { Box, IconButton, Typography } from '@mui/material';
 import styles from './FilterChip.module.css';
 import CloseIcon from '@mui/icons-material/Close';
-import { getEmailLabel } from 'src/utils/helper';
+import { convertcamelCaseToTitleCase, getEmailLabel } from 'src/utils/helper';
 import { set } from 'react-hook-form';
 
 export interface IFilterChip {
@@ -22,7 +22,7 @@ const FilterChip: React.FC<IFilterChip> = ({ filterTag, setFilters, filterKey })
       }}
     >
       <Typography variant="body1" className={styles.filterChip}>
-        {filterKey.toUpperCase()} : {filterTag}
+        {convertcamelCaseToTitleCase(filterKey)} : {filterTag}
       </Typography>
       <IconButton
         size="small"

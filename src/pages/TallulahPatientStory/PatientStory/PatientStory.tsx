@@ -166,6 +166,8 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
             setFormTemplate(selectedTemplate);
             // fetch form data
             fetchFormData(event.target.value);
+            // clear filters
+            setSelectedFilter({});
           }}
           fullWidth
           sx={{
@@ -174,7 +176,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
             marginTop: '1rem'
           }}
         >
-          {publishedTemplateList.map((template) => (
+          {publishedTemplateList?.map((template) => (
             <MenuItem key={template.id} value={template.id}>
               {template.name}
             </MenuItem>
@@ -196,6 +198,8 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
             searchText={searchText}
             handleSearchChange={handleSearchChange}
           />
+        </Box>
+        <Box className={styles.filterContainer}>
           <Filter filterObjects={getFilterObjects()} setSelectedFilter={setSelectedFilter} selectedFilter={selectedFilter} />
         </Box>
         <Box>

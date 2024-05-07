@@ -5,6 +5,7 @@ import { MenuItemData, NestedDropdown } from 'mui-nested-menu';
 import { useEffect, useState } from 'react';
 import { sendAmplitudeData } from 'src/utils/Amplitude/amplitude';
 import { PatientStoryFilter } from 'src/pages/TallulahPatientStory/PatientStory/PatientStory';
+import { convertcamelCaseToTitleCase } from 'src/utils/helper';
 
 interface IFilterProps {
   filterObjects: PatientStoryFilter[];
@@ -27,7 +28,7 @@ const Filter: React.FC<IFilterProps> = ({ filterObjects, setSelectedFilter, sele
       label: 'Filter',
       items: filterObjects.map((filterObject) => {
         return {
-          label: filterObject.name,
+          label: convertcamelCaseToTitleCase(filterObject.name),
           rightIcon: <ChevronRightIcon />,
           items: filterObject.options.map((option) => {
             return {
