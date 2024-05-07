@@ -67,6 +67,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
   const [uploaded, setUploaded] = useState<boolean>(false);
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
   const [selectedGender, setSelectedGender] = useState('');
+  const [formTemplates, setFormTemplates] = useState<GetFormTemplate_Out[]>();
 
   const [sendNotification] = useNotification();
   let { id } = useParams();
@@ -409,6 +410,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
     try {
       const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
       const filteredData = res.templates.filter((formTemplate: any) => formTemplate.state === 'PUBLISHED');
+      setFormTemplates(filteredData);
       const formTemplate = filteredData[0];
       setFormLayout(formTemplate);
       // create form data object with empty values
@@ -590,6 +592,45 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
 
   const formPublicLink = window.location.origin + '/form/';
 
+  const TemplateSelector = () => {
+    return (
+      <Box className={styles.templateSelectorDiv}>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={formLayout?.id}
+          onChange={(event: any) => {
+            const selectedFormTemplate = formTemplates?.find((template) => template.id === event.target.value);
+            setFormLayout(selectedFormTemplate);
+            const formDataObj: any = {};
+            selectedFormTemplate?.field_groups
+              ?.flatMap((fieldGroup: any) => fieldGroup.fields)
+              .forEach((field: any) => {
+                formDataObj[field.name] = {
+                  value: '',
+                  label: field.label,
+                  type: field.type
+                };
+              });
+            setFormData(formDataObj);
+          }}
+          fullWidth
+          sx={{
+            backgroundColor: 'white',
+            borderRadius: '5px',
+            marginTop: '1rem'
+          }}
+        >
+          {formTemplates?.map((template) => (
+            <MenuItem key={template.id} value={template.id}>
+              {template.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </Box>
+    );
+  };
+
   return (
     <Box className={styles.container}>
       {uploading && (
@@ -642,35 +683,45 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
           </Box>
         </Box>
       )}
-      {/* id undefined means the form is being accessed via non public link */}
+      {/* id undefined means the form is being accessed via NON public link */}
       {id === undefined ? (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%'
-          }}
-        >
-          <Typography>
-            Form Public Link -{' '}
-            <a href={formPublicLink + formLayout?.id} target="_blank" rel="noreferrer">
-              {formPublicLink + formLayout?.id}
-            </a>
-          </Typography>
-
-          <ContentCopyIcon
+        <Box>
+          <Box
             sx={{
-              cursor: 'pointer'
+              width: '300px',
+              marginBottom: '1rem'
             }}
-            onClick={() => {
-              navigator.clipboard.writeText(formPublicLink + formLayout?.id);
-              sendNotification({
-                msg: 'Copied to clipboard',
-                variant: 'success'
-              });
+          >
+            <TemplateSelector />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%'
             }}
-          />
+          >
+            <Typography>
+              Form Public Link -{' '}
+              <a href={formPublicLink + formLayout?.id} target="_blank" rel="noreferrer">
+                {formPublicLink + formLayout?.id}
+              </a>
+            </Typography>
+
+            <ContentCopyIcon
+              sx={{
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                navigator.clipboard.writeText(formPublicLink + formLayout?.id);
+                sendNotification({
+                  msg: 'Copied to clipboard',
+                  variant: 'success'
+                });
+              }}
+            />
+          </Box>
         </Box>
       ) : null}
       {id !== undefined && formLayout?.logo && (

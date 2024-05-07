@@ -23,6 +23,7 @@ export class FormDataService {
      * @param limit Number of emails to return
      * @param sortKey Sort key
      * @param sortDirection Sort direction
+     * @param requestBody
      * @returns GetMultipleFormData_Out Successful Response
      * @throws ApiError
      */
@@ -32,9 +33,10 @@ export class FormDataService {
         limit: number = 200,
         sortKey: string = 'creation_time',
         sortDirection: number = -1,
+        requestBody?: Record<string, Array<string>>,
     ): CancelablePromise<GetMultipleFormData_Out> {
         return __request(OpenAPI, {
-            method: 'GET',
+            method: 'PUT',
             url: '/api/form-data/',
             query: {
                 'form_template_id': formTemplateId,
@@ -43,6 +45,8 @@ export class FormDataService {
                 'sort_key': sortKey,
                 'sort_direction': sortDirection,
             },
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: `Validation Error`,
             },
