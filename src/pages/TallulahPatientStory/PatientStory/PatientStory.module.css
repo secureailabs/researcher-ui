@@ -1,10 +1,4 @@
 .container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding-top: 20px;
 }
 
 .searchContainer {
@@ -15,11 +9,15 @@
 }
 
 .patientStoryContainer {
-  flex: 9;
+  margin-top: 20px;
 }
 
 .templateListContainer {
   flex: 1;
   margin-top: 50px;
   margin-right: 20px;
+}
+
+.templateSelectorDiv {
+  width: 300px;
 }

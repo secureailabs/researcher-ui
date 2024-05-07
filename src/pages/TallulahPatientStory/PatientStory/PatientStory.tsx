@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid, Tab, Tabs, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, InputLabel, MenuItem, Select, Tab, Tabs, Typography } from '@mui/material';
 import styles from './PatientStory.module.css';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -15,6 +15,8 @@ import PatientDetailViewModal from './components/PatientDetailViewModal';
 import CardTemplates from './components/CardTemplates';
 import { TemplateNames } from './components/CardTemplates/CardTemplates';
 import Filter from './components/Filter';
+import { AnyAction } from 'redux';
+import FilterChip from './components/FilterChip';
 
 export interface IPatientStory {}
 
@@ -34,7 +36,6 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [searchText, setSearchText] = useState<string | undefined>(undefined);
   const [formData, setFormData] = useState<GetFormData_Out[]>([]);
   const [filteredData, setFilteredData] = useState<GetFormData_Out[]>([]); // filteredData is a subset of formData
-  const [publishedFormId, setPublishedFormId] = useState<string>('');
   const [formTemplate, setFormTemplate] = useState<GetFormTemplate_Out>();
   const [selectedPatientData, setSelectedPatientData] = useState<GetFormData_Out>();
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
@@ -42,6 +43,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [selectedFilter, setSelectedFilter] = useState<any>({});
   const [tabValue, setTabValue] = useState<number>(0);
   const [publishedTemplateList, setPublishedTemplateList] = useState<GetFormTemplate_Out[]>([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const templateNameString = formTemplate?.card_layout?.name || 'TEMPLATE0';
@@ -92,7 +94,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       // filter the published state
       const filteredData = res.templates.filter((formTemplate: any) => formTemplate.state === 'PUBLISHED');
       setPublishedTemplateList(filteredData);
-      setPublishedFormId(filteredData[0].id);
+      setSelectedTemplateId(filteredData[0].id);
       setFormTemplate(filteredData[0]);
       fetchFormData(filteredData[0].id);
     } catch (err) {
@@ -107,7 +109,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
 
   const fetchSearchResults = async (text: string) => {
     setIsFormDataFetching(true);
-    const res = await FormDataService.searchFormData(publishedFormId, text);
+    const res = await FormDataService.searchFormData(selectedTemplateId, text);
     const data = res.hits.hits.map((hit: any) => hit._id);
     const newfilteredData = formData.filter((item: GetFormData_Out) => data.includes(item.id));
     setFilteredData(newfilteredData);
@@ -145,62 +147,47 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   }, []);
 
   useEffect(() => {
-    if (publishedFormId) {
-      fetchFormData(publishedFormId);
+    if (selectedTemplateId) {
+      fetchFormData(selectedTemplateId);
     }
   }, [selectedFilter]);
 
-  function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
+  const TemplateSelector = () => {
     return (
-      <div role="tabpanel" hidden={value !== index} id={`vertical-tabpanel-${index}`} aria-labelledby={`vertical-tab-${index}`} {...other}>
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
-
-  const TemplateList = () => {
-    return (
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <Typography variant="h6" sx={{ margin: '1rem' }}>
-          Forms
-        </Typography>
-        <Tabs
-          orientation="vertical"
-          variant="scrollable"
-          value={tabValue}
-          onChange={(event: React.SyntheticEvent<Element, Event>, newValue: number) => {
-            setTabValue(newValue);
+      <Box className={styles.templateSelectorDiv}>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={selectedTemplateId}
+          onChange={(event: any) => {
+            setSelectedTemplateId(event.target.value as string);
+            // update new form template
+            const selectedTemplate = publishedTemplateList.find((template) => template.id === event.target.value);
+            setFormTemplate(selectedTemplate);
+            // fetch form data
+            fetchFormData(event.target.value);
           }}
-          aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: 'divider' }}
+          fullWidth
+          sx={{
+            backgroundColor: 'white',
+            borderRadius: '5px',
+            marginTop: '1rem'
+          }}
         >
-          {publishedTemplateList.map((template, index) => (
-            <Tab
-              key={template.id}
-              label={template.name}
-              sx={{
-                backgroundColor: tabValue === index ? '#abe1f5' : 'white',
-                color: tabValue === index ? 'white' : 'black',
-                fontWeight: tabValue === index ? 'bold' : 'normal',
-                fontColor: tabValue === index ? 'white' : 'black'
-              }}
-            />
+          {publishedTemplateList.map((template) => (
+            <MenuItem key={template.id} value={template.id}>
+              {template.name}
+            </MenuItem>
           ))}
-        </Tabs>
+        </Select>
       </Box>
     );
   };
 
   return (
     <Box className={styles.container}>
-      <Box className={styles.templateListContainer}>
-        <TemplateList />
+      <Box>
+        <TemplateSelector />
       </Box>
       <Box className={styles.patientStoryContainer}>
         <Box className={styles.searchContainer}>
@@ -210,6 +197,26 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
             handleSearchChange={handleSearchChange}
           />
           <Filter filterObjects={getFilterObjects()} setSelectedFilter={setSelectedFilter} selectedFilter={selectedFilter} />
+        </Box>
+        <Box>
+          {/* get keys of selectedFilter and loop to disl;ay all the filter tags */}
+          <Box
+            className={styles.filterTagsContainer}
+            sx={{
+              display: 'flex',
+              marginBottom: '1rem'
+            }}
+          >
+            {Object.keys(selectedFilter).map((key) =>
+              selectedFilter[key].map((tag: string) => {
+                return (
+                  <Box key={key} className={styles.filterTag}>
+                    <FilterChip filterTag={tag} filterKey={key} setFilters={setSelectedFilter} />
+                  </Box>
+                );
+              })
+            )}
+          </Box>
         </Box>
 
         {isFormTemplateFetching || isFormDataFetching ? (
