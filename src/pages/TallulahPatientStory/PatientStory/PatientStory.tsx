@@ -17,6 +17,7 @@ import { TemplateNames } from './components/CardTemplates/CardTemplates';
 import Filter from './components/Filter';
 import { AnyAction } from 'redux';
 import FilterChip from './components/FilterChip';
+import Sort from './components/Sort';
 
 export interface IPatientStory {}
 
@@ -44,6 +45,8 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [tabValue, setTabValue] = useState<number>(0);
   const [publishedTemplateList, setPublishedTemplateList] = useState<GetFormTemplate_Out[]>([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
+  const [sortKey, setSortKey] = useState<string>('creation_time');
+  const [sortDirection, setSortDirection] = useState<number>(-1);
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const templateNameString = formTemplate?.card_layout?.name || 'TEMPLATE0';
@@ -68,8 +71,8 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       const filterFormTemplateId = formId;
       const filterSkip = 0;
       const filterLimit = 200;
-      const filterSortKey = 'creation_time';
-      const filterSortDirection = -1;
+      const filterSortKey = sortKey;
+      const filterSortDirection = sortDirection;
       const filterRequestBody = selectedFilter;
       const res: GetMultipleFormData_Out = await FormDataService.getAllFormData(
         filterFormTemplateId,
@@ -152,6 +155,12 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     }
   }, [selectedFilter]);
 
+  useEffect(() => {
+    if (selectedTemplateId) {
+      fetchFormData(selectedTemplateId);
+    }
+  }, [sortKey, sortDirection]);
+
   const TemplateSelector = () => {
     return (
       <Box className={styles.templateSelectorDiv}>
@@ -201,6 +210,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
         </Box>
         <Box className={styles.filterContainer}>
           <Filter filterObjects={getFilterObjects()} setSelectedFilter={setSelectedFilter} selectedFilter={selectedFilter} />
+          <Sort sortDirection={sortDirection} setSortDirection={setSortDirection} sortKey={sortKey} setSortKey={setSortKey} />
         </Box>
         <Box>
           {/* get keys of selectedFilter and loop to disl;ay all the filter tags */}
