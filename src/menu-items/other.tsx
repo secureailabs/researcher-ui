@@ -71,6 +71,20 @@ const pages = [
     icon: icons.IconId,
     children: [
       {
+        id: 'FormBuilder',
+        title: 'FormBuilder',
+        type: 'item',
+        url: '/form-builder',
+        target: true
+      },
+      {
+        id: 'patient-story-form-templates',
+        title: 'Patient Story Form Templates',
+        type: 'item',
+        url: '/patient-story-form-templates',
+        target: false
+      },
+      {
         id: 'patient-story-form',
         title: 'Patient Story Form',
         type: 'item',

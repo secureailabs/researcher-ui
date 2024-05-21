@@ -3,6 +3,8 @@ import Loadable from 'src/components/extended/Loadable';
 import MainLayout from 'src/components/layout/MainLayout';
 import Dashboard from 'src/pages/Dashboard';
 import TallulahETapestry from 'src/pages/TallulahETapestry';
+import FormBuilder from 'src/pages/TallulahPatientStory/FormBuilder';
+import FormTemplates from 'src/pages/TallulahPatientStory/FormTemplates';
 
 const Home = Loadable(lazy(async () => await import('src/pages/Home')));
 const TallulahSearch = Loadable(lazy(async () => await import('src/pages/TallulahSearch')));
@@ -74,6 +76,14 @@ const MainRoutes = {
     {
       path: 'patient-story',
       element: <PatientStory />
+    },
+    {
+      path: 'patient-story-form-templates',
+      element: <FormTemplates />
+    },
+    {
+      path: 'form-builder',
+      element: <FormBuilder />
     },
     {
       path: 'content-generation-form',
