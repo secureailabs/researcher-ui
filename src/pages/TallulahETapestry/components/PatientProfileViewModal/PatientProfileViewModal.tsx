@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import useNotification from 'src/hooks/useNotification';
 import { GetETapestryData_Out, GetPatientProfile_Out } from 'src/tallulah-ts-client';
 import { convertcamelCaseToTitleCase } from 'src/utils/helper';
+import PatientDetailEditModal from '../PatientDetailEditModal';
 
 export interface IPatientProfileViewModal {
   openModal: boolean;
@@ -26,11 +27,22 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
   const [mediaDetails, setMediaDetails] = useState<any>({});
 
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   const [sendNotification] = useNotification();
 
   const handleCloseDeleteModal = () => {
     setOpenDeleteModal(false);
+  };
+
+  const openOptionsMenu = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOptionsMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
   const renderModalCardHeader = (
@@ -43,6 +55,34 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
         padding: '1rem'
       }}
     >
+      <Button
+        id="basic-button"
+        aria-controls={openOptionsMenu ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={openOptionsMenu ? 'true' : undefined}
+        onClick={handleOptionsMenuClick}
+        variant="outlined"
+      >
+        Actions
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={openOptionsMenu}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button'
+        }}
+        onClose={handleClose}
+      >
+        <MenuItem
+          onClick={() => {
+            setShowEditModal(true);
+            handleClose();
+          }}
+        >
+          Edit
+        </MenuItem>
+      </Menu>
       <CloseIcon
         onClick={handleCloseModal}
         sx={{
@@ -106,6 +146,29 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
           </Box>
         </Box>
       )}
+
+      <Box
+        sx={{
+          marginTop: '2rem'
+        }}
+      >
+        <Typography variant="h5">Tags</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.5rem',
+            marginBottom: '1rem',
+            marginTop: '1rem'
+          }}
+        >
+          {data?.tags && (data?.tags).map((tag: string) => <Box className={styles.tag}>{tag}</Box>)}
+        </Box>
+      </Box>
+      <Box>
+        <Typography variant="h5">Notes</Typography>
+        <Typography variant="body1">{data.notes || 'N/A'}</Typography>
+      </Box>
     </Box>
   );
 
@@ -126,6 +189,16 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
       >
         {renderModalCardHeader}
         {renderModalCardContent}
+        {
+          <PatientDetailEditModal
+            openModal={showEditModal}
+            handleCloseModal={() => {
+              setShowEditModal(false);
+            }}
+            data={data}
+            handleParentClose={() => {}}
+          />
+        }
       </Box>
     </Modal>
   );

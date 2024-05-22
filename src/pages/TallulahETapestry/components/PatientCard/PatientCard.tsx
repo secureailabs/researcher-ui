@@ -33,6 +33,17 @@ const PatientCard: React.FC<IPatientCard> = ({ data }) => {
       >
         {data.account.name}
       </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+          marginBottom: '1rem',
+          marginTop: '1rem'
+        }}
+      >
+        {data?.tags && (data?.tags).map((tag: string) => <Box className={styles.tag}>{tag}</Box>)}
+      </Box>
       {fieldNamesToDisplay.map((field) => (
         <Box className={styles.valueContainer}>
           <Typography variant="body1" className={styles.label}>
