@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import SearchBar from 'src/components/SearchBar';
 import PatientCard from './components/PatientCard';
 import PatientProfileViewModal from './components/PatientProfileViewModal';
+import PatientDetailEditModal from './components/PatientDetailEditModal';
 
 export interface ITallulahETapestry {}
 
@@ -34,6 +35,7 @@ const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [openPatientDetailEditModal, setOpenPatientDetailEditModal] = useState<boolean>(false);
 
   const [selectedPatientData, setSelectedPatientData] = useState<GetETapestryData_Out>();
 

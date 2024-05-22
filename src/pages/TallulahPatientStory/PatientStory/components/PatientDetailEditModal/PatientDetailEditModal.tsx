@@ -251,14 +251,6 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
               padding: '1rem'
             }}
           >
-            {Object.entries(data).map((field: any) => {
-              if (isPrivateField(field[0])) return null;
-              return (
-                <Box key={field[1].name} sx={{ margin: '1rem' }}>
-                  {renderField(field[0], field[1])}
-                </Box>
-              );
-            })}
             {renderEditablePrivateFields}
           </Box>
         </Box>

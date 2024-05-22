@@ -28,3 +28,12 @@
 .valueContainer {
   margin-top: 10px;
 }
+
+.tag {
+  background-color: #fcc69a;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 400;
+  margin-right: 10px;
+}
