@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import AppStripedDataGrid from 'src/components/AppStripedDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
+import { useNavigate } from 'react-router-dom';
 
 export interface IFormTemplates {
   sampleTextProp?: string;
@@ -11,6 +12,8 @@ export interface IFormTemplates {
 
 const FormTemplates: React.FC<IFormTemplates> = () => {
   const [formTemplates, setFormTemplates] = useState<GetFormTemplate_Out[]>([]);
+
+  const navigate = useNavigate();
 
   const fetchFormTemplates = async () => {
     try {
@@ -66,7 +69,13 @@ const FormTemplates: React.FC<IFormTemplates> = () => {
       flex: 1,
       sortable: false,
       renderCell: (params) => (
-        <Button variant="text" color="primary">
+        <Button
+          variant="text"
+          color="primary"
+          onClick={() => {
+            navigate(`/form-builder/${params.row.id}`);
+          }}
+        >
           Edit
         </Button>
       )

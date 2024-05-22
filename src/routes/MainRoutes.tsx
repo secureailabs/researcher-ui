@@ -86,6 +86,10 @@ const MainRoutes = {
       element: <FormBuilder />
     },
     {
+      path: 'form-builder/:id',
+      element: <FormBuilder />
+    },
+    {
       path: 'content-generation-form',
       element: <ContentGenerationForm />
     },

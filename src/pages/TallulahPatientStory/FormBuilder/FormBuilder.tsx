@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './FormBuilder.module.css';
 import {
   Container,
@@ -18,6 +18,9 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import FormPreviewModal from './FormPreviewModal';
+import { useParams } from 'react-router-dom';
+import { FormTemplatesService } from 'src/tallulah-ts-client';
 
 export interface IFormBuilder {}
 
@@ -41,10 +44,12 @@ const fieldTypes = [
 ];
 
 const FormBuilder: React.FC<IFormBuilder> = () => {
+  const [openPreviewModal, setOpenPreviewModal] = useState<boolean>(false);
+
   const [form, setForm] = useState<any>({
     name: '',
     description: '',
-    fieldGroups: []
+    field_groups: []
   });
 
   const [newFieldGroup, setNewFieldGroup] = useState<any>({
@@ -63,6 +68,26 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
     private: false
   });
 
+  let { id } = useParams();
+
+  const fetchFormTemplate = async (id: any) => {
+    try {
+      const res = await FormTemplatesService.getFormTemplate(id);
+      const newForm = {
+        name: res.name,
+        description: res.description,
+        field_groups: res.field_groups
+      };
+      setForm(newForm);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleClosePreviewModal = () => {
+    setOpenPreviewModal(false);
+  };
+
   const handleFormChange = (e: any) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -77,7 +102,7 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
 
   const handleFieldChange = (e: any, groupIndex: any, fieldIndex: any) => {
     const { name, value, type, checked } = e.target;
-    const updatedFieldGroups = [...form.fieldGroups];
+    const updatedFieldGroups = [...form.field_groups];
     const updatedFields = [...updatedFieldGroups[groupIndex].fields];
     const updatedField = {
       ...updatedFields[fieldIndex],
@@ -85,13 +110,13 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
     };
     updatedFields[fieldIndex] = updatedField;
     updatedFieldGroups[groupIndex].fields = updatedFields;
-    setForm({ ...form, fieldGroups: updatedFieldGroups });
+    setForm({ ...form, field_groups: updatedFieldGroups });
   };
 
   const addFieldGroup = () => {
     setForm({
       ...form,
-      fieldGroups: [...form.fieldGroups, { ...newFieldGroup, fields: [{ ...newField }] }]
+      field_groups: [...form.field_groups, { ...newFieldGroup, fields: [{ ...newField }] }]
     });
     setNewFieldGroup({ name: '', description: '' });
     setNewField({
@@ -108,9 +133,9 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
   };
 
   const addFieldToGroup = (groupIndex: any) => {
-    const updatedFieldGroups = [...form.fieldGroups];
+    const updatedFieldGroups = [...form.field_groups];
     updatedFieldGroups[groupIndex].fields = [...updatedFieldGroups[groupIndex].fields, { ...newField }];
-    setForm({ ...form, fieldGroups: updatedFieldGroups });
+    setForm({ ...form, field_groups: updatedFieldGroups });
     setNewField({
       name: '',
       label: '',
@@ -124,20 +149,26 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
   };
 
   const removeFieldGroup = (groupIndex: any) => {
-    const updatedFieldGroups = [...form.fieldGroups];
+    const updatedFieldGroups = [...form.field_groups];
     updatedFieldGroups.splice(groupIndex, 1);
-    setForm({ ...form, fieldGroups: updatedFieldGroups });
+    setForm({ ...form, field_groups: updatedFieldGroups });
   };
 
   const removeField = (groupIndex: any, fieldIndex: any) => {
-    const updatedFieldGroups = [...form.fieldGroups];
+    const updatedFieldGroups = [...form.field_groups];
     updatedFieldGroups[groupIndex].fields.splice(fieldIndex, 1);
-    setForm({ ...form, fieldGroups: updatedFieldGroups });
+    setForm({ ...form, field_groups: updatedFieldGroups });
   };
 
   const handleSubmit = () => {
     console.log('Form Template:', JSON.stringify(form, null, 2));
   };
+
+  useEffect(() => {
+    if (id !== undefined) {
+      fetchFormTemplate(id);
+    }
+  }, []);
 
   return (
     <Container>
@@ -158,13 +189,12 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
           margin="normal"
         />
       </Paper>
-
-      {form.fieldGroups.map((group: any, groupIndex: any) => (
+      {form.field_groups.map((group: any, groupIndex: any) => (
         <Paper key={groupIndex} style={{ padding: 16, marginBottom: 16 }}>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
               <Typography variant="h6" gutterBottom>
-                Field Group {groupIndex + 1}: {group.name}
+                Section {groupIndex + 1}: {group.name}
               </Typography>
             </Grid>
             <Grid item>
@@ -174,25 +204,25 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
             </Grid>
           </Grid>
           <TextField
-            label="Group Name"
+            label="Section Name"
             name="name"
             value={group.name}
             onChange={(e) => {
-              const updatedFieldGroups = [...form.fieldGroups];
+              const updatedFieldGroups = [...form.field_groups];
               updatedFieldGroups[groupIndex].name = e.target.value;
-              setForm({ ...form, fieldGroups: updatedFieldGroups });
+              setForm({ ...form, field_groups: updatedFieldGroups });
             }}
             fullWidth
             margin="normal"
           />
           <TextField
-            label="Group Description"
+            label="Section Description"
             name="description"
             value={group.description}
             onChange={(e) => {
-              const updatedFieldGroups = [...form.fieldGroups];
+              const updatedFieldGroups = [...form.field_groups];
               updatedFieldGroups[groupIndex].description = e.target.value;
-              setForm({ ...form, fieldGroups: updatedFieldGroups });
+              setForm({ ...form, field_groups: updatedFieldGroups });
             }}
             fullWidth
             margin="normal"
@@ -308,7 +338,6 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
           </Box>
         </Paper>
       ))}
-
       <Paper style={{ padding: 16, marginBottom: 16 }}>
         <Typography variant="h6" gutterBottom>
           Add New Field Group
@@ -322,19 +351,26 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
           fullWidth
           margin="normal"
         />
-        <Button variant="contained" color="primary" onClick={addFieldGroup} fullWidth>
-          Add Field Group
+        <Button variant="outlined" color="primary" onClick={addFieldGroup} fullWidth>
+          Add New Section
         </Button>
       </Paper>
-
-      <Button variant="contained" color="secondary" onClick={handleSubmit} fullWidth>
-        Save Form Template
-      </Button>
-
-      <Typography variant="h6" gutterBottom style={{ marginTop: 16 }}>
-        Form Preview
-      </Typography>
-      <pre>{JSON.stringify(form, null, 2)}</pre>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          gap: '1rem',
+          marginBottom: '10px'
+        }}
+      >
+        <Button variant="contained" onClick={handleSubmit} fullWidth>
+          Save Form Template
+        </Button>
+        <Button variant="outlined" onClick={() => setOpenPreviewModal(true)} fullWidth>
+          Preview Form Template
+        </Button>
+      </Box>
+      <FormPreviewModal form={form} openModal={openPreviewModal} handleCloseModal={handleClosePreviewModal} />=
     </Container>
   );
 };
