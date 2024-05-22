@@ -12,6 +12,7 @@ export interface IFormTemplates {
 
 const FormTemplates: React.FC<IFormTemplates> = () => {
   const [formTemplates, setFormTemplates] = useState<GetFormTemplate_Out[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -69,21 +70,41 @@ const FormTemplates: React.FC<IFormTemplates> = () => {
       flex: 1,
       sortable: false,
       renderCell: (params) => (
-        <Button
-          variant="text"
-          color="primary"
-          onClick={() => {
-            navigate(`/form-builder/${params.row.id}`);
-          }}
-        >
-          Edit
-        </Button>
+        <Box>
+          <Button
+            variant="text"
+            color="primary"
+            onClick={() => {
+              navigate(`/form-builder/${params.row.id}`);
+            }}
+          >
+            Edit
+          </Button>
+          {params.row.state === 'TEMPLATE' && (
+            <Button
+              variant="text"
+              color="primary"
+              onClick={async () => {
+                setIsLoading(true);
+                try {
+                  await FormTemplatesService.publishFormTemplate(params.row.id);
+                  fetchFormTemplates();
+                } catch (err) {
+                  console.log(err);
+                }
+                setIsLoading(false);
+              }}
+            >
+              Publish
+            </Button>
+          )}
+        </Box>
       )
     }
   ];
 
   const handleNewFormTemplateClicked = () => {
-    console.log('New Form Template Clicked');
+    navigate('/form-builder');
   };
 
   return (
@@ -104,6 +125,24 @@ const FormTemplates: React.FC<IFormTemplates> = () => {
           backgroundColor: '#fff'
         }}
       >
+        {isLoading && (
+          <Box
+            className={styles.loading}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)'
+            }}
+          >
+            <Typography variant="h5">Publishing...</Typography>
+          </Box>
+        )}
         <AppStripedDataGrid autoHeight rows={formTemplates} columns={columns} />
       </Box>
     </Box>

@@ -14,13 +14,16 @@ import {
   Switch,
   FormControlLabel,
   IconButton,
-  Box
+  Box,
+  CircularProgress,
+  LinearProgress
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import FormPreviewModal from './FormPreviewModal';
 import { useParams } from 'react-router-dom';
 import { FormTemplatesService } from 'src/tallulah-ts-client';
+import useNotification from 'src/hooks/useNotification';
 
 export interface IFormBuilder {}
 
@@ -44,12 +47,16 @@ const fieldTypes = [
 ];
 
 const FormBuilder: React.FC<IFormBuilder> = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
   const [openPreviewModal, setOpenPreviewModal] = useState<boolean>(false);
 
   const [form, setForm] = useState<any>({
     name: '',
     description: '',
-    field_groups: []
+    field_groups: [],
+    card_layout: null,
+    logo: null
   });
 
   const [newFieldGroup, setNewFieldGroup] = useState<any>({
@@ -68,9 +75,12 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
     private: false
   });
 
+  const [sendNotification] = useNotification();
+
   let { id } = useParams();
 
   const fetchFormTemplate = async (id: any) => {
+    setIsFetching(true);
     try {
       const res = await FormTemplatesService.getFormTemplate(id);
       const newForm = {
@@ -82,6 +92,7 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
     } catch (err) {
       console.log(err);
     }
+    setIsFetching(false);
   };
 
   const handleClosePreviewModal = () => {
@@ -160,8 +171,40 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
     setForm({ ...form, field_groups: updatedFieldGroups });
   };
 
+  const addNewFormTemplate = async () => {
+    setIsLoading(true);
+    try {
+      const res = await FormTemplatesService.addNewFormTemplate(form);
+      sendNotification({
+        msg: 'Form Template created successfully.',
+        variant: 'success'
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    setIsLoading(false);
+  };
+
+  const updateFormTemplate = async () => {
+    setIsLoading(true);
+    try {
+      const res = await FormTemplatesService.updateFormTemplate(id as string, form);
+      sendNotification({
+        msg: 'Form Template updated successfully.',
+        variant: 'success'
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    setIsLoading(false);
+  };
+
   const handleSubmit = () => {
-    console.log('Form Template:', JSON.stringify(form, null, 2));
+    if (id === undefined) {
+      addNewFormTemplate();
+    } else {
+      updateFormTemplate();
+    }
   };
 
   useEffect(() => {
@@ -175,6 +218,7 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
       <Typography variant="h4" gutterBottom>
         Form Builder
       </Typography>
+      {isFetching && <LinearProgress />}
       <Paper style={{ padding: 16, marginBottom: 16 }}>
         <Typography variant="h6" gutterBottom>
           Form Information
@@ -358,6 +402,16 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
       <Box
         sx={{
           display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: '10px'
+        }}
+      >
+        {isLoading && <CircularProgress />}
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
           justifyContent: 'space-between',
           gap: '1rem',
           marginBottom: '10px'
@@ -370,7 +424,7 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
           Preview Form Template
         </Button>
       </Box>
-      <FormPreviewModal form={form} openModal={openPreviewModal} handleCloseModal={handleClosePreviewModal} />=
+      <FormPreviewModal form={form} openModal={openPreviewModal} handleCloseModal={handleClosePreviewModal} />
     </Container>
   );
 };
