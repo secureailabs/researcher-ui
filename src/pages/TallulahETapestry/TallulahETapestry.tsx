@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid, LinearProgress, Pagination, Typography } from '@mui/material';
+import { Box, CircularProgress, Button, Grid, LinearProgress, Pagination, Typography } from '@mui/material';
 import styles from './TallulahETapestry.module.css';
 import { useQuery } from 'react-query';
 import {
@@ -14,6 +14,7 @@ import SearchBar from 'src/components/SearchBar';
 import PatientCard from './components/PatientCard';
 import PatientProfileViewModal from './components/PatientProfileViewModal';
 import PatientDetailEditModal from './components/PatientDetailEditModal';
+import useNotification from 'src/hooks/useNotification';
 
 export interface ITallulahETapestry {}
 
@@ -22,8 +23,8 @@ const INITIAL_PAGINATION_DETAILS = {
   limit: 20,
   next: 0
 };
-
 const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
+  const [sendNotification] = useNotification();
   const [searchText, setSearchText] = useState('');
   const [paginationDetails, setPaginationDetails] = useState({
     count: 0,
@@ -38,6 +39,20 @@ const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
   const [openPatientDetailEditModal, setOpenPatientDetailEditModal] = useState<boolean>(false);
 
   const [selectedPatientData, setSelectedPatientData] = useState<GetETapestryData_Out>();
+
+  const handleDataRefresh = async () => {
+    setLoading(true);
+    try {
+      await EtapestryRepositoriesService.refreshEtapestryRepository(profileRepository?.id || '');
+    } catch (err) {
+      console.log(err);
+      sendNotification({
+        msg: err || 'Failed to refresh data.',
+        variant: 'error'
+      });
+    }
+    setLoading(false);
+  };
 
   const fetchPatientProfile = async () => {
     setLoading(true);
@@ -136,6 +151,17 @@ const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
 
   return (
     <Box className={styles.container}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'end'
+        }}
+      >
+        <Button variant="contained" onClick={handleDataRefresh}>
+          Refresh Data
+        </Button>
+      </Box>
       <Box className={styles.searchBarContainer}>
         <SearchBar placeholder="Search Profiles" searchText={searchText} handleSearchChange={handleSearchChange} />
       </Box>
@@ -145,7 +171,6 @@ const TallulahETapestry: React.FC<ITallulahETapestry> = ({}) => {
         </Box>
       )}
       {paginationDetails.count > 0 ? PaginationComponent : null}
-
       <Box
         sx={{
           width: '100%',
