@@ -51,7 +51,10 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({ openModal, 
   const updateETapestryData = async () => {
     setIsLoading(true);
     try {
-      const res = await EtapestryDataService.updateEtapestryData(data.id, tags, notes);
+      const res = await EtapestryDataService.updateEtapestryData(data.id, {
+        notes: notes,
+        tags: tags?.split(',').map((tag) => tag.trim()) || []
+      });
       sendNotification({
         msg: 'Patient details updated successfully.',
         variant: 'success'

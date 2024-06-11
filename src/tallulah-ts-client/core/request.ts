@@ -204,7 +204,7 @@ const sendRequest = async <T>(
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
-      //@ts-ignore
+      // @ts-ignore
       return axiosError.response;
     }
     throw error;

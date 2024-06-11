@@ -334,7 +334,18 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
                                 label="Field Name"
                                 name="name"
                                 value={field.name}
-                                onChange={(e) => handleFieldChange(e, groupIndex, fieldIndex)}
+                                onChange={(e) => {
+                                  handleFieldChange(e, groupIndex, fieldIndex);
+                                  if (field.label === field.name) {
+                                    handleFieldChange({ target: { name: 'label', value: e.target.value } }, groupIndex, fieldIndex);
+                                  }
+                                  if (field.description === field.name) {
+                                    handleFieldChange({ target: { name: 'description', value: e.target.value } }, groupIndex, fieldIndex);
+                                  }
+                                  if (field.place_holder === field.name) {
+                                    handleFieldChange({ target: { name: 'place_holder', value: e.target.value } }, groupIndex, fieldIndex);
+                                  }
+                                }}
                                 fullWidth
                                 margin="normal"
                               />
