@@ -4,7 +4,8 @@ import styles from './PatientProfileViewModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import useNotification from 'src/hooks/useNotification';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
-import { PatientProfilesService, GetPatientProfile_Out } from 'src/tallulah-ts-client';
+import { PatientProfilesService, GetPatientProfile_Out, MediaService, FormMediaTypes } from 'src/tallulah-ts-client';
+import EditPatientProfileModal from '../EditPatientProfileModal';
 
 export interface IPatientProfileViewModal {
   openModal: boolean;
@@ -12,6 +13,32 @@ export interface IPatientProfileViewModal {
   data: GetPatientProfile_Out;
   handleRefresh: () => void;
 }
+
+const ImageFile: React.FC<{ imageId: string }> = ({ imageId }) => {
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const fetchImageUrl = async (imageId: string) => {
+    try {
+      const res = await MediaService.getMediaDownloadUrl(imageId, FormMediaTypes.IMAGE);
+      setImageUrl(res.url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchImageUrl(imageId);
+  }, [imageId]);
+
+  return (
+    <Box
+      sx={{
+        position: 'relative'
+      }}
+    >
+      <img src={imageUrl} alt="patient" className={styles.image} />
+    </Box>
+  );
+};
 
 const mediaTypes = ['FILE', 'IMAGE', 'VIDEO'];
 
@@ -22,10 +49,9 @@ const convertTagsStringToArray = (tags: string | undefined) => {
 
 const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal, handleCloseModal, data, handleRefresh }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
-
   const [mediaDetails, setMediaDetails] = useState<any>({});
-
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [openEditModal, setOpenEditModal] = useState<boolean>(false);
 
   const [sendNotification] = useNotification();
 
@@ -70,6 +96,10 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
     handleCloseDeleteModal();
   };
 
+  const handleEditClicked = () => {
+    setOpenEditModal(true);
+  };
+
   const renderModalCardHeader = (
     <Box
       sx={{
@@ -99,6 +129,7 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
         }}
         onClose={handleClose}
       >
+        <MenuItem onClick={handleEditClicked}>Edit</MenuItem>
         <MenuItem
           onClick={() => {
             handleDeleteClick();
@@ -204,6 +235,12 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
         </Typography>
         <Typography variant="body1">{data.address || 'N/A'}</Typography>
       </Box>
+      <Box className={styles.textSection}>
+        <Typography variant="h6" className={styles.label}>
+          Photos
+        </Typography>
+        <Box>{data.photos && data.photos.length > 0 && data.photos.map((photo: any) => <ImageFile imageId={photo} />)}</Box>
+      </Box>
     </Box>
   );
 
@@ -228,6 +265,12 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
           openDeleteModal={openDeleteModal}
           handleCloseDeleteModal={handleCloseDeleteModal}
           handleDelete={handleDelete}
+        />
+        <EditPatientProfileModal
+          openModal={openEditModal}
+          handleCloseModal={() => setOpenEditModal(false)}
+          data={data}
+          handleRefresh={handleRefresh}
         />
       </Box>
     </Modal>
