@@ -46,7 +46,7 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ spacing, se
           accept="image/*"
           footer={false}
           label={fieldName === 'profilePicture' ? 'Upload Profile Picture' : 'Upload Images'}
-          maxFiles={fieldName === 'profilePicture' ? 1 : 5}
+          maxFiles={fieldName === 'profilePicture' ? 1 : 10}
         >
           {files.map((file) => (
             <FileMosaic {...file} preview />

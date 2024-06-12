@@ -9,7 +9,6 @@ import {
   PatientProfileRepositoriesService,
   PatientProfilesService
 } from 'src/tallulah-ts-client';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { useEffect, useState } from 'react';
 import SearchBar from 'src/components/SearchBar';
 import PatientCard from './components/PatientCard';

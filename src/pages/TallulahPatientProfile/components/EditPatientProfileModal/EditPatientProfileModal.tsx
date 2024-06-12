@@ -13,6 +13,7 @@ import { LoadingButton } from '@mui/lab';
 import ImageUpload from '../ImageUpload';
 import { set } from 'react-hook-form';
 import axios from 'axios';
+import VideoUpload from '../VideoUpload';
 
 export interface IEditPatientProfileModal {
   openModal: boolean;
@@ -25,7 +26,12 @@ export type TImageFileUpload = {
   files: File[];
 };
 
-const ImageFile: React.FC<{ imageId: string }> = ({ imageId }) => {
+export type TMediaFileUpload = {
+  fieldName: string;
+  files: File[];
+};
+
+const ImageFile: React.FC<{ imageId: string; handleRemovePhoto: any }> = ({ imageId, handleRemovePhoto }) => {
   const [imageUrl, setImageUrl] = useState<string>('');
   const fetchImageUrl = async (imageId: string) => {
     try {
@@ -55,9 +61,7 @@ const ImageFile: React.FC<{ imageId: string }> = ({ imageId }) => {
       >
         {/* add a close icon with absolute position */}
         <CloseIcon
-          onClick={() => {
-            console.log('delete image');
-          }}
+          onClick={handleRemovePhoto}
           sx={{
             cursor: 'pointer'
           }}
@@ -68,7 +72,7 @@ const ImageFile: React.FC<{ imageId: string }> = ({ imageId }) => {
   );
 };
 
-const ImageViewComponent: React.FC<{ imageFiles: string[] }> = ({ imageFiles }) => {
+const ImageViewComponent: React.FC<{ imageFiles: string[]; handleRemovePhoto: any }> = ({ imageFiles, handleRemovePhoto }) => {
   return (
     <Box
       sx={{
@@ -79,7 +83,65 @@ const ImageViewComponent: React.FC<{ imageFiles: string[] }> = ({ imageFiles }) 
       }}
     >
       {imageFiles.map((image) => (
-        <ImageFile key={image} imageId={image} />
+        <ImageFile key={image} imageId={image} handleRemovePhoto={handleRemovePhoto} />
+      ))}
+    </Box>
+  );
+};
+
+const VideoFile: React.FC<{ videoId: string; handleRemoveVideo: any }> = ({ videoId, handleRemoveVideo }) => {
+  const [videoUrl, setVideoUrl] = useState<string>('');
+  const fetchImageUrl = async (videoId: string) => {
+    try {
+      const res = await MediaService.getMediaDownloadUrl(videoId, FormMediaTypes.VIDEO);
+      setVideoUrl(res.url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchImageUrl(videoId);
+  }, [videoId]);
+
+  return (
+    <Box
+      sx={{
+        position: 'relative'
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '0',
+          right: '0'
+        }}
+      >
+        {/* add a close icon with absolute position */}
+        <CloseIcon
+          onClick={handleRemoveVideo}
+          sx={{
+            cursor: 'pointer'
+          }}
+        />
+      </Box>
+      <video src={videoUrl} controls className={styles.image} />
+    </Box>
+  );
+};
+
+const VideoViewComponent: React.FC<{ videoFiles: string[]; handleRemoveVideo: any }> = ({ videoFiles, handleRemoveVideo }) => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        gap: '1rem',
+        flexWrap: 'wrap',
+        marginTop: '1rem'
+      }}
+    >
+      {videoFiles.map((video) => (
+        <VideoFile key={video} videoId={video} handleRemoveVideo={handleRemoveVideo} />
       ))}
     </Box>
   );
@@ -88,7 +150,10 @@ const ImageViewComponent: React.FC<{ imageFiles: string[] }> = ({ imageFiles }) 
 const EditPatientProfileModal: React.FC<IEditPatientProfileModal> = ({ openModal, handleCloseModal, data, handleRefresh }) => {
   const [patientData, setPatientData] = useState<GetPatientProfile_Out>(data);
   const [imageFiles, setImageFiles] = useState<TImageFileUpload[]>([]);
+  const [videoFiles, setVideoFiles] = useState<TMediaFileUpload[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [savedPhotosList, setPhotos] = useState<string[]>(data.photos || []);
+  const [savedVideosList, setVideos] = useState<string[]>(data.videos || []);
 
   const {
     id,
@@ -125,6 +190,16 @@ const EditPatientProfileModal: React.FC<IEditPatientProfileModal> = ({ openModal
     }
 
     return { id, fileType: file.type, fileName: file.name };
+  };
+
+  const handleRemovePhoto = (photoId: string) => {
+    const updatedPhotosList = savedPhotosList.filter((photo) => photo !== photoId);
+    setPhotos(updatedPhotosList);
+  };
+
+  const handleRemoveVideo = (videoId: string) => {
+    const updatedVideosList = savedVideosList.filter((video) => video !== videoId);
+    setVideos(updatedVideosList);
   };
 
   const modalContent = (
@@ -173,9 +248,19 @@ const EditPatientProfileModal: React.FC<IEditPatientProfileModal> = ({ openModal
           });
         }}
       />
-      <Box>Image</Box>
-      <ImageUpload fieldName="photos" setImageFiles={setImageFiles} />
-      {photos && photos.length > 0 && <ImageViewComponent imageFiles={photos} />}
+      <Box>
+        <Box>Image</Box>
+        <ImageUpload fieldName="photos" setImageFiles={setImageFiles} />
+        {savedPhotosList && savedPhotosList.length > 0 && (
+          <ImageViewComponent imageFiles={savedPhotosList} handleRemovePhoto={handleRemovePhoto} />
+        )}
+      </Box>
+      <Box>
+        <VideoUpload fieldName="videos" setVideoFiles={setVideoFiles} />
+        {savedVideosList && savedVideosList.length > 0 && (
+          <VideoViewComponent videoFiles={savedVideosList} handleRemoveVideo={handleRemoveVideo} />
+        )}
+      </Box>
     </Box>
   );
 
@@ -226,8 +311,8 @@ const EditPatientProfileModal: React.FC<IEditPatientProfileModal> = ({ openModal
       family_net_monthly_income: patientData.family_net_monthly_income,
       address: patientData.address,
       recent_requests: patientData.recent_requests || [],
-      photos: imageMediaUploadResults.map((result) => result.id),
-      videos: patientData.videos || [],
+      photos: [...savedPhotosList, ...imageMediaUploadResults.map((result) => result.id)],
+      videos: [...savedVideosList, ...videoFiles[0].files.map((file: any) => file.id)],
       notes: patientData.notes,
       tags: patientData.tags
     };

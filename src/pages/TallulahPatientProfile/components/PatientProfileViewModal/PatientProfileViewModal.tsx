@@ -40,6 +40,49 @@ const ImageFile: React.FC<{ imageId: string }> = ({ imageId }) => {
   );
 };
 
+const VideoFile: React.FC<{ videoId: string }> = ({ videoId }) => {
+  const [videoUrl, setVideoUrl] = useState<string>('');
+  const fetchImageUrl = async (videoId: string) => {
+    try {
+      const res = await MediaService.getMediaDownloadUrl(videoId, FormMediaTypes.VIDEO);
+      setVideoUrl(res.url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchImageUrl(videoId);
+  }, [videoId]);
+
+  return (
+    <Box
+      sx={{
+        position: 'relative'
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '0',
+          right: '0'
+        }}
+      >
+        {/* add a close icon with absolute position */}
+        <CloseIcon
+          onClick={() => {
+            console.log('delete image');
+          }}
+          sx={{
+            cursor: 'pointer'
+          }}
+        />
+      </Box>
+      <video src={videoUrl} controls className={styles.image} />
+    </Box>
+  );
+};
+
 const mediaTypes = ['FILE', 'IMAGE', 'VIDEO'];
 
 const convertTagsStringToArray = (tags: string | undefined) => {
@@ -239,7 +282,37 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
         <Typography variant="h6" className={styles.label}>
           Photos
         </Typography>
-        <Box>{data.photos && data.photos.length > 0 && data.photos.map((photo: any) => <ImageFile imageId={photo} />)}</Box>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: '1rem',
+            flexWrap: 'wrap',
+            marginTop: '1rem'
+          }}
+        >
+          {data.photos && data.photos.length > 0 && data.photos.map((photo: any) => <ImageFile imageId={photo} />)}
+        </Box>
+      </Box>
+      <Box className={styles.textSection}>
+        <Typography variant="h6" className={styles.label}>
+          Videos
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: '1rem',
+            flexWrap: 'wrap',
+            marginTop: '1rem'
+          }}
+        >
+          {data.videos && data.videos.length > 0 && data.videos.map((video: any) => <VideoFile videoId={video} />)}
+        </Box>
+      </Box>
+      <Box className={styles.textSection}>
+        <Typography variant="h6" className={styles.label}>
+          Notes
+        </Typography>
+        <Typography variant="body1">{data.notes || 'N/A'}</Typography>
       </Box>
       <Box
         sx={{
