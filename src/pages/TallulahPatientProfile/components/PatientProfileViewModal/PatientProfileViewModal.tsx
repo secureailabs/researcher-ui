@@ -241,6 +241,24 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
         </Typography>
         <Box>{data.photos && data.photos.length > 0 && data.photos.map((photo: any) => <ImageFile imageId={photo} />)}</Box>
       </Box>
+      <Box
+        sx={{
+          marginTop: '2rem'
+        }}
+      >
+        <Typography variant="h5">Tags</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.5rem',
+            marginBottom: '1rem',
+            marginTop: '1rem'
+          }}
+        >
+          {data?.tags && (data?.tags).map((tag: string) => <Box className={styles.tag}>{tag}</Box>)}
+        </Box>
+      </Box>
     </Box>
   );
 
