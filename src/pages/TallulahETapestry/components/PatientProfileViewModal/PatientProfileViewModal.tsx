@@ -3,7 +3,7 @@ import { Box, Button, Divider, Menu, MenuItem, Modal, Typography } from '@mui/ma
 import styles from './PatientProfileViewModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import useNotification from 'src/hooks/useNotification';
-import { GetETapestryData_Out, GetPatientProfile_Out } from 'src/tallulah-ts-client';
+import { FormMediaTypes, GetETapestryData_Out, GetPatientProfile_Out, MediaService } from 'src/tallulah-ts-client';
 import { convertcamelCaseToTitleCase } from 'src/utils/helper';
 import PatientDetailEditModal from '../PatientDetailEditModal';
 
@@ -19,6 +19,75 @@ const mediaTypes = ['FILE', 'IMAGE', 'VIDEO'];
 const convertTagsStringToArray = (tags: string | undefined) => {
   if (!tags) return [];
   return tags.split(',');
+};
+
+const ImageFile: React.FC<{ imageId: string }> = ({ imageId }) => {
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const fetchImageUrl = async (imageId: string) => {
+    try {
+      const res = await MediaService.getMediaDownloadUrl(imageId, FormMediaTypes.IMAGE);
+      setImageUrl(res.url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchImageUrl(imageId);
+  }, [imageId]);
+
+  return (
+    <Box
+      sx={{
+        position: 'relative'
+      }}
+    >
+      <img src={imageUrl} alt="patient" className={styles.image} />
+    </Box>
+  );
+};
+
+const VideoFile: React.FC<{ videoId: string }> = ({ videoId }) => {
+  const [videoUrl, setVideoUrl] = useState<string>('');
+  const fetchImageUrl = async (videoId: string) => {
+    try {
+      const res = await MediaService.getMediaDownloadUrl(videoId, FormMediaTypes.VIDEO);
+      setVideoUrl(res.url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchImageUrl(videoId);
+  }, [videoId]);
+
+  return (
+    <Box
+      sx={{
+        position: 'relative'
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '0',
+          right: '0'
+        }}
+      >
+        {/* add a close icon with absolute position */}
+        <CloseIcon
+          onClick={() => {
+            console.log('delete image');
+          }}
+          sx={{
+            cursor: 'pointer'
+          }}
+        />
+      </Box>
+      <video src={videoUrl} controls className={styles.image} />
+    </Box>
+  );
 };
 
 const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal, handleCloseModal, data, handleRefresh }) => {
@@ -168,6 +237,36 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
       <Box>
         <Typography variant="h5">Notes</Typography>
         <Typography variant="body1">{data.notes || 'N/A'}</Typography>
+      </Box>
+      <Box className={styles.textSection}>
+        <Typography variant="h6" className={styles.label}>
+          Photos
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: '1rem',
+            flexWrap: 'wrap',
+            marginTop: '1rem'
+          }}
+        >
+          {data.photos && data.photos.length > 0 && data.photos.map((photo: any) => <ImageFile imageId={photo} />)}
+        </Box>
+      </Box>
+      <Box className={styles.textSection}>
+        <Typography variant="h6" className={styles.label}>
+          Videos
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: '1rem',
+            flexWrap: 'wrap',
+            marginTop: '1rem'
+          }}
+        >
+          {data.videos && data.videos.length > 0 && data.videos.map((video: any) => <VideoFile videoId={video} />)}
+        </Box>
       </Box>
     </Box>
   );

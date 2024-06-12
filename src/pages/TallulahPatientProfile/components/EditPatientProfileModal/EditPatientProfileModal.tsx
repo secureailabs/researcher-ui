@@ -14,7 +14,7 @@ import ImageUpload from '../ImageUpload';
 import { set } from 'react-hook-form';
 import axios from 'axios';
 import VideoUpload from '../VideoUpload';
-
+import useNotification from 'src/hooks/useNotification';
 export interface IEditPatientProfileModal {
   openModal: boolean;
   handleCloseModal: () => void;
@@ -155,6 +155,8 @@ const EditPatientProfileModal: React.FC<IEditPatientProfileModal> = ({ openModal
   const [savedPhotosList, setPhotos] = useState<string[]>(data.photos || []);
   const [savedVideosList, setVideos] = useState<string[]>(data.videos || []);
 
+  const [sendNotification] = useNotification();
+
   const {
     id,
     patient_id,
@@ -294,6 +296,12 @@ const EditPatientProfileModal: React.FC<IEditPatientProfileModal> = ({ openModal
       mediaUploadPromises.push(handleMediaUpload(file.file, FormMediaTypes.IMAGE));
     });
 
+    const videoMediaUploadPromises: any[] = [];
+
+    videoFiles[0].files.forEach((file: any) => {
+      videoMediaUploadPromises.push(handleMediaUpload(file.file, FormMediaTypes.VIDEO));
+    });
+
     const imageMediaUploadResults = await Promise.all(mediaUploadPromises);
 
     const body: UpdatePatientProfile_In = {
@@ -319,6 +327,10 @@ const EditPatientProfileModal: React.FC<IEditPatientProfileModal> = ({ openModal
 
     try {
       const res = await PatientProfilesService.updatePatientProfile(id, body);
+      sendNotification({
+        msg: 'Patient details updated successfully.',
+        variant: 'success'
+      });
     } catch (err) {
       console.log(err);
     }
