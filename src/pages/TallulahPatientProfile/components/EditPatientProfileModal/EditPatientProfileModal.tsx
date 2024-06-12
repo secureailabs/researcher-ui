@@ -61,7 +61,9 @@ const ImageFile: React.FC<{ imageId: string; handleRemovePhoto: any }> = ({ imag
       >
         {/* add a close icon with absolute position */}
         <CloseIcon
-          onClick={handleRemovePhoto}
+          onClick={() => {
+            handleRemovePhoto(imageId);
+          }}
           sx={{
             cursor: 'pointer'
           }}
@@ -119,7 +121,9 @@ const VideoFile: React.FC<{ videoId: string; handleRemoveVideo: any }> = ({ vide
       >
         {/* add a close icon with absolute position */}
         <CloseIcon
-          onClick={handleRemoveVideo}
+          onClick={() => {
+            handleRemoveVideo(videoId);
+          }}
           sx={{
             cursor: 'pointer'
           }}
@@ -195,6 +199,7 @@ const EditPatientProfileModal: React.FC<IEditPatientProfileModal> = ({ openModal
   };
 
   const handleRemovePhoto = (photoId: string) => {
+    console.log('removing photo', photoId);
     const updatedPhotosList = savedPhotosList.filter((photo) => photo !== photoId);
     setPhotos(updatedPhotosList);
   };
