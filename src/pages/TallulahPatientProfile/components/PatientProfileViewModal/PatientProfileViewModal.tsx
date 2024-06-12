@@ -4,8 +4,17 @@ import styles from './PatientProfileViewModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import useNotification from 'src/hooks/useNotification';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
-import { PatientProfilesService, GetPatientProfile_Out, MediaService, FormMediaTypes } from 'src/tallulah-ts-client';
+import {
+  PatientProfilesService,
+  GetPatientProfile_Out,
+  MediaService,
+  FormMediaTypes,
+  ContentGenerationTemplatesService,
+  ContentGenerationsService,
+  RegisterContentGeneration_In
+} from 'src/tallulah-ts-client';
 import EditPatientProfileModal from '../EditPatientProfileModal';
+import { set } from 'react-hook-form';
 
 export interface IPatientProfileViewModal {
   openModal: boolean;
@@ -95,6 +104,7 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
   const [mediaDetails, setMediaDetails] = useState<any>({});
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
+  const [openContentGenerationModal, setOpenContentGenerationModal] = useState<boolean>(false);
 
   const [sendNotification] = useNotification();
 
@@ -116,6 +126,54 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
   const handleDeleteClick = () => {
     handleClose();
     setOpenDeleteModal(true);
+  };
+
+  const handleContentGenerationClick = async () => {
+    handleClose();
+    await handleContentGeneration();
+  };
+
+  const handleContentGeneration = async () => {
+    setOpenContentGenerationModal(false);
+    try {
+      const content_generation_templates = await ContentGenerationTemplatesService.getAllContentGenerationTemplates();
+      if (content_generation_templates.templates.length === 0) {
+        sendNotification({
+          msg: 'No content generation templates found',
+          variant: 'error'
+        });
+        return;
+      }
+
+      const template_id = content_generation_templates.templates[0].id;
+      console.log(data);
+      const generation_values: any = { ...data, diagnosis: 'Cancer', guardian: data?.guardians[0].name };
+      delete generation_values.guardians;
+      delete generation_values.id;
+      delete generation_values.creation_time;
+      delete generation_values.organization_id;
+      delete generation_values.owner_id;
+      delete generation_values.state;
+      delete generation_values.repository_id;
+      delete generation_values.patient_id;
+
+      const content_generation_req: RegisterContentGeneration_In = {
+        template_id,
+        values: generation_values
+      };
+      await ContentGenerationsService.createContentGeneration(content_generation_req);
+
+      sendNotification({
+        msg: 'Content generation request sent successfully',
+        variant: 'success'
+      });
+    } catch (error) {
+      sendNotification({
+        msg: 'Failed to generate content',
+        variant: 'error'
+      });
+    }
+    handleCloseModal();
   };
 
   const handleDelete = async () => {
@@ -180,6 +238,14 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
           }}
         >
           Delete
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleContentGenerationClick();
+            handleClose();
+          }}
+        >
+          Generate Story
         </MenuItem>
       </Menu>
       <CloseIcon
