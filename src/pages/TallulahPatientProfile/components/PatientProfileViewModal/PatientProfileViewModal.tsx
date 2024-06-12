@@ -75,9 +75,15 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
       }
 
       const template_id = content_generation_templates.templates[0].id;
-      console.log(data);
-      const generation_values: any = { ...data, diagnosis: 'Cancer', guardian: data.guardians[0].name };
-      delete generation_values.guardians;
+      let guardian_combined = '';
+      if (data.guardians && data.guardians.length > 0) {
+        guardian_combined = data.guardians
+          .map((guardian: any) => {
+            return `${guardian.name} (${guardian.relationship})`;
+          })
+          .join(', ');
+      }
+      const generation_values: any = { ...data, guardians: guardian_combined };
       delete generation_values.id;
       delete generation_values.creation_time;
       delete generation_values.organization_id;
@@ -85,6 +91,11 @@ const PatientProfileViewModal: React.FC<IPatientProfileViewModal> = ({ openModal
       delete generation_values.state;
       delete generation_values.repository_id;
       delete generation_values.patient_id;
+      delete generation_values.recent_requests;
+      delete generation_values.photos;
+      delete generation_values.videos;
+      delete generation_values.tags;
+      delete generation_values.notes;
 
       const content_generation_req: RegisterContentGeneration_In = {
         template_id,
