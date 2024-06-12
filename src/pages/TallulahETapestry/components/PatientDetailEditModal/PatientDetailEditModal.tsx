@@ -6,7 +6,8 @@ import {
   FormDataService,
   FormMediaTypes,
   FormTemplatesService,
-  GetMultipleFormTemplate_Out
+  GetMultipleFormTemplate_Out,
+  MediaService
 } from 'src/tallulah-ts-client';
 import styles from './PatientDetailEditModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
@@ -30,6 +31,9 @@ import {
   Modal
 } from '@mui/material';
 import { set } from 'react-hook-form';
+import ImageUpload from '../ImageUpload';
+import VideoUpload from '../VideoUpload';
+import axios from 'axios';
 
 export interface IPatientDetailEditModal {
   openModal: boolean;
@@ -38,20 +42,187 @@ export interface IPatientDetailEditModal {
   handleParentClose: () => void;
 }
 
+export type TImageFileUpload = {
+  fieldName: string;
+  files: File[];
+};
+
+export type TMediaFileUpload = {
+  fieldName: string;
+  files: File[];
+};
+
+const ImageFile: React.FC<{ imageId: string; handleRemovePhoto: any }> = ({ imageId, handleRemovePhoto }) => {
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const fetchImageUrl = async (imageId: string) => {
+    try {
+      const res = await MediaService.getMediaDownloadUrl(imageId, FormMediaTypes.IMAGE);
+      setImageUrl(res.url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchImageUrl(imageId);
+  }, [imageId]);
+
+  return (
+    <Box
+      sx={{
+        position: 'relative'
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '0',
+          right: '0'
+        }}
+      >
+        {/* add a close icon with absolute position */}
+        <CloseIcon
+          onClick={handleRemovePhoto}
+          sx={{
+            cursor: 'pointer'
+          }}
+        />
+      </Box>
+      <img src={imageUrl} alt="patient" className={styles.image} />
+    </Box>
+  );
+};
+
+const ImageViewComponent: React.FC<{ imageFiles: string[]; handleRemovePhoto: any }> = ({ imageFiles, handleRemovePhoto }) => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        gap: '1rem',
+        flexWrap: 'wrap',
+        marginTop: '1rem'
+      }}
+    >
+      {imageFiles.map((image) => (
+        <ImageFile key={image} imageId={image} handleRemovePhoto={handleRemovePhoto} />
+      ))}
+    </Box>
+  );
+};
+
+const VideoFile: React.FC<{ videoId: string; handleRemoveVideo: any }> = ({ videoId, handleRemoveVideo }) => {
+  const [videoUrl, setVideoUrl] = useState<string>('');
+  const fetchImageUrl = async (videoId: string) => {
+    try {
+      const res = await MediaService.getMediaDownloadUrl(videoId, FormMediaTypes.VIDEO);
+      setVideoUrl(res.url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchImageUrl(videoId);
+  }, [videoId]);
+
+  return (
+    <Box
+      sx={{
+        position: 'relative'
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '0',
+          right: '0'
+        }}
+      >
+        {/* add a close icon with absolute position */}
+        <CloseIcon
+          onClick={handleRemoveVideo}
+          sx={{
+            cursor: 'pointer'
+          }}
+        />
+      </Box>
+      <video src={videoUrl} controls className={styles.image} />
+    </Box>
+  );
+};
+
+const VideoViewComponent: React.FC<{ videoFiles: string[]; handleRemoveVideo: any }> = ({ videoFiles, handleRemoveVideo }) => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        gap: '1rem',
+        flexWrap: 'wrap',
+        marginTop: '1rem'
+      }}
+    >
+      {videoFiles.map((video) => (
+        <VideoFile key={video} videoId={video} handleRemoveVideo={handleRemoveVideo} />
+      ))}
+    </Box>
+  );
+};
+
 const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({ openModal, handleCloseModal, data, handleParentClose }) => {
   const [sendNotification] = useNotification();
 
   const [tags, setTags] = useState<string>();
   const [notes, setNotes] = useState<string>();
+  const [savedPhotosList, setSavedPhotosList] = useState<string[]>(data?.photos || []);
+  const [savedVideosList, setSavedVideosList] = useState<string[]>(data?.videos || []);
+  const [imageFiles, setImageFiles] = useState<TImageFileUpload[]>([]);
+  const [videoFiles, setVideoFiles] = useState<TMediaFileUpload[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log('data: ', data);
+  const handleMediaUpload = async (file: any, mediaType: FormMediaTypes) => {
+    const res = await MediaService.getMediaUploadUrl(mediaType);
+    const { id, url } = res;
+
+    const uploadResponse = await axios({
+      method: 'PUT',
+      url: url,
+      data: file,
+      headers: {
+        'x-ms-blob-type': 'BlockBlob',
+        'Content-Type': file.type
+      }
+    });
+
+    if (!uploadResponse) {
+      throw new Error('Failed to upload media');
+    }
+
+    return { id, fileType: file.type, fileName: file.name };
+  };
 
   const updateETapestryData = async () => {
     setIsLoading(true);
+
+    const mediaUploadPromises: any[] = [];
+
+    imageFiles[0].files.forEach((file: any) => {
+      mediaUploadPromises.push(handleMediaUpload(file.file, FormMediaTypes.IMAGE));
+    });
+
+    const videoMediaUploadPromises: any[] = [];
+
+    videoFiles[0].files.forEach((file: any) => {
+      videoMediaUploadPromises.push(handleMediaUpload(file.file, FormMediaTypes.VIDEO));
+    });
+
     try {
-      const res = await EtapestryDataService.updateEtapestryData(data.id, tags, notes);
+      const res = await EtapestryDataService.updateEtapestryData(data.id, {
+        notes: notes,
+        tags: tags?.split(',').map((tag) => tag.trim()) || [],
+        photos: [...savedPhotosList, ...(await Promise.all(mediaUploadPromises)).map((media) => media.id)],
+        videos: [...savedVideosList, ...(await Promise.all(videoMediaUploadPromises)).map((media) => media.id)]
+      });
       sendNotification({
         msg: 'Patient details updated successfully.',
         variant: 'success'
@@ -96,6 +267,16 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({ openModal, 
       />
     </Box>
   );
+
+  const handleRemovePhoto = (photoId: string) => {
+    const updatedPhotosList = savedPhotosList.filter((photo) => photo !== photoId);
+    setSavedPhotosList(updatedPhotosList);
+  };
+
+  const handleRemoveVideo = (videoId: string) => {
+    const updatedVideosList = savedVideosList.filter((video) => video !== videoId);
+    setSavedVideosList(updatedVideosList);
+  };
 
   return (
     <Modal open={openModal} onClose={handleCloseModal}>
@@ -149,6 +330,29 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({ openModal, 
             }}
             value={notes}
           />
+
+          <Box
+            sx={{
+              width: '100%',
+              marginBottom: '1rem'
+            }}
+          >
+            <Box>Image</Box>
+            <ImageUpload fieldName="photos" setImageFiles={setImageFiles} />
+            {savedPhotosList && savedPhotosList.length > 0 && (
+              <ImageViewComponent imageFiles={savedPhotosList} handleRemovePhoto={handleRemovePhoto} />
+            )}
+          </Box>
+          <Box
+            sx={{
+              width: '100%'
+            }}
+          >
+            <VideoUpload fieldName="videos" setVideoFiles={setVideoFiles} />
+            {savedVideosList && savedVideosList.length > 0 && (
+              <VideoViewComponent videoFiles={savedVideosList} handleRemoveVideo={handleRemoveVideo} />
+            )}
+          </Box>
 
           {isLoading && (
             <Box

@@ -69,12 +69,16 @@ const PatientStoryDashboard: React.FC<IPatientStoryDashboard> = ({ sampleTextPro
       return DashboardTemplatesService.getDashboardTemplates(formTemplate.id);
     });
 
-    const res = await Promise.all(promises).then((res) => {
-      const dashboardTemplates = res.map((dashboardTemplate) => {
-        return {
-          ...dashboardTemplate[0],
-          isResponseLoading: false
-        };
+    const res = await Promise.allSettled(promises).then((res) => {
+      const dashboardTemplates:any = []
+
+      res.forEach((dashboardTemplate: any) => {
+        if (dashboardTemplate.status === 'fulfilled') {
+          dashboardTemplates.push({
+            ...dashboardTemplate.value[0],
+            isResponseLoading: false
+          });
+        }
       });
       setDashboardTemplates(dashboardTemplates);
       executeDashboardTemplates(dashboardTemplates);
@@ -111,10 +115,10 @@ const PatientStoryDashboard: React.FC<IPatientStoryDashboard> = ({ sampleTextPro
               justifyContent: 'center'
             }}
           >
-            <Typography variant="h5">{dashboard.name}</Typography> {isLoading && <CircularProgress sx={{ margin: '20px' }} />}
+            <Typography variant="h5">{dashboard?.name}</Typography> {isLoading && <CircularProgress sx={{ margin: '20px' }} />}
           </Box>
           <Box className={styles.dashboardLayout}>
-            {dashboard.layout?.widgets?.map((widget: DashboardWidget) => (
+            {dashboard?.layout?.widgets?.map((widget: DashboardWidget) => (
               <DashboardItem widget={widget} response={getResponseObject(dashboard, widget)} />
             ))}
           </Box>

@@ -30,24 +30,23 @@ import DragHandleIcon from '@mui/icons-material/DragHandle';
 export interface IFormBuilder {}
 
 const fieldTypes = [
-  'STRING',
-  'NUMBER',
-  'DATE',
-  'TIME',
-  'DATETIME',
-  'EMAIL',
-  'PHONE',
-  'URL',
-  'TEXTAREA',
-  'SELECT',
-  'RADIO',
-  'CHECKBOX',
-  'FILE',
-  'IMAGE',
-  'VIDEO',
-  'CONSENT_CHECKBOX'
+  ['Text', 'STRING'],
+  ['Long Answer', 'TEXTAREA'],
+  ['Number', 'NUMBER'],
+  ['Date', 'DATE'],
+  ['Time', 'TIME'],
+  ['Datetime', 'DATETIME'],
+  ['Email', 'EMAIL'],
+  ['Phone', 'PHONE'],
+  ['Url', 'URL'],
+  ['Select', 'SELECT'],
+  ['Radio', 'RADIO'],
+  ['Checkbox', 'CHECKBOX'],
+  ['File', 'FILE'],
+  ['Image', 'IMAGE'],
+  ['Video', 'VIDEO'],
+  ['Consent_checkbox', 'CONSENT_CHECKBOX']
 ];
-
 const FormBuilder: React.FC<IFormBuilder> = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -334,7 +333,18 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
                                 label="Field Name"
                                 name="name"
                                 value={field.name}
-                                onChange={(e) => handleFieldChange(e, groupIndex, fieldIndex)}
+                                onChange={(e) => {
+                                  handleFieldChange(e, groupIndex, fieldIndex);
+                                  if (field.label === field.name) {
+                                    handleFieldChange({ target: { name: 'label', value: e.target.value } }, groupIndex, fieldIndex);
+                                  }
+                                  if (field.description === field.name) {
+                                    handleFieldChange({ target: { name: 'description', value: e.target.value } }, groupIndex, fieldIndex);
+                                  }
+                                  if (field.place_holder === field.name) {
+                                    handleFieldChange({ target: { name: 'place_holder', value: e.target.value } }, groupIndex, fieldIndex);
+                                  }
+                                }}
                                 fullWidth
                                 margin="normal"
                               />
@@ -366,8 +376,8 @@ const FormBuilder: React.FC<IFormBuilder> = () => {
                                 <InputLabel>Field Type</InputLabel>
                                 <Select name="type" value={field.type} onChange={(e) => handleFieldChange(e, groupIndex, fieldIndex)}>
                                   {fieldTypes.map((type) => (
-                                    <MenuItem key={type} value={type}>
-                                      {type}
+                                    <MenuItem key={type[0]} value={type[1]}>
+                                      {type[0]}
                                     </MenuItem>
                                   ))}
                                 </Select>
