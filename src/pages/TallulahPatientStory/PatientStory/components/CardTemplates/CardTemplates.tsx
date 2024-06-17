@@ -5,6 +5,7 @@ import Template2 from '../CardTemplateLayouts/Template2';
 import Template0 from '../CardTemplateLayouts/Template0';
 import Template3 from '../CardTemplateLayouts/Template3';
 import Template4 from '../CardTemplateLayouts/Template4';
+import Template5 from '../CardTemplateLayouts/Template5';
 
 export interface ICardTemplates {
   templateName: TemplateNames;
@@ -17,7 +18,8 @@ export enum TemplateNames {
   TEMPLATE1 = 'Template1',
   TEMPLATE2 = 'Template2',
   TEMPLATE3 = 'Template3',
-  TEMPLATE4 = 'Template4'
+  TEMPLATE4 = 'Template4',
+  TEMPLATE5 = 'Template5'
 }
 
 export interface ICard {
@@ -36,6 +38,8 @@ const CardTemplates: React.FC<ICardTemplates> = ({ templateName, data, formTempl
       return <Template3 data={data} formTemplate={formTemplate} />;
     case TemplateNames.TEMPLATE4:
       return <Template4 data={data} formTemplate={formTemplate} />;
+    case TemplateNames.TEMPLATE5:
+      return <Template5 data={data} formTemplate={formTemplate} />;
     default:
       return <Template0 data={data} formTemplate={formTemplate} />;
   }

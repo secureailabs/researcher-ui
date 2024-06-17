@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid, InputLabel, MenuItem, Select, Tab, Tabs, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, MenuItem, Select, Typography } from '@mui/material';
 import styles from './PatientStory.module.css';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -9,13 +9,11 @@ import {
   GetMultipleFormData_Out,
   GetMultipleFormTemplate_Out
 } from 'src/tallulah-ts-client';
-import PatientCard from './components/PatientCard';
 import SearchBar from 'src/components/SearchBar';
 import PatientDetailViewModal from './components/PatientDetailViewModal';
 import CardTemplates from './components/CardTemplates';
 import { TemplateNames } from './components/CardTemplates/CardTemplates';
 import Filter from './components/Filter';
-import { AnyAction } from 'redux';
 import FilterChip from './components/FilterChip';
 import Sort from './components/Sort';
 
@@ -42,7 +40,6 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [isFormTemplateFetching, setIsFormTemplateFetching] = useState<boolean>(false);
   const [isFormDataFetching, setIsFormDataFetching] = useState<boolean>(false);
   const [selectedFilter, setSelectedFilter] = useState<any>({});
-  const [tabValue, setTabValue] = useState<number>(0);
   const [publishedTemplateList, setPublishedTemplateList] = useState<GetFormTemplate_Out[]>([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('creation_time');
@@ -50,7 +47,8 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const templateNameString = formTemplate?.card_layout?.name || 'TEMPLATE0';
-  const templateNameEnum = TemplateNames[templateNameString as keyof typeof TemplateNames];
+  // const templateNameEnum = TemplateNames[templateNameString as keyof typeof TemplateNames];
+  const templateNameEnum = TemplateNames.TEMPLATE5;
 
   const getFilterObjects = () => {
     // flat map the field groups to get the fields and create an array with the field names and options
