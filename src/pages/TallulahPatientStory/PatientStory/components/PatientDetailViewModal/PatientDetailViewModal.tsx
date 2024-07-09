@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Menu, MenuItem, Modal, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Menu, MenuItem, Modal, Typography } from '@mui/material';
 import PatientImage from 'src/assets/images/users/avatar-3.png';
 import { formatReceivedTimeFull } from 'src/utils/helper';
 import { FormDataService, FormMediaTypes, GetFormData_Out } from 'src/tallulah-ts-client';
@@ -27,6 +27,7 @@ const convertTagsStringToArray = (tags: string | undefined) => {
 
 const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, handleCloseModal, data, handleRefresh }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
+  const [fetchingProfileImage, setFetchingProfileImage] = useState<boolean>(false);
 
   const profileImageId =
     data?.values.profilePicture?.value && data?.values.profilePicture?.value.length > 0 ? data?.values.profilePicture.value[0].id : null;
@@ -87,6 +88,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
   const skipFieldNames = ['firstName', 'lastName', 'name', 'tags', 'profilePicture', 'consent'];
 
   const fetchProfileImage = async (id: any, type: string) => {
+    setFetchingProfileImage(true);
     const mediaType = type === 'FILE' ? FormMediaTypes.FILE : type === 'IMAGE' ? FormMediaTypes.IMAGE : FormMediaTypes.VIDEO;
     try {
       const res = await FormDataService.getDownloadUrl(id, mediaType);
@@ -95,6 +97,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
       setProfileImageUrl('');
       console.log(err);
     }
+    setFetchingProfileImage(false);
   };
 
   useEffect(() => {
@@ -270,7 +273,11 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
         </Box>
         {/* display image  */}
         <Box>
-          <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient" className={styles.profileImage} />
+          {!fetchingProfileImage ? (
+            <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient" className={styles.profileImage} />
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
       </Box>
       {/* consent section */}
