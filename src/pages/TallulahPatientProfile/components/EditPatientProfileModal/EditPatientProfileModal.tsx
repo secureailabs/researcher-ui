@@ -227,7 +227,6 @@ const EditPatientProfileModal: React.FC<IEditPatientProfileModal> = ({ openModal
                 fullWidth
                 className={styles.inputStyle}
                 type="text"
-                value={value}
                 label={key}
                 onChange={(e) => {
                   setPatientData({
@@ -246,7 +245,6 @@ const EditPatientProfileModal: React.FC<IEditPatientProfileModal> = ({ openModal
         fullWidth
         className={styles.inputStyle}
         type="text"
-        value={tags?.join(',')}
         label="tags"
         onChange={(e) => {
           setPatientData({
