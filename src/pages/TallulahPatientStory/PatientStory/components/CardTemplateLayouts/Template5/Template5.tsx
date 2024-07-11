@@ -12,8 +12,6 @@ const Template5: React.FC<ICard> = ({ data, formTemplate }) => {
 
   const fieldNamesToDisplay = formTemplate?.card_layout?.fields || [];
 
-  console.log('data', data);
-
   const getFieldLabel = (fieldName: string) => {
     const fields = formTemplate?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields);
     const field = fields?.find((field) => field?.name === fieldName);
