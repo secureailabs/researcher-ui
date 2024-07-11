@@ -18,11 +18,6 @@ export interface IPatientDetailViewModal {
 
 const mediaTypes = ['FILE', 'IMAGE', 'VIDEO'];
 
-const convertTagsStringToArray = (tags: string | undefined) => {
-  if (!tags) return [];
-  return tags.split(',');
-};
-
 const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, handleCloseModal, data, handleRefresh }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
   const [fetchingProfileImage, setFetchingProfileImage] = useState<boolean>(false);
@@ -38,8 +33,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
 
   const [sendNotification] = useNotification();
 
-  const convertTagsStringToArray = (tags1: string | undefined) => {
-    const tags = 'tags1,tags2,tags3,tag4,tags5,tags6,tags7,tags8,tags9,tags10';
+  const convertTagsStringToArray = (tags: string | undefined) => {
     if (!tags) return { visibleTags: [], additionalTagsCount: 0 };
     const allTags = tags.split(',');
     const visibleTags = allTags;
