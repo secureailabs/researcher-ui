@@ -20,9 +20,10 @@ import {
   Box,
   Typography,
   CircularProgress,
-  Divider,
   Modal
 } from '@mui/material';
+import { TMediaFileUpload } from 'src/components/ImageEditComponent/ImageUpload';
+import ImageEditComponent from 'src/components/ImageEditComponent';
 
 export interface IPatientDetailEditModal {
   openModal: boolean;
@@ -42,6 +43,8 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
   const [formData, setFormData] = useState<any>({ ...data });
   const [isLoading, setIsLoading] = useState(false);
   const [privateFields, setPrivateFields] = useState<any>([]);
+  const [imageFiles, setImageFiles] = useState<TMediaFileUpload[]>([]);
+  const [savedPhotosList, setSavedPhotosList] = useState<string[]>([]);
 
   const [sendNotification] = useNotification();
 
@@ -90,6 +93,11 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
     setIsLoading(false);
   };
 
+  const handleRemovSavedPhoto = (photoId: string) => {
+    const newSavedPhotosList = savedPhotosList.filter((id) => id !== photoId);
+    setSavedPhotosList(newSavedPhotosList);
+  };
+
   const renderField = (fieldName: any, field: any) => {
     switch (field.type) {
       case 'TEXTAREA':
@@ -110,6 +118,15 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
           </>
         );
       case 'IMAGE':
+        return (
+          <Box
+            sx={{
+              width: '100%'
+            }}
+          >
+            <ImageEditComponent setImageFiles={setImageFiles} imageFileIds={savedPhotosList} handleRemovePhoto={handleRemovSavedPhoto} />
+          </Box>
+        );
       case 'FILE':
       case 'VIDEO':
         return null;
@@ -251,6 +268,14 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
               padding: '1rem'
             }}
           >
+            {Object.entries(data).map((field: any) => {
+              if (isPrivateField(field[0])) return null;
+              return (
+                <Box key={field[1].name} sx={{ margin: '1rem' }}>
+                  {renderField(field[0], field[1])}
+                </Box>
+              );
+            })}
             {renderEditablePrivateFields}
           </Box>
         </Box>

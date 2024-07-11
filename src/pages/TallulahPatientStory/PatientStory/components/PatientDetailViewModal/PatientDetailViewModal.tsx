@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Menu, MenuItem, Modal, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Divider, Menu, MenuItem, Modal, Typography } from '@mui/material';
 import PatientImage from 'src/assets/images/users/avatar-3.png';
 import { formatReceivedTimeFull } from 'src/utils/helper';
 import { FormDataService, FormMediaTypes, GetFormData_Out } from 'src/tallulah-ts-client';
@@ -8,7 +8,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 import useNotification from 'src/hooks/useNotification';
 import PatientDetailEditModal from '../PatientDetailEditModal';
-import { ConsoleView } from 'react-device-detect';
 
 export interface IPatientDetailViewModal {
   openModal: boolean;
@@ -19,14 +18,9 @@ export interface IPatientDetailViewModal {
 
 const mediaTypes = ['FILE', 'IMAGE', 'VIDEO'];
 
-const convertTagsStringToArray = (tags: string | undefined) => {
-  if (!tags) return [];
-
-  return tags.split(',');
-};
-
 const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, handleCloseModal, data, handleRefresh }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
+  const [fetchingProfileImage, setFetchingProfileImage] = useState<boolean>(false);
 
   const profileImageId =
     data?.values.profilePicture?.value && data?.values.profilePicture?.value.length > 0 ? data?.values.profilePicture.value[0].id : null;
@@ -38,6 +32,14 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   const [sendNotification] = useNotification();
+
+  const convertTagsStringToArray = (tags: string | undefined) => {
+    if (!tags) return { visibleTags: [], additionalTagsCount: 0 };
+    const allTags = tags.split(',');
+    const visibleTags = allTags;
+    const additionalTagsCount = allTags.length - visibleTags.length;
+    return { visibleTags, additionalTagsCount };
+  };
 
   const handleCloseDeleteModal = () => {
     setOpenDeleteModal(false);
@@ -87,6 +89,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
   const skipFieldNames = ['firstName', 'lastName', 'name', 'tags', 'profilePicture', 'consent'];
 
   const fetchProfileImage = async (id: any, type: string) => {
+    setFetchingProfileImage(true);
     const mediaType = type === 'FILE' ? FormMediaTypes.FILE : type === 'IMAGE' ? FormMediaTypes.IMAGE : FormMediaTypes.VIDEO;
     try {
       const res = await FormDataService.getDownloadUrl(id, mediaType);
@@ -95,6 +98,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
       setProfileImageUrl('');
       console.log(err);
     }
+    setFetchingProfileImage(false);
   };
 
   useEffect(() => {
@@ -256,48 +260,76 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
   const renderModalCardContent = (
     <Box className={styles.container}>
       {/* Patient Details */}
-      <Box className={styles.cardHeaderLayout}>
+      <Box className={styles.containerDiv}>
         <Box>
-          {data.values.firstName ? (
-            <Typography variant="h6" className={styles.name}>
-              {data.values.firstName?.value} {data.values.lastName?.value}
-            </Typography>
-          ) : data.values.name ? (
-            <Typography variant="h6" className={styles.name}>
-              {data.values?.name?.value}
-            </Typography>
+          {!fetchingProfileImage ? (
+            <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient" className={styles.profileImage} />
+          ) : (
+            <CircularProgress />
+          )}
+        </Box>
+        <Box>
+          <Box>
+            {data.values.firstName ? (
+              <Typography variant="h6" className={styles.name}>
+                {data.values.firstName?.value} {data.values.lastName?.value}
+              </Typography>
+            ) : data.values.name ? (
+              <Typography variant="h6" className={styles.name}>
+                {data.values?.name?.value}
+              </Typography>
+            ) : null}
+          </Box>
+          <Box>Date Of Data Use Consent: {formatReceivedTimeFull(data?.creation_time as string)}</Box>
+          {data?.values && 'tags' in data?.values ? (
+            <Box
+              sx={{
+                display: 'flex',
+                flexWrap: 'nowrap',
+                gap: '0.5rem',
+                marginBottom: '1rem',
+                marginTop: '1rem'
+              }}
+            >
+              {convertTagsStringToArray(data?.values?.tags?.value).visibleTags.map((tag: string, index) => (
+                <Box key={index} className={styles.tag}>
+                  {tag}
+                </Box>
+              ))}
+              {convertTagsStringToArray(data?.values?.tags?.value).additionalTagsCount > 0 && (
+                <Box className={styles.tag2}>+{convertTagsStringToArray(data?.values?.tags?.value).additionalTagsCount} tags</Box>
+              )}
+            </Box>
           ) : null}
+          <Divider sx={{ marginBottom: '1rem' }} />
+          <Box className={styles.section2}>
+            <Box>
+              <Typography
+                sx={{
+                  color: '#909CAC'
+                }}
+              >
+                Age
+              </Typography>
+              <Typography>{data?.values?.age?.value} years</Typography>
+            </Box>
+            <Box>
+              <Typography
+                sx={{
+                  color: '#909CAC'
+                }}
+              >
+                Gender
+              </Typography>
+              <Typography>{data?.values?.gender?.value}</Typography>
+            </Box>
+          </Box>
+          <Divider sx={{ marginTop: '1rem' }} />
+          {Object.keys(rest).map((key: any) =>
+            mediaTypes.includes(data.values[key].type) ? renderMediaDisplay(key) : renderDataDisplay(key)
+          )}
         </Box>
-        {/* display image  */}
-        <Box>
-          <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient" className={styles.profileImage} />
-        </Box>
       </Box>
-      {/* consent section */}
-      <Box className={styles.consentDiv}>
-        <Typography
-          variant="body1"
-          sx={{
-            padding: '10px',
-            backgroundColor: data?.values.consent?.value[0] === 'Yes' ? '#78bf92' : '#eba865'
-          }}
-        >
-          Date of Data Use Consent :{' '}
-          {data?.values.consent?.value[0] === 'Yes'
-            ? formatReceivedTimeFull(data?.creation_time as string)
-            : data?.values?.consent?.value[0] === 'No'
-            ? 'No'
-            : 'Pending '}
-        </Typography>
-      </Box>
-      {/* tags section */}
-      <Box className={styles.tagsDiv}>
-        {convertTagsStringToArray(data?.values?.tags?.value).map((tag: string) => (
-          <Box className={styles.tag}>{tag}</Box>
-        ))}
-      </Box>
-      {/* Display rest of the key and value data */}
-      {Object.keys(rest).map((key: any) => (mediaTypes.includes(data.values[key].type) ? renderMediaDisplay(key) : renderDataDisplay(key)))}
     </Box>
   );
 

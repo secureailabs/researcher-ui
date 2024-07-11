@@ -12,8 +12,6 @@ const Template5: React.FC<ICard> = ({ data, formTemplate }) => {
 
   const fieldNamesToDisplay = formTemplate?.card_layout?.fields || [];
 
-  console.log('data', data);
-
   const getFieldLabel = (fieldName: string) => {
     const fields = formTemplate?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields);
     const field = fields?.find((field) => field?.name === fieldName);
@@ -33,8 +31,7 @@ const Template5: React.FC<ICard> = ({ data, formTemplate }) => {
     }
   };
 
-  const convertTagsStringToArray = (tags1: string | undefined) => {
-    const tags = 'tags1,tags2,tags3,tag4,tags5,tags6,tags7,tags8,tags9,tags10';
+  const convertTagsStringToArray = (tags: string | undefined) => {
     if (!tags) return { visibleTags: [], additionalTagsCount: 0 };
     const allTags = tags.split(',');
     const visibleTags = allTags.slice(0, 3); // Display up to 3 tags
