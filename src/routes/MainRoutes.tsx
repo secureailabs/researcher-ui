@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
 import MainLayout from 'src/components/layout/MainLayout';
 import Dashboard from 'src/pages/Dashboard';
+import PatientChat from 'src/pages/PatientChat';
 import TallulahETapestry from 'src/pages/TallulahETapestry';
 import FormBuilder from 'src/pages/TallulahPatientStory/FormBuilder';
 import FormTemplates from 'src/pages/TallulahPatientStory/FormTemplates';
@@ -104,6 +105,10 @@ const MainRoutes = {
     {
       path: 'etapestry',
       element: <TallulahETapestry />
+    },
+    {
+      path: 'patient-chat/:id',
+      element: <PatientChat />
     }
   ]
 };

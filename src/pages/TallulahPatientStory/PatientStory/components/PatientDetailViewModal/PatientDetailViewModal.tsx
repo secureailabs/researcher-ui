@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 import useNotification from 'src/hooks/useNotification';
 import PatientDetailEditModal from '../PatientDetailEditModal';
+import { useNavigate } from 'react-router-dom';
 
 export interface IPatientDetailViewModal {
   openModal: boolean;
@@ -21,17 +22,16 @@ const mediaTypes = ['FILE', 'IMAGE', 'VIDEO'];
 const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, handleCloseModal, data, handleRefresh }) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
   const [fetchingProfileImage, setFetchingProfileImage] = useState<boolean>(false);
+  const [mediaDetails, setMediaDetails] = useState<any>({});
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   const profileImageId =
     data?.values.profilePicture?.value && data?.values.profilePicture?.value.length > 0 ? data?.values.profilePicture.value[0].id : null;
-  const [mediaDetails, setMediaDetails] = useState<any>({});
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-
-  const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   const [sendNotification] = useNotification();
+  const navigate = useNavigate();
 
   const convertTagsStringToArray = (tags: string | undefined) => {
     if (!tags) return { visibleTags: [], additionalTagsCount: 0 };
@@ -183,6 +183,13 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           }}
         >
           Delete
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate(`/patient-chat/${data.id}`);
+          }}
+        >
+          Story assistant chat
         </MenuItem>
       </Menu>
       <CloseIcon
