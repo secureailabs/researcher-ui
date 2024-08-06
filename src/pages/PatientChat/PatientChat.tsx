@@ -17,9 +17,9 @@ export const DynamicUserNameBreadCrumb = ({ match }: any) => {
 
   const getName = (formData: any) => {
     if (formData?.values?.firstName) {
-      return formData?.values?.firstName?.value + ' ' + formData?.values?.lastName?.value;
+      return 'Patient Chat :' + ' ' + formData?.values?.firstName?.value + ' ' + formData?.values?.lastName?.value;
     } else if (formData?.values?.name) {
-      return formData?.values?.name?.value;
+      return 'Patient Chat :' + ' ' + formData?.values?.name?.value;
     }
     return id;
   };

@@ -106,6 +106,11 @@ export const MainRoutesChildren = [
     element: <TallulahETapestry />
   },
   {
+    path: 'patient-chat',
+    element: <PatientStory />,
+    breadcrumb: null
+  },
+  {
     path: 'patient-chat/:id',
     element: <PatientChat />,
     breadcrumb: DynamicUserNameBreadCrumb
