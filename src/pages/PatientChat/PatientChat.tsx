@@ -13,7 +13,7 @@ export interface IPatientChat {
 
 export const DynamicUserNameBreadCrumb = ({ match }: any) => {
   const id = match.params.id;
-  const [name, setName] = useState<string>('i');
+  const [name, setName] = useState<string>('');
 
   const getName = (formData: any) => {
     if (formData?.values?.firstName) {
