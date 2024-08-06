@@ -71,10 +71,10 @@ const pages = [
     icon: icons.IconId,
     children: [
       {
-        id: 'patient-story-form-templates',
-        title: 'Manage Templates',
+        id: 'patient-story-list',
+        title: 'Patient Story',
         type: 'item',
-        url: '/patient-story-form-templates',
+        url: '/patient-story',
         target: false
       },
       {
@@ -85,10 +85,10 @@ const pages = [
         target: false
       },
       {
-        id: 'patient-story-list',
-        title: 'Patient Story',
+        id: 'patient-story-form-templates',
+        title: 'Manage Templates',
         type: 'item',
-        url: '/patient-story',
+        url: '/patient-story-form-templates',
         target: false
       }
     ]

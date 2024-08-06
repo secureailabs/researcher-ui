@@ -2,6 +2,8 @@ import { lazy } from 'react';
 import Loadable from 'src/components/extended/Loadable';
 import MainLayout from 'src/components/layout/MainLayout';
 import Dashboard from 'src/pages/Dashboard';
+import PatientChat from 'src/pages/PatientChat';
+import { DynamicUserNameBreadCrumb } from 'src/pages/PatientChat/PatientChat';
 import TallulahETapestry from 'src/pages/TallulahETapestry';
 import FormBuilder from 'src/pages/TallulahPatientStory/FormBuilder';
 import FormTemplates from 'src/pages/TallulahPatientStory/FormTemplates';
@@ -21,91 +23,104 @@ const TallulahPatientProfile = Loadable(lazy(async () => await import('src/pages
 
 // ==============================|| MAIN ROUTING ||============================== //
 
-const MainRoutes = {
+export const MainRoutesChildren = [
+  {
+    path: '/',
+    element: <Home />,
+    breadcrumb: 'Home'
+  },
+  {
+    path: 'home',
+    element: <Home />,
+    breadcrumb: 'Home'
+  },
+  {
+    path: 'dashboard',
+    element: <Dashboard />,
+    breadcrumb: 'Dashboard'
+  },
+  {
+    path: 'tallulah-search',
+    element: <TallulahSearch />,
+    breadcrumb: 'Tallulah Search'
+  },
+  {
+    path: 'tallulah-story-assistant',
+    element: <TallulahStoryAssistant />,
+    breadcrumb: 'Story Assistant'
+  },
+  {
+    path: 'tallulah-dashboard',
+    element: <TallulahDashboard />,
+    breadcrumb: 'Dashboard'
+  },
+  {
+    path: 'email-assistant',
+    element: <TallulahEmailAssistant />,
+    breadcrumb: 'Email Assistant'
+  },
+  {
+    path: 'email-assistant/response-template',
+    element: <TallulahEmailResponseTemplate />,
+    breadcrumb: 'Response Template'
+  },
+  {
+    path: 'mailbox/authorize',
+    element: <MSAuthorize />
+  },
+  {
+    path: 'patient-story-form',
+    element: <PatientStoryForm />
+  },
+  {
+    path: 'patient-story',
+    element: <PatientStory />,
+    breadcrumb: 'Patient Stories'
+  },
+  {
+    path: 'patient-story-form-templates',
+    element: <FormTemplates />
+  },
+  {
+    path: 'form-builder',
+    element: <FormBuilder />
+  },
+  {
+    path: 'form-builder/:id',
+    element: <FormBuilder />
+  },
+  {
+    path: 'content-generation-form',
+    element: <ContentGenerationForm />
+  },
+  {
+    path: 'content-generation',
+    element: <ContentGeneration />
+  },
+  {
+    path: 'patient-profile',
+    element: <TallulahPatientProfile />
+  },
+  {
+    path: 'etapestry',
+    element: <TallulahETapestry />
+  },
+  {
+    path: 'patient-chat',
+    element: <PatientStory />,
+    breadcrumb: null
+  },
+  {
+    path: 'patient-chat/:id',
+    element: <PatientChat />,
+    breadcrumb: DynamicUserNameBreadCrumb
+  }
+];
+
+export const MainRoutes = {
   path: '/',
   element: <MainLayout />,
-  children: [
-    {
-      path: '/',
-      element: <Home />,
-      breadcrumb: 'Home'
-    },
-    {
-      path: 'home',
-      element: <Home />,
-      breadcrumb: 'Home'
-    },
-    {
-      path: 'dashboard',
-      element: <Dashboard />,
-      breadcrumb: 'Dashboard'
-    },
-    {
-      path: 'tallulah-search',
-      element: <TallulahSearch />,
-      breadcrumb: 'Tallulah Search'
-    },
-    {
-      path: 'tallulah-story-assistant',
-      element: <TallulahStoryAssistant />,
-      breadcrumb: 'Story Assistant'
-    },
-    {
-      path: 'tallulah-dashboard',
-      element: <TallulahDashboard />,
-      breadcrumb: 'Dashboard'
-    },
-    {
-      path: 'email-assistant',
-      element: <TallulahEmailAssistant />,
-      breadcrumb: 'Email Assistant'
-    },
-    {
-      path: 'email-assistant/response-template',
-      element: <TallulahEmailResponseTemplate />,
-      breadcrumb: 'Response Template'
-    },
-    {
-      path: 'mailbox/authorize',
-      element: <MSAuthorize />
-    },
-    {
-      path: 'patient-story-form',
-      element: <PatientStoryForm />
-    },
-    {
-      path: 'patient-story',
-      element: <PatientStory />
-    },
-    {
-      path: 'patient-story-form-templates',
-      element: <FormTemplates />
-    },
-    {
-      path: 'form-builder',
-      element: <FormBuilder />
-    },
-    {
-      path: 'form-builder/:id',
-      element: <FormBuilder />
-    },
-    {
-      path: 'content-generation-form',
-      element: <ContentGenerationForm />
-    },
-    {
-      path: 'content-generation',
-      element: <ContentGeneration />
-    },
-    {
-      path: 'patient-profile',
-      element: <TallulahPatientProfile />
-    },
-    {
-      path: 'etapestry',
-      element: <TallulahETapestry />
-    }
-  ]
+  children: MainRoutesChildren
 };
 
 export default MainRoutes;
