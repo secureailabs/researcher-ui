@@ -189,7 +189,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             navigate(`/patient-chat/${data.id}`);
           }}
         >
-          Story assistant chat
+          Story assistant
         </MenuItem>
       </Menu>
       <CloseIcon
@@ -268,7 +268,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     <Box className={styles.container}>
       {/* Patient Details */}
       <Box className={styles.containerDiv}>
-        <Box>
+        <Box className={styles.profileImageContainer}>
           {!fetchingProfileImage ? (
             <img src={profileImageUrl ? profileImageUrl : PatientImage} alt="Patient" className={styles.profileImage} />
           ) : (
@@ -350,13 +350,16 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
           transform: 'translate(-50%, -50%)',
           outline: 'none',
           width: '1000px',
-          overflowY: 'scroll',
           height: '90%',
-          backgroundColor: '#fff'
+          backgroundColor: '#fff',
+          borderRadius: '15px',
+          overflowY: 'hidden'
         }}
       >
-        {renderModalCardHeader}
-        {renderModalCardContent}
+        <Box className={styles.modalContent}>
+          {renderModalCardHeader}
+          {renderModalCardContent}
+        </Box>
 
         <DeleteConfirmationModal
           openDeleteModal={openDeleteModal}

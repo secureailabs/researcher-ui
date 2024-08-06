@@ -2,6 +2,11 @@
   padding: 40px;
 }
 
+.modalContent {
+  overflow-y: auto;
+  max-height: 100%;
+}
+
 .cardHeaderLayout {
   display: flex;
   flex-direction: row;
@@ -18,6 +23,13 @@
   font-size: 14px;
   font-weight: 400;
   font-style: italic;
+}
+
+.profileImageContainer {
+  width: 220px;
+  height: 260px;
+  display: flex;
+  justify-content: center;
 }
 
 .profileImage {
