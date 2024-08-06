@@ -17,6 +17,7 @@ import { initAmplitude } from 'src/utils/Amplitude/amplitude';
 import axios from 'axios';
 import { notification } from 'antd';
 import useNotification from 'src/hooks/useNotification';
+import { MainRoutesChildren } from 'src/routes/MainRoutes';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 
@@ -26,7 +27,7 @@ export const enum SideBarMenuEnum {
 }
 
 const BreadcrumbsWrapper = (): JSX.Element => {
-  const breadcrumbs = useBreadcrumbs();
+  const breadcrumbs = useBreadcrumbs(MainRoutesChildren);
   return (
     <Breadcrumbs aria-label="breadcrumb">
       {breadcrumbs.map(({ match, breadcrumb }) => (

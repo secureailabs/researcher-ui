@@ -5,11 +5,40 @@ import { useEffect, useState } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import PromptInputBox from './components/PromptInputBox';
 import logo from 'src/assets/images/array_insights_small.png';
-import { set } from 'react-hook-form';
+import user_avatar from 'src/assets/images/users/avatar-3.png';
 
 export interface IPatientChat {
   sampleTextProp?: string;
 }
+
+export const DynamicUserNameBreadCrumb = ({ match }: any) => {
+  const id = match.params.id;
+  const [name, setName] = useState<string>('i');
+
+  const getName = (formData: any) => {
+    if (formData?.values?.firstName) {
+      return formData?.values?.firstName?.value + ' ' + formData?.values?.lastName?.value;
+    } else if (formData?.values?.name) {
+      return formData?.values?.name?.value;
+    }
+    return id;
+  };
+
+  const fetchPatientFormDataById = async () => {
+    try {
+      const res = await FormDataService.getFormData(id as string);
+      setName(getName(res));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPatientFormDataById();
+  }, []);
+
+  return <span>{name}</span>;
+};
 
 const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
   const [chatId, setChatId] = useState('');
@@ -19,6 +48,7 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
   let { id } = useParams();
 
   const startPatientChat = async () => {
+    setIsLoading(true);
     try {
       const res = await PatientChatService.startPatientChat({
         form_data_id: id as string
@@ -28,13 +58,13 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false);
   };
 
   const fetchPatientFormDataById = async () => {
     try {
       const res = await FormDataService.getFormData(id as string);
       startPatientChat();
-      console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -44,7 +74,6 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
     setIsLoading(true);
     try {
       const res = await PatientChatService.patientChat(chatId as string, promptText);
-      console.log(res);
       setChatHistory(res.chat);
     } catch (error) {
       console.log(error);
@@ -70,6 +99,7 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
           </Box>
         ) : (
           <Box key={index} className={styles.patientBox}>
+            <img src={user_avatar} alt="Sail-Logo" width="30" />
             <Box className={styles.patientText}>{chat.content}</Box>
           </Box>
         )
