@@ -18,6 +18,8 @@ const PromptInputBox: React.FC<IPromptInputBox> = ({ handleKeyPress }) => {
     if (e.key === 'Enter') {
       handleKeyPress && handleKeyPress(inputText);
       setInputText('');
+      // unfocus the input box
+      e.currentTarget.blur();
     }
   };
 
