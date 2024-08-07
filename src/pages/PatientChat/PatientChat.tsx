@@ -54,7 +54,8 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
         form_data_id: id as string
       });
       setChatId(res.id);
-      setChatHistory(res.chat);
+      // strip the 0 index as it is the initial message from the assistant
+      setChatHistory(res?.chat?.slice(1));
     } catch (error) {
       console.log(error);
     }
@@ -74,7 +75,7 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
     setIsLoading(true);
     try {
       const res = await PatientChatService.patientChat(chatId as string, promptText);
-      setChatHistory(res.chat);
+      setChatHistory(res?.chat?.slice(1));
     } catch (error) {
       console.log(error);
     }
@@ -94,13 +95,13 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
       {chatHistory?.map((chat, index) =>
         chat.role === 'assistant' ? (
           <Box key={index} className={styles.assistantBox}>
-            <Box className={styles.assistantText}>{chat.content}</Box>
             <img src={logo} alt="Sail-Logo" width="30" />
+            <div dangerouslySetInnerHTML={{ __html: chat.content }} />
           </Box>
         ) : (
           <Box key={index} className={styles.patientBox}>
-            <img src={user_avatar} alt="Sail-Logo" width="30" />
             <Box className={styles.patientText}>{chat.content}</Box>
+            <img src={user_avatar} alt="Sail-Logo" width="30" />
           </Box>
         )
       )}
