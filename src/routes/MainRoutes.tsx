@@ -107,8 +107,8 @@ export const MainRoutesChildren = [
   },
   {
     path: 'patient-chat',
-    element: <PatientStory />,
-    breadcrumb: null
+    element: <PatientChat />,
+    breadcrumb: 'Patient Chat'
   },
   {
     path: 'patient-chat/:id',
