@@ -15,6 +15,7 @@ import PromptInputBox from './components/PromptInputBox';
 import logo from 'src/assets/images/array_insights_small.png';
 import user_avatar from 'src/assets/images/users/avatar-3.png';
 import SearchBar from 'src/components/SearchBar';
+import Sort from '../TallulahPatientStory/PatientStory/components/Sort';
 
 export interface IPatientChat {
   sampleTextProp?: string;
@@ -59,6 +60,8 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
   const [searchText, setSearchText] = useState<string | undefined>(undefined);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
+  const [sortDirection, setSortDirection] = useState<number>(-1);
+  const [sortKey, setSortKey] = useState<string>('creation_time');
 
   const navigate = useNavigate();
 
@@ -74,22 +77,22 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
   };
 
   const fetchSearchResults = async (text: string) => {
-    setIsFormDataFetching(true);
+    setIsLoading(true);
     const res = await FormDataService.searchFormData(selectedTemplateId, text);
     const data = res.hits.hits.map((hit: any) => hit._id);
     const newfilteredData = formData.filter((item: GetFormData_Out) => data.includes(item.id));
     setFilteredData(newfilteredData);
-    setIsFormDataFetching(false);
+    setIsLoading(false);
   };
 
   const fetchFormData = async (formId: string) => {
-    setIsFormDataFetching(true);
+    setIsLoading(true);
     try {
       const filterFormTemplateId = formId;
       const filterSkip = 0;
       const filterLimit = 200;
-      const filterSortKey = 'creation_time';
-      const filterSortDirection = -1;
+      const filterSortKey = sortKey;
+      const filterSortDirection = sortDirection;
       const res: GetMultipleFormData_Out = await FormDataService.getAllFormData(
         filterFormTemplateId,
         filterSkip,
@@ -102,7 +105,7 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
     } catch (err) {
       console.log(err);
     }
-    setIsFormDataFetching(false);
+    setIsLoading(false);
   };
 
   const startPatientChat = async () => {
@@ -212,6 +215,29 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
       <Box className={styles.searchBarBox}>
         <SearchBar placeholder="Search Patient By Name " searchText={''} handleSearchChange={handleSearchChange} />
       </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          marginBottom: '20px'
+        }}
+      >
+        <Sort sortDirection={sortDirection} setSortDirection={setSortDirection} sortKey={sortKey} setSortKey={setSortKey} />
+      </Box>
+
+      {isLoading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : null}
+
       <Grid container spacing={3}>
         {filteredData?.map((patientData: GetFormData_Out) => (
           <Grid
@@ -236,6 +262,12 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
       </Grid>
     </Box>
   );
+
+  useEffect(() => {
+    if (selectedTemplateId) {
+      fetchFormData(selectedTemplateId);
+    }
+  }, [sortKey, sortDirection]);
 
   return (
     <Box className={styles.container}>

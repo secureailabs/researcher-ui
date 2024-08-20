@@ -189,7 +189,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             navigate(`/patient-chat/${data.id}`);
           }}
         >
-          Story assistant
+          Patient Chat
         </MenuItem>
       </Menu>
       <CloseIcon
