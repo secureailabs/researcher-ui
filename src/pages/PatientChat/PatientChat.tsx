@@ -248,7 +248,7 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
             md={3}
             lg={3}
             onClick={() => {
-              navigate(`/patient-chat/${patientData.form_template_id}`);
+              navigate(`/patient-chat/${patientData.id}`, { replace: true });
             }}
             className={styles.patientCardGridItem}
           >
