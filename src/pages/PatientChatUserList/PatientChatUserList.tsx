@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import styles from './PatientChat.module.css';
+import styles from './PatientChatUserList.module.css';
 import {
   Context,
   FormDataService,
@@ -11,7 +11,6 @@ import {
 } from 'src/tallulah-ts-client';
 import { useEffect, useRef, useState } from 'react';
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
-import PromptInputBox from './components/PromptInputBox';
 import logo from 'src/assets/images/array_insights_small.png';
 import user_avatar from 'src/assets/images/users/avatar-3.png';
 import SearchBar from 'src/components/SearchBar';
@@ -248,8 +247,7 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
             md={3}
             lg={3}
             onClick={() => {
-              // navigate(`/patient-chat/${patientData.id}`);
-              window.location.href = `/patient-chat/${patientData.id}`;
+              navigate(`/patient-chat/${patientData.id}`);
             }}
             className={styles.patientCardGridItem}
           >
@@ -270,25 +268,7 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
     }
   }, [sortKey, sortDirection]);
 
-  return (
-    <Box className={styles.container}>
-      {id !== undefined ? (
-        <>
-          <Box className={styles.conversationBox}>{ConversationComponent}</Box>
-          <Box className={styles.chatInputBox}>
-            {isLoading ? (
-              <Box>
-                <CircularProgress />
-              </Box>
-            ) : null}
-            <PromptInputBox handleKeyPress={handleKeyPress} />
-          </Box>
-        </>
-      ) : (
-        PatientSelectionComponent
-      )}
-    </Box>
-  );
+  return <Box className={styles.container}>{PatientSelectionComponent}</Box>;
 };
 
 export default PatientChat;
