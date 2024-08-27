@@ -42,7 +42,8 @@ const EmailAssistant: React.FC<IEmailAssistant> = ({}) => {
 
   const emailDisplayRef = useRef<EmailDisplaySectionRef | null>(null);
 
-  const OUTLOOK_REDIRECT_URI = window.location.origin + '/mailbox/authorize';
+  // read from env
+  const OUTLOOK_REDIRECT_URI = process.env.REACT_APP_OUTLOOK_REDIRECT_URI || '';
 
   const open = Boolean(anchorEl);
 

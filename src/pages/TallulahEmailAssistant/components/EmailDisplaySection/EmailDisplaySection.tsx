@@ -318,7 +318,7 @@ const EmailDisplaySection: React.ForwardRefRenderFunction<EmailDisplaySectionRef
           setPage(newPage);
         }}
         disableSelectionOnClick
-        getRowId={(row: any) => row._id}
+        getRowId={(row: any) => row.id}
         getCellClassName={(params: any) => {
           return styles.cell;
         }}
