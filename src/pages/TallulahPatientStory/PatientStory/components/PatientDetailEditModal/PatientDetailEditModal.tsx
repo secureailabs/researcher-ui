@@ -24,6 +24,8 @@ import {
 } from '@mui/material';
 import { TMediaFileUpload } from 'src/components/ImageEditComponent/ImageUpload';
 import ImageEditComponent from 'src/components/ImageEditComponent';
+import { set } from 'react-hook-form';
+import axios from 'axios';
 
 export interface IPatientDetailEditModal {
   openModal: boolean;
@@ -44,7 +46,8 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [privateFields, setPrivateFields] = useState<any>([]);
   const [imageFiles, setImageFiles] = useState<TMediaFileUpload[]>([]);
-  const [savedPhotosList, setSavedPhotosList] = useState<string[]>([]);
+  const [savedPhotosList, setSavedPhotosList] = useState<any[]>([]);
+  const [newProfilePicture, setNewProfilePicture] = useState<any[]>([]);
 
   const [sendNotification] = useNotification();
 
@@ -76,11 +79,87 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
     setFormData(newFormData);
   };
 
+  const handleMediaUpload = async (file: any, type: string, fieldName: string) => {
+    const typeEnum = type === 'FILE' ? FormMediaTypes.FILE : type === 'IMAGE' ? FormMediaTypes.IMAGE : FormMediaTypes.VIDEO;
+
+    const response = await FormDataService.getUploadUrl(typeEnum);
+    const { id, url } = response;
+
+    const uploadResponse = await axios({
+      method: 'PUT',
+      url: url,
+      data: file,
+      headers: {
+        'x-ms-blob-type': 'BlockBlob',
+        'Content-Type': file.type
+      }
+    });
+
+    if (!uploadResponse) {
+      throw new Error('Failed to upload media');
+    }
+
+    return { id, fieldName, fileType: file.type, fileName: file.name }; // or any other relevant data from the response
+  };
+
   const handleSubmit = async () => {
     if (isLoading) return;
     setIsLoading(true);
+
+    const newFormData = { ...formData };
+    // check if there is a field named 'Images' in the form data
+    const isImagesFieldExist = Object.keys(newFormData).includes('Images');
+    if (isImagesFieldExist) {
+        // remove the 'Images' field from the form data
+        delete newFormData['Images'];
+        newFormData['Images'] = { value: savedPhotosList, type: 'IMAGE', label: 'Photos' };
+        const mediaUploadPromises: any[] = [];
+
+        imageFiles?.forEach((imageFile: any) => {
+          imageFile.files.forEach((file: any) => {
+            mediaUploadPromises.push(handleMediaUpload(file.file, 'IMAGE', imageFile.fieldName));
+          });
+        });
+
+        // filter the
+
+        const mediaUploadResults = await Promise.all(mediaUploadPromises);
+
+        mediaUploadResults.forEach((mediaUploadResult: any) => {
+          newFormData[mediaUploadResult.fieldName].value.push({
+            id: mediaUploadResult.id,
+            type: mediaUploadResult.fileType,
+            name: mediaUploadResult.fileName
+          });
+        });
+    }
+
+    const isProfilePictureFieldExist = Object.keys(newFormData).includes('profilePicture');
+    if (isProfilePictureFieldExist && newProfilePicture.length > 0) {
+      delete newFormData['profilePicture'];
+      newFormData['profilePicture'] = { value: [], type: 'IMAGE', label: 'Profile Picture' };
+      const mediaUploadPromises: any[] = [];
+
+      newProfilePicture?.forEach((imageFile: any) => {
+        imageFile.files.forEach((file: any) => {
+          mediaUploadPromises.push(handleMediaUpload(file.file, 'IMAGE', 'profilePicture'));
+        });
+      });
+
+      const mediaUploadResults = await Promise.all(mediaUploadPromises);
+
+      mediaUploadResults.forEach((mediaUploadResult: any) => {
+        newFormData['profilePicture'].value.push({
+          id: mediaUploadResult.id,
+          type: mediaUploadResult.fileType,
+          name: mediaUploadResult.fileName
+        });
+      });
+    }
+
+
     try {
-      await FormDataService.updateFormData(formDataId, { values: formData });
+      await FormDataService.updateFormData(formDataId, { values: newFormData });
       handleCloseModal();
       handleParentClose();
     } catch (error) {
@@ -94,7 +173,7 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
   };
 
   const handleRemovSavedPhoto = (photoId: string) => {
-    const newSavedPhotosList = savedPhotosList.filter((id) => id !== photoId);
+    const newSavedPhotosList = savedPhotosList.filter((image) => image.id !== photoId);
     setSavedPhotosList(newSavedPhotosList);
   };
 
@@ -124,7 +203,15 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
               width: '100%'
             }}
           >
-            <ImageEditComponent setImageFiles={setImageFiles} imageFileIds={savedPhotosList} handleRemovePhoto={handleRemovSavedPhoto} />
+            {fieldName === "profilePicture" ? (
+              <ImageEditComponent type="profilePicture" setImageFiles={setNewProfilePicture} imageFileIds={field.value} handleRemovePhoto={
+                (photoId: string) => {
+                  setNewProfilePicture([]);
+                }
+              } />
+            ) : (
+              <ImageEditComponent setImageFiles={setImageFiles} imageFileIds={savedPhotosList} handleRemovePhoto={handleRemovSavedPhoto} />
+            )}
           </Box>
         );
       case 'FILE':
@@ -221,8 +308,13 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
     return privateFields.some((field: any) => field.name === fieldName);
   };
 
+  console.log('data', data);
+
   useEffect(() => {
     fetchFormTemplate();
+    const savedPhotos:any = Object.entries(data).filter(([key, value]: [string,any]) => value.type === 'IMAGE' && key !== 'profilePicture');
+    const savedPhotosList = savedPhotos[0][1].value;
+    setSavedPhotosList(savedPhotosList);
   }, []);
 
   return (
