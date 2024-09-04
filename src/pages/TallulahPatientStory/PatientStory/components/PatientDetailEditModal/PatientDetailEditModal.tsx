@@ -108,11 +108,11 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
 
     const newFormData = { ...formData };
     // check if there is a field named 'Images' in the form data
-    const isImagesFieldExist = Object.keys(newFormData).includes('Images');
+    const isImagesFieldExist = Object.keys(newFormData).includes('photos');
     if (isImagesFieldExist) {
         // remove the 'Images' field from the form data
-        delete newFormData['Images'];
-        newFormData['Images'] = { value: savedPhotosList, type: 'IMAGE', label: 'Photos' };
+        delete newFormData['photos'];
+        newFormData['photos'] = { value: savedPhotosList, type: 'IMAGE', label: 'Photos' };
         const mediaUploadPromises: any[] = [];
 
         imageFiles?.forEach((imageFile: any) => {
@@ -307,8 +307,6 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
   const isPrivateField = (fieldName: string) => {
     return privateFields.some((field: any) => field.name === fieldName);
   };
-
-  console.log('data', data);
 
   useEffect(() => {
     fetchFormTemplate();
