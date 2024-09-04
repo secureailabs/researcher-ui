@@ -66,7 +66,7 @@ const ImageEditComponent: React.FC<IImageEditComponent> = ({ imageFileIds, handl
         width: '100%'
       }}
     >
-      <ImageUpload fieldName={type === 'profilePicture' ? 'profilePicture' : 'Images'} setImageFiles={setImageFiles} />
+      <ImageUpload fieldName={type === 'profilePicture' ? 'profilePicture' : 'photos'} setImageFiles={setImageFiles} />
       {imageFileIds.map((image) => (
         <ImageFile key={image.id} imageId={image.id} handleRemovePhoto={handleRemovePhoto} />
       ))}
