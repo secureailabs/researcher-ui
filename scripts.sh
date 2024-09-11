@@ -24,7 +24,6 @@ push_image_to_registry() {
     fi
 
     echo "login to azure account"
-    az login --service-principal --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
     az account set --subscription $AZURE_SUBSCRIPTION_ID
 
     echo "log in to azure registry"
