@@ -310,9 +310,14 @@ const PatientDetailEditModal: React.FC<IPatientDetailEditModal> = ({
 
   useEffect(() => {
     fetchFormTemplate();
-    const savedPhotos:any = Object.entries(data).filter(([key, value]: [string,any]) => value.type === 'IMAGE' && key !== 'profilePicture');
-    const savedPhotosList = savedPhotos[0][1].value;
-    setSavedPhotosList(savedPhotosList);
+    try{
+      const savedPhotos:any = Object.entries(data).filter(([key, value]: [string,any]) => value.type === 'IMAGE' && key !== 'profilePicture');
+      const savedPhotosList = savedPhotos[0][1].value;
+      setSavedPhotosList(savedPhotosList);
+    }
+    catch(err){
+      console.log(err);
+    }
   }, []);
 
   return (
