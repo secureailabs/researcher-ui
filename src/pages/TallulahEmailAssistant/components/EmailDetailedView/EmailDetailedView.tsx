@@ -165,7 +165,7 @@ const EmailDetailedView: React.FC<IEmailDetailedView> = ({
               alignItems: 'center'
             }}
           >
-            <Box className={styles.emailContentBody}>{data.body.content}</Box>
+            <Box className={styles.emailContentBody}>{data?.body?.content}</Box>
           </Box>
         </Box>
         <Box

@@ -189,7 +189,7 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
             navigate(`/patient-chat/${data.id}`);
           }}
         >
-          Story assistant
+          Patient Chat
         </MenuItem>
       </Menu>
       <CloseIcon
@@ -263,6 +263,8 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
       </Box>
     );
   };
+
+  console.log("rest", rest);
 
   const renderModalCardContent = (
     <Box className={styles.container}>

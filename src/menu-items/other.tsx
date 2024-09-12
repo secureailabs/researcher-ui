@@ -33,7 +33,8 @@ const pagesIdAndCorrespondingRoles: { [key: string]: UserRole[] } = {
   'content-generation': [UserRole.CONTENT_GENERATION_USER],
   'patient-profile': [UserRole.PATIENT_PROFILE_USER],
   'etapestry-data': [UserRole.ETAPESTRY_USER],
-  Dashboard: [UserRole.FORM_INTAKE_USER]
+  Dashboard: [UserRole.FORM_INTAKE_USER],
+  'patient-chat': [UserRole.FORM_INTAKE_USER]
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -89,6 +90,21 @@ const pages = [
         title: 'Manage Templates',
         type: 'item',
         url: '/patient-story-form-templates',
+        target: false
+      }
+    ]
+  },
+  {
+    id: 'patient-chat',
+    title: 'Patient Chat',
+    type: 'collapse',
+    icon: icons.IconDeviceDesktopAnalytics,
+    children: [
+      {
+        id: 'patient-chat',
+        title: 'Patient Chat',
+        type: 'item',
+        url: '/patient-chat',
         target: false
       }
     ]

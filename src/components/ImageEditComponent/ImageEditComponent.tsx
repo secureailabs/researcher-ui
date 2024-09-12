@@ -1,21 +1,22 @@
 import { Box } from '@mui/material';
 import styles from './ImageEditComponent.module.css';
 import { useEffect, useState } from 'react';
-import { MediaService, FormMediaTypes } from 'src/tallulah-ts-client';
+import { FormMediaTypes, FormDataService } from 'src/tallulah-ts-client';
 import CloseIcon from '@mui/icons-material/Close';
 import ImageUpload, { TMediaFileUpload } from './ImageUpload';
 
 export interface IImageEditComponent {
-  imageFileIds: string[];
+  imageFileIds: any[];
   handleRemovePhoto: (videoId: string) => void;
   setImageFiles: (files: TMediaFileUpload[]) => void;
+  type?: "profilePicture" | "image";
 }
 
 const ImageFile: React.FC<{ imageId: string; handleRemovePhoto: any }> = ({ imageId, handleRemovePhoto }) => {
   const [imageUrl, setImageUrl] = useState<string>('');
   const fetchImageUrl = async (imageId: string) => {
     try {
-      const res = await MediaService.getMediaDownloadUrl(imageId, FormMediaTypes.IMAGE);
+      const res = await FormDataService.getDownloadUrl(imageId, FormMediaTypes.IMAGE);
       setImageUrl(res.url);
     } catch (err) {
       console.log(err);
@@ -54,7 +55,7 @@ const ImageFile: React.FC<{ imageId: string; handleRemovePhoto: any }> = ({ imag
   );
 };
 
-const ImageEditComponent: React.FC<IImageEditComponent> = ({ imageFileIds, handleRemovePhoto, setImageFiles }) => {
+const ImageEditComponent: React.FC<IImageEditComponent> = ({ imageFileIds, handleRemovePhoto, setImageFiles, type }) => {
   return (
     <Box
       sx={{
@@ -65,9 +66,9 @@ const ImageEditComponent: React.FC<IImageEditComponent> = ({ imageFileIds, handl
         width: '100%'
       }}
     >
-      <ImageUpload fieldName="photos" setImageFiles={setImageFiles} />
+      <ImageUpload fieldName={type === 'profilePicture' ? 'profilePicture' : 'photos'} setImageFiles={setImageFiles} />
       {imageFileIds.map((image) => (
-        <ImageFile key={image} imageId={image} handleRemovePhoto={handleRemovePhoto} />
+        <ImageFile key={image.id} imageId={image.id} handleRemovePhoto={handleRemovePhoto} />
       ))}
     </Box>
   );

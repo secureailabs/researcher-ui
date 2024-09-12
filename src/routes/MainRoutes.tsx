@@ -4,6 +4,7 @@ import MainLayout from 'src/components/layout/MainLayout';
 import Dashboard from 'src/pages/Dashboard';
 import PatientChat from 'src/pages/PatientChat';
 import { DynamicUserNameBreadCrumb } from 'src/pages/PatientChat/PatientChat';
+import PatientChatUserList from 'src/pages/PatientChatUserList';
 import TallulahETapestry from 'src/pages/TallulahETapestry';
 import FormBuilder from 'src/pages/TallulahPatientStory/FormBuilder';
 import FormTemplates from 'src/pages/TallulahPatientStory/FormTemplates';
@@ -107,8 +108,8 @@ export const MainRoutesChildren = [
   },
   {
     path: 'patient-chat',
-    element: <PatientStory />,
-    breadcrumb: null
+    element: <PatientChatUserList />,
+    breadcrumb: 'Patient Chat'
   },
   {
     path: 'patient-chat/:id',
