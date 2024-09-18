@@ -393,7 +393,7 @@ const Login: React.FC = () => {
             <Box className={styles.stack} sx={{ my: 3 }}>
               <Typography variant="h3">Enroll 2FA</Typography>
             </Box>
-            <Typography variant="h6">Verification Code Sent To Your Phone</Typography>
+            <Typography variant="h6">Add your phone number for 2FA</Typography>
             <Controller
               name="phone"
               control={control}
