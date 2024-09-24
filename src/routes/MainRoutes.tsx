@@ -21,6 +21,7 @@ const PatientStory = Loadable(lazy(async () => await import('src/pages/TallulahP
 const ContentGeneration = Loadable(lazy(async () => await import('src/pages/TallulahContentGeneration/ContentGeneration')));
 const ContentGenerationForm = Loadable(lazy(async () => await import('src/pages/TallulahContentGeneration/ContentGenerationForm')));
 const TallulahPatientProfile = Loadable(lazy(async () => await import('src/pages/TallulahPatientProfile')));
+const RedditSearch = Loadable(lazy(async () => await import('src/pages/RedditSearch')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -115,6 +116,11 @@ export const MainRoutesChildren = [
     path: 'patient-chat/:id',
     element: <PatientChat />,
     breadcrumb: DynamicUserNameBreadCrumb
+  },
+  {
+    path: 'reddit-search',
+    element: <RedditSearch />,
+    breadcrumb: 'Reddit Search'
   }
 ];
 

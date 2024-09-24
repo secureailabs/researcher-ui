@@ -7,7 +7,8 @@ import {
   IconId,
   IconListDetails,
   IconPencil,
-  IconUsers
+  IconUsers,
+  IconSearch
 } from '@tabler/icons-react';
 
 // type
@@ -23,7 +24,8 @@ const icons = {
   IconId,
   IconListDetails,
   IconPencil,
-  IconUsers
+  IconUsers,
+  IconSearch
 };
 
 const pagesIdAndCorrespondingRoles: { [key: string]: UserRole[] } = {
@@ -34,7 +36,8 @@ const pagesIdAndCorrespondingRoles: { [key: string]: UserRole[] } = {
   'patient-profile': [UserRole.PATIENT_PROFILE_USER],
   'etapestry-data': [UserRole.ETAPESTRY_USER],
   Dashboard: [UserRole.FORM_INTAKE_USER],
-  'patient-chat': [UserRole.FORM_INTAKE_USER]
+  'patient-chat': [UserRole.FORM_INTAKE_USER],
+  'reddit-search': [UserRole.CONTENT_GENERATION_USER]
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -142,6 +145,21 @@ const pages = [
         title: 'Patient Profile',
         type: 'item',
         url: '/patient-profile',
+        target: false
+      }
+    ]
+  },
+  {
+    id: 'reddit-search',
+    title: 'Social Search',
+    type: 'collapse',
+    icon: icons.IconSearch,
+    children: [
+      {
+        id: 'reddit-search',
+        title: 'Reddit Search',
+        type: 'item',
+        url: '/reddit-search',
         target: false
       }
     ]
