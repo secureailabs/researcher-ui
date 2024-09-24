@@ -1,28 +1,12 @@
-import { useNavigate, useParams } from 'react-router-dom';
 import styles from './RedditSearch.module.css';
-import {
-  Context,
-  FormDataService,
-  FormTemplatesService,
-  GetFormData_Out,
-  GetMultipleFormData_Out,
-  GetMultipleFormTemplate_Out,
-  PatientChatService
-} from 'src/tallulah-ts-client';
-import { useEffect, useRef, useState } from 'react';
-import { Box, Button, CircularProgress, Grid, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import logo from 'src/assets/images/array_insights_small.png';
-import user_avatar from 'src/assets/images/users/avatar-3.png';
-import SearchBar from 'src/components/SearchBar';
-import Sort from '../TallulahPatientStory/PatientStory/components/Sort';
+import { useState } from 'react';
+import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import axios from 'axios';
 
 export interface IRedditSearch {
   sampleTextProp?: string;
 }
-
-// https://www.google.com/webhp?igu=1&gws_rd=ssl
 
 const RedditSearch = () => {
   const { handleSubmit, control, getValues, formState, reset } = useForm({
@@ -43,6 +27,12 @@ const RedditSearch = () => {
         console.log(error);
       });
   };
+
+  function openInNewTab(url: string) {
+    window?.open(url, '_blank')?.focus();
+  }
+
+  const timezoneOffet = new Date().getTimezoneOffset()*60000;
 
   return (
     <div>
@@ -79,26 +69,36 @@ const RedditSearch = () => {
         >
           Search
         </Button>
-        <Table style={{width: "100%"}}>
-          <TableHead>
-          <TableRow>
-            <TableCell className={styles.tableBorders}><Typography>Sub reddit</Typography></TableCell>
-            <TableCell className={styles.tableBorders}><Typography>Author</Typography></TableCell>
-            <TableCell className={styles.tableBorders}><Typography>Title</Typography></TableCell>
-            <TableCell className={styles.tableBorders}><Typography>Image</Typography></TableCell>
-          </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((item: any, index: number) => (
-              <TableRow key={index}>
-                <TableCell className={styles.tableBorders}><Typography><a href={"https://www.reddit.com/r/"+item.data.subreddit} target="_blank">{item.data.subreddit}</a></Typography></TableCell>
-                <TableCell className={styles.tableBorders}><Typography><a href={"https://www.reddit.com/user/"+item.data.author} target="_blank">{item.data.author}</a></Typography></TableCell>
-                <TableCell className={styles.tableBorders}><Typography><a href={"https://www.reddit.com/"+item.data.permalink} target="_blank">{item.data.title}</a></Typography></TableCell>
-                <TableCell className={styles.tableBorders}>{'thumbnail' in item.data && item.data.thumbnail.startsWith('http') && (<img src={item.data.thumbnail} alt="thumbnail" />)}</TableCell>
-              </TableRow>
+        <Box>
+          <Typography className={styles.resultsTitle}>Search Results</Typography>
+          <Box>
+          {data.map((item: any, index: number) => (
+            <Grid className={styles.card} container>
+              <Grid container item spacing={2}>
+                <Grid item>
+                  <Chip onClick={() => {openInNewTab("https://www.reddit.com/"+item.data.subreddit_name_prefixed)}} label={"Topic: " + item.data.subreddit_name_prefixed} variant="outlined" />
+                </Grid>
+                <Grid item>
+                  <Chip onClick={() => {openInNewTab("https://www.reddit.com/user/"+item.data.author)}} label={"Author: " + item.data.author} variant="outlined" />
+                </Grid>
+                <Grid item>
+                  <Chip label={new Date(item.data.created_utc*1000).toLocaleString()} variant="outlined" />
+                </Grid>
+              </Grid>
+              <Grid className={styles.title} container item spacing={2} onClick={() => {openInNewTab("https://www.reddit.com"+item.data.permalink)}}>
+                <Grid item xs>
+                  <Typography className={styles.titleText}>{item.data.title}</Typography>
+                </Grid>
+                {'thumbnail' in item.data && item.data.thumbnail.startsWith('http') && (
+                <Grid item xs={4}>
+                  <img src={item.data.thumbnail} alt="thumbnail" />
+                </Grid>
+                )}
+              </Grid>
+            </Grid>
             ))}
-          </TableBody>
-        </Table>
+          </Box>
+        </Box>
       </Box>
     </div>
   );
