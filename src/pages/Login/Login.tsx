@@ -407,6 +407,7 @@ const Login: React.FC = () => {
                   helperText={error ? error.message : null}
                   required
                   fullWidth
+                  defaultCountry="US"
                   id="phone"
                   label="Phone Number"
                   autoFocus
