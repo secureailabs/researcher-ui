@@ -5,12 +5,13 @@ import {
   FormDataService,
   FormTemplatesService,
   GetFormData_Out,
+  GetFormTemplate_Out,
   GetMultipleFormData_Out,
   GetMultipleFormTemplate_Out,
   PatientChatService
 } from 'src/tallulah-ts-client';
 import { useEffect, useRef, useState } from 'react';
-import { Box, CircularProgress, Grid, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import logo from 'src/assets/images/array_insights_small.png';
 import user_avatar from 'src/assets/images/users/avatar-3.png';
 import SearchBar from 'src/components/SearchBar';
@@ -59,6 +60,7 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
   const [searchText, setSearchText] = useState<string | undefined>(undefined);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
+  const [formTemplates, setFormTemplates] = useState<GetFormTemplate_Out[]>([]);
   const [sortDirection, setSortDirection] = useState<number>(-1);
   const [sortKey, setSortKey] = useState<string>('creation_time');
 
@@ -136,6 +138,7 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
       const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
       // filter the published state
       const filteredData = res.templates.filter((formTemplate: any) => formTemplate.state === 'PUBLISHED');
+      setFormTemplates(filteredData);
       setSelectedTemplateId(filteredData[0].id);
       fetchFormData(filteredData[0].id);
     } catch (err) {
@@ -211,6 +214,23 @@ const PatientChat: React.FC<IPatientChat> = ({ sampleTextProp }) => {
       <Typography variant="h4" className={styles.patientSelectionBoxText}>
         Select a patient to begin
       </Typography>
+      <InputLabel id="form-template-select-label">Form templates</InputLabel>
+      <Select
+        labelId="form-template-select-label"
+        id="form-template-select"
+        value={selectedTemplateId}
+        label="Templates"
+        onChange={(event: SelectChangeEvent) => {
+          setSelectedTemplateId(event.target.value as string);
+          fetchFormData(event.target.value as string);
+        }}
+      >
+        {formTemplates.map((formTemplate) => (
+          <MenuItem key={formTemplate.id} value={formTemplate.id}>
+            {formTemplate.name}
+          </MenuItem>
+        ))}
+      </Select>
       <Box className={styles.searchBarBox}>
         <SearchBar placeholder="Search Patient By Name " searchText={''} handleSearchChange={handleSearchChange} />
       </Box>
