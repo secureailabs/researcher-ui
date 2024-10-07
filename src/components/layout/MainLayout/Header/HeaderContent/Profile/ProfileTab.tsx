@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { List, ListItemButton, ListItemIcon, ListItemText, Switch } from '@mui/material';
 
 // assets
-import { EditOutlined, ProfileOutlined, LogoutOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons';
+import { EditOutlined, ProfileOutlined, LogoutOutlined, UserOutlined, WalletOutlined, DatabaseOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 // ==============================|| HEADER PROFILE - PROFILE TAB ||============================== //
@@ -27,6 +27,9 @@ const ProfileTab = ({ handleLogout }: Props) => {
       case 0:
         navigate('/settings/password-reset');
         break;
+      case 1:
+        navigate('/settings/data-export-requests');
+        break;
       default:
         break;
     }
@@ -40,7 +43,13 @@ const ProfileTab = ({ handleLogout }: Props) => {
         </ListItemIcon>
         <ListItemText primary="Reset Password" />
       </ListItemButton>
-      <ListItemButton selected={selectedIndex === 1} onClick={handleLogout}>
+      <ListItemButton selected={selectedIndex === 1} onClick={(event: React.MouseEvent<HTMLDivElement>) => handleListItemClick(event, 1)}>
+        <ListItemIcon>
+          <DatabaseOutlined />
+        </ListItemIcon>
+        <ListItemText primary="Data Export Requests" />
+      </ListItemButton>
+      <ListItemButton selected={selectedIndex === 2} onClick={handleLogout}>
         <ListItemIcon>
           <LogoutOutlined />
         </ListItemIcon>

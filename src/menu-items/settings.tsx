@@ -22,6 +22,13 @@ const pages = [
         type: 'item',
         url: '/settings/password-reset',
         target: false
+      },
+      {
+        id: 'data-export-requests',
+        title: 'Data Export Requests',
+        type: 'item',
+        url: '/settings/data-export-requests',
+        target: false
       }
     ]
   }
