@@ -264,8 +264,6 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
     );
   };
 
-  console.log("rest", rest);
-
   const renderModalCardContent = (
     <Box className={styles.container}>
       {/* Patient Details */}

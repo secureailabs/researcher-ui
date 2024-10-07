@@ -1,7 +1,8 @@
-import { Box, CircularProgress, Grid, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, MenuItem, Select, Typography } from '@mui/material';
 import styles from './PatientStory.module.css';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  FormDataLocation,
   FormDataService,
   FormTemplatesService,
   GetFormData_Out,
@@ -16,6 +17,8 @@ import { TemplateNames } from './components/CardTemplates/CardTemplates';
 import Filter from './components/Filter';
 import FilterChip from './components/FilterChip';
 import Sort from './components/Sort';
+import {AdvancedMarker, APIProvider, CollisionBehavior, InfoWindow, Map, Marker, Pin, useAdvancedMarkerRef} from '@vis.gl/react-google-maps';
+
 
 export interface IPatientStory {}
 
@@ -29,6 +32,42 @@ interface TabPanelProps {
   index: number;
   value: number;
 }
+
+const API_KEY = "AIzaSyDMnqabvdj-jsDc3iWdf3ImwWujeqEPZYc"
+
+const MarkerWithInfoWindow = (props:any) => {
+  const [markerRef, marker] = useAdvancedMarkerRef();
+  const [infoWindowShown, setInfoWindowShown] = useState(false);
+
+  const handleClose = useCallback(() => setInfoWindowShown(false), []);
+
+  const handleMarkerClick = useCallback(
+    () => setInfoWindowShown(isShown => !isShown),
+    []
+  );
+
+  return (
+    <>
+      <AdvancedMarker position={props.position} ref={markerRef} onClick={handleMarkerClick} />
+      {infoWindowShown &&
+      <InfoWindow anchor={marker} onClose={handleClose}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {props.city}
+        <Button
+        onClick={props.handleOnClick}
+        >View Details</Button>
+        </Box>
+       </InfoWindow>
+      }
+    </>
+  );
+};
+
 
 const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -44,6 +83,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('creation_time');
   const [sortDirection, setSortDirection] = useState<number>(-1);
+  const [formDataLocation, setFormDataLocation] = useState<FormDataLocation[]>([]);
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const templateNameString = formTemplate?.card_layout?.name || 'TEMPLATE0';
@@ -120,6 +160,16 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     setSearchText(text);
   };
 
+  const fetchZipCodes = async (formTemplateId:string) => {
+    try {
+      const res = await FormDataService.getZipcodes(formTemplateId)
+      setFormDataLocation(res.form_data_location)
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     if (searchText === undefined) {
       return;
@@ -158,6 +208,14 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     }
   }, [sortKey, sortDirection]);
 
+  const handleMarkerClick = (form_data_id: string) => {
+    const patientData = formData.find((data) => data.id === form_data_id);
+    if (patientData) {
+      setOpenModal(true);
+      setSelectedPatientData(patientData);
+    }
+  }
+
   const TemplateSelector = () => {
     return (
       <Box className={styles.templateSelectorDiv}>
@@ -167,6 +225,8 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
           value={selectedTemplateId}
           onChange={(event: any) => {
             setSelectedTemplateId(event.target.value as string);
+            setFormDataLocation([])
+            fetchZipCodes(event.target.value as string);
             // update new form template
             const selectedTemplate = publishedTemplateList.find((template) => template.id === event.target.value);
             setFormTemplate(selectedTemplate);
@@ -197,6 +257,33 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       <Box>
         <TemplateSelector />
       </Box>
+      {formDataLocation.length>0 &&
+      <Box
+      sx={{
+        width: '100%',
+        height: '400px',
+        marginTop: '1rem',
+      }}
+      >
+          <APIProvider apiKey={API_KEY}>
+        <Map
+          defaultCenter={{lat: 44.500000, lng: 	-89.500000 }}
+          defaultZoom={4}
+          gestureHandling={'greedy'}
+          disableDefaultUI={true}
+          mapId={"429d97a6790fbaa6 "}
+        >
+            {formDataLocation.length>0 && formDataLocation.map((formData, index) => (
+
+              <MarkerWithInfoWindow key={formData.form_data_id} position={{lat: formData.location.latitude, lng: formData.location.longitude}} city={formData.location.city} handleOnClick={()=>{
+                handleMarkerClick(formData.form_data_id)
+              }} />
+
+            ))}
+          </Map>
+      </APIProvider>
+      </Box>
+      }
       <Box className={styles.patientStoryContainer}>
         <Box className={styles.searchContainer}>
           <SearchBar
@@ -294,6 +381,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
             </Grid>
           ))}
         </Grid>
+
         {selectedPatientData ? (
           <PatientDetailViewModal
             openModal={openModal}
