@@ -45,7 +45,8 @@ const fieldTypes = [
   ['File', 'FILE'],
   ['Image', 'IMAGE'],
   ['Video', 'VIDEO'],
-  ['Consent_checkbox', 'CONSENT_CHECKBOX']
+  ['Consent_checkbox', 'CONSENT_CHECKBOX'],
+  ['Zipcode', 'ZIPCODE']
 ];
 const FormBuilder: React.FC<IFormBuilder> = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
