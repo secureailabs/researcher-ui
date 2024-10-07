@@ -19,9 +19,6 @@ const BarchartItem: React.FC<IBarchartItem> = ({ response }) => {
     keys.sort((a: any, b: any) => a - b);
   }
 
-  console.log('keys', keys);
-  console.log('counts', counts);
-
   return (
     // create a bar chart with the response object
     <BarChart
