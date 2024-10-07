@@ -47,6 +47,38 @@ const Sort: React.FC<ISort> = ({ sortDirection, setSortDirection, sortKey, setSo
         ]
       },
       {
+        label: 'Recent Chat',
+        rightIcon: <ChevronRightIcon />,
+        items: [
+          {
+            label: 'Oldest',
+            callback: (event, item) => {
+              setSortDirection(1);
+              setSortKey('chat_time');
+            },
+            sx:
+              sortDirection === 1 && sortKey === 'chat_time'
+                ? {
+                    backgroundColor: '#a1d0f7'
+                  }
+                : {}
+          },
+          {
+            label: 'Newest',
+            callback: (event, item) => {
+              setSortDirection(-1);
+              setSortKey('chat_time');
+            },
+            sx:
+              sortDirection === -1 && sortKey === 'chat_time'
+                ? {
+                    backgroundColor: '#a1d0f7'
+                  }
+                : {}
+          }
+        ]
+      },
+      {
         label: 'First Name',
         rightIcon: <ChevronRightIcon />,
         items: [
