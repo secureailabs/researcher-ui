@@ -11,9 +11,10 @@ interface IFilterProps {
   filterObjects: PatientStoryFilter[];
   setSelectedFilter: (data: any) => void;
   selectedFilter: any;
+  handleVideoFilter: (option: string) => void;
 }
 
-const Filter: React.FC<IFilterProps> = ({ filterObjects, setSelectedFilter, selectedFilter }) => {
+const Filter: React.FC<IFilterProps> = ({ filterObjects, setSelectedFilter, selectedFilter, handleVideoFilter }) => {
   const [MenuItems, setMenuItems] = useState<MenuItemData>({});
 
   const isSelected = (key: string, option: string) => {
@@ -23,36 +24,62 @@ const Filter: React.FC<IFilterProps> = ({ filterObjects, setSelectedFilter, sele
     return false;
   };
 
+  const getFilterObject = () => {
+    const basicfilter = filterObjects.map((filterObject) => {
+      return {
+        label: convertcamelCaseToTitleCase(filterObject.name),
+        rightIcon: <ChevronRightIcon />,
+        items: filterObject.options.map((option) => {
+          return {
+            label: option,
+            sx: {
+              backgroundColor: isSelected(filterObject.name, option) ? '#a1d0f7' : 'white'
+              // override hover color
+            },
+            callback: () => {
+              if (selectedFilter && selectedFilter[filterObject.name] && selectedFilter[filterObject.name].includes(option)) {
+                const newSelectedFilter = { ...selectedFilter };
+                newSelectedFilter[filterObject.name] = newSelectedFilter[filterObject.name].filter((item: string) => item !== option);
+                if (newSelectedFilter[filterObject.name].length === 0) {
+                  delete newSelectedFilter[filterObject.name];
+                }
+                setSelectedFilter(newSelectedFilter);
+              } else {
+                setSelectedFilter({ ...selectedFilter, [filterObject.name]: [...(selectedFilter[filterObject.name] || []), option] });
+              }
+            }
+          };
+        })
+      };
+    });
+
+    const extendedFilter = {
+      label: 'Is Video Present',
+      rightIcon: <ChevronRightIcon />,
+      items: [
+        {
+          label: 'Yes',
+          callback: () => {
+            handleVideoFilter('Yes');
+          }
+        },
+        {
+          label: 'No',
+          callback: () => {
+            handleVideoFilter('No');
+          }
+        }
+      ],
+
+    };
+
+    return [...basicfilter, extendedFilter];
+  }
+
   useEffect(() => {
     const menuItemsData: MenuItemData = {
       label: 'Filter',
-      items: filterObjects.map((filterObject) => {
-        return {
-          label: convertcamelCaseToTitleCase(filterObject.name),
-          rightIcon: <ChevronRightIcon />,
-          items: filterObject.options.map((option) => {
-            return {
-              label: option,
-              sx: {
-                backgroundColor: isSelected(filterObject.name, option) ? '#a1d0f7' : 'white'
-                // override hover color
-              },
-              callback: (event, item) => {
-                if (selectedFilter && selectedFilter[filterObject.name] && selectedFilter[filterObject.name].includes(option)) {
-                  const newSelectedFilter = { ...selectedFilter };
-                  newSelectedFilter[filterObject.name] = newSelectedFilter[filterObject.name].filter((item: string) => item !== option);
-                  if (newSelectedFilter[filterObject.name].length === 0) {
-                    delete newSelectedFilter[filterObject.name];
-                  }
-                  setSelectedFilter(newSelectedFilter);
-                } else {
-                  setSelectedFilter({ ...selectedFilter, [filterObject.name]: [...(selectedFilter[filterObject.name] || []), option] });
-                }
-              }
-            };
-          })
-        };
-      })
+      items: getFilterObject()
     };
     setMenuItems(menuItemsData);
   }, [filterObjects]);
