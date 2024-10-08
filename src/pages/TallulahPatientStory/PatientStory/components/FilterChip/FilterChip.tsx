@@ -6,11 +6,12 @@ import { set } from 'react-hook-form';
 
 export interface IFilterChip {
   filterTag: string;
-  setFilters: (filters: any) => void;
+  setFilters?: (filters: any) => void;
   filterKey: string;
+  onClose?: () => void;
 }
 
-const FilterChip: React.FC<IFilterChip> = ({ filterTag, setFilters, filterKey }) => {
+const FilterChip: React.FC<IFilterChip> = ({ filterTag, setFilters, filterKey, onClose }) => {
   const getEmailLabelColor = (label: string) => {
     return getEmailLabel(label)?.color ? getEmailLabel(label)?.color : '#71decc';
   };
@@ -28,20 +29,25 @@ const FilterChip: React.FC<IFilterChip> = ({ filterTag, setFilters, filterKey })
         size="small"
         className={styles.filterChipIcon}
         onClick={() => {
-          setFilters((prevFilters: any) => {
-            // prevfiltgers is of object like {key: [value]}
-            // find the key and remove the value from the array
-            const updatedFilters = { ...prevFilters };
-            const filterValues = updatedFilters[filterKey];
-            const updatedFilterValues = filterValues.filter((value: string) => value !== filterTag);
-            // if the filter values are empty, remove the key from the object
-            if (updatedFilterValues.length === 0) {
-              delete updatedFilters[filterKey];
-            } else {
-              updatedFilters[filterKey] = updatedFilterValues;
-            }
-            return updatedFilters;
-          });
+          if (onClose) {
+              onClose();
+          }
+         else if (setFilters) {
+            setFilters((prevFilters: any) => {
+              // prevfiltgers is of object like {key: [value]}
+              // find the key and remove the value from the array
+              const updatedFilters = { ...prevFilters };
+              const filterValues = updatedFilters[filterKey];
+              const updatedFilterValues = filterValues.filter((value: string) => value !== filterTag);
+              // if the filter values are empty, remove the key from the object
+              if (updatedFilterValues.length === 0) {
+                delete updatedFilters[filterKey];
+              } else {
+                updatedFilters[filterKey] = updatedFilterValues;
+              }
+              return updatedFilters;
+            });
+          }
         }}
       >
         <CloseIcon
