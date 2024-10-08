@@ -53,6 +53,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-microsoft-login": "^2.0.1",
     "react-notifications-component": "^4.0.1",
+    "react-password-checklist": "^1.8.0",
     "react-perfect-scrollbar": "^1.5.8",
     "react-plotly.js": "^2.6.0",
     "react-query": "^3.39.3",
