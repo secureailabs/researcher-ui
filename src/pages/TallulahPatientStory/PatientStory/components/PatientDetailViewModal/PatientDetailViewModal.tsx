@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, CircularProgress, Divider, Menu, MenuItem, Modal, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Divider, IconButton, Menu, MenuItem, Modal, Tab, Tabs, Typography } from '@mui/material';
 import PatientImage from 'src/assets/images/users/avatar-3.png';
 import { formatReceivedTimeFull } from 'src/utils/helper';
 import { FormDataService, FormMediaTypes, GetFormData_Out } from 'src/tallulah-ts-client';
@@ -9,6 +9,7 @@ import DeleteConfirmationModal from 'src/components/DeleteConfirmationModal';
 import useNotification from 'src/hooks/useNotification';
 import PatientDetailEditModal from '../PatientDetailEditModal';
 import { useNavigate } from 'react-router-dom';
+import { RefreshOutlined } from '@mui/icons-material';
 
 export interface IPatientDetailViewModal {
   openModal: boolean;
@@ -345,15 +346,16 @@ const PatientDetailViewModal: React.FC<IPatientDetailViewModal> = ({ openModal, 
         </Box>
         <Box>
           <Box>
-            {data.values.firstName ? (
-              <Typography variant="h6" className={styles.name}>
-                {data.values.firstName?.value} {data.values.lastName?.value}
-              </Typography>
-            ) : data.values.name ? (
-              <Typography variant="h6" className={styles.name}>
-                {data.values?.name?.value}
-              </Typography>
-            ) : null}
+            <Typography variant="h6" className={styles.name}>
+              {data.values.firstName ? (
+                  data.values.firstName?.value + " " + data.values.lastName?.value
+              ) : data.values.name ? (
+                  data.values?.name?.value
+              ) : null}
+              <IconButton onClick={handleRefresh}>
+                <RefreshOutlined />
+              </IconButton>
+            </Typography>
           </Box>
           <Box>Date Of Data Use Consent: {formatReceivedTimeFull(data?.creation_time as string)}</Box>
           {data?.values && 'tags' in data?.values ? (

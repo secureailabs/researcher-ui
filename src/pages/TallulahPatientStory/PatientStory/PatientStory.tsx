@@ -88,6 +88,10 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   };
 
   const fetchPublishedFormTemplate = async () => {
+    var id : string | null = null;
+    if (openModal) {
+      id = selectedPatientData?.id ?? null;
+    }
     setIsFormTemplateFetching(true);
     try {
       const res: GetMultipleFormTemplate_Out = await FormTemplatesService.getAllFormTemplates();
@@ -97,6 +101,9 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       setSelectedTemplateId(filteredData[0].id);
       setFormTemplate(filteredData[0]);
       fetchFormData(filteredData[0].id);
+      if (openModal && id) {
+        setSelectedPatientData(formData.find((data) => data.id === id));
+      }
     } catch (err) {
       console.log(err);
     }
