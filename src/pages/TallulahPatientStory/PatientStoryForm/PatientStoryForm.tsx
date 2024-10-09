@@ -139,6 +139,7 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       case 'STRING':
       case 'EMAIL':
       case 'PHONE':
+      case 'ZIPCODE':
       case 'URL':
         return (
           <TextField

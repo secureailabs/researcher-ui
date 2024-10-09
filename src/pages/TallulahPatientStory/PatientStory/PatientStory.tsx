@@ -1,7 +1,8 @@
-import { Box, CircularProgress, Grid, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, MenuItem, Select, Typography } from '@mui/material';
 import styles from './PatientStory.module.css';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  FormDataLocation,
   FormDataService,
   FormTemplatesService,
   GetFormData_Out,
@@ -16,6 +17,8 @@ import { TemplateNames } from './components/CardTemplates/CardTemplates';
 import Filter from './components/Filter';
 import FilterChip from './components/FilterChip';
 import Sort from './components/Sort';
+import {AdvancedMarker, APIProvider, CollisionBehavior, InfoWindow, Map, Marker, Pin, useAdvancedMarkerRef} from '@vis.gl/react-google-maps';
+
 
 export interface IPatientStory {}
 
@@ -29,6 +32,42 @@ interface TabPanelProps {
   index: number;
   value: number;
 }
+
+const API_KEY = "AIzaSyDMnqabvdj-jsDc3iWdf3ImwWujeqEPZYc"
+
+const MarkerWithInfoWindow = (props:any) => {
+  const [markerRef, marker] = useAdvancedMarkerRef();
+  const [infoWindowShown, setInfoWindowShown] = useState(false);
+
+  const handleClose = useCallback(() => setInfoWindowShown(false), []);
+
+  const handleMarkerClick = useCallback(
+    () => setInfoWindowShown(isShown => !isShown),
+    []
+  );
+
+  return (
+    <>
+      <AdvancedMarker position={props.position} ref={markerRef} onClick={handleMarkerClick} />
+      {infoWindowShown &&
+      <InfoWindow anchor={marker} onClose={handleClose}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {props.city}
+        <Button
+        onClick={props.handleOnClick}
+        >View Details</Button>
+        </Box>
+       </InfoWindow>
+      }
+    </>
+  );
+};
+
 
 const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -44,13 +83,14 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('creation_time');
   const [sortDirection, setSortDirection] = useState<number>(-1);
+  const [formDataLocation, setFormDataLocation] = useState<FormDataLocation[]>([]);
+  const [filterHasVideo, setFilterHasVideo] = useState<boolean|null>(null);
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const templateNameString = formTemplate?.card_layout?.name || 'TEMPLATE0';
   const templateNameEnum = TemplateNames[templateNameString as keyof typeof TemplateNames];
 
   const getFilterObjects = () => {
-    // flat map the field groups to get the fields and create an array with the field names and options
     const fields = formTemplate?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields);
     const filterObject: PatientStoryFilter[] = [];
     fields?.forEach((field) => {
@@ -62,15 +102,26 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     return filterObject;
   };
 
+  const getVideoKey = () => {
+    // from formTemplate get the key of the video field
+    const fields = formTemplate?.field_groups?.flatMap((fieldGroup) => fieldGroup.fields);
+    const videoField = fields?.find((field) => field?.type === 'VIDEO');
+    return videoField?.name || '';
+  }
+
   const fetchFormData = async (formId: string) => {
     setIsFormDataFetching(true);
+
     try {
       const filterFormTemplateId = formId;
       const filterSkip = 0;
       const filterLimit = 200;
       const filterSortKey = sortKey;
       const filterSortDirection = sortDirection;
-      const filterRequestBody = selectedFilter;
+      const filterRequestBody = {
+        kv: selectedFilter,
+        values_present: filterHasVideo ? [getVideoKey()] : null,
+      }
       const res: GetMultipleFormData_Out = await FormDataService.getAllFormData(
         filterFormTemplateId,
         filterSkip,
@@ -127,6 +178,16 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     setSearchText(text);
   };
 
+  const fetchZipCodes = async (formTemplateId:string) => {
+    try {
+      const res = await FormDataService.getZipcodes(formTemplateId)
+      setFormDataLocation(res.form_data_location)
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     if (searchText === undefined) {
       return;
@@ -157,13 +218,21 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     if (selectedTemplateId) {
       fetchFormData(selectedTemplateId);
     }
-  }, [selectedFilter]);
+  }, [selectedFilter, filterHasVideo]);
 
   useEffect(() => {
     if (selectedTemplateId) {
       fetchFormData(selectedTemplateId);
     }
   }, [sortKey, sortDirection]);
+
+  const handleMarkerClick = (form_data_id: string) => {
+    const patientData = formData.find((data) => data.id === form_data_id);
+    if (patientData) {
+      setOpenModal(true);
+      setSelectedPatientData(patientData);
+    }
+  }
 
   const TemplateSelector = () => {
     return (
@@ -174,6 +243,8 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
           value={selectedTemplateId}
           onChange={(event: any) => {
             setSelectedTemplateId(event.target.value as string);
+            setFormDataLocation([])
+            fetchZipCodes(event.target.value as string);
             // update new form template
             const selectedTemplate = publishedTemplateList.find((template) => template.id === event.target.value);
             setFormTemplate(selectedTemplate);
@@ -199,11 +270,55 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
     );
   };
 
+  const handleVideoFilterClick = (value: string) => {
+
+    if (filterHasVideo === null && value === 'Yes') {
+      setFilterHasVideo(true);
+    } else if (filterHasVideo === null && value === 'No') {
+      setFilterHasVideo(false);
+    } else if (filterHasVideo === true && value === 'Yes') {
+      setFilterHasVideo(null);
+    } else if (filterHasVideo === true && value === 'No') {
+      setFilterHasVideo(false);
+    } else if (filterHasVideo === false && value === 'Yes') {
+      setFilterHasVideo(true);
+    } else if (filterHasVideo === false && value === 'No') {
+      setFilterHasVideo(null);
+    }
+  }
+
   return (
     <Box className={styles.container}>
       <Box>
         <TemplateSelector />
       </Box>
+      {formDataLocation.length>0 &&
+      <Box
+      sx={{
+        width: '100%',
+        height: '400px',
+        marginTop: '1rem',
+      }}
+      >
+          <APIProvider apiKey={API_KEY}>
+            <Map
+              defaultCenter={{lat: 44.500000, lng: 	-89.500000 }}
+              defaultZoom={4}
+              gestureHandling={'greedy'}
+              disableDefaultUI={true}
+              mapId={"429d97a6790fbaa6"}
+            >
+                {formDataLocation.length>0 && formDataLocation.map((formData, index) => (
+
+                  <MarkerWithInfoWindow key={formData.form_data_id} position={{lat: formData.location.latitude, lng: formData.location.longitude}} city={formData.location.city} handleOnClick={()=>{
+                    handleMarkerClick(formData.form_data_id)
+                  }} />
+
+                ))}
+              </Map>
+          </APIProvider>
+        </Box>
+      }
       <Box className={styles.patientStoryContainer}>
         <Box className={styles.searchContainer}>
           <SearchBar
@@ -213,7 +328,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
           />
         </Box>
         <Box className={styles.filterContainer}>
-          <Filter filterObjects={getFilterObjects()} setSelectedFilter={setSelectedFilter} selectedFilter={selectedFilter} />
+          <Filter filterObjects={getFilterObjects()} setSelectedFilter={setSelectedFilter} selectedFilter={selectedFilter} handleVideoFilter={handleVideoFilterClick} />
           <Sort sortDirection={sortDirection} setSortDirection={setSortDirection} sortKey={sortKey} setSortKey={setSortKey} />
         </Box>
         <Box>
@@ -234,6 +349,13 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
                 );
               })
             )}
+            {filterHasVideo !== null ? (
+              <Box key={'video'} className={styles.filterTag}>
+                <FilterChip filterTag={filterHasVideo ? 'Video Present' : 'No Video'} filterKey={'Video'} onClose={()=>{
+                  setFilterHasVideo(null);
+                }} />
+              </Box>
+            ) : null}
           </Box>
         </Box>
 
