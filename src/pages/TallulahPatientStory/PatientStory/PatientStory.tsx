@@ -146,6 +146,7 @@ const PatientStory: React.FC<IPatientStory> = ({}) => {
       const filteredData = res.templates.filter((formTemplate: any) => formTemplate.state === 'PUBLISHED');
       setPublishedTemplateList(filteredData);
       setSelectedTemplateId(filteredData[0].id);
+      fetchZipCodes(filteredData[0].id);
       setFormTemplate(filteredData[0]);
       fetchFormData(filteredData[0].id);
     } catch (err) {
