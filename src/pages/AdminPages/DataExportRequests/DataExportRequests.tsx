@@ -7,7 +7,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { RefreshOutlined } from '@mui/icons-material';
 
 const DataExportRequests = ({}) => {
-  const [exportType, setExportType] = useState('json');
+  const [exportType, setExportType] = useState<string>('json');
   const [exports, setExports] = useState<ExportData_Out[]>([]);
 
   const [sendNotification] = useNotification();
