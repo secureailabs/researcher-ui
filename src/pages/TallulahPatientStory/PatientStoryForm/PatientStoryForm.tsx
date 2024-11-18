@@ -208,7 +208,15 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       case 'TEXTAREA':
         return (
           <>
-            <Typography>{field.description}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%'
+              }}
+            >
+              <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
+              {field.required ? <Typography color="red"> &nbsp; (*Required)</Typography> : null}
+            </Box>
             <TextField
               name={field.name}
               fullWidth
@@ -360,21 +368,45 @@ const PatientStoryForm: React.FC<IPatientStoryForm> = ({}) => {
       case 'FILE':
         return (
           <>
-            <Typography>{field.description}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%'
+              }}
+            >
+              <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
+              {field.required ? <Typography color="red"> &nbsp; (*Required)</Typography> : null}
+            </Box>
             <DocumentUpload fieldName={field.name} setDocumentFiles={setDocumentFiles} />
           </>
         );
       case 'IMAGE':
         return (
           <>
-            <Typography>{field.description}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%'
+              }}
+            >
+              <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
+              {field.required ? <Typography color="red"> &nbsp; (*Required)</Typography> : null}
+            </Box>
             <ImageUpload fieldName={field.name} setImageFiles={setImageFiles} />
           </>
         );
       case 'VIDEO':
         return (
           <>
-            <Typography>{field.description}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%'
+              }}
+            >
+              <Typography dangerouslySetInnerHTML={{ __html: field.description }} />
+              {field.required ? <Typography color="red"> &nbsp; (*Required)</Typography> : null}
+            </Box>
             <VideoUpload fieldName={field.name} setVideoFiles={setVideoFiles} />
           </>
         );
